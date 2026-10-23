@@ -37,6 +37,29 @@ create index if not exists cloud_records_workspace_updated_idx
 create index if not exists cloud_records_live_entity_idx
   on public.cloud_records (workspace_id, entity_type) where deleted_at is null;
 
+-- Automatically make the creator an owner. Without this membership row,
+-- the workspace creator could create a workspace but fail member-scoped reads.
+create or replace function public.add_workspace_creator_as_owner()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $
+begin
+  insert into public.workspace_members (workspace_id, user_id, role)
+  values (new.id, new.created_by, 'owner')
+  on conflict (workspace_id, user_id) do nothing;
+  return new;
+end;
+$;
+
+revoke all on function public.add_workspace_creator_as_owner() from public;
+
+drop trigger if exists workspaces_add_creator_as_owner on public.workspaces;
+create trigger workspaces_add_creator_as_owner
+  after insert on public.workspaces
+  for each row execute function public.add_workspace_creator_as_owner();
+
 create or replace function public.is_workspace_member(target_workspace uuid)
 returns boolean
 language sql
