@@ -1,9 +1,8 @@
-# Trigger deployment after enabling GitHub Pages.
-name: Deploy VELTRO prototype to GitHub Pages
+name: Build and deploy VELTRO-PRO
 
 on:
   push:
-    branches: [main]
+    branches: ['**']
   workflow_dispatch:
 
 permissions:
@@ -12,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -21,35 +20,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.18.3
-          run_install: false
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
-      - name: Verify toolchain
-        run: |
-          node --version
-          pnpm --version
-
+          cache: npm
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile --reporter=append-only
-
+        run: npm install
       - name: Build
-        run: pnpm run build
-
+        run: npm run build
       - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
   deploy:
+    if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

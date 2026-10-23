@@ -1,58 +1,255 @@
-import React, { useState } from 'react';
-import { Activity, Bell, Boxes, ChartNoAxesCombined, ChevronDown, CircleHelp, ClipboardCheck, Command, CreditCard, Gauge, LayoutDashboard, Menu, Mic, Package, Search, Settings2, ShieldCheck, ShoppingBag, ShoppingCart, Sparkles, Truck, Users, Wallet, X, ArrowUpRight, ArrowDownRight, MoreHorizontal, CalendarDays, CircleCheck, Clock3, Network, Target, Zap } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import {
+  Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight,
+  MoreHorizontal, CalendarDays, Package, ReceiptText,
+  Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
+  ShoppingCart, X, Globe, ClipboardList, History,
+  CircleCheck, PackageCheck
+} from 'lucide-react';
+import { dashboard, sections } from './data/navigation.js';
 
-const nav = [
- ['لوحة التحكم','Dashboard','Tableau de bord',LayoutDashboard],['المهام','Action Items','Actions',ClipboardCheck],['التحليلات','Analytics','Analytique',ChartNoAxesCombined],['المشاريع','Projects','Projets',Boxes],['الرسائل','Messages','Messages',CircleHelp],['الفريق','Team','Équipe',Users],['التقارير','Reports','Rapports',Gauge],['الإعدادات','Settings','Paramètres',Settings2]
-];
-const tasks = [
- ['مراجعة أداء الربع الحالي','Review quarterly performance','Revoir les performances trimestrielles','مكتمل','Done','Terminé','done'],
- ['تحديث استراتيجية النمو','Update growth strategy','Mettre à jour la stratégie de croissance','قيد العمل','In progress','En cours','progress'],
- ['مزامنة بيانات الفريق','Sync team workspace','Synchroniser l’espace équipe','معلّق','Pending','En attente','pending'],
- ['إرسال تقرير الأداء','Send performance report','Envoyer le rapport de performance','مكتمل','Done','Terminé','done']
-];
-const bars=[35,52,43,68,57,76,61,89,72,95,66,81,58,88,73,97,64,83];
-export default function App(){
- const [lang,setLang]=useState('en'); const [active,setActive]=useState(0); const [search,setSearch]=useState(''); const [notice,setNotice]=useState(false); const [menu,setMenu]=useState(false); const [checked,setChecked]=useState([true,false,false,true]);
- const t=(ar,en,fr)=>lang==='ar'?ar:lang==='fr'?fr:en;
- return <div className={'ref-shell lang-'+lang} dir={lang==='ar'?'rtl':'ltr'}>
-  <header className="ref-topbar"><div className="ref-top-left"><button className="ref-icon-btn mobile-only" onClick={()=>setMenu(!menu)}><Menu size={18}/></button><div className="ref-breadcrumb">{t('مساحة العمل','Workspace','Espace de travail')} <span>/</span> <b>{nav[active][lang==='ar'?0:lang==='fr'?2:1]}</b></div></div>
-    <div className="ref-top-tools"><label className="ref-search"><Search size={16}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('ابحث عن أي شيء...','Search anything...','Rechercher...')}/><kbd>⌘ K</kbd></label><label className="ref-search ref-search-small"><Command size={15}/><select value={lang} onChange={e=>setLang(e.target.value)} aria-label="Language"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select><ChevronDown size={13}/></label><button className="ref-icon-btn" onClick={()=>setNotice(!notice)} aria-label="Notifications"><Bell size={17}/><i className="ref-dot"/></button><button className="ref-icon-btn" aria-label="Microphone"><Mic size={17}/></button><button className="ref-primary" onClick={()=>setActive(1)}><Sparkles size={15}/>{t('إجراء جديد','New action','Nouvelle action')}</button><button className="ref-profile" onClick={()=>setMenu(!menu)}>N <ChevronDown size={13}/></button></div>
-    {notice&&<div className="ref-popover"><b>{t('الإشعارات','Notifications','Notifications')}</b><p>{t('كل شيء محدّث. لديك 3 مهام للمراجعة.','Everything is up to date. 3 tasks need review.','Tout est à jour. 3 tâches à vérifier.')}</p></div>}
-   </header>
-  <main className="ref-app">
-  <aside className="ref-sidebar">
-   <div className="ref-brand"><span className="ref-brand-icon"><Sparkles size={20}/></span><span><b>VELTRO</b><small>BUSINESS SUITE</small></span></div>
-   <div className="ref-workspace"><span className="ref-avatar">V</span><span><b>{t('مساحة العمل','Workspace','Espace de travail')}</b><small>{t('الخطة الاحترافية','Professional plan','Offre professionnelle')}</small></span><ChevronDown size={15}/></div>
-   <div className="ref-nav-label">{t('القائمة الرئيسية','WORKSPACE','ESPACE DE TRAVAIL')}</div>
-   <nav>{nav.map((n,i)=>{const I=n[3];return <button key={n[0]} className={active===i?'selected':''} onClick={()=>setActive(i)}><I size={17}/><span>{n[lang==='ar'?0:lang==='fr'?2:1]}</span>{i===1&&<i className="ref-count">4</i>}</button>})}</nav>
-   <div className="ref-side-bottom"><div className="ref-status"><span><Activity size={16}/></span><div><b>{t('النظام مستقر','System operational','Système opérationnel')}</b><small><i/> {t('جميع الخدمات متصلة','All services connected','Tous les services connectés')}</small></div></div><div className="ref-user"><span className="ref-avatar">N</span><span><b>{t('مدير المتجر','Workspace admin','Administrateur')}</b><small>noamen@veltro.app</small></span><MoreHorizontal size={17}/></div></div>
-  </aside>
-  <section className="ref-main">
+const copy = {
+  ar: {
+    workspace: 'مساحة العمل', search: 'ابحث عن قسم أو وظيفة...', demo: 'معاينة تصميمية · بيانات تجريبية',
+    subtitle: 'نظرة شاملة على أداء المتجر وحركة العمل.', today: 'اليوم', revenue: 'مبيعات اليوم',
+    invoices: 'فواتير البيع', products: 'المنتجات', lowStock: 'مخزون منخفض',
+    vsYesterday: 'مقارنة بالأمس', salesTrend: 'حركة المبيعات', last7: 'آخر 7 أيام',
+    salesVsPurchases: 'المبيعات مقابل المشتريات', sales: 'المبيعات', purchases: 'المشتريات',
+    recent: 'آخر العمليات', viewAll: 'عرض الكل', productMovement: 'حركة المنتجات',
+    product: 'المنتج', operation: 'العملية', quantity: 'الكمية', status: 'الحالة',
+    completed: 'مكتملة', pending: 'معلقة', received: 'مستلمة', sold: 'بيع',
+    bought: 'شراء', returned: 'مرتجع', stockOverview: 'نظرة على المخزون',
+    available: 'متوفر', low: 'منخفض', out: 'نفد', module: 'القسم',
+    moduleHint: 'هذه معاينة لواجهة القسم. سيتم ربط الجداول والإجراءات ببيانات النظام عند تنفيذ الوظائف.',
+    shortcuts: 'وصول سريع', addProduct: 'إضافة منتج', newSale: 'فتح نقطة البيع',
+    newOrder: 'طلب سلع', openCash: 'فتح الصندوق', notifications: 'الإشعارات',
+    noNotifications: 'لا توجد إشعارات جديدة.', logout: 'تسجيل الخروج',
+    logoutConfirm: 'هل تريد تسجيل الخروج من VELTRO-PRO؟', cancel: 'إلغاء', confirm: 'تسجيل الخروج',
+    signedOut: 'تم تسجيل الخروج من المعاينة', signIn: 'العودة إلى المعاينة',
+    back: 'العودة', home: 'لوحة التحكم', selected: 'القسم المحدد',
+    welcome: 'مرحبًا بك في', title: 'VELTRO BUSINESS SUITE',
+    daily: 'الحالة اليومية', cashBalance: 'رصيد الصندوق', expense: 'المصاريف',
+    profit: 'الربح التقديري', viewDetails: 'عرض التفاصيل', allSections: 'الأقسام',
+    searchResults: 'نتائج البحث', noResults: 'لا توجد نتائج مطابقة.',
+    topProducts: 'أكثر المنتجات حركة', activity: 'النشاط حسب الفترة',
+  },
+  en: {
+    workspace: 'Workspace', search: 'Search sections and actions...', demo: 'Design preview · Sample data',
+    subtitle: 'A clear overview of store performance and operations.', today: 'Today', revenue: 'Today’s sales',
+    invoices: 'Sales invoices', products: 'Products', lowStock: 'Low stock',
+    vsYesterday: 'vs yesterday', salesTrend: 'Sales activity', last7: 'Last 7 days',
+    salesVsPurchases: 'Sales vs purchases', sales: 'Sales', purchases: 'Purchases',
+    recent: 'Recent activity', viewAll: 'View all', productMovement: 'Product movement',
+    product: 'Product', operation: 'Operation', quantity: 'Quantity', status: 'Status',
+    completed: 'Completed', pending: 'Pending', received: 'Received', sold: 'Sale',
+    bought: 'Purchase', returned: 'Return', stockOverview: 'Stock overview',
+    available: 'In stock', low: 'Low', out: 'Out', module: 'Section',
+    moduleHint: 'This is a preview of the section. Tables and actions will connect to system data when the functionality is implemented.',
+    shortcuts: 'Quick access', addProduct: 'Add product', newSale: 'Open point of sale',
+    newOrder: 'Order goods', openCash: 'Open cash register', notifications: 'Notifications',
+    noNotifications: 'No new notifications.', logout: 'Log out',
+    logoutConfirm: 'Log out of VELTRO-PRO preview?', cancel: 'Cancel', confirm: 'Log out',
+    signedOut: 'You have left the preview', signIn: 'Return to preview',
+    back: 'Back', home: 'Dashboard', selected: 'Selected section',
+    welcome: 'Welcome to', title: 'VELTRO BUSINESS SUITE',
+    daily: 'Daily status', cashBalance: 'Cash balance', expense: 'Expenses',
+    profit: 'Estimated profit', viewDetails: 'View details', allSections: 'Sections',
+    searchResults: 'Search results', noResults: 'No matching results.',
+    topProducts: 'Top moving products', activity: 'Activity by period',
+  },
+  fr: {
+    workspace: 'Espace de travail', search: 'Rechercher une rubrique...', demo: 'Aperçu du design · Données fictives',
+    subtitle: 'Une vue claire des performances et des opérations du magasin.', today: 'Aujourd’hui', revenue: 'Ventes du jour',
+    invoices: 'Factures de vente', products: 'Produits', lowStock: 'Stock faible',
+    vsYesterday: 'vs hier', salesTrend: 'Activité des ventes', last7: '7 derniers jours',
+    salesVsPurchases: 'Ventes et achats', sales: 'Ventes', purchases: 'Achats',
+    recent: 'Activité récente', viewAll: 'Tout voir', productMovement: 'Mouvement des produits',
+    product: 'Produit', operation: 'Opération', quantity: 'Quantité', status: 'État',
+    completed: 'Terminé', pending: 'En attente', received: 'Reçu', sold: 'Vente',
+    bought: 'Achat', returned: 'Retour', stockOverview: 'Vue du stock',
+    available: 'Disponible', low: 'Faible', out: 'Épuisé', module: 'Rubrique',
+    moduleHint: 'Ceci est un aperçu de la rubrique. Les tableaux et actions seront reliés aux données lors de l’implémentation.',
+    shortcuts: 'Accès rapide', addProduct: 'Ajouter un produit', newSale: 'Ouvrir le point de vente',
+    newOrder: 'Commander', openCash: 'Ouvrir la caisse', notifications: 'Notifications',
+    noNotifications: 'Aucune nouvelle notification.', logout: 'Déconnexion',
+    logoutConfirm: 'Voulez-vous quitter l’aperçu VELTRO-PRO ?', cancel: 'Annuler', confirm: 'Déconnexion',
+    signedOut: 'Vous avez quitté l’aperçu', signIn: 'Revenir à l’aperçu',
+    back: 'Retour', home: 'Tableau de bord', selected: 'Rubrique sélectionnée',
+    welcome: 'Bienvenue dans', title: 'VELTRO BUSINESS SUITE',
+    daily: 'Situation journalière', cashBalance: 'Solde de caisse', expense: 'Dépenses',
+    profit: 'Bénéfice estimé', viewDetails: 'Voir les détails', allSections: 'Rubriques',
+    searchResults: 'Résultats', noResults: 'Aucun résultat.',
+    topProducts: 'Produits les plus actifs', activity: 'Activité par période',
+  }
+};
 
-   <div className="ref-content">
-    <div className="ref-heading"><div><div className="ref-eyebrow"><i/> {t('نظرة عامة على مساحة العمل','WORKSPACE OVERVIEW','APERÇU DE L’ESPACE')}</div><h1>{t('أهلاً بعودتك،','Welcome back,','Bon retour,')} <em>{t('نعمان.','Naaman.','Naaman.')}</em></h1><p>{t('إليك ملخص الأداء والنشاط لهذا اليوم.','Here’s your performance and activity summary for today.','Voici votre résumé des performances et de l’activité du jour.')}</p></div><button className="ref-date" onClick={()=>setSearch('Today')}><CalendarDays size={15}/>{t('23 أكتوبر 2026','October 23, 2026','23 octobre 2026')}<ChevronDown size={14}/></button></div>
-    <div className="ref-grid">
-     <div className="ref-column">
-      <article className="ref-card ref-hero-stat"><div className="ref-card-top"><span>{t('مؤشر النمو الرئيسي','KEY PERFORMANCE INDEX','INDICATEUR CLÉ')}</span><span className="ref-icon-chip cyan"><ArrowUpRight size={17}/></span></div><div className="ref-big-number">3430<small>%</small></div><div className="ref-stat-line"><span className="ref-pill positive"><ArrowUpRight size={13}/> 18.6%</span><span>{t('مقارنة بالشهر الماضي','vs last month','vs mois dernier')}</span></div><div className="ref-sparkline">{bars.slice(0,12).map((h,i)=><i key={i} style={{height:h+'%'}}/>)}</div><div className="ref-card-foot"><span>{t('مؤشر الأداء','Performance index','Indice de performance')}</span><b>{t('ممتاز','Excellent','Excellent')}</b></div></article>
-      <article className="ref-card"><div className="ref-card-top"><div><span className="ref-kicker">{t('توزيع النشاط','ACTIVITY DISTRIBUTION','RÉPARTITION')}</span><h2>{t('مصادر الإنجاز','Completion sources','Sources de réalisation')}</h2></div><button className="ref-dots"><MoreHorizontal size={18}/></button></div><div className="ref-donut-layout"><div className="ref-donut"><div><b>72<small>%</small></b><span>{t('مكتمل','Complete','Terminé')}</span></div></div><div className="ref-legend"><div><span><i className="c-cyan"/> {t('المهام','Tasks','Tâches')}</span><b>48%</b></div><div><span><i className="c-pink"/> {t('المشاريع','Projects','Projets')}</span><b>32%</b></div><div><span><i className="c-blue"/> {t('أخرى','Other','Autre')}</span><b>20%</b></div></div></div><div className="ref-progress-list"><div><span>{t('الإنجاز اليومي','Daily completion','Avancement quotidien')}</span><b>78%</b></div><i><b style={{width:'78%'}}/></i><div><span>{t('هدف الأسبوع','Weekly target','Objectif hebdomadaire')}</span><b>64%</b></div><i><b style={{width:'64%'}}/></i></div></article>
-      <article className="ref-card ref-network-card"><div className="ref-card-top"><div><span className="ref-kicker">{t('الترابط','CONNECTIONS','CONNEXIONS')}</span><h2>{t('شبكة الفريق','Team network','Réseau d’équipe')}</h2></div><Network size={18} className="ref-muted"/></div><div className="ref-network"><svg viewBox="0 0 320 132" role="img" aria-label="Network diagram"><g stroke="rgba(104,193,255,.27)" strokeWidth="1.4"><path d="M34 70L95 26L153 65L218 22L286 68L223 108L153 65L94 109L34 70L94 109L153 65L223 108L286 68L218 22L153 65"/></g><g fill="#0c2445" stroke="#43d9f5" strokeWidth="2"><circle cx="34" cy="70" r="8"/><circle cx="95" cy="26" r="7"/><circle cx="94" cy="109" r="7"/><circle cx="153" cy="65" r="12" fill="#123a65"/><circle cx="218" cy="22" r="7"/><circle cx="223" cy="108" r="7"/><circle cx="286" cy="68" r="9"/></g><circle cx="153" cy="65" r="19" fill="none" stroke="rgba(66,223,247,.2)"/></svg><div className="ref-network-caption"><span><i className="c-cyan"/> 24 {t('عضوًا متصلًا','connected members','membres connectés')}</span><b><span className="ref-live"/> {t('مباشر','Live','En direct')}</b></div></div></article>
-     </div>
-     <div className="ref-column">
-      <article className="ref-card ref-tasks-card"><div className="ref-card-top"><div><span className="ref-kicker">{t('ما يحتاج انتباهك','NEEDS YOUR ATTENTION','À SURVEILLER')}</span><h2>{t('قائمة الإجراءات','Action Items','Actions à traiter')}</h2></div><button className="ref-count-badge">04</button></div><div className="ref-task-list">{tasks.map((task,i)=><button className="ref-task" key={task[0]} onClick={()=>setChecked(old=>old.map((v,j)=>i===j?!v:v))}><span className={'ref-check '+(checked[i]?'checked':'')}>{checked[i]&&<CircleCheck size={15}/>}</span><span className="ref-task-text"><b>{task[lang==='ar'?0:lang==='fr'?2:1]}</b><small>{t('موعد التسليم: اليوم','Due today','Échéance : aujourd’hui')}</small></span><span className={'ref-task-state '+task[6]}>{task[lang==='ar'?3:lang==='fr'?5:4]}</span></button>)}</div><button className="ref-link" onClick={()=>setActive(1)}>{t('عرض جميع المهام','View all action items','Voir toutes les actions')} <ArrowUpRight size={14}/></button></article>
-      <article className="ref-card ref-security"><div className="ref-security-icon"><ShieldCheck size={22}/></div><div className="ref-card-top"><span>{t('درجة أمان مساحة العمل','WORKSPACE HEALTH','SANTÉ DE L’ESPACE')}</span><span className="ref-pill positive">+6.4%</span></div><div className="ref-security-score">36<small>%</small></div><p>{t('مؤشر الحماية والتوافق','Protection & compliance score','Score de protection et conformité')}</p><div className="ref-security-bar"><i/></div><div className="ref-card-foot"><span>{t('مستوى الحماية','Protection level','Niveau de protection')}</span><b>{t('جيد','Good','Bon')}</b></div></article>
-      <article className="ref-card ref-finance"><div className="ref-card-top"><div><span className="ref-kicker">{t('الملخص المالي','FINANCIAL SUMMARY','RÉSUMÉ FINANCIER')}</span><h2>{t('نظرة مالية','Financial overview','Vue financière')}</h2></div><CreditCard size={18} className="ref-muted"/></div><div className="ref-finance-values"><div><span>{t('الإيرادات','Revenue','Revenus')}</span><b>$1,250</b><small className="up">↗ 12.5%</small></div><div><span>{t('المصروفات','Expenses','Dépenses')}</span><b>$1,400</b><small className="down">↘ 3.2%</small></div></div><div className="ref-finance-bars"><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/></div></article>
-      <article className="ref-card ref-select-card"><div className="ref-card-top"><div><span className="ref-kicker">{t('تفاصيل إضافية','MORE DETAILS','PLUS DE DÉTAILS')}</span><h2>{t('ملخص الفريق','Team summary','Résumé de l’équipe')}</h2></div><Users size={18} className="ref-muted"/></div><button className="ref-dropdown" onClick={()=>setMenu(!menu)}><span><span className="ref-avatar mini">T</span>{t('فريق التصميم','Design team','Équipe design')}</span><ChevronDown size={15}/></button>{menu&&<div className="ref-dropdown-options"><button onClick={()=>setMenu(false)}>{t('فريق المبيعات','Sales team','Équipe commerciale')}</button><button onClick={()=>setMenu(false)}>{t('فريق العمليات','Operations team','Équipe opérations')}</button></div>}<div className="ref-team-members"><span>AM</span><span>JD</span><span>SK</span><span>+8</span><small>{t('11 عضوًا نشطًا','11 active members','11 membres actifs')}</small></div></article>
-     </div>
-     <div className="ref-column">
-      <article className="ref-card ref-settings-card"><div className="ref-settings-visual"><div className="ref-orbit orbit-a"/><div className="ref-orbit orbit-b"/><span><Settings2 size={29}/></span><i className="orb-dot dot-a"/><i className="orb-dot dot-b"/><i className="orb-dot dot-c"/></div><span className="ref-kicker">{t('مساحة عمل ذكية','SMART WORKSPACE','ESPACE INTELLIGENT')}</span><h2>{t('كل شيء في مكانه.','Everything in its place.','Tout à sa place.')}</h2><p>{t('خصص مساحة عملك، ونظم الأدوات، وحافظ على تركيز فريقك من لوحة واحدة.','Customize your workspace, organize your tools, and keep your team focused from one place.','Personnalisez votre espace, organisez vos outils et gardez votre équipe concentrée.')}</p><button className="ref-link" onClick={()=>setActive(7)}>{t('تخصيص مساحة العمل','Customize workspace','Personnaliser')} <ArrowUpRight size={14}/></button></article>
-      <article className="ref-card ref-priority"><div className="ref-card-top"><div><span className="ref-kicker">{t('الأولويات','PRIORITY','PRIORITÉ')}</span><h2>{t('توزيع الأولويات','Priority distribution','Répartition des priorités')}</h2></div><button className="ref-dots"><MoreHorizontal size={18}/></button></div><div className="ref-priority-total"><b>84</b><span>{t('إجمالي العناصر','Total items','Éléments au total')}</span><small className="up">↗ 8.2%</small></div><div className="ref-priority-chart">{[48,72,55,86,64,95,76,59,82,68,100,74,88,61,79,93,66,84].map((h,i)=><i key={i} style={{height:h+'%'}} className={i===10?'highlight':''}/>)}</div><div className="ref-chart-labels"><span>{t('منخفض','Low','Faible')}</span><span>{t('متوسط','Medium','Moyen')}</span><span>{t('مرتفع','High','Élevé')}</span></div></article>
-      <article className="ref-card ref-mini-chart"><div className="ref-card-top"><div><span className="ref-kicker">{t('النشاط بمرور الوقت','ACTIVITY OVER TIME','ACTIVITÉ DANS LE TEMPS')}</span><h2>{t('معدل الإنتاجية','Productivity rate','Taux de productivité')}</h2></div><span className="ref-pill positive"><ArrowUpRight size={13}/> 14.8%</span></div><div className="ref-mini-bars">{bars.map((h,i)=><i key={i} style={{height:h+'%','--delay':i*28+'ms'}}/>)}</div><div className="ref-mini-footer"><span>{t('هذا الأسبوع','This week','Cette semaine')}</span><b>+24.6%</b></div></article>
-      <article className="ref-card ref-tip"><span className="ref-tip-icon"><Zap size={16}/></span><div><b>{t('نصيحة ذكية','Smart insight','Conseil intelligent')}</b><p>{t('أنجزت 4 مهام أكثر من الأسبوع الماضي. استمر!','You completed 4 more tasks than last week. Keep it up!','Vous avez terminé 4 tâches de plus que la semaine passée. Continuez !')}</p></div></article>
-     </div>
+const activityRows = [
+  { id: 'INV-1048', product: 'Youkous 1.5L', operation: 'sold', quantity: '24', status: 'completed', time: '10:42' },
+  { id: 'PUR-0217', product: 'Ifri 0.5L', operation: 'bought', quantity: '120', status: 'received', time: '10:18' },
+  { id: 'INV-1047', product: 'Jus d’orange', operation: 'sold', quantity: '12', status: 'completed', time: '09:56' },
+  { id: 'STK-0081', product: 'Sucre 1 kg', operation: 'returned', quantity: '3', status: 'pending', time: '09:31' },
+];
+
+function getLabel(item, lang) { return item?.label?.[lang] || item?.label?.ar || ''; }
+
+function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, setMobileOpen }) {
+  const groups = useMemo(() => {
+    const q = search.trim().toLocaleLowerCase();
+    return sections.map(section => {
+      const sectionLabel = getLabel(section, lang);
+      const children = section.children.filter(child => !q || getLabel(child, lang).toLocaleLowerCase().includes(q) || sectionLabel.toLocaleLowerCase().includes(q));
+      return { ...section, sectionLabel, children, visible: !q || sectionLabel.toLocaleLowerCase().includes(q) || children.length > 0 };
+    }).filter(section => section.visible);
+  }, [lang, search]);
+  const isActive = (id) => activeId === id || sections.some(s => s.id === id && s.children.some(c => c.id === activeId));
+  return <>
+    {mobileOpen && <button className="sidebar-scrim" onClick={() => setMobileOpen(false)} aria-label="Close navigation" />}
+    <aside className={'sidebar ' + (mobileOpen ? 'sidebar-open' : '')}>
+      <div className="brand-row">
+        <span className="brand-mark"><span>V</span></span>
+        <span className="brand-copy"><b>VELTRO</b><small>BUSINESS SUITE</small></span>
+        <span className="brand-version">PRO</span>
+      </div>
+      <button className={'dashboard-link ' + (activeId === dashboard.id ? 'active' : '')} onClick={() => { onNavigate(dashboard); setMobileOpen(false); }}>
+        <dashboard.icon size={16} strokeWidth={1.9} /><span>{getLabel(dashboard, lang)}</span>
+      </button>
+      <div className="sidebar-caption">{t('allSections')}</div>
+      <nav className="side-nav" aria-label={t('allSections')}>
+        {groups.map(section => {
+          const Icon = section.icon;
+          return <section className={'nav-group ' + (isActive(section.id) ? 'group-active' : '')} key={section.id}>
+            <button className="nav-group-title" onClick={() => { onNavigate(section); setMobileOpen(false); }} title={section.sectionLabel}>
+              <Icon size={14} strokeWidth={2}/><span>{section.sectionLabel}</span>
+            </button>
+            <div className="nav-children">
+              {section.children.map(child => {
+                const ChildIcon = child.icon;
+                return <button key={child.id} className={'nav-child ' + (activeId === child.id ? 'active' : '')} onClick={() => { onNavigate(child, section); setMobileOpen(false); }} title={getLabel(child, lang)}>
+                  <ChildIcon size={12} strokeWidth={1.8}/><span>{getLabel(child, lang)}</span>
+                </button>;
+              })}
+            </div>
+          </section>;
+        })}
+        {groups.length === 0 && <div className="nav-empty">{t('noResults')}</div>}
+      </nav>
+      <div className="sidebar-bottom">
+        <div className="sidebar-health"><span className="health-dot"/><span>{lang === 'ar' ? 'واجهة تجريبية' : lang === 'fr' ? 'Aperçu du système' : 'System preview'}</span><span className="health-tag">DEMO</span></div>
+        <button className="logout-link" onClick={onLogout}><LogOut size={15}/><span>{t('logout')}</span></button>
+      </div>
+    </aside>
+  </>;
+}
+
+function MetricCard({ icon: Icon, label, value, trend, tone = 'blue', footer }) {
+  return <article className="metric-card">
+    <div className="metric-top"><span className={'metric-icon tone-' + tone}><Icon size={17} strokeWidth={1.9}/></span><span className="metric-trend"><ArrowUpRight size={12}/> {trend}</span></div>
+    <div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="metric-foot">{footer}</div>
+  </article>;
+}
+
+function SalesChart({ t, lang }) {
+  const labels = lang === 'ar' ? ['س','أ','إ','ث','أ','خ','ج'] : lang === 'fr' ? ['S','D','L','M','M','J','V'] : ['S','S','M','T','W','T','F'];
+  const heights = [35,53,43,65,50,76,61,91,68,83,57,95,72,88];
+  return <article className="panel chart-panel">
+    <div className="panel-head"><div><span className="eyebrow">{t('last7')}</span><h2>{t('salesTrend')}</h2></div><button className="more-button" aria-label="More"><MoreHorizontal size={18}/></button></div>
+    <div className="chart-total"><strong>245,800 <small>DA</small></strong><span className="positive"><ArrowUpRight size={13}/> 8.4%</span></div>
+    <div className="bar-chart" role="img" aria-label={t('salesTrend')}>{heights.map((height,i)=><div className="bar-slot" key={i}><i style={{height:height+'%'}} className={i===11?'bar-highlight':''}/></div>)}</div>
+    <div className="chart-axis">{labels.map((label,i)=><span key={i}>{label}</span>)}</div>
+  </article>;
+}
+
+function MixChart({ t }) {
+  return <article className="panel mix-panel">
+    <div className="panel-head"><div><span className="eyebrow">{t('today')}</span><h2>{t('salesVsPurchases')}</h2></div><button className="more-button" aria-label="More"><MoreHorizontal size={18}/></button></div>
+    <div className="mix-content"><div className="mix-donut"><div><strong>68<small>%</small></strong><span>{t('sales')}</span></div></div>
+      <div className="mix-legend"><div><i className="legend-blue"/><span>{t('sales')}</span><b>245,800 DA</b></div><div><i className="legend-green"/><span>{t('purchases')}</span><b>92,400 DA</b></div><div><i className="legend-violet"/><span>{t('expense')}</span><b>18,200 DA</b></div></div>
+    </div><div className="mix-note"><span className="health-dot"/>{t('demo')}</div>
+  </article>;
+}
+
+function RecentActivity({ t }) {
+  return <article className="panel recent-panel">
+    <div className="panel-head"><div><span className="eyebrow">{t('today')}</span><h2>{t('recent')}</h2></div><button className="text-action">{t('viewAll')} <ArrowUpRight size={13}/></button></div>
+    <div className="table-wrap"><table><thead><tr><th>{t('product')}</th><th>{t('operation')}</th><th>{t('quantity')}</th><th>{t('status')}</th><th/></tr></thead><tbody>
+      {activityRows.map(row=><tr key={row.id}><td><span className="product-cell"><span className="product-mini"><Package size={14}/></span><span><b>{row.product}</b><small>{row.id} · {row.time}</small></span></span></td><td><span className={'operation-pill '+row.operation}>{t(row.operation)}</span></td><td className="quantity-cell">{row.quantity}</td><td><span className={'status-pill '+row.status}><i/>{t(row.status)}</span></td><td><button className="row-more" aria-label="More"><MoreHorizontal size={15}/></button></td></tr>)}
+    </tbody></table></div>
+  </article>;
+}
+
+function StockOverview({ t }) {
+  const items = [
+    {name:'Youkous 1.5L',stock:76,label:t('available'),tone:'good'},
+    {name:'Ifri 0.5L',stock:48,label:t('available'),tone:'good'},
+    {name:'Jus d’orange',stock:18,label:t('low'),tone:'warn'},
+    {name:'Sucre 1 kg',stock:0,label:t('out'),tone:'bad'},
+  ];
+  return <article className="panel stock-panel"><div className="panel-head"><div><span className="eyebrow">{t('products')}</span><h2>{t('stockOverview')}</h2></div><PackageCheck size={18} className="panel-muted"/></div>
+    <div className="stock-list">{items.map(item=><div className="stock-item" key={item.name}><span className="stock-avatar"><Package size={15}/></span><span className="stock-name"><b>{item.name}</b><small>{item.label}</small></span><span className="stock-amount">{item.stock}<small>pcs</small></span><span className={'stock-indicator '+item.tone}/></div>)}</div>
+  </article>;
+}
+
+function DashboardPage({ t, lang, onNavigate }) {
+  return <div className="page-content dashboard-content">
+    <div className="page-heading"><div><div className="heading-kicker"><span className="health-dot"/>{t('welcome')} <b>VELTRO</b></div><h1>{t('home')}</h1><p>{t('subtitle')}</p></div><div className="heading-actions"><span className="demo-badge">{t('demo')}</span><button className="date-button"><CalendarDays size={14}/>{t('today')} <ChevronDown size={14}/></button></div></div>
+    <div className="metrics-grid">
+      <MetricCard icon={Wallet} label={t('revenue')} value="245,800 DA" trend="8.4%" tone="blue" footer={t('vsYesterday')}/>
+      <MetricCard icon={ReceiptText} label={t('invoices')} value="126" trend="5.2%" tone="green" footer={t('vsYesterday')}/>
+      <MetricCard icon={Package} label={t('products')} value="1,842" trend="2.1%" tone="violet" footer={t('available')}/>
+      <MetricCard icon={CircleAlert} label={t('lowStock')} value="08" trend="3" tone="amber" footer={t('low')}/>
     </div>
-    <footer className="ref-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span><ShieldCheck size={13}/> {t('بيئة عمل آمنة','Secure workspace','Espace sécurisé')}</span><span>{t('مصمم للأعمال. مبني للسرعة.','Designed for business. Built for speed.','Conçu pour les entreprises.')}</span></footer>
-   </div>
-  </section>
-  </main>
- </div>
+    <div className="charts-grid"><SalesChart t={t} lang={lang}/><MixChart t={t}/></div>
+    <div className="lower-grid"><RecentActivity t={t}/><StockOverview t={t}/></div>
+    <div className="quick-actions"><span>{t('shortcuts')}</span>
+      <button onClick={()=>onNavigate({id:'product-list',label:{ar:'قائمة المنتجات',en:'Product list',fr:'Liste des produits'}})}><Package size={14}/>{t('addProduct')}</button>
+      <button onClick={()=>onNavigate({id:'point-of-sale',label:{ar:'نقطة البيع',en:'Point of sale',fr:'Point de vente'}})}><ShoppingCart size={14}/>{t('newSale')}</button>
+      <button onClick={()=>onNavigate({id:'order-new',label:{ar:'طلب السلع',en:'Order goods',fr:'Commander des articles'}})}><ClipboardList size={14}/>{t('newOrder')}</button>
+      <button onClick={()=>onNavigate({id:'cash-summary',label:{ar:'ملخص الصندوق',en:'Cash summary',fr:'Résumé de caisse'}})}><Wallet size={14}/>{t('openCash')}</button>
+    </div>
+  </div>;
+}
+
+function ModulePage({ page, parent, t, lang, onBack }) {
+  const Icon = page.icon || parent?.icon || ChartNoAxesCombined;
+  const title = getLabel(page,lang) || page.label?.ar || t('module');
+  const parentLabel = parent ? getLabel(parent,lang) : t('allSections');
+  return <div className="page-content module-content">
+    <div className="page-heading"><div><div className="heading-kicker"><span className="health-dot"/>{parentLabel}</div><h1>{title}</h1><p>{t('moduleHint')}</p></div><span className="module-icon"><Icon size={24}/></span></div>
+    <div className="module-metrics"><div className="module-metric"><span>{t('module')}</span><b>{parentLabel}</b></div><div className="module-metric"><span>{t('status')}</span><b><i className="health-dot"/>{t('demo')}</b></div><div className="module-metric"><span>{t('today')}</span><b>23 / 10 / 2026</b></div></div>
+    <section className="module-workspace panel"><div className="module-empty-icon"><Icon size={28}/></div><h2>{title}</h2><p>{t('moduleHint')}</p><div className="module-empty-actions"><button onClick={onBack}>{t('back')}</button><span>{t('demo')}</span></div></section>
+  </div>;
+}
+
+export default function App() {
+  const [lang,setLang]=useState('ar');
+  const [activePage,setActivePage]=useState(dashboard);
+  const [activeParent,setActiveParent]=useState(null);
+  const [search,setSearch]=useState('');
+  const [notificationsOpen,setNotificationsOpen]=useState(false);
+  const [mobileOpen,setMobileOpen]=useState(false);
+  const [logoutOpen,setLogoutOpen]=useState(false);
+  const [signedOut,setSignedOut]=useState(false);
+  const t=(key)=>copy[lang][key]||copy.ar[key]||key;
+  const dir=lang==='ar'?'rtl':'ltr';
+  const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setNotificationsOpen(false);};
+  if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
+  return <div className={'app-shell lang-'+lang} dir={dir}>
+    <div className="app-layout">
+      <Sidebar lang={lang} t={t} activeId={activePage.id} onNavigate={navigate} onLogout={()=>setLogoutOpen(true)} search={search} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen}/>
+      <main className="workspace">
+        <header className="topbar">
+          <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>setMobileOpen(true)} aria-label="Open navigation"><Menu size={18}/></button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
+          <div className="topbar-actions">
+            <label className="global-search"><Search size={15}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>⌕</kbd></label>
+            <label className="language-select"><Globe size={15}/><select value={lang} onChange={e=>setLang(e.target.value)} aria-label="Language"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select><ChevronDown size={12}/></label>
+            <div className="notification-wrap"><button className="icon-button notification-button" onClick={()=>setNotificationsOpen(v=>!v)} aria-label={t('notifications')}><Bell size={17}/><i/></button>{notificationsOpen&&<div className="notification-popover"><b>{t('notifications')}</b><p>{t('noNotifications')}</p></div>}</div>
+            <div className="profile-chip"><span className="profile-avatar">V</span><span><b>VELTRO</b><small>PRO</small></span><ChevronDown size={13}/></div>
+          </div>
+        </header>
+        {activePage.id===dashboard.id?<DashboardPage t={t} lang={lang} onNavigate={navigate}/>:<ModulePage page={activePage} parent={activeParent} t={t} lang={lang} onBack={()=>navigate(dashboard)}/>}
+        <footer className="workspace-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span><span className="health-dot"/>{lang==='ar'?'تصميم أولي — لا يحفظ معاملات حقيقية':lang==='fr'?'Prototype — aucune opération réelle enregistrée':'Prototype — no real transactions stored'}</span></footer>
+      </main>
+    </div>
+    {logoutOpen&&<div className="modal-backdrop" role="presentation"><section className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title"><span className="modal-icon"><LogOut size={22}/></span><h2 id="logout-title">{t('logoutConfirm')}</h2><p>VELTRO BUSINESS SUITE</p><div><button className="button-secondary" onClick={()=>setLogoutOpen(false)}>{t('cancel')}</button><button className="button-danger" onClick={()=>{setLogoutOpen(false);setSignedOut(true);}}>{t('confirm')}</button></div><button className="modal-close" onClick={()=>setLogoutOpen(false)} aria-label="Close"><X size={16}/></button></section></div>}
+  </div>;
 }
