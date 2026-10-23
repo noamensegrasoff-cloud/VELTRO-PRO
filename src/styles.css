@@ -579,3 +579,15 @@
 .refresh-button svg{transition:transform .35s ease}
 .refresh-button:hover svg{transform:rotate(90deg)}
 .refresh-button:active svg{transform:rotate(180deg)}
+
+
+/* Further reduce sidebar width */
+@media(min-width:761px){
+  .app-shell .sidebar{flex:0 0 232px;width:232px;padding-inline:8px}
+}
+@media(min-width:1500px){
+  .app-shell .sidebar{flex-basis:248px;width:248px;padding-inline:9px}
+}
+@media(min-width:761px) and (max-width:1100px){
+  .app-shell .sidebar{flex-basis:220px;width:220px;padding-inline:7px}
+}
