@@ -20,7 +20,16 @@ export async function getCloudStatus() {
   if (!isSupabaseConfigured || !supabase) return 'not_configured';
   const { data, error } = await supabase.auth.getSession();
   if (error) return 'error';
-  return data.session?.user ? 'connected' : 'configured';
+  if (!data.session?.user) return 'configured';
+
+  // A valid session alone does not prove the database schema is installed.
+  // Read-only probes keep the UI from reporting "connected" when tables are absent.
+  const [workspaceProbe, recordsProbe] = await Promise.all([
+    supabase.from('workspaces').select('id').limit(1),
+    supabase.from('cloud_records').select('record_id').limit(1),
+  ]);
+  if (workspaceProbe.error || recordsProbe.error) return 'error';
+  return 'connected';
 }
 
 function requireCloud() {
