@@ -298,3 +298,22 @@
   .nav-child{gap:5px;font-size:8.3px;}
   .nav-child-label{font-size:8.3px;}
 }
+
+
+/* VELTRO-PRO global dark mode */
+.app-shell.theme-dark{
+  color-scheme:dark;
+  --navy:#d8e7fb;--blue:#70b7ff;--pale:#0b1220;--green:#4dd5ad;--muted:#91a2ba;--line:#29364a;--panel:#141e2e;--shadow:0 8px 24px rgba(0,0,0,.18);
+  color:#e5edf8;background:#0b1220;
+}
+.theme-dark .workspace,.theme-dark .app-layout,.theme-dark .workspace-main,.theme-dark .page-content{background:#0b1220;color:#e5edf8}
+.theme-dark .sidebar,.theme-dark .topbar,.theme-dark .panel,.theme-dark .metric-card,.theme-dark .module-card,.theme-dark .table-panel,.theme-dark .profile-menu,.theme-dark .notification-popover,.theme-dark .confirm-modal,.theme-dark .search-results,.theme-dark .quick-card,.theme-dark .activity-card,.theme-dark .stock-card{background:#141e2e;color:#e5edf8;border-color:#29364a;box-shadow:var(--shadow)}
+.theme-dark .brand-row{border-color:#29364a}.theme-dark .brand-copy b,.theme-dark .panel h2,.theme-dark .metric-value,.theme-dark .module-title,.theme-dark .topbar b,.theme-dark .profile-chip b{color:#e5edf8}
+.theme-dark .brand-copy small,.theme-dark .sidebar-caption,.theme-dark .breadcrumbs>span,.theme-dark .metric-label,.theme-dark .metric-foot,.theme-dark .eyebrow,.theme-dark .panel p,.theme-dark .module-description,.theme-dark .nav-child,.theme-dark .dashboard-link,.theme-dark .topbar,.theme-dark .workspace-footer,.theme-dark .mix-legend span,.theme-dark .table th,.theme-dark .table td{color:#9aabc2}
+.theme-dark .nav-group.group-expanded{background:#18263a;border-color:#2a3b53}.theme-dark .nav-group-title{color:#d7e4f6}.theme-dark .nav-group-title:hover,.theme-dark .dashboard-link:hover,.theme-dark .dashboard-link.active{background:#20334c;color:#e7f2ff}.theme-dark .nav-group-icon{background:#1c2b40;border-color:#30425b;color:#a9c5e8}.theme-dark .nav-child:hover{background:#1c2b40;border-color:#30425b;color:#e6f1ff}.theme-dark .nav-child.active{background:#203955;border-color:#355678;color:#e7f3ff;box-shadow:inset 2px 0 0 #70b7ff}.theme-dark .nav-children-inner{border-color:#34465f}
+.theme-dark input,.theme-dark select,.theme-dark textarea,.theme-dark .global-search,.theme-dark .language-select{background:#101a29;color:#e5edf8;border-color:#304057}.theme-dark input::placeholder{color:#72849d}.theme-dark .icon-button,.theme-dark .more-button,.theme-dark .text-action{color:#a9bdd6}.theme-dark .icon-button:hover,.theme-dark .more-button:hover{background:#22334a}.theme-dark .notification-popover{border:1px solid #29364a}.theme-dark .notification-popover p,.theme-dark .notification-popover b{color:#dce8f8}
+.theme-dark .metric-icon,.theme-dark .mix-donut,.theme-dark .legend-blue,.theme-dark .legend-green,.theme-dark .legend-violet{filter:brightness(.85)}.theme-dark .bar-slot{background:#243248}.theme-dark .chart-axis,.theme-dark .chart-axis span{color:#8295af}.theme-dark .table-wrap,.theme-dark table{background:#141e2e}.theme-dark th{background:#1a273a;border-color:#2b3a50}.theme-dark td,.theme-dark tr{border-color:#29364a}.theme-dark tr:hover td{background:#1b2a3e}.theme-dark .nav-count{background:#1c2b40;color:#b9cee9;border-color:#30425b}.theme-dark .brand-version{background:#1c2b40;border-color:#30425b;color:#8fc2ff}.theme-dark .dashboard-link svg,.theme-dark .nav-child>svg{color:#91abc9}
+.theme-dark .modal-backdrop{background:rgba(1,6,15,.76)}.theme-dark .confirm-modal p{color:#9aabc2}.theme-dark .button-secondary{background:#1c2b40;color:#e5edf8;border-color:#304057}.theme-dark .sidebar-health{background:#101a29;border-color:#29364a}.theme-dark .health-tag{background:#20334a;color:#b9d9ff}
+.theme-dark .workspace-footer{border-color:#29364a}.theme-dark .cloud-status{color:#9aabc2}.theme-dark .module-placeholder,.theme-dark .empty-state{background:#101a29;border-color:#29364a;color:#9aabc2}
+.theme-toggle{flex:0 0 auto}
+@media(prefers-reduced-motion:reduce){.theme-dark *{transition:none!important}}
