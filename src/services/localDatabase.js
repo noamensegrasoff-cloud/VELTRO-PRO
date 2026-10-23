@@ -1,4 +1,5 @@
-import { getDeviceId, getCloudRecords, saveCloudRecord, deleteCloudRecord } from './cloudStorage.js';
+import { getDeviceId } from './cloudStorage.js';
+import { isSameLocalVersion } from './syncQueuePolicy.js';
 
 const DB_NAME = 'veltro-pro-local';
 const DB_VERSION = 1;
@@ -82,7 +83,22 @@ export async function saveLocalRecord({ entityType, recordId, payload, workspace
     const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
     tx.objectStore(RECORDS).put(record);
     if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
-      tx.objectStore(OUTBOX).add({ recordKey: key, workspaceId: activeWorkspace, entityType, recordId: String(recordId), operation: 'upsert', payload, createdAt: now });
+      // Keep only the latest desired state for this record. Older queued writes
+      // must not overwrite a newer edit after a reconnect.
+      const outbox = tx.objectStore(OUTBOX);
+      const queued = outbox.index('by_record_key').openCursor(IDBKeyRange.only(key));
+      queued.onsuccess = () => {
+        const cursor = queued.result;
+        if (cursor) {
+          cursor.delete();
+          cursor.continue();
+        } else {
+          outbox.add({
+            recordKey: key, workspaceId: activeWorkspace, entityType,
+            recordId: String(recordId), operation: 'upsert', payload, createdAt: now,
+          });
+        }
+      };
     }
     tx.oncomplete = () => { db.close(); resolve(record); };
     tx.onerror = () => { const error = tx.error || new Error('Could not save record locally.'); db.close(); reject(error); };
@@ -125,7 +141,21 @@ export async function deleteLocalRecord({ entityType, recordId, workspaceId, que
     const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
     tx.objectStore(RECORDS).put(record);
     if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
-      tx.objectStore(OUTBOX).add({ recordKey: key, workspaceId: activeWorkspace, entityType, recordId: String(recordId), operation: 'delete', createdAt: now });
+      // A queued delete supersedes any older upsert for the same record.
+      const outbox = tx.objectStore(OUTBOX);
+      const queued = outbox.index('by_record_key').openCursor(IDBKeyRange.only(key));
+      queued.onsuccess = () => {
+        const cursor = queued.result;
+        if (cursor) {
+          cursor.delete();
+          cursor.continue();
+        } else {
+          outbox.add({
+            recordKey: key, workspaceId: activeWorkspace, entityType,
+            recordId: String(recordId), operation: 'delete', createdAt: now,
+          });
+        }
+      };
     }
     tx.oncomplete = () => { db.close(); resolve(record); };
     tx.onerror = () => { const error = tx.error || new Error('Could not delete record locally.'); db.close(); reject(error); };
@@ -149,14 +179,17 @@ export async function removePendingSyncOperation(id) {
   return withStore(OUTBOX, 'readwrite', store => store.delete(id));
 }
 
-export async function markLocalRecordSynced(key, cloudUpdatedAt) {
+export async function markLocalRecordSynced(key, operationCreatedAt, cloudUpdatedAt) {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(RECORDS, 'readwrite');
     const store = tx.objectStore(RECORDS);
     const request = store.get(key);
     request.onsuccess = () => {
-      if (request.result) store.put({ ...request.result, syncState: 'synced', cloudUpdatedAt: cloudUpdatedAt || new Date().toISOString() });
+      // Do not mark a newer local edit as synced because an older queued write completed.
+      if (request.result && isSameLocalVersion(request.result, operationCreatedAt)) {
+        store.put({ ...request.result, syncState: 'synced', cloudUpdatedAt: cloudUpdatedAt || new Date().toISOString() });
+      }
     };
     tx.oncomplete = () => { db.close(); resolve(); };
     tx.onerror = () => { const error = tx.error || new Error('Could not update sync state.'); db.close(); reject(error); };
