@@ -362,3 +362,19 @@
 .theme-dark .panel svg,.theme-dark .metric-card svg,.theme-dark .module-card svg,.theme-dark .table-panel svg,.theme-dark .quick-card svg,.theme-dark .activity-card svg,.theme-dark .stock-card svg,.theme-dark .notification-popover svg,.theme-dark .confirm-modal svg,.theme-dark .sidebar svg,.theme-dark .topbar svg{color:inherit}
 .theme-dark .icon-button,.theme-dark .icon-button svg,.theme-dark .global-search,.theme-dark .global-search svg,.theme-dark .language-select,.theme-dark .language-select svg{color:var(--dark-muted)!important}
 .theme-dark .button-danger,.theme-dark .button-danger svg,.theme-dark .btn-primary,.theme-dark .btn-primary svg,.theme-dark .button-primary,.theme-dark .button-primary svg{color:#fff!important}
+
+/* Dashboard dark-mode contrast: Quick access, Stock overview, Recent activity */
+.theme-dark .quick-actions{color:var(--dark-text)!important;background:var(--dark-surface);border-color:var(--dark-border)}
+.theme-dark .quick-actions>span{color:var(--dark-muted)!important}
+.theme-dark .quick-actions button{color:var(--dark-text)!important;background:var(--dark-raised);border-color:var(--dark-border)}
+.theme-dark .quick-actions button svg{color:var(--dark-muted)!important;stroke:currentColor}
+.theme-dark .stock-panel,.theme-dark .recent-panel{color:var(--dark-text)!important;background:var(--dark-surface)!important;border-color:var(--dark-border)!important}
+.theme-dark .stock-panel .panel-head h2,.theme-dark .recent-panel .panel-head h2{color:var(--dark-text)!important}
+.theme-dark .stock-panel .eyebrow,.theme-dark .recent-panel .eyebrow{color:var(--dark-muted)!important}
+.theme-dark .stock-panel .panel-muted,.theme-dark .recent-panel .panel-muted,.theme-dark .recent-panel .text-action{color:var(--dark-muted)!important}
+.theme-dark .stock-panel .stock-name b,.theme-dark .stock-panel .stock-amount,.theme-dark .recent-panel .table td,.theme-dark .recent-panel .product-cell b,.theme-dark .recent-panel .quantity-cell{color:var(--dark-text)!important}
+.theme-dark .stock-panel .stock-name small,.theme-dark .stock-panel .stock-amount small,.theme-dark .recent-panel .product-cell small{color:var(--dark-muted)!important}
+.theme-dark .stock-panel .stock-avatar,.theme-dark .recent-panel .product-mini{color:var(--dark-muted)!important;background:var(--dark-raised)!important;border-color:var(--dark-border)!important}
+.theme-dark .recent-panel .table th{color:var(--dark-muted)!important}
+.theme-dark .recent-panel .table td,.theme-dark .recent-panel .table th{border-color:var(--dark-border)!important}
+.theme-dark .recent-panel .row-more,.theme-dark .recent-panel .row-more svg{color:var(--dark-muted)!important}
