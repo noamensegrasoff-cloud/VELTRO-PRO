@@ -74,15 +74,19 @@ export async function deleteCloudRecord({ workspaceId, entityType, recordId }) {
   const { data: authData, error: authError } = await client.auth.getUser();
   if (authError) throw authError;
   if (!authData.user) throw new Error('Sign in before deleting cloud records.');
-  const { data, error } = await client.from('cloud_records').update({
-    deleted_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
+  const now = new Date().toISOString();
+  // Upsert a tombstone so deleting a record that never reached the cloud
+  // still syncs successfully and can propagate to other devices.
+  const { data, error } = await client.from('cloud_records').upsert({
+    workspace_id: workspaceId,
+    entity_type: entityType,
+    record_id: String(recordId),
+    payload: {},
+    deleted_at: now,
+    updated_at: now,
     updated_by: authData.user.id,
     device_id: getDeviceId(),
-  }).eq('workspace_id', workspaceId)
-    .eq('entity_type', entityType)
-    .eq('record_id', String(recordId))
-    .select().single();
+  }, { onConflict: 'workspace_id,entity_type,record_id' }).select().single();
   if (error) throw error;
   return data;
 }
