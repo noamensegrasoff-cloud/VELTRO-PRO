@@ -635,7 +635,10 @@
 }
 .app-shell .sidebar-toggle-button:hover{transform:translateY(-1px);border-color:var(--accent,#8aa7c9)}
 .app-shell .sidebar-toggle-button kbd{
-  font:600 10px/1 inherit;
+  font-family:inherit;
+  font-size:10px;
+  font-weight:600;
+  line-height:1;
   padding:3px 4px;
   border:1px solid currentColor;
   border-radius:4px;
