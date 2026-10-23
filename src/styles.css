@@ -352,3 +352,13 @@
 .theme-dark .metric-icon svg,.theme-dark .module-icon svg,.theme-dark .module-empty-icon svg{color:inherit}
 .theme-dark .cloud-connected svg{color:#4dd5ad}.theme-dark .cloud-configured svg{color:#e7b75f}.theme-dark .cloud-not_configured svg,.theme-dark .cloud-error svg{color:#ff8b8b}
 .theme-dark .button-danger svg,.theme-dark .btn-primary svg,.theme-dark .button-primary svg{color:currentColor}
+
+
+/* Final dark-mode contrast pass for leftover utility classes and hard-coded white icons */
+.theme-dark :is(.text-white,.text-light,.text-light-emphasis,.text-body,.text-body-secondary,.text-dark,.text-muted){color:var(--dark-text)!important}
+.theme-dark :is(.panel,.metric-card,.module-card,.table-panel,.quick-card,.activity-card,.stock-card,.notification-popover,.confirm-modal,.sidebar,.topbar,.module-workspace,.module-metric,.stock-item,.table-wrap) :is([style*="color: white"],[style*="color:white"],[style*="color: #fff"],[style*="color:#fff"],[style*="color: rgb(255, 255, 255)"],[style*="color:rgb(255,255,255)"]){color:var(--dark-text)!important}
+.theme-dark svg[stroke="#fff"],.theme-dark svg[stroke="#ffffff"],.theme-dark svg[stroke="white"],.theme-dark svg [stroke="#fff"],.theme-dark svg [stroke="#ffffff"],.theme-dark svg [stroke="white"]{stroke:currentColor!important}
+.theme-dark svg[fill="#fff"],.theme-dark svg[fill="#ffffff"],.theme-dark svg[fill="white"],.theme-dark svg [fill="#fff"],.theme-dark svg [fill="#ffffff"],.theme-dark svg [fill="white"]{fill:currentColor!important}
+.theme-dark .panel svg,.theme-dark .metric-card svg,.theme-dark .module-card svg,.theme-dark .table-panel svg,.theme-dark .quick-card svg,.theme-dark .activity-card svg,.theme-dark .stock-card svg,.theme-dark .notification-popover svg,.theme-dark .confirm-modal svg,.theme-dark .sidebar svg,.theme-dark .topbar svg{color:inherit}
+.theme-dark .icon-button,.theme-dark .icon-button svg,.theme-dark .global-search,.theme-dark .global-search svg,.theme-dark .language-select,.theme-dark .language-select svg{color:var(--dark-muted)!important}
+.theme-dark .button-danger,.theme-dark .button-danger svg,.theme-dark .btn-primary,.theme-dark .btn-primary svg,.theme-dark .button-primary,.theme-dark .button-primary svg{color:#fff!important}
