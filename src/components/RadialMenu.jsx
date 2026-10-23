@@ -4,8 +4,8 @@ import ElectricCore from './ElectricCore.jsx';
 
 function point(index, count, inner = false) {
   const angle = (-Math.PI / 2) + (Math.PI * 2 * index / count);
-  const rx = inner ? 28 : 39;
-  const ry = inner ? 25 : 36;
+  const rx = inner ? 25 : 34;
+  const ry = inner ? 21 : 30;
   return { left: `${50 + Math.cos(angle) * rx}%`, top: `${50 + Math.sin(angle) * ry}%` };
 }
 
