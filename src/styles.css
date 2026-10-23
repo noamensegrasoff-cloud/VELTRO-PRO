@@ -378,3 +378,89 @@
 .theme-dark .recent-panel .table th{color:var(--dark-muted)!important}
 .theme-dark .recent-panel .table td,.theme-dark .recent-panel .table th{border-color:var(--dark-border)!important}
 .theme-dark .recent-panel .row-more,.theme-dark .recent-panel .row-more svg{color:var(--dark-muted)!important}
+
+/* Explicitly override light surfaces in the dashboard and toolbar in dark mode */
+.app-shell.theme-dark .dashboard-content .panel,
+.app-shell.theme-dark .dashboard-content .metric-card,
+.app-shell.theme-dark .dashboard-content .recent-panel,
+.app-shell.theme-dark .dashboard-content .stock-panel{
+  background-color:var(--dark-surface)!important;
+  color:var(--dark-text)!important;
+  border-color:var(--dark-border)!important;
+}
+.app-shell.theme-dark .dashboard-content .table-wrap,
+.app-shell.theme-dark .dashboard-content table,
+.app-shell.theme-dark .dashboard-content tbody,
+.app-shell.theme-dark .dashboard-content tr{
+  background-color:transparent!important;
+  color:var(--dark-text)!important;
+}
+.app-shell.theme-dark .dashboard-content th{
+  background-color:var(--dark-raised)!important;
+  color:var(--dark-muted)!important;
+  border-color:var(--dark-border)!important;
+}
+.app-shell.theme-dark .dashboard-content td{
+  background-color:transparent!important;
+  color:var(--dark-text)!important;
+  border-color:var(--dark-border)!important;
+}
+.app-shell.theme-dark .dashboard-content .quick-actions{
+  background-color:transparent!important;
+  color:var(--dark-text)!important;
+  border-color:var(--dark-border)!important;
+}
+.app-shell.theme-dark .dashboard-content .quick-actions button{
+  background-color:var(--dark-raised)!important;
+  color:var(--dark-text)!important;
+  border:1px solid var(--dark-border)!important;
+}
+.app-shell.theme-dark .dashboard-content .quick-actions button svg{
+  color:var(--dark-muted)!important;
+}
+.app-shell.theme-dark .topbar .icon-button,
+.app-shell.theme-dark .topbar .theme-toggle,
+.app-shell.theme-dark .topbar .notification-button{
+  background-color:var(--dark-raised)!important;
+  color:var(--dark-text)!important;
+  border:1px solid var(--dark-border)!important;
+}
+.app-shell.theme-dark .topbar .icon-button svg,
+.app-shell.theme-dark .topbar .theme-toggle svg,
+.app-shell.theme-dark .topbar .notification-button svg{
+  color:var(--dark-text)!important;
+  stroke:currentColor!important;
+}
+.app-shell.theme-dark .topbar .icon-button:hover,
+.app-shell.theme-dark .topbar .theme-toggle:hover,
+.app-shell.theme-dark .topbar .notification-button:hover{
+  background-color:var(--dark-hover)!important;
+}
+.app-shell.theme-dark .notification-button i{
+  border-color:var(--dark-surface)!important;
+}
+.app-shell.theme-dark .date-button,
+.app-shell.theme-dark .global-search,
+.app-shell.theme-dark .language-select,
+.app-shell.theme-dark .profile-chip{
+  background-color:var(--dark-raised)!important;
+  color:var(--dark-text)!important;
+  border-color:var(--dark-border)!important;
+}
+.app-shell.theme-dark .date-button svg,
+.app-shell.theme-dark .global-search svg,
+.app-shell.theme-dark .language-select svg{
+  color:var(--dark-muted)!important;
+}
+.app-shell.theme-dark .text-action,
+.app-shell.theme-dark .more-button,
+.app-shell.theme-dark .row-more{
+  background-color:transparent!important;
+  color:var(--dark-muted)!important;
+}
+.app-shell.theme-dark .button-secondary,
+.app-shell.theme-dark .module-empty-actions button{
+  background-color:var(--dark-raised)!important;
+  color:var(--dark-text)!important;
+  border-color:var(--dark-border)!important;
+}
