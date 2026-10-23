@@ -1,7 +1,7 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase.js';
 import {
-  adoptLocalRecordsIntoWorkspace,
   getActiveWorkspaceId,
+  setActiveWorkspaceId,
   listPendingSyncOperations,
   markLocalRecordSynced,
   mergeCloudRecord,
@@ -55,7 +55,9 @@ export async function getOrCreateWorkspace() {
     if (error) throw error;
   }
 
-  await adoptLocalRecordsIntoWorkspace(workspace.id);
+  // Select the workspace without importing records from the old local-device
+  // namespace. Migration must be a separate, explicit, user-approved action.
+  await setActiveWorkspaceId(workspace.id);
   return workspace;
 }
 
@@ -93,7 +95,7 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
             payload: operation.payload,
           });
         }
-        await markLocalRecordSynced(operation.recordKey);
+        await markLocalRecordSynced(operation.recordKey, operation.createdAt);
         await removePendingSyncOperation(operation.id);
         pendingKeys.delete(operation.recordKey);
         pushed += 1;
@@ -147,6 +149,11 @@ export function startAutoSync({ entityTypes = DEFAULT_ENTITY_TYPES, onStatus } =
   };
   const onOnline = () => { void run(); };
   if (typeof window !== 'undefined') window.addEventListener('online', onOnline);
+  // Periodic retry covers transient failures even when the browser never emits
+  // another online event. syncWorkspace remains single-flight per tab.
+  const retryTimer = typeof window !== 'undefined'
+    ? window.setInterval(() => { void run(); }, 30_000)
+    : null;
   const unsubscribeAuth = subscribeToAuthChanges(({ event, session }) => {
     if (session?.user && ['INITIAL_SESSION', 'SIGNED_IN', 'TOKEN_REFRESHED', 'USER_UPDATED'].includes(event)) {
       void run();
@@ -156,6 +163,7 @@ export function startAutoSync({ entityTypes = DEFAULT_ENTITY_TYPES, onStatus } =
   return () => {
     stopped = true;
     if (typeof window !== 'undefined') window.removeEventListener('online', onOnline);
+    if (retryTimer !== null && typeof window !== 'undefined') window.clearInterval(retryTimer);
     unsubscribeAuth();
   };
 }
