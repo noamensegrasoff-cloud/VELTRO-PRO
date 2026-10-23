@@ -269,29 +269,26 @@ export default function App() {
         return;
       }
       if (!/^F[1-9]$/.test(event.key) || logoutOpen || signedOut) return;
-      // Let the POS screen handle its own shortcuts without changing their behavior.
+      // Prevent browser actions first, while still allowing POS to receive its own shortcuts.
+      event.preventDefault();
       if (activePage.id === 'point-of-sale') return;
-      // Outside POS, these keys belong to VELTRO, not browser commands.
+      // Outside POS, stop other page handlers from competing with VELTRO shortcuts.
+      event.stopImmediatePropagation();
       if (sidebarVisible) {
         const targetIndex = Number(event.key.slice(1)) - 1;
         const sectionIds = ['sales', 'purchases', 'products', 'orders', 'suppliers', 'customers', 'daily-status', 'statistics', 'cash'];
         const section = sections.find(item => item.id === sectionIds[targetIndex]);
         if (section?.children?.[0]) {
-          event.preventDefault();
-          event.stopPropagation();
           setActivePage(section.children[0]);
           setActiveParent(section);
           setNotificationsOpen(false);
           setMobileOpen(false);
-          return;
         }
       }
-      // Even while the sidebar is hidden, prevent browser F-key actions.
-      event.preventDefault();
-      event.stopPropagation();
     };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
+    // Capture phase is necessary so browser/page defaults are cancelled before bubbling handlers.
+    window.addEventListener('keydown', onKeyDown, true);
+    return () => window.removeEventListener('keydown', onKeyDown, true);
   }, [sidebarVisible, logoutOpen, signedOut, mobileOpen, activePage.id]);
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
   return <div className={'app-shell lang-'+lang+' theme-'+theme+(sidebarVisible?'':' sidebar-collapsed')} dir={dir}>
