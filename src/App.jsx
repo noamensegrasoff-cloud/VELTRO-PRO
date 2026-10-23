@@ -4,7 +4,7 @@ import { sections } from './data/navigation.js';
 import RadialMenu from './components/RadialMenu.jsx';
 
 export default function App() {
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(null);\n  const [menuOpen, setMenuOpen] = useState(false);
   const [chosen, setChosen] = useState(null);
   const [pulse, setPulse] = useState(0);
 
@@ -35,7 +35,7 @@ export default function App() {
         <h1>كل أعمالك، <em>في مركز واحد.</em></h1>
         <p className="hero-description">تنقّل كهربائي تفاعلي — اختر دائرة لتنتقل الطاقة إلى القسم التالي.</p>
       </section>
-      <RadialMenu sections={sections} selected={selected} onSelect={(item) => { setSelected(item); setChosen(null); }} onBack={() => { setSelected(null); setChosen(null); }} onChoose={choose}/>
+      <RadialMenu sections={sections} selected={selected} open={menuOpen} onOpen={() => setMenuOpen(true)} onSelect={(item) => { setSelected(item); setMenuOpen(false); setChosen(null); }} onBack={() => { setSelected(null); setMenuOpen(true); setChosen(null); }} onChoose={choose}/>
       {chosen && <div className="selection-panel" role="status">
         <span className="selection-kicker"><ShieldCheck size={15}/> نموذج تفاعلي</span>
         <strong>{chosen.label}</strong>
