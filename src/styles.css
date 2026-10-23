@@ -86,3 +86,24 @@
   .nav-group-title{font-size:11.5px}
   .nav-child{font-size:10px}
 }
+
+
+/* Further reduce sidebar width on desktop */
+@media (min-width:761px){
+  .sidebar{flex-basis:248px;width:248px;padding-inline:7px}
+  .brand-row{gap:7px}
+  .brand-copy b{font-size:14px;letter-spacing:1.8px}
+  .brand-copy small{font-size:6.5px;letter-spacing:1.3px}
+  .brand-version{padding:3px 5px}
+  .nav-group-title{gap:6px;padding-inline:5px;font-size:10.5px}
+  .nav-group-icon{width:25px;height:25px;flex-basis:25px}
+  .nav-count{min-width:17px;height:17px;padding-inline:3px;font-size:8px}
+  .nav-child{gap:5px;padding-inline:4px;font-size:9.5px}
+  .nav-child-marker{flex-basis:17px;font-size:7px}
+  .nav-children-inner{margin-inline-start:12px;padding-inline-start:5px}
+}
+@media (min-width:1500px){
+  .sidebar{flex-basis:264px;width:264px;padding-inline:8px}
+  .nav-group-title{font-size:10.8px}
+  .nav-child{font-size:9.7px}
+}
