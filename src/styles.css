@@ -573,3 +573,9 @@
 @media(min-width:1500px){
   .app-shell .sidebar{flex-basis:276px;width:276px;padding-inline:11px}
 }
+
+
+/* Topbar refresh action */
+.refresh-button svg{transition:transform .35s ease}
+.refresh-button:hover svg{transform:rotate(90deg)}
+.refresh-button:active svg{transform:rotate(180deg)}
