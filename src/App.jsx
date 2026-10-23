@@ -93,6 +93,10 @@ const activityRows = [
 function getLabel(item, lang) { return item?.label?.[lang] || item?.label?.ar || ''; }
 
 function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, setMobileOpen }) {
+  const [openSections, setOpenSections] = useState(() => {
+    const active = sections.find(section => section.children.some(child => child.id === activeId));
+    return active ? [active.id] : [];
+  });
   const groups = useMemo(() => {
     const q = search.trim().toLocaleLowerCase();
     return sections.map(section => {
@@ -102,6 +106,7 @@ function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, 
     }).filter(section => section.visible);
   }, [lang, search]);
   const isActive = (id) => activeId === id || sections.some(s => s.id === id && s.children.some(c => c.id === activeId));
+  const toggleSection = (id) => setOpenSections(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
   return <>
     {mobileOpen && <button className="sidebar-scrim" onClick={() => setMobileOpen(false)} aria-label="Close navigation" />}
     <aside className={'sidebar ' + (mobileOpen ? 'sidebar-open' : '')}>
@@ -111,23 +116,31 @@ function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, 
         <span className="brand-version">PRO</span>
       </div>
       <button className={'dashboard-link ' + (activeId === dashboard.id ? 'active' : '')} onClick={() => { onNavigate(dashboard); setMobileOpen(false); }}>
-        <dashboard.icon size={16} strokeWidth={1.9} /><span>{getLabel(dashboard, lang)}</span>
+        <dashboard.icon size={17} strokeWidth={1.9} /><span>{getLabel(dashboard, lang)}</span>
       </button>
       <div className="sidebar-caption">{t('allSections')}</div>
       <nav className="side-nav" aria-label={t('allSections')}>
         {groups.map(section => {
           const Icon = section.icon;
-          return <section className={'nav-group ' + (isActive(section.id) ? 'group-active' : '')} key={section.id}>
-            <button className="nav-group-title" onClick={() => { onNavigate(section); setMobileOpen(false); }} title={section.sectionLabel}>
-              <Icon size={14} strokeWidth={2}/><span>{section.sectionLabel}</span>
+          const expanded = search.trim().length > 0 || openSections.includes(section.id);
+          return <section className={'nav-group ' + (isActive(section.id) ? 'group-active' : '') + (expanded ? ' group-expanded' : '')} key={section.id}>
+            <button className="nav-group-title" onClick={() => toggleSection(section.id)} title={section.sectionLabel} aria-expanded={expanded} aria-controls={'nav-children-' + section.id}>
+              <span className="nav-group-icon"><Icon size={16} strokeWidth={1.9}/></span>
+              <span className="nav-group-label">{section.sectionLabel}</span>
+              <span className="nav-count">{section.children.length}</span>
+              <ChevronDown className="nav-chevron" size={14} strokeWidth={2}/>
             </button>
-            <div className="nav-children">
-              {section.children.map(child => {
-                const ChildIcon = child.icon;
-                return <button key={child.id} className={'nav-child ' + (activeId === child.id ? 'active' : '')} onClick={() => { onNavigate(child, section); setMobileOpen(false); }} title={getLabel(child, lang)}>
-                  <ChildIcon size={12} strokeWidth={1.8}/><span>{getLabel(child, lang)}</span>
-                </button>;
-              })}
+            <div id={'nav-children-' + section.id} className="nav-children" aria-hidden={!expanded}>
+              <div className="nav-children-inner">
+                {section.children.map((child, index) => {
+                  const ChildIcon = child.icon;
+                  return <button key={child.id} className={'nav-child ' + (activeId === child.id ? 'active' : '')} onClick={() => { setOpenSections(current => current.includes(section.id) ? current : [...current, section.id]); onNavigate(child, section); setMobileOpen(false); }} title={getLabel(child, lang)}>
+                    <span className="nav-child-marker">{String(index + 1).padStart(2, '0')}</span>
+                    <ChildIcon size={14} strokeWidth={1.8}/><span className="nav-child-label">{getLabel(child, lang)}</span>
+                    {activeId === child.id && <span className="nav-child-current" />}
+                  </button>;
+                })}
+              </div>
             </div>
           </section>;
         })}
@@ -140,7 +153,6 @@ function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, 
     </aside>
   </>;
 }
-
 function MetricCard({ icon: Icon, label, value, trend, tone = 'blue', footer }) {
   return <article className="metric-card">
     <div className="metric-top"><span className={'metric-icon tone-' + tone}><Icon size={17} strokeWidth={1.9}/></span><span className="metric-trend"><ArrowUpRight size={12}/> {trend}</span></div>
