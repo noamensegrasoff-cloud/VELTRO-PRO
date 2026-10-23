@@ -268,18 +268,27 @@ export default function App() {
         setSidebarVisible(visible => !visible);
         return;
       }
-      if (!sidebarVisible || logoutOpen || signedOut || !/^F[1-9]$/.test(event.key)) return;
-      // The point-of-sale screen owns its existing F-key shortcuts.
+      if (!/^F[1-9]$/.test(event.key) || logoutOpen || signedOut) return;
+      // Let the POS screen handle its own shortcuts without changing their behavior.
       if (activePage.id === 'point-of-sale') return;
-      const targetIndex = Number(event.key.slice(1)) - 1;
-      const sectionIds = ['sales', 'purchases', 'products', 'orders', 'suppliers', 'customers', 'daily-status', 'statistics', 'cash'];
-      const section = sections.find(item => item.id === sectionIds[targetIndex]);
-      if (!section || !section.children?.[0]) return;
+      // Outside POS, these keys belong to VELTRO, not browser commands.
+      if (sidebarVisible) {
+        const targetIndex = Number(event.key.slice(1)) - 1;
+        const sectionIds = ['sales', 'purchases', 'products', 'orders', 'suppliers', 'customers', 'daily-status', 'statistics', 'cash'];
+        const section = sections.find(item => item.id === sectionIds[targetIndex]);
+        if (section?.children?.[0]) {
+          event.preventDefault();
+          event.stopPropagation();
+          setActivePage(section.children[0]);
+          setActiveParent(section);
+          setNotificationsOpen(false);
+          setMobileOpen(false);
+          return;
+        }
+      }
+      // Even while the sidebar is hidden, prevent browser F-key actions.
       event.preventDefault();
-      setActivePage(section.children[0]);
-      setActiveParent(section);
-      setNotificationsOpen(false);
-      setMobileOpen(false);
+      event.stopPropagation();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
