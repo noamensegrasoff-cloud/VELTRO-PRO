@@ -278,3 +278,12 @@
 }
 @media(min-width:1500px){.nav-group-title{font-size:9px}}
 @media(max-width:760px){.nav-group-title{gap:5px}.nav-group-label{font-size:11px}}
+
+
+/* Keep sidebar submenu items (branches) on a single horizontal line */
+.nav-children-inner{min-width:0}
+.nav-child{display:flex;flex-wrap:nowrap;min-width:0;white-space:nowrap;align-items:center}
+.nav-child-marker,.nav-child>svg,.nav-child-current{flex-shrink:0}
+.nav-child-label{display:block;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;word-break:normal;line-height:1.2}
+@media(min-width:761px){.nav-child{gap:4px;padding-inline:3px;font-size:8.5px}.nav-child-marker{flex-basis:12px}}
+@media(max-width:760px){.nav-child{flex-wrap:nowrap}.nav-child-label{white-space:nowrap}}
