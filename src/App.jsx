@@ -51,6 +51,7 @@ function Donut() {
 
 export default function App() {
   const [active, setActive] = useState('dashboard');
+  const [language, setLanguage] = useState('ar');
   const [query, setQuery] = useState('');
   const [noticeOpen, setNoticeOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -61,7 +62,7 @@ export default function App() {
   const current = navigation.find(item => item.id === active) || navigation[0];
   const chooseSection = (id) => { setActive(id); setSidebarOpen(false); };
   return (
-    <main className="dashboard-app" dir="rtl">
+    <main className={"dashboard-app lang-" + language} dir={language === "ar" ? "rtl" : "ltr"}>
       <aside className={'sidebar ' + (sidebarOpen ? 'sidebar-open' : '')}>
         <div className="brand-lockup"><span className="brand-symbol"><Sparkles size={18}/></span><span className="brand-words"><b>VELTRO</b><small>BUSINESS SUITE</small></span></div>
         <div className="workspace-switch" onClick={() => setProfileOpen(v => !v)} role="button" tabIndex={0}><span className="workspace-avatar">V</span><span className="workspace-name"><b>متجري</b><small>الخطة الاحترافية</small></span><ChevronDown size={15}/></div>
@@ -78,7 +79,7 @@ export default function App() {
       <section className="dashboard-main">
         <header className="dashboard-topbar">
           <div className="topbar-left"><button className="mobile-menu" onClick={() => setSidebarOpen(v => !v)} aria-label="القائمة"><Menu size={20}/></button><div className="breadcrumb">مساحة العمل <span>/</span> <b>{current.label}</b></div></div>
-          <div className="topbar-actions">
+          <div className="topbar-actions"><label className="language-switch"><span>文</span><select value={language} onChange={e => setLanguage(e.target.value)} aria-label="Language"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select></label>
             <label className="global-search"><Search size={16}/><input value={query} onChange={e => setQuery(e.target.value)} placeholder="ابحث في القوائم..." /><kbd>⌘ K</kbd>{query && <div className="search-results">{filteredNavigation.length ? filteredNavigation.map(n => <button key={n.id} onClick={() => {chooseSection(n.id);setQuery('')}}>{n.label}<ArrowUpRight size={14}/></button>) : <span>لا توجد نتائج</span>}</div>}</label>
             <span className="topbar-divider"/>
             <button className={'icon-button ' + (noticeOpen ? 'icon-button-active' : '')} aria-label="الإشعارات" onClick={() => {setNoticeOpen(v=>!v);setProfileOpen(false)}}><Bell size={18}/><i className="notification-dot"/></button>
