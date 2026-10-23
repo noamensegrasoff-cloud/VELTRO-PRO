@@ -21,19 +21,19 @@ function MenuNode({ item, index, count, onClick, inner = false }) {
   );
 }
 
-export default function RadialMenu({ sections, selected, onSelect, onBack, onChoose }) {
+export default function RadialMenu({ sections, selected, open, onOpen, onSelect, onBack, onChoose }) {
   const children = selected?.children || [];
   return (
-    <div className={`radial-stage ${selected ? 'stage-branch' : 'stage-root'}`}>
+    <div className={`radial-stage ${selected ? 'stage-branch' : open ? 'stage-root is-open' : 'stage-closed'}`}>
       <div className="stage-vignette" />
       <div className="electric-field field-one"/><div className="electric-field field-two"/>
       {!selected ? (
         <>
           {sections.map((item, i) => <MenuNode key={item.id} item={item} index={i} count={sections.length} onClick={() => onSelect(item)} />)}
           <div className="core-position root-core-position">
-            <ElectricCore onClick={() => onSelect(sections[0])} hint="اضغط لفتح الأقسام" seed={11}/>
+            <ElectricCore onClick={onOpen} hint={open ? "اختر قسمًا للمتابعة" : "اضغط لإطلاق الطاقة"} seed={11}/>
           </div>
-          <div className="stage-caption"><span className="status-dot"/> مركز التحكم <span className="caption-separator">/</span> اختر قسمًا للمتابعة</div>
+          <div className="stage-caption"><span className="status-dot"/> مركز التحكم <span className="caption-separator">/</span> {open ? "اختر قسمًا للمتابعة" : "اضغط على النواة الكهربائية"}</div>
         </>
       ) : (
         <>
