@@ -4,7 +4,7 @@ import {
   MoreHorizontal, CalendarDays, Package, ReceiptText,
   Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
   ShoppingCart, X, Globe, ClipboardList, History,
-  CircleCheck, PackageCheck, Cloud
+  CircleCheck, PackageCheck, Cloud, PanelLeftClose, PanelLeftOpen
 } from 'lucide-react';
 import { dashboard, sections } from './data/navigation.js';
 import { getCloudStatus } from './services/cloudStorage.js';
@@ -96,7 +96,7 @@ const activityRows = [
 
 function getLabel(item, lang) { return item?.label?.[lang] || item?.label?.ar || ''; }
 
-function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, setMobileOpen }) {
+function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, setMobileOpen, sidebarVisible }) {
   const [openSections, setOpenSections] = useState(() => {
     const active = sections.find(section => section.children.some(child => child.id === activeId));
     return active ? [active.id] : [];
@@ -113,7 +113,7 @@ function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, 
   const toggleSection = (id) => setOpenSections(current => current.includes(id) ? current.filter(item => item !== id) : [...current, id]);
   return <>
     {mobileOpen && <button className="sidebar-scrim" onClick={() => setMobileOpen(false)} aria-label="Close navigation" />}
-    <aside className={'sidebar ' + (mobileOpen ? 'sidebar-open' : '')}>
+    <aside className={'sidebar ' + (mobileOpen ? 'sidebar-open' : '') + (!sidebarVisible ? ' sidebar-hidden' : '')}>
       <div className="brand-row">
         <span className="brand-mark"><span>V</span></span>
         <span className="brand-copy"><b>VELTRO</b><small>BUSINESS SUITE</small></span>
@@ -248,18 +248,49 @@ export default function App() {
   const [search,setSearch]=useState('');
   const [notificationsOpen,setNotificationsOpen]=useState(false);
   const [mobileOpen,setMobileOpen]=useState(false);
+  const [sidebarVisible,setSidebarVisible]=useState(true);
   const [logoutOpen,setLogoutOpen]=useState(false);
   const [signedOut,setSignedOut]=useState(false);
   const t=(key)=>copy[lang][key]||copy.ar[key]||key;
   const dir=lang==='ar'?'rtl':'ltr';
   const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setNotificationsOpen(false);};
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        if (logoutOpen) {
+          setLogoutOpen(false);
+          return;
+        }
+        if (mobileOpen) {
+          setMobileOpen(false);
+          return;
+        }
+        setSidebarVisible(visible => !visible);
+        return;
+      }
+      if (!sidebarVisible || logoutOpen || signedOut || !/^F[1-9]$/.test(event.key)) return;
+      // The point-of-sale screen owns its existing F-key shortcuts.
+      if (activePage.id === 'point-of-sale') return;
+      const targetIndex = Number(event.key.slice(1)) - 1;
+      const sectionIds = ['sales', 'purchases', 'products', 'orders', 'suppliers', 'customers', 'daily-status', 'statistics', 'cash'];
+      const section = sections.find(item => item.id === sectionIds[targetIndex]);
+      if (!section || !section.children?.[0]) return;
+      event.preventDefault();
+      setActivePage(section.children[0]);
+      setActiveParent(section);
+      setNotificationsOpen(false);
+      setMobileOpen(false);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [sidebarVisible, logoutOpen, signedOut, mobileOpen, activePage.id]);
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
-  return <div className={'app-shell lang-'+lang+' theme-'+theme} dir={dir}>
+  return <div className={'app-shell lang-'+lang+' theme-'+theme+(sidebarVisible?'':' sidebar-collapsed')} dir={dir}>
     <div className="app-layout">
-      <Sidebar lang={lang} t={t} activeId={activePage.id} onNavigate={navigate} onLogout={()=>setLogoutOpen(true)} search={search} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen}/>
+      <Sidebar lang={lang} t={t} activeId={activePage.id} onNavigate={navigate} onLogout={()=>setLogoutOpen(true)} search={search} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} sidebarVisible={sidebarVisible}/>
       <main className="workspace">
         <header className="topbar">
-          <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>{setSidebarVisible(true);setMobileOpen(true);}} aria-label="Open navigation"><Menu size={18}/></button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
+          <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>{setSidebarVisible(true);setMobileOpen(true);}} aria-label="Open navigation"><Menu size={18}/></button><button className="sidebar-toggle-button" onClick={()=>setSidebarVisible(v=>!v)} aria-label={sidebarVisible?(lang==='ar'?'إخفاء القائمة الجانبية':'Hide sidebar'):(lang==='ar'?'إظهار القائمة الجانبية':'Show sidebar')} title="Esc"><kbd>Esc</kbd>{sidebarVisible?<PanelLeftClose size={17}/>:<PanelLeftOpen size={17}/>}</button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
           <div className="topbar-actions">
             <label className="global-search"><Search size={15}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>⌕</kbd></label>
             <button className="icon-button refresh-button" onClick={()=>window.location.reload()} aria-label={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'} title={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'}><RotateCw size={17}/></button>
