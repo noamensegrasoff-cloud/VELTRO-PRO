@@ -12,7 +12,7 @@ export default function App() {
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
         if (chosen) setChosen(null);
-        else setSelected(null);
+        else { setSelected(null); setMenuOpen(false); }
       }
     };
     window.addEventListener('keydown', onKeyDown);
