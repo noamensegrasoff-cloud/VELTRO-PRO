@@ -417,3 +417,62 @@ h1 em{background:linear-gradient(100deg,#c3fff5 0%,#53f1dc 48%,#a58bff 100%);-we
 @media(prefers-reduced-motion:reduce){
   .core-orb,.node-icon,.electric-field{animation:none!important;transition:none!important}
 }
+
+
+/* Resident Evil 5-inspired menu transitions: restrained, mechanical, cinematic */
+.radial-stage{perspective:1500px;transform-style:preserve-3d}
+.radial-stage .menu-node{
+  transform-origin:50% 50%;
+  backface-visibility:hidden;
+  will-change:transform,opacity,filter;
+}
+.stage-root.is-open .menu-node{
+  animation:reMenuNodeIn .62s cubic-bezier(.2,.78,.18,1) both;
+  animation-delay:calc(var(--node-delay) + 70ms);
+}
+.stage-branch .menu-node{
+  animation:reMenuBranchIn .54s cubic-bezier(.18,.72,.22,1) both;
+  animation-delay:calc(var(--node-delay) + 45ms);
+}
+.stage-root.is-open .energy-links,
+.stage-branch .energy-links{
+  transform-origin:50% 50%;
+  animation:reMenuLinesIn .46s ease-out both;
+}
+.stage-root.is-open .core-position{
+  animation:reMenuCoreSettle .58s cubic-bezier(.2,.8,.2,1) both;
+}
+.stage-branch .core-position{
+  animation:reMenuCoreSettle .5s cubic-bezier(.2,.8,.2,1) both;
+}
+.menu-node .node-icon{
+  transition:transform .24s cubic-bezier(.2,.75,.2,1),box-shadow .24s ease,border-color .24s ease;
+}
+.menu-node:active .node-icon{
+  transform:translateY(2px) translateZ(-2px) scale(.96);
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.42),0 2px 0 rgba(83,241,220,.13),0 5px 12px rgba(0,0,0,.3);
+}
+.back-button{animation:reMenuBackIn .35s ease-out both}
+@keyframes reMenuNodeIn{
+  0%{opacity:0;transform:translate(-50%,-50%) translate3d(0,12px,-130px) rotateX(18deg) scale(.68);filter:blur(3px)}
+  68%{opacity:1;transform:translate(-50%,-50%) translate3d(0,-2px,12px) rotateX(-2deg) scale(1.025);filter:blur(0)}
+  100%{opacity:1;transform:translate(-50%,-50%) translate3d(0,0,0) rotateX(0) scale(1);filter:blur(0)}
+}
+@keyframes reMenuBranchIn{
+  0%{opacity:0;transform:translate(-50%,-50%) translate3d(0,8px,-100px) rotateY(12deg) scale(.76);filter:blur(2px)}
+  72%{opacity:1;transform:translate(-50%,-50%) translate3d(0,-1px,10px) rotateY(-1deg) scale(1.025);filter:blur(0)}
+  100%{opacity:1;transform:translate(-50%,-50%) translateZ(0) rotateY(0) scale(1);filter:blur(0)}
+}
+@keyframes reMenuLinesIn{
+  from{opacity:0;transform:scale(.86);filter:blur(2px)}
+  to{opacity:1;transform:scale(1);filter:blur(0)}
+}
+@keyframes reMenuCoreSettle{
+  0%{opacity:0;transform:translate(-50%,-50%) translateZ(80px) scale(1.12);filter:blur(5px)}
+  72%{opacity:1;transform:translate(-50%,-50%) translateZ(28px) scale(.985);filter:blur(0)}
+  100%{opacity:1;transform:translate(-50%,-50%) translateZ(34px) scale(1);filter:blur(0)}
+}
+@keyframes reMenuBackIn{from{opacity:0;transform:translateX(8px) scale(.97)}to{opacity:1;transform:translateX(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){
+  .stage-root.is-open .menu-node,.stage-branch .menu-node,.stage-root.is-open .energy-links,.stage-branch .energy-links,.stage-root.is-open .core-position,.stage-branch .core-position,.back-button{animation:none!important}
+}
