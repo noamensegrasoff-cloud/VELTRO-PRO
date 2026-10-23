@@ -58,3 +58,14 @@
 @media(max-height:720px) and (min-width:761px){.nav-group-title{height:35px;min-height:35px}.nav-child{min-height:29px;padding-block:4px}.side-nav{gap:3px}.nav-group{padding:2px}}
 @media(max-width:760px){.nav-group-title{height:43px;min-height:43px}.nav-child{min-height:39px;font-size:11px}.nav-group{padding:4px}.side-nav{gap:6px;padding-bottom:18px}}
 @media(prefers-reduced-motion:reduce){.nav-group,.nav-group-title,.nav-group-icon,.nav-chevron,.nav-children,.nav-child,.dashboard-link{transition:none!important}}
+
+
+/* Language and cloud-connection status */
+.cloud-status{display:inline-flex;align-items:center;gap:6px;min-width:0;color:#647c98;white-space:nowrap}
+.cloud-status svg{flex:0 0 14px;color:#7894b3}
+.cloud-connected svg{color:#21936a}
+.cloud-configured svg{color:#c18a30}
+.cloud-not_configured svg,.cloud-error svg{color:#bd6a54}
+.workspace-footer .prototype-note{display:none}
+.workspace-footer{gap:14px}
+@media(max-width:760px){.workspace-footer{height:auto;min-height:28px;padding:5px 10px;flex-wrap:wrap;justify-content:flex-start;gap:5px 12px}.cloud-status{white-space:normal;font-size:8px}.workspace-footer .prototype-note{display:none}}
