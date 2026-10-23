@@ -287,3 +287,14 @@
 .nav-child-label{display:block;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal;word-break:normal;line-height:1.2}
 @media(min-width:761px){.nav-child{gap:4px;padding-inline:3px;font-size:8.5px}.nav-child-marker{flex-basis:12px}}
 @media(max-width:760px){.nav-child{flex-wrap:nowrap}.nav-child-label{white-space:nowrap}}
+
+
+/* Fix submenu labels being shortened to “POS …”: keep full names on one line */
+.nav-child{overflow:visible;}
+.nav-child-label{flex:0 0 auto;min-width:max-content;max-width:none;overflow:visible;text-overflow:clip;white-space:nowrap;}
+.nav-children,.nav-children-inner,.side-nav,.sidebar{overflow-x:visible;}
+@media(min-width:761px){
+  .nav-child-marker{display:none;}
+  .nav-child{gap:5px;font-size:8.3px;}
+  .nav-child-label{font-size:8.3px;}
+}
