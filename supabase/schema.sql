@@ -1,6 +1,8 @@
 -- VELTRO-PRO cloud foundation
--- Run this script in the Supabase SQL Editor for the intended project.
+-- Apply this entire script in the intended Supabase project's SQL Editor.
 -- All application data is workspace-scoped. Never expose a service_role key to the browser.
+
+begin;
 
 create extension if not exists pgcrypto;
 
@@ -37,6 +39,33 @@ create index if not exists cloud_records_workspace_updated_idx
 create index if not exists cloud_records_live_entity_idx
   on public.cloud_records (workspace_id, entity_type) where deleted_at is null;
 
+-- A workspace creator is always its owner. This runs inside PostgreSQL, not in
+-- the browser, so a new account cannot accidentally create an unowned workspace.
+create or replace function public.add_workspace_creator_as_owner()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  insert into public.workspace_members (workspace_id, user_id, role)
+  values (new.id, new.created_by, 'owner')
+  on conflict (workspace_id, user_id) do nothing;
+  return new;
+end;
+$$;
+
+drop trigger if exists workspaces_add_creator_owner on public.workspaces;
+create trigger workspaces_add_creator_owner
+after insert on public.workspaces
+for each row execute function public.add_workspace_creator_as_owner();
+
+-- Repair workspaces created before this trigger was installed.
+insert into public.workspace_members (workspace_id, user_id, role)
+select w.id, w.created_by, 'owner'
+from public.workspaces w
+on conflict (workspace_id, user_id) do nothing;
+
 create or replace function public.is_workspace_member(target_workspace uuid)
 returns boolean
 language sql
@@ -54,6 +83,7 @@ $$;
 
 revoke all on function public.is_workspace_member(uuid) from public;
 grant execute on function public.is_workspace_member(uuid) to authenticated;
+revoke all on function public.add_workspace_creator_as_owner() from public;
 
 alter table public.workspaces enable row level security;
 alter table public.workspace_members enable row level security;
@@ -74,16 +104,11 @@ create policy "Members can read workspace membership"
   on public.workspace_members for select to authenticated
   using (public.is_workspace_member(workspace_id));
 
+-- Membership changes are intentionally not client-writable. The database
+-- trigger creates the owner's membership. Add a separate server-verified
+-- invitation flow before implementing team invitations.
 drop policy if exists "Workspace owners can add members" on public.workspace_members;
-create policy "Workspace owners can add members"
-  on public.workspace_members for insert to authenticated
-  with check (
-    user_id = (select auth.uid())
-    and exists (
-      select 1 from public.workspaces w
-      where w.id = workspace_id and w.created_by = (select auth.uid())
-    )
-  );
+drop policy if exists "Owners can add themselves to their workspace" on public.workspace_members;
 
 drop policy if exists "Workspace members can read records" on public.cloud_records;
 create policy "Workspace members can read records"
@@ -107,10 +132,10 @@ create policy "Workspace members can update records"
     and updated_by = (select auth.uid())
   );
 
--- Explicitly do not grant anonymous access.
-revoke all on public.workspaces, public.workspace_members, public.cloud_records from anon;
+-- Remove old broad grants before re-applying the minimum required permissions.
+revoke all on public.workspaces, public.workspace_members, public.cloud_records from anon, authenticated;
 grant select, insert on public.workspaces to authenticated;
-grant select, insert on public.workspace_members to authenticated;
+grant select on public.workspace_members to authenticated;
 grant select, insert, update on public.cloud_records to authenticated;
 
 -- Optional: enable realtime delivery for cloud record changes.
@@ -126,3 +151,5 @@ begin
     alter publication supabase_realtime add table public.cloud_records;
   end if;
 end $$;
+
+commit;
