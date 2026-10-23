@@ -33,7 +33,7 @@ const copy = {
     profit: 'الربح التقديري', viewDetails: 'عرض التفاصيل', allSections: 'الأقسام',
     searchResults: 'نتائج البحث', noResults: 'لا توجد نتائج مطابقة.',
     topProducts: 'أكثر المنتجات حركة', activity: 'النشاط حسب الفترة',
-    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد',
+    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد',
   },
   en: {
     workspace: 'Workspace', search: 'Search sections and actions...', demo: 'Design preview · Sample data',
@@ -58,7 +58,7 @@ const copy = {
     profit: 'Estimated profit', viewDetails: 'View details', allSections: 'Sections',
     searchResults: 'Search results', noResults: 'No matching results.',
     topProducts: 'Top moving products', activity: 'Activity by period',
-    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudPrototype: 'UI preview — store transactions are not connected yet',
+    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'UI preview — store transactions are not connected yet',
   },
   fr: {
     workspace: 'Espace de travail', search: 'Rechercher une rubrique...', demo: 'Aperçu du design · Données fictives',
@@ -83,7 +83,7 @@ const copy = {
     profit: 'Bénéfice estimé', viewDetails: 'Voir les détails', allSections: 'Rubriques',
     searchResults: 'Résultats', noResults: 'Aucun résultat.',
     topProducts: 'Produits les plus actifs', activity: 'Activité par période',
-    cloudTitle: 'Stockage cloud', cloudConfigured: 'Cloud configuré ; connexion requise', cloudMissing: 'Ajoutez la configuration Supabase pour connecter le cloud', cloudConnected: 'Session du compte cloud active', cloudPrototype: 'Aperçu — les opérations du magasin ne sont pas encore reliées',
+    cloudTitle: 'Stockage cloud', cloudConfigured: 'Cloud configuré ; connexion requise', cloudMissing: 'Ajoutez la configuration Supabase pour connecter le cloud', cloudConnected: 'Session du compte cloud active', cloudChecking: 'Vérification de la configuration cloud', cloudError: 'Impossible de vérifier la connexion cloud', cloudPrototype: 'Aperçu — les opérations du magasin ne sont pas encore reliées',
   }
 };
 
@@ -266,7 +266,7 @@ export default function App() {
           </div>
         </header>
         {activePage.id===dashboard.id?<DashboardPage t={t} lang={lang} onNavigate={navigate}/>:<ModulePage page={activePage} parent={activeParent} t={t} lang={lang} onBack={()=>navigate(dashboard)}/>}
-        <footer className="workspace-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span className={'cloud-status cloud-'+cloudState}><Cloud size={14}/><span>{cloudState==='connected'?t('cloudConnected'):cloudState==='configured'?t('cloudConfigured'):t('cloudMissing')}</span></span><span className="prototype-note">{t('cloudPrototype')}</span></footer>
+        <footer className="workspace-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span className={'cloud-status cloud-'+cloudState}><Cloud size={14}/><span>{cloudState==='connected'?t('cloudConnected'):cloudState==='configured'?t('cloudConfigured'):cloudState==='checking'?t('cloudChecking'):cloudState==='error'?t('cloudError'):t('cloudMissing')}</span></span><span className="prototype-note">{t('cloudPrototype')}</span></footer>
       </main>
     </div>
     {logoutOpen&&<div className="modal-backdrop" role="presentation"><section className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title"><span className="modal-icon"><LogOut size={22}/></span><h2 id="logout-title">{t('logoutConfirm')}</h2><p>VELTRO BUSINESS SUITE</p><div><button className="button-secondary" onClick={()=>setLogoutOpen(false)}>{t('cancel')}</button><button className="button-danger" onClick={()=>{setLogoutOpen(false);setSignedOut(true);}}>{t('confirm')}</button></div><button className="modal-close" onClick={()=>setLogoutOpen(false)} aria-label="Close"><X size={16}/></button></section></div>}
