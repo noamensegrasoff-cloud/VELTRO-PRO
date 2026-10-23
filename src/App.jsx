@@ -259,7 +259,7 @@ export default function App() {
       <Sidebar lang={lang} t={t} activeId={activePage.id} onNavigate={navigate} onLogout={()=>setLogoutOpen(true)} search={search} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen}/>
       <main className="workspace">
         <header className="topbar">
-          <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>setMobileOpen(true)} aria-label="Open navigation"><Menu size={18}/></button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
+          <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>{setSidebarVisible(true);setMobileOpen(true);}} aria-label="Open navigation"><Menu size={18}/></button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
           <div className="topbar-actions">
             <label className="global-search"><Search size={15}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>⌕</kbd></label>
             <button className="icon-button refresh-button" onClick={()=>window.location.reload()} aria-label={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'} title={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'}><RotateCw size={17}/></button>
