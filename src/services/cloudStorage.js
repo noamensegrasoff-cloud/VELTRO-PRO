@@ -1,4 +1,5 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase.js';
+import { isFullCloudPage } from './syncQueuePolicy.js';
 
 const DEVICE_KEY = 'veltro-pro-device-id';
 
@@ -48,7 +49,7 @@ export async function getCloudRecords({ workspaceId, entityType, includeDeleted 
     if (error) throw error;
     const rows = data ?? [];
     allRows.push(...rows);
-    if (rows.length < pageSize) break;
+    if (!isFullCloudPage(rows, pageSize)) break;
     from += pageSize;
   }
   return allRows;
