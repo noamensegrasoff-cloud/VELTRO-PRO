@@ -62,7 +62,7 @@ alter table public.cloud_records enable row level security;
 drop policy if exists "Members can read their workspaces" on public.workspaces;
 create policy "Members can read their workspaces"
   on public.workspaces for select to authenticated
-  using (public.is_workspace_member(id));
+  using (created_by = (select auth.uid()) or public.is_workspace_member(id));
 
 drop policy if exists "Owners can create a workspace" on public.workspaces;
 create policy "Owners can create a workspace"
