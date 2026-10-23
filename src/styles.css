@@ -258,3 +258,9 @@
   .nav-child{min-height:38px;font-size:11px;padding:7px 8px}
   .nav-children-inner{margin-inline-start:14px;padding-inline-start:7px}
 }
+
+
+/* Keep sidebar branch headings on a single line */
+.nav-group-title{white-space:nowrap;min-width:0}
+.nav-group-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1 1 auto;overflow-wrap:normal;word-break:normal}
+.nav-group-title .nav-count,.nav-group-title .nav-chevron,.nav-group-title .nav-group-icon{flex-shrink:0}
