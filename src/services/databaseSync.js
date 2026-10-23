@@ -59,7 +59,13 @@ export async function getOrCreateWorkspace() {
   return workspace;
 }
 
-export async function syncWorkspace({ entityTypes = [], onProgress } = {}) {
+const DEFAULT_ENTITY_TYPES = [
+  'products', 'categories', 'sales', 'sales_drafts', 'invoices',
+  'purchases', 'purchase_drafts', 'suppliers', 'customers', 'orders',
+  'cash_movements', 'expenses', 'settings', 'stock_movements',
+];
+
+export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProgress } = {}) {
   if (syncInFlight) return syncInFlight;
   syncInFlight = (async () => {
     if (!isSupabaseConfigured || !supabase) return { status: 'not_configured', pushed: 0, pulled: 0 };
@@ -126,6 +132,32 @@ export function subscribeToAuthChanges(callback) {
     callback?.({ event, session, user: session?.user || null });
   });
   return () => data.subscription.unsubscribe();
+}
+
+export function startAutoSync({ entityTypes = DEFAULT_ENTITY_TYPES, onStatus } = {}) {
+  let stopped = false;
+  const run = async () => {
+    if (stopped) return;
+    try {
+      const result = await syncWorkspace({ entityTypes });
+      if (!stopped) onStatus?.(result);
+    } catch (error) {
+      if (!stopped) onStatus?.({ status: 'error', error });
+    }
+  };
+  const onOnline = () => { void run(); };
+  if (typeof window !== 'undefined') window.addEventListener('online', onOnline);
+  const unsubscribeAuth = subscribeToAuthChanges(({ event, session }) => {
+    if (session?.user && ['INITIAL_SESSION', 'SIGNED_IN', 'TOKEN_REFRESHED', 'USER_UPDATED'].includes(event)) {
+      void run();
+    }
+  });
+  if (typeof navigator === 'undefined' || navigator.onLine) void run();
+  return () => {
+    stopped = true;
+    if (typeof window !== 'undefined') window.removeEventListener('online', onOnline);
+    unsubscribeAuth();
+  };
 }
 
 export async function getDatabaseStatus() {
