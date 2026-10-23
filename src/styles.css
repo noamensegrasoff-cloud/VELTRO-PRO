@@ -591,3 +591,69 @@
 @media(min-width:761px) and (max-width:1100px){
   .app-shell .sidebar{flex-basis:220px;width:220px;padding-inline:7px}
 }
+
+
+/* Animated sidebar collapse; Escape toggles it without unmounting navigation */
+.app-shell .sidebar{
+  min-width:0;
+  overflow:hidden;
+  transition:flex-basis .42s cubic-bezier(.22,1,.36,1),
+             width .42s cubic-bezier(.22,1,.36,1),
+             padding .42s cubic-bezier(.22,1,.36,1),
+             margin .42s cubic-bezier(.22,1,.36,1),
+             opacity .24s ease,
+             transform .42s cubic-bezier(.22,1,.36,1);
+  will-change:flex-basis,width,opacity,transform;
+}
+.app-shell.sidebar-collapsed .sidebar{
+  flex:0 0 0!important;
+  width:0!important;
+  min-width:0!important;
+  padding:0!important;
+  margin:0!important;
+  border-width:0!important;
+  opacity:0;
+  transform:translateX(14px);
+  pointer-events:none;
+  overflow:hidden;
+}
+.app-shell .sidebar-toggle-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  flex:0 0 auto;
+  height:34px;
+  min-width:40px;
+  padding:0 9px;
+  border:1px solid var(--border,#e2e8f0);
+  border-radius:9px;
+  background:var(--surface,#fff);
+  color:var(--text,#334155);
+  cursor:pointer;
+  transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease;
+}
+.app-shell .sidebar-toggle-button:hover{transform:translateY(-1px);border-color:var(--accent,#8aa7c9)}
+.app-shell .sidebar-toggle-button kbd{
+  font:600 10px/1 inherit;
+  padding:3px 4px;
+  border:1px solid currentColor;
+  border-radius:4px;
+  opacity:.7;
+}
+.app-shell .sidebar-toggle-button svg{flex:0 0 auto}
+.app-shell.theme-dark .sidebar-toggle-button{
+  background:var(--dark-raised,#1b2637);
+  color:var(--dark-text,#e7edf7);
+  border-color:var(--dark-border,#344155);
+}
+.app-shell .mobile-menu-button{flex:0 0 auto}
+@media(max-width:760px){
+  .app-shell .sidebar-toggle-button{display:none}
+  .app-shell .sidebar{transition:transform .32s cubic-bezier(.22,1,.36,1),opacity .24s ease}
+  .app-shell.sidebar-collapsed .sidebar{flex-basis:min(340px,88vw)!important;width:min(340px,88vw)!important;padding:12px!important;transform:translateX(110%);opacity:0}
+  .app-shell[dir="ltr"].sidebar-collapsed .sidebar{transform:translateX(-110%)}
+}
+@media(prefers-reduced-motion:reduce){
+  .app-shell .sidebar,.app-shell .sidebar-toggle-button{transition:none!important;animation:none!important}
+}
