@@ -35,7 +35,7 @@ export default function App() {
         <h1>كل أعمالك، <em>في مركز واحد.</em></h1>
         <p className="hero-description">تنقّل كهربائي تفاعلي — اختر دائرة لتنتقل الطاقة إلى القسم التالي.</p>
       </section>
-      <RadialMenu sections={sections} selected={selected} open={menuOpen} onOpen={() => setMenuOpen(true)} onSelect={(item) => { setSelected(item); setMenuOpen(false); setChosen(null); }} onBack={() => { setSelected(null); setMenuOpen(true); setChosen(null); }} onChoose={choose}/>
+      <RadialMenu sections={sections} selected={selected} open={menuOpen} onOpen={() => setMenuOpen(true)} onToggle={() => setMenuOpen((value) => !value)} onSelect={(item) => { setSelected(item); setMenuOpen(false); setChosen(null); }} onBack={() => { setSelected(null); setMenuOpen(true); setChosen(null); }} onChoose={choose}/>
       {chosen && <div className="selection-panel" role="status">
         <span className="selection-kicker"><ShieldCheck size={15}/> نموذج تفاعلي</span>
         <strong>{chosen.label}</strong>
