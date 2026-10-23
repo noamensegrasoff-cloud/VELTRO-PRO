@@ -47,12 +47,9 @@ export async function getOrCreateWorkspace() {
     .maybeSingle();
   if (membershipLookupError) throw membershipLookupError;
   if (!membership) {
-    const { error } = await supabase.from('workspace_members').insert({
-      workspace_id: workspace.id,
-      user_id: user.id,
-      role: 'owner',
-    });
-    if (error) throw error;
+    throw new Error(
+      'Workspace owner membership is missing. The database owner trigger or backfill may not be applied correctly.'
+    );
   }
 
   await adoptLocalRecordsIntoWorkspace(workspace.id);
@@ -72,7 +69,11 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     if (typeof navigator !== 'undefined' && !navigator.onLine) return { status: 'offline', pushed: 0, pulled: 0 };
 
     const workspace = await getOrCreateWorkspace();
-    const pending = await listPendingSyncOperations();
+    // The local outbox is shared by this browser profile. Never replay an
+    // operation queued for a different account/workspace under the current
+    // user's session; leave it queued for its own workspace to sync later.
+    const allPending = await listPendingSyncOperations();
+    const pending = allPending.filter(item => item.workspaceId === workspace.id);
     let pushed = 0;
     let pulled = 0;
     const pendingKeys = new Set(pending.map(item => item.recordKey));
