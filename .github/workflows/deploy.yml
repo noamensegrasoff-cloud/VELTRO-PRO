@@ -20,24 +20,34 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Node
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.3
+          run_install: false
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
-      - name: Enable pinned pnpm
+          node-version: 22
+
+      - name: Verify toolchain
         run: |
-          corepack enable
-          corepack prepare pnpm@10.18.3 --activate
           node --version
           pnpm --version
+
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --no-frozen-lockfile --reporter=append-only
+
       - name: Build
         run: pnpm run build
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+
   deploy:
     environment:
       name: github-pages
