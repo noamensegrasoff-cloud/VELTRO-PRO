@@ -264,3 +264,17 @@
 .nav-group-title{white-space:nowrap;min-width:0}
 .nav-group-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1 1 auto;overflow-wrap:normal;word-break:normal}
 .nav-group-title .nav-count,.nav-group-title .nav-chevron,.nav-group-title .nav-group-icon{flex-shrink:0}
+
+
+/* One-line branch titles: show the complete label without wrapping or ellipsis */
+.nav-group-title{display:flex;flex-wrap:nowrap;white-space:nowrap;gap:3px;overflow:visible}
+.nav-group-label{display:block;flex:1 1 auto;min-width:0;white-space:nowrap;overflow:visible;text-overflow:clip;overflow-wrap:normal;word-break:keep-all;line-height:1.15}
+.nav-group-title .nav-group-icon,.nav-group-title .nav-chevron{flex-shrink:0}
+@media(min-width:761px){
+  .nav-group-title{gap:3px;padding-inline:2px;font-size:8.7px}
+  .nav-group-icon{width:19px;height:19px;flex-basis:19px}
+  .nav-count{display:none}
+  .nav-chevron{width:10px;height:10px;flex:0 0 10px}
+}
+@media(min-width:1500px){.nav-group-title{font-size:9px}}
+@media(max-width:760px){.nav-group-title{gap:5px}.nav-group-label{font-size:11px}}
