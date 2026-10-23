@@ -725,3 +725,107 @@ html,body,#root{min-height:100%;background:#050b1d}
 @media(max-width:850px){.ref-shell{padding:10px;gap:10px}.ref-shell>.ref-topbar{padding:9px 10px;border-radius:15px}.ref-app{min-height:calc(100vh - 100px);border-radius:19px}}
 @media(max-width:560px){.ref-shell{padding:6px;gap:7px}.ref-shell>.ref-topbar{padding:8px;border-radius:13px}.ref-app{min-height:calc(100vh - 80px);border-radius:16px}}
 @media(prefers-reduced-transparency:reduce){.ref-shell>.ref-topbar,.ref-app .ref-card,.ref-app .ref-sidebar{backdrop-filter:none;-webkit-backdrop-filter:none}}
+
+
+/* Dashboard overview fit: show every chart and card together on a desktop screen */
+@media(min-width:1100px){
+  .ref-shell{min-height:100svh;height:100svh;padding:12px 18px;gap:9px;overflow:hidden}
+  .ref-shell>.ref-topbar{min-height:50px;height:50px;padding:6px 16px;border-radius:14px}
+  .ref-shell>.ref-topbar .ref-icon-btn,.ref-shell>.ref-topbar .ref-profile{min-height:32px;height:32px}
+  .ref-shell>.ref-topbar .ref-search{min-height:32px;height:32px}
+  .ref-app{min-height:0;height:calc(100svh - 83px);flex:1 1 auto;border-radius:20px;overflow:hidden}
+  .ref-app .ref-main{min-height:0;height:100%;overflow:hidden}
+  .ref-content{height:100%;max-width:none;padding:12px 16px 8px;display:flex;flex-direction:column;min-height:0;overflow:hidden}
+  .ref-heading{flex:0 0 auto;margin-bottom:10px;gap:12px}
+  .ref-heading h1{font-size:clamp(20px,1.8vw,27px);margin:4px 0 3px}
+  .ref-heading p{font-size:9px}
+  .ref-eyebrow{font-size:8px}
+  .ref-date{height:30px;padding:0 10px;font-size:9px}
+  .ref-grid{flex:1 1 auto;min-height:0;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,.96fr);gap:10px;align-items:stretch}
+  .ref-column{min-height:0;gap:8px;align-content:stretch;grid-template-rows:repeat(4,minmax(0,1fr))}
+  .ref-column:first-child{grid-template-rows:1.03fr 1.08fr .9fr}
+  .ref-card{min-height:0;padding:10px 12px;border-radius:13px;display:flex;flex-direction:column;gap:5px}
+  .ref-card-top{gap:7px;align-items:center}
+  .ref-card h2{font-size:11px;margin:2px 0 0}
+  .ref-card-top>span:first-child,.ref-kicker{font-size:7px;letter-spacing:.7px}
+  .ref-icon-chip{width:25px;height:25px;border-radius:8px}
+  .ref-big-number{font-size:clamp(28px,2.3vw,39px);line-height:1;margin-top:3px;letter-spacing:-1px}
+  .ref-big-number small{font-size:15px}
+  .ref-stat-line{font-size:8px;gap:6px}
+  .ref-pill{font-size:8px;padding:3px 5px}
+  .ref-sparkline{height:22px;margin:2px 0 1px;gap:4px;min-height:15px}
+  .ref-card-foot{padding-top:5px;font-size:8px;margin-top:auto}
+  .ref-donut-layout{gap:8px;padding:5px 0;justify-content:space-around;min-height:0}
+  .ref-donut{width:clamp(58px,5.3vw,76px);height:clamp(58px,5.3vw,76px);flex-basis:clamp(58px,5.3vw,76px)}
+  .ref-donut:before{inset:6px}
+  .ref-donut b{font-size:17px}
+  .ref-donut b small{font-size:9px}
+  .ref-donut span{font-size:7px}
+  .ref-legend{gap:5px}
+  .ref-legend>div{font-size:8px}
+  .ref-legend b{font-size:8px}
+  .ref-progress-list{gap:4px}
+  .ref-progress-list>div{font-size:7px}
+  .ref-progress-list>i{height:4px;margin-bottom:1px}
+  .ref-network{margin-top:0;min-height:0;flex:1}
+  .ref-network svg{height:clamp(42px,7vh,65px);display:block}
+  .ref-network-caption{font-size:7px}
+  .ref-task-list{min-height:0;flex:1;gap:0}
+  .ref-task{padding:5px 0;gap:6px}
+  .ref-check{width:14px;height:14px;flex-basis:14px;border-radius:4px}
+  .ref-task-text{gap:2px}
+  .ref-task-text b{font-size:8px}
+  .ref-task-text small,.ref-task-state{font-size:7px}
+  .ref-task-state{padding:3px 4px}
+  .ref-link{font-size:8px;padding:4px 0;min-height:0}
+  .ref-security-icon{width:26px;height:26px;margin-bottom:0}
+  .ref-security-score{font-size:30px;line-height:1}
+  .ref-security-score small{font-size:14px}
+  .ref-security p{font-size:8px;margin:0}
+  .ref-security-bar{height:4px;margin:2px 0}
+  .ref-finance-values{gap:7px;margin:3px 0}
+  .ref-finance-values>div{gap:2px}
+  .ref-finance-values span,.ref-finance-values small{font-size:7px}
+  .ref-finance-values b{font-size:15px}
+  .ref-finance-bars{height:25px;min-height:20px;gap:4px;margin-top:auto}
+  .ref-dropdown{height:27px;min-height:27px;padding:0 8px;font-size:8px}
+  .ref-team-members{margin-top:3px;gap:4px}
+  .ref-team-members>span{width:20px;height:20px;font-size:7px}
+  .ref-team-members small{font-size:7px}
+  .ref-settings-visual{height:clamp(38px,6vh,52px);flex:0 0 auto;margin:0 0 2px}
+  .ref-settings-visual>span{width:34px;height:34px;border-radius:11px}
+  .ref-orbit.orbit-a{width:100px;height:40px}
+  .ref-orbit.orbit-b{width:130px;height:48px}
+  .ref-settings-card p{font-size:8px;line-height:1.45;margin:2px 0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .ref-settings-card .ref-link{margin-top:auto}
+  .ref-priority-total{margin:2px 0;gap:6px}
+  .ref-priority-total b{font-size:21px}
+  .ref-priority-total span,.ref-priority-total small{font-size:7px}
+  .ref-priority-chart{height:clamp(24px,4.5vh,40px);min-height:20px;gap:4px;margin:1px 0}
+  .ref-chart-labels{font-size:7px}
+  .ref-mini-bars{height:clamp(24px,4.5vh,40px);min-height:20px;margin-top:1px;gap:4px}
+  .ref-mini-footer{font-size:7px;margin-top:auto}
+  .ref-tip{flex-direction:row;align-items:center;gap:8px}
+  .ref-tip-icon{width:25px;height:25px;flex:0 0 25px}
+  .ref-tip b{font-size:8px}
+  .ref-tip p{font-size:7px;line-height:1.4;margin:2px 0 0}
+  .ref-footer{padding:5px 2px 0;font-size:7px;flex:0 0 auto}
+}
+@media(min-width:1100px) and (max-height:760px){
+  .ref-shell{padding:7px 12px;gap:6px}
+  .ref-shell>.ref-topbar{height:44px;min-height:44px}
+  .ref-app{height:calc(100svh - 64px)}
+  .ref-content{padding:8px 12px 5px}
+  .ref-heading{margin-bottom:6px}
+  .ref-column{gap:5px}
+  .ref-card{padding:7px 9px;gap:3px}
+  .ref-footer{display:none}
+}
+@media(min-width:1100px) and (max-height:620px){
+  .ref-shell{padding:5px 8px;gap:4px}
+  .ref-shell>.ref-topbar{height:38px;min-height:38px}
+  .ref-app{height:calc(100svh - 52px)}
+  .ref-heading p{display:none}
+  .ref-network svg{height:36px}
+  .ref-settings-visual{height:32px}
+}
