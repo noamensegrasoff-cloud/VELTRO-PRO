@@ -42,7 +42,7 @@ export default function RadialMenu({ sections, selected, onSelect, onBack, onCho
           <div className="core-position branch-core-position">
             <ElectricCore label={selected.label} subtitle="VELTRO MODULE" size="medium" active seed={selected.id.length + 30} onClick={onBack} hint="رجوع"/>
           </div>
-          <div className="stage-caption"><span className="status-dot"/> ${selected.label} <span className="caption-separator">/</span> اختر وظيفة</div>
+          <div className="stage-caption"><span className="status-dot"/> {selected.label} <span className="caption-separator">/</span> اختر وظيفة</div>
         </>
       )}
     </div>
