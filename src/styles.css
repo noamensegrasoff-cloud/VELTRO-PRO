@@ -464,3 +464,67 @@
   color:var(--dark-text)!important;
   border-color:var(--dark-border)!important;
 }
+
+/* Arabic dashboard RTL spacing: keep icons and labels in separate visual lanes */
+.app-shell.lang-ar .metric-label{
+  left:11px!important;
+  right:48px!important;
+  text-align:right!important;
+  direction:rtl;
+}
+.app-shell.lang-ar .metric-foot{
+  right:auto!important;
+  left:11px!important;
+  text-align:left!important;
+}
+.app-shell.lang-ar .heading-kicker{
+  direction:rtl;
+  justify-content:flex-start;
+}
+.app-shell.lang-ar .panel-head{
+  direction:rtl;
+}
+.app-shell.lang-ar .panel-head>div{
+  min-width:0;
+}
+.app-shell.lang-ar .panel-head h2{
+  overflow-wrap:anywhere;
+}
+.app-shell.lang-ar .date-button,
+.app-shell.lang-ar .quick-actions button{
+  direction:rtl;
+}
+.app-shell.lang-ar .stock-item{
+  direction:rtl;
+}
+.app-shell.lang-ar .stock-amount{
+  direction:ltr;
+  unicode-bidi:isolate;
+}
+.app-shell.lang-ar .product-cell{
+  direction:rtl;
+}
+.app-shell.lang-ar .product-cell small,
+.app-shell.lang-ar .quantity-cell,
+.app-shell.lang-ar .status-pill,
+.app-shell.lang-ar .operation-pill{
+  unicode-bidi:plaintext;
+}
+.app-shell.lang-ar .mix-legend>div{
+  direction:rtl;
+}
+.app-shell.lang-ar .mix-legend b{
+  direction:ltr;
+  unicode-bidi:isolate;
+  text-align:right;
+}
+.app-shell.lang-ar .topbar-actions{
+  direction:rtl;
+}
+.app-shell.lang-ar .notification-popover{
+  right:auto;
+  left:0;
+}
+@media(max-width:1100px){
+  .app-shell.lang-ar .metric-label{right:43px!important;left:8px!important}
+}
