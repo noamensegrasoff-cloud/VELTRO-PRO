@@ -26,6 +26,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Test sync safety rules
+        run: npm test
       - name: Build
         env:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
