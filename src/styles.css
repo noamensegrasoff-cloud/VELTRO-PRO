@@ -342,3 +342,13 @@
 .theme-dark .metric-trend,.theme-dark .positive{color:#64d7b4!important}.theme-dark .metric-icon{background:#223149!important;color:#9fcaff!important}.theme-dark .chart-total,.theme-dark .chart-axis{color:var(--dark-muted)!important}.theme-dark .bar-slot{background:#26364c!important}.theme-dark .mix-donut{border-color:#30435c!important}.theme-dark .mix-legend>div{color:var(--dark-muted)!important}.theme-dark .table-wrap table,.theme-dark table{background:var(--dark-surface)!important;color:var(--dark-text)!important}.theme-dark th{background:var(--dark-raised)!important;color:var(--dark-muted)!important;border-color:var(--dark-border)!important}.theme-dark td{background:transparent!important;color:var(--dark-text)!important;border-color:var(--dark-border)!important}.theme-dark tr:hover td{background:var(--dark-hover)!important}
 .theme-dark .module-placeholder,.theme-dark .module-empty-actions,.theme-dark .nav-empty{background:var(--dark-raised)!important;color:var(--dark-muted)!important;border-color:var(--dark-border)!important}.theme-dark .demo-badge{background:#332b1c!important;color:#f2c879!important;border-color:#59462a!important}.theme-dark .date-button:hover,.theme-dark .button-secondary:hover{background:var(--dark-hover)!important}.theme-dark .button-danger{background:#a33b4b!important;color:#fff!important;border-color:#a33b4b!important}.theme-dark .modal-backdrop{background:rgba(2,6,14,.78)!important}.theme-dark .modal-close{color:var(--dark-muted)!important}.theme-dark .signed-out{background:var(--dark-bg)!important;color:var(--dark-text)!important}
 .theme-dark .cloud-connected svg{color:#4dd5ad}.theme-dark .cloud-configured svg{color:#e7b75f}.theme-dark .cloud-not_configured svg,.theme-dark .cloud-error svg{color:#ff8b8b}
+
+
+/* Dark mode icon contrast: prevent leftover light-theme white icon colors */
+.theme-dark svg{color:inherit}
+.theme-dark button svg,.theme-dark a svg,.theme-dark [role="button"] svg{color:inherit}
+.theme-dark .dashboard-link svg,.theme-dark .nav-group-title svg,.theme-dark .nav-child>svg{color:var(--dark-muted)}
+.theme-dark .dashboard-link.active svg,.theme-dark .nav-child.active>svg{color:#9fcaff}
+.theme-dark .metric-icon svg,.theme-dark .module-icon svg,.theme-dark .module-empty-icon svg{color:inherit}
+.theme-dark .cloud-connected svg{color:#4dd5ad}.theme-dark .cloud-configured svg{color:#e7b75f}.theme-dark .cloud-not_configured svg,.theme-dark .cloud-error svg{color:#ff8b8b}
+.theme-dark .button-danger svg,.theme-dark .btn-primary svg,.theme-dark .button-primary svg{color:currentColor}
