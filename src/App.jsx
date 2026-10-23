@@ -1,108 +1,55 @@
-import React, { useMemo, useState } from 'react';
-import {
-  Activity, Bell, Boxes, ChartNoAxesCombined, ChevronDown, CircleHelp,
-  ClipboardList, Command, CreditCard, Download, LayoutDashboard, Menu,
-  Package, PackageSearch, Search, Settings2, ShieldCheck, ShoppingBag,
-  ShoppingCart, Sparkles, Truck, Users, Wallet, Wifi, X, ArrowUpRight,
-  ArrowDownRight, MoreHorizontal, CalendarDays, CircleCheck, Clock3
-} from 'lucide-react';
-import { sections } from './data/navigation.js';
+import React, { useState } from 'react';
+import { Activity, Bell, Boxes, ChartNoAxesCombined, ChevronDown, CircleHelp, ClipboardCheck, Command, CreditCard, Gauge, LayoutDashboard, Menu, Mic, Package, Search, Settings2, ShieldCheck, ShoppingBag, ShoppingCart, Sparkles, Truck, Users, Wallet, X, ArrowUpRight, ArrowDownRight, MoreHorizontal, CalendarDays, CircleCheck, Clock3, Network, Target, Zap } from 'lucide-react';
 
-const navigation = [
-  { label: 'لوحة التحكم', icon: LayoutDashboard, id: 'dashboard' },
-  { label: 'المبيعات', icon: ShoppingCart, id: 'sales' },
-  { label: 'المشتريات', icon: PackageSearch, id: 'purchases' },
-  { label: 'المنتجات والمخزون', icon: Boxes, id: 'products' },
-  { label: 'الطلبات', icon: ClipboardList, id: 'orders' },
-  { label: 'الموردون', icon: Truck, id: 'suppliers' },
-  { label: 'الزبائن', icon: Users, id: 'customers' },
-  { label: 'الصندوق', icon: Wallet, id: 'cash' },
-  { label: 'التقارير والتحليلات', icon: ChartNoAxesCombined, id: 'reports' },
+const nav = [
+ ['لوحة التحكم','Dashboard','Tableau de bord',LayoutDashboard],['المهام','Action Items','Actions',ClipboardCheck],['التحليلات','Analytics','Analytique',ChartNoAxesCombined],['المشاريع','Projects','Projets',Boxes],['الرسائل','Messages','Messages',CircleHelp],['الفريق','Team','Équipe',Users],['التقارير','Reports','Rapports',Gauge],['الإعدادات','Settings','Paramètres',Settings2]
 ];
-const metrics = [
-  { label: 'إجمالي المبيعات', value: '284,650', unit: 'دج', change: '+12.8%', up: true, icon: ShoppingBag, color: 'cyan' },
-  { label: 'صافي الأرباح', value: '48,290', unit: 'دج', change: '+8.2%', up: true, icon: ChartNoAxesCombined, color: 'violet' },
-  { label: 'المنتجات في المخزون', value: '1,284', unit: 'منتج', change: '36 منخفض', up: false, icon: Boxes, color: 'blue' },
-  { label: 'فواتير قيد المعالجة', value: '18', unit: 'فاتورة', change: '6 تحتاج مراجعة', up: false, icon: ClipboardList, color: 'pink' },
+const tasks = [
+ ['مراجعة أداء الربع الحالي','Review quarterly performance','Revoir les performances trimestrielles','مكتمل','Done','Terminé','done'],
+ ['تحديث استراتيجية النمو','Update growth strategy','Mettre à jour la stratégie de croissance','قيد العمل','In progress','En cours','progress'],
+ ['مزامنة بيانات الفريق','Sync team workspace','Synchroniser l’espace équipe','معلّق','Pending','En attente','pending'],
+ ['إرسال تقرير الأداء','Send performance report','Envoyer le rapport de performance','مكتمل','Done','Terminé','done']
 ];
-const bars = [34,48,41,64,52,76,57,86,67,93,71,82];
-const activities = [
-  { title: 'عملية بيع جديدة', desc: 'فاتورة #INV-2084 · نقطة البيع الرئيسية', time: 'منذ دقيقتين', amount: '+ 12,500 دج', type: 'sale' },
-  { title: 'تحديث المخزون', desc: 'تم تحديث بيانات 8 منتجات', time: 'منذ 18 دقيقة', amount: '8 منتجات', type: 'stock' },
-  { title: 'استلام مشتريات', desc: 'فاتورة مورد #PUR-0318', time: 'منذ 42 دقيقة', amount: '− 34,800 دج', type: 'purchase' },
-];
-const fmt = (v) => v.toLocaleString('en-US');
-
-function MiniBars() {
-  return <div className="mini-bars" aria-label="رسم بياني تجريبي للمبيعات">{bars.map((h, i) => <span key={i} style={{'--bar-height': h + '%', '--bar-delay': (i * 35) + 'ms'}} className={i === 9 ? 'bar-highlight' : ''} />)}</div>;
-}
-function SalesChart() {
-  return <svg className="sales-chart" viewBox="0 0 620 190" preserveAspectRatio="none" role="img" aria-label="منحنى مبيعات توضيحي">
-    {[25,65,105,145].map(y => <line key={y} x1="8" y1={y} x2="610" y2={y} stroke="rgba(153,184,231,.11)" strokeDasharray="4 6" />)}
-    <defs><linearGradient id="salesFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#43d9f5" stopOpacity=".3"/><stop offset="100%" stopColor="#43d9f5" stopOpacity="0"/></linearGradient><linearGradient id="salesLine" x1="0" y1="0" x2="1" y2="0"><stop stopColor="#49dff0"/><stop offset="100%" stopColor="#9a7bff"/></linearGradient></defs>
-    <path d="M8 145 C35 136 42 122 62 127 S92 100 112 111 S148 130 165 94 S202 102 220 79 S250 89 275 68 S313 96 335 62 S365 74 388 52 S426 80 445 44 S484 65 505 31 S548 55 568 24 S594 42 610 16 L610 175 L8 175 Z" fill="url(#salesFill)"/>
-    <path d="M8 145 C35 136 42 122 62 127 S92 100 112 111 S148 130 165 94 S202 102 220 79 S250 89 275 68 S313 96 335 62 S365 74 388 52 S426 80 445 44 S484 65 505 31 S548 55 568 24 S594 42 610 16" fill="none" stroke="url(#salesLine)" strokeWidth="3" strokeLinecap="round"/>
-    <circle cx="505" cy="31" r="5" fill="#4fe5f2" stroke="#101e47" strokeWidth="3"/>
-  </svg>;
-}
-function Donut() {
-  return <div className="donut-wrap"><div className="donut-chart"><div className="donut-center"><strong>72%</strong><span>مكتمل</span></div></div><div className="donut-legend"><span><i className="legend-cyan"/>مبيعات التجزئة <b>48%</b></span><span><i className="legend-violet"/>الجملة <b>32%</b></span><span><i className="legend-blue"/>أخرى <b>20%</b></span></div></div>;
-}
-
-export default function App() {
-  const [active, setActive] = useState('dashboard');
-  const [language, setLanguage] = useState('ar');
-  const [query, setQuery] = useState('');
-  const [noticeOpen, setNoticeOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [modal, setModal] = useState(null);
-  const [period, setPeriod] = useState('هذا الأسبوع');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const filteredNavigation = useMemo(() => navigation.filter(item => item.label.includes(query.trim())), [query]);
-  const current = navigation.find(item => item.id === active) || navigation[0];
-  const chooseSection = (id) => { setActive(id); setSidebarOpen(false); };
-  return (
-    <main className={"dashboard-app lang-" + language} dir={language === "ar" ? "rtl" : "ltr"}>
-      <aside className={'sidebar ' + (sidebarOpen ? 'sidebar-open' : '')}>
-        <div className="brand-lockup"><span className="brand-symbol"><Sparkles size={18}/></span><span className="brand-words"><b>VELTRO</b><small>BUSINESS SUITE</small></span></div>
-        <div className="workspace-switch" onClick={() => setProfileOpen(v => !v)} role="button" tabIndex={0}><span className="workspace-avatar">V</span><span className="workspace-name"><b>متجري</b><small>الخطة الاحترافية</small></span><ChevronDown size={15}/></div>
-        <div className="sidebar-label">مساحة العمل</div>
-        <nav className="sidebar-nav" aria-label="القائمة الرئيسية">
-          {navigation.map(item => { const Icon = item.icon; return <button key={item.id} className={'nav-item ' + (active === item.id ? 'nav-active' : '')} onClick={() => chooseSection(item.id)}><Icon size={17}/><span>{item.label}</span>{item.id === 'orders' && <i className="nav-count">4</i>}</button>; })}
-        </nav>
-        <div className="sidebar-label secondary-label">النظام</div>
-        <button className={'nav-item ' + (active === 'settings' ? 'nav-active' : '')} onClick={() => chooseSection('settings')}><Settings2 size={17}/><span>الإعدادات</span></button>
-        <button className="nav-item" onClick={() => setModal({title:'مركز المساعدة',desc:'هذه معاينة تصميمية لمركز المساعدة في VELTRO-PRO.'})}><CircleHelp size={17}/><span>مركز المساعدة</span></button>
-        <div className="sidebar-bottom"><div className="system-card"><span className="system-orb"><Activity size={16}/></span><div><b>النظام يعمل بشكل طبيعي</b><small><i/> جميع الخدمات مستقرة</small></div></div><div className="sidebar-user"><span className="user-avatar">N</span><span><b>مدير المتجر</b><small>المسؤول الرئيسي</small></span><MoreHorizontal size={18} onClick={() => setProfileOpen(v => !v)}/></div></div>
-      </aside>
-      {sidebarOpen && <button className="mobile-scrim" aria-label="إغلاق القائمة" onClick={() => setSidebarOpen(false)}/>}
-      <section className="dashboard-main">
-        <header className="dashboard-topbar">
-          <div className="topbar-left"><button className="mobile-menu" onClick={() => setSidebarOpen(v => !v)} aria-label="القائمة"><Menu size={20}/></button><div className="breadcrumb">مساحة العمل <span>/</span> <b>{current.label}</b></div></div>
-          <div className="topbar-actions"><label className="language-switch"><span>文</span><select value={language} onChange={e => setLanguage(e.target.value)} aria-label="Language"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select></label>
-            <label className="global-search"><Search size={16}/><input value={query} onChange={e => setQuery(e.target.value)} placeholder="ابحث في القوائم..." /><kbd>⌘ K</kbd>{query && <div className="search-results">{filteredNavigation.length ? filteredNavigation.map(n => <button key={n.id} onClick={() => {chooseSection(n.id);setQuery('')}}>{n.label}<ArrowUpRight size={14}/></button>) : <span>لا توجد نتائج</span>}</div>}</label>
-            <span className="topbar-divider"/>
-            <button className={'icon-button ' + (noticeOpen ? 'icon-button-active' : '')} aria-label="الإشعارات" onClick={() => {setNoticeOpen(v=>!v);setProfileOpen(false)}}><Bell size={18}/><i className="notification-dot"/></button>
-            <button className="profile-trigger" onClick={() => {setProfileOpen(v=>!v);setNoticeOpen(false)}}><span className="user-avatar">N</span><ChevronDown size={14}/></button>
-          </div>
-          {noticeOpen && <div className="floating-panel notification-panel"><div className="floating-title"><b>الإشعارات</b><span>3 جديدة</span></div><div className="notice-row"><i className="notice-cyan"/><span><b>مخزون منخفض</b><small>3 منتجات تحتاج إلى إعادة الطلب</small></span><small>الآن</small></div><div className="notice-row"><i className="notice-violet"/><span><b>ملخص اليوم جاهز</b><small>يمكنك مراجعة مؤشرات الأداء</small></span><small>10 د</small></div><button className="text-action" onClick={()=>setNoticeOpen(false)}>إغلاق الإشعارات</button></div>}
-          {profileOpen && <div className="floating-panel profile-panel"><b>مدير المتجر</b><span>إدارة حساب مساحة العمل</span><button onClick={()=>{setProfileOpen(false);setModal({title:'إعدادات الحساب',desc:'هذه معاينة تفاعلية للتصميم، وليست متصلة بحساب متجر حقيقي.'})}}>إعدادات الحساب</button></div>}
-        </header>
-        <div className="dashboard-content">
-          <div className="welcome-row"><div><div className="eyebrow"><span/> لوحة معلومات الأعمال</div><h1>{active === 'dashboard' ? <>مرحبًا بك، <em>إليك نظرة عامة.</em></> : <>{current.label} <em>في لمحة.</em></>}</h1><p>إليك ما يحدث في مساحة عملك اليوم.</p></div><div className="welcome-actions"><button className="outline-action" onClick={() => setModal({title:'تصدير التقرير',desc:'سيُتاح تصدير التقارير عند ربط الواجهة ببيانات المتجر الفعلية.'})}><Download size={16}/> تصدير التقرير</button><button className="primary-action" onClick={() => setModal({title:'إنشاء عملية جديدة',desc:'هذه واجهة تجريبية للتصميم. لم يتم ربط إنشاء الفواتير بقاعدة بيانات المتجر.'})}><Sparkles size={16}/> إجراء جديد</button></div></div>
-          <div className="status-strip"><span className="status-check"><CircleCheck size={15}/></span><span><b>كل شيء على ما يرام</b><small>آخر تحديث للواجهة منذ لحظات</small></span><span className="status-live"><i/> مباشر تجريبي</span><span className="status-strip-spacer"/><span className="status-strip-note"><Wifi size={14}/> وضع العرض</span></div>
-          <div className="metric-grid">{metrics.map((m,i)=>{const Icon=m.icon;return <article className={'metric-card metric-'+m.color} key={m.label}><div className="metric-top"><span>{m.label}</span><span className="metric-icon"><Icon size={18}/></span></div><div className="metric-number"><strong>{m.value}</strong><small>{m.unit}</small></div><div className="metric-bottom"><span className={m.up?'trend-up':'trend-neutral'}>{m.up?<ArrowUpRight size={14}/>:<Activity size={13}/>} {m.change}</span><span className="metric-period">مقارنة بالفترة السابقة</span></div><div className="metric-glow"/></article>})}</div>
-          <div className="primary-grid">
-            <article className="glass-card sales-card"><div className="card-heading"><div><span className="card-kicker">تحليلات الأداء</span><h2>نظرة عامة على المبيعات</h2></div><button className="period-select" onClick={() => setPeriod(period === 'هذا الأسبوع' ? 'هذا الشهر' : period === 'هذا الشهر' ? 'هذا العام' : 'هذا الأسبوع')}><CalendarDays size={14}/>{period}<ChevronDown size={13}/></button></div><div className="sales-total"><strong>284,650 <small>دج</small></strong><span><ArrowUpRight size={14}/> 12.8%</span><small>إجمالي المبيعات خلال {period}</small></div><SalesChart/><div className="chart-axis"><span>الأحد</span><span>الإثنين</span><span>الثلاثاء</span><span>الأربعاء</span><span>الخميس</span><span>الجمعة</span><span>السبت</span></div></article>
-            <article className="glass-card tasks-card"><div className="card-heading"><div><span className="card-kicker">مساحة العمل</span><h2>نظرة سريعة</h2></div><button className="dots-button" onClick={() => setModal({title:'نظرة سريعة',desc:'ملخص بصري تجريبي لمؤشرات مساحة العمل.'})}><MoreHorizontal size={19}/></button></div><div className="quick-stat"><span className="quick-icon cyan-bg"><ShoppingCart size={17}/></span><span><b>عمليات البيع</b><small>نشاط نقاط البيع</small></span><strong>126</strong></div><div className="quick-stat"><span className="quick-icon violet-bg"><Package size={17}/></span><span><b>حركة المنتجات</b><small>إضافة وتحديث المخزون</small></span><strong>38</strong></div><div className="quick-stat"><span className="quick-icon blue-bg"><CreditCard size={17}/></span><span><b>المدفوعات</b><small>عمليات مسجلة</small></span><strong>94</strong></div><div className="task-progress"><div><span>إنجاز مهام اليوم</span><b>72%</b></div><div className="progress-track"><i/></div></div></article>
-            <article className="glass-card categories-card"><div className="card-heading"><div><span className="card-kicker">توزيع النشاط</span><h2>مصادر المبيعات</h2></div><button className="dots-button" onClick={() => setModal({title:'مصادر المبيعات',desc:'الرسم التوضيحي يعرض توزيعًا تجريبيًا، وليس بيانات فعلية.'})}><MoreHorizontal size={19}/></button></div><Donut/></article>
-            <article className="glass-card priority-card"><div className="card-heading"><div><span className="card-kicker">مؤشرات مباشرة</span><h2>مؤشر النشاط اليومي</h2></div><span className="live-chip"><i/> تجريبي</span></div><MiniBars/><div className="priority-foot"><span>أقل نشاط</span><span>أعلى نشاط</span><b>+18.6% <ArrowUpRight size={13}/></b></div></article>
-          </div>
-          <article className="glass-card activity-card"><div className="card-heading"><div><span className="card-kicker">آخر التحديثات</span><h2>النشاط الأخير</h2></div><button className="text-action" onClick={() => chooseSection('reports')}>عرض كل النشاط <ArrowUpRight size={14}/></button></div><div className="activity-table"><div className="activity-header"><span>العملية</span><span>الوقت</span><span>القيمة / التفاصيل</span><span>الحالة</span></div>{activities.map((a,i)=><div className="activity-row" key={a.title}><span className="activity-title"><i className={'activity-icon activity-'+a.type}>{a.type==='sale'?<ShoppingCart size={16}/>:a.type==='stock'?<Package size={16}/>:<Truck size={16}/>}</i><span><b>{a.title}</b><small>{a.desc}</small></span></span><span className="activity-time"><Clock3 size={13}/>{a.time}</span><span className="activity-amount">{a.amount}</span><span><i className="completed-dot"/> مكتمل</span></div>)}</div></article>
-          <footer className="dashboard-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span><ShieldCheck size={13}/> واجهة عرض تصميمية · الأرقام المعروضة تجريبية</span><span>مصمم للأعمال. مبني للسرعة.</span></footer>
-        </div>
-      </section>
-      {modal && <div className="modal-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setModal(null)}}><section className="design-modal" role="dialog" aria-modal="true" aria-label={modal.title}><button className="modal-close" onClick={()=>setModal(null)} aria-label="إغلاق"><X size={18}/></button><span className="modal-symbol"><Sparkles size={22}/></span><h2>{modal.title}</h2><p>{modal.desc}</p><button className="primary-action" onClick={()=>setModal(null)}>حسنًا</button></section></div>}
-    </main>
-  );
+const bars=[35,52,43,68,57,76,61,89,72,95,66,81,58,88,73,97,64,83];
+export default function App(){
+ const [lang,setLang]=useState('en'); const [active,setActive]=useState(0); const [search,setSearch]=useState(''); const [notice,setNotice]=useState(false); const [menu,setMenu]=useState(false); const [checked,setChecked]=useState([true,false,false,true]);
+ const t=(ar,en,fr)=>lang==='ar'?ar:lang==='fr'?fr:en;
+ return <main className={'ref-app lang-'+lang} dir={lang==='ar'?'rtl':'ltr'}>
+  <aside className="ref-sidebar">
+   <div className="ref-brand"><span className="ref-brand-icon"><Sparkles size={20}/></span><span><b>VELTRO</b><small>BUSINESS SUITE</small></span></div>
+   <div className="ref-workspace"><span className="ref-avatar">V</span><span><b>{t('مساحة العمل','Workspace','Espace de travail')}</b><small>{t('الخطة الاحترافية','Professional plan','Offre professionnelle')}</small></span><ChevronDown size={15}/></div>
+   <div className="ref-nav-label">{t('القائمة الرئيسية','WORKSPACE','ESPACE DE TRAVAIL')}</div>
+   <nav>{nav.map((n,i)=>{const I=n[3];return <button key={n[0]} className={active===i?'selected':''} onClick={()=>setActive(i)}><I size={17}/><span>{n[lang==='ar'?0:lang==='fr'?2:1]}</span>{i===1&&<i className="ref-count">4</i>}</button>})}</nav>
+   <div className="ref-side-bottom"><div className="ref-status"><span><Activity size={16}/></span><div><b>{t('النظام مستقر','System operational','Système opérationnel')}</b><small><i/> {t('جميع الخدمات متصلة','All services connected','Tous les services connectés')}</small></div></div><div className="ref-user"><span className="ref-avatar">N</span><span><b>{t('مدير المتجر','Workspace admin','Administrateur')}</b><small>noamen@veltro.app</small></span><MoreHorizontal size={17}/></div></div>
+  </aside>
+  <section className="ref-main">
+   <header className="ref-topbar"><div className="ref-top-left"><button className="ref-icon-btn mobile-only" onClick={()=>setMenu(!menu)}><Menu size={18}/></button><div className="ref-breadcrumb">{t('مساحة العمل','Workspace','Espace de travail')} <span>/</span> <b>{nav[active][lang==='ar'?0:lang==='fr'?2:1]}</b></div></div>
+    <div className="ref-top-tools"><label className="ref-search"><Search size={16}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('ابحث عن أي شيء...','Search anything...','Rechercher...')}/><kbd>⌘ K</kbd></label><label className="ref-search ref-search-small"><Command size={15}/><select value={lang} onChange={e=>setLang(e.target.value)} aria-label="Language"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select><ChevronDown size={13}/></label><button className="ref-icon-btn" onClick={()=>setNotice(!notice)} aria-label="Notifications"><Bell size={17}/><i className="ref-dot"/></button><button className="ref-icon-btn" aria-label="Microphone"><Mic size={17}/></button><button className="ref-primary" onClick={()=>setActive(1)}><Sparkles size={15}/>{t('إجراء جديد','New action','Nouvelle action')}</button><button className="ref-profile" onClick={()=>setMenu(!menu)}>N <ChevronDown size={13}/></button></div>
+    {notice&&<div className="ref-popover"><b>{t('الإشعارات','Notifications','Notifications')}</b><p>{t('كل شيء محدّث. لديك 3 مهام للمراجعة.','Everything is up to date. 3 tasks need review.','Tout est à jour. 3 tâches à vérifier.')}</p></div>}
+   </header>
+   <div className="ref-content">
+    <div className="ref-heading"><div><div className="ref-eyebrow"><i/> {t('نظرة عامة على مساحة العمل','WORKSPACE OVERVIEW','APERÇU DE L’ESPACE')}</div><h1>{t('أهلاً بعودتك،','Welcome back,','Bon retour,')} <em>{t('نعمان.','Naaman.','Naaman.')}</em></h1><p>{t('إليك ملخص الأداء والنشاط لهذا اليوم.','Here’s your performance and activity summary for today.','Voici votre résumé des performances et de l’activité du jour.')}</p></div><button className="ref-date" onClick={()=>setSearch('Today')}><CalendarDays size={15}/>{t('23 أكتوبر 2026','October 23, 2026','23 octobre 2026')}<ChevronDown size={14}/></button></div>
+    <div className="ref-grid">
+     <div className="ref-column">
+      <article className="ref-card ref-hero-stat"><div className="ref-card-top"><span>{t('مؤشر النمو الرئيسي','KEY PERFORMANCE INDEX','INDICATEUR CLÉ')}</span><span className="ref-icon-chip cyan"><ArrowUpRight size={17}/></span></div><div className="ref-big-number">3430<small>%</small></div><div className="ref-stat-line"><span className="ref-pill positive"><ArrowUpRight size={13}/> 18.6%</span><span>{t('مقارنة بالشهر الماضي','vs last month','vs mois dernier')}</span></div><div className="ref-sparkline">{bars.slice(0,12).map((h,i)=><i key={i} style={{height:h+'%'}}/>)}</div><div className="ref-card-foot"><span>{t('مؤشر الأداء','Performance index','Indice de performance')}</span><b>{t('ممتاز','Excellent','Excellent')}</b></div></article>
+      <article className="ref-card"><div className="ref-card-top"><div><span className="ref-kicker">{t('توزيع النشاط','ACTIVITY DISTRIBUTION','RÉPARTITION')}</span><h2>{t('مصادر الإنجاز','Completion sources','Sources de réalisation')}</h2></div><button className="ref-dots"><MoreHorizontal size={18}/></button></div><div className="ref-donut-layout"><div className="ref-donut"><div><b>72<small>%</small></b><span>{t('مكتمل','Complete','Terminé')}</span></div></div><div className="ref-legend"><div><span><i className="c-cyan"/> {t('المهام','Tasks','Tâches')}</span><b>48%</b></div><div><span><i className="c-pink"/> {t('المشاريع','Projects','Projets')}</span><b>32%</b></div><div><span><i className="c-blue"/> {t('أخرى','Other','Autre')}</span><b>20%</b></div></div></div><div className="ref-progress-list"><div><span>{t('الإنجاز اليومي','Daily completion','Avancement quotidien')}</span><b>78%</b></div><i><b style={{width:'78%'}}/></i><div><span>{t('هدف الأسبوع','Weekly target','Objectif hebdomadaire')}</span><b>64%</b></div><i><b style={{width:'64%'}}/></i></div></article>
+      <article className="ref-card ref-network-card"><div className="ref-card-top"><div><span className="ref-kicker">{t('الترابط','CONNECTIONS','CONNEXIONS')}</span><h2>{t('شبكة الفريق','Team network','Réseau d’équipe')}</h2></div><Network size={18} className="ref-muted"/></div><div className="ref-network"><svg viewBox="0 0 320 132" role="img" aria-label="Network diagram"><g stroke="rgba(104,193,255,.27)" strokeWidth="1.4"><path d="M34 70L95 26L153 65L218 22L286 68L223 108L153 65L94 109L34 70L94 109L153 65L223 108L286 68L218 22L153 65"/></g><g fill="#0c2445" stroke="#43d9f5" strokeWidth="2"><circle cx="34" cy="70" r="8"/><circle cx="95" cy="26" r="7"/><circle cx="94" cy="109" r="7"/><circle cx="153" cy="65" r="12" fill="#123a65"/><circle cx="218" cy="22" r="7"/><circle cx="223" cy="108" r="7"/><circle cx="286" cy="68" r="9"/></g><circle cx="153" cy="65" r="19" fill="none" stroke="rgba(66,223,247,.2)"/></svg><div className="ref-network-caption"><span><i className="c-cyan"/> 24 {t('عضوًا متصلًا','connected members','membres connectés')}</span><b><span className="ref-live"/> {t('مباشر','Live','En direct')}</b></div></div></article>
+     </div>
+     <div className="ref-column">
+      <article className="ref-card ref-tasks-card"><div className="ref-card-top"><div><span className="ref-kicker">{t('ما يحتاج انتباهك','NEEDS YOUR ATTENTION','À SURVEILLER')}</span><h2>{t('قائمة الإجراءات','Action Items','Actions à traiter')}</h2></div><button className="ref-count-badge">04</button></div><div className="ref-task-list">{tasks.map((task,i)=><button className="ref-task" key={task[0]} onClick={()=>setChecked(old=>old.map((v,j)=>i===j?!v:v))}><span className={'ref-check '+(checked[i]?'checked':'')}>{checked[i]&&<CircleCheck size={15}/>}</span><span className="ref-task-text"><b>{task[lang==='ar'?0:lang==='fr'?2:1]}</b><small>{t('موعد التسليم: اليوم','Due today','Échéance : aujourd’hui')}</small></span><span className={'ref-task-state '+task[6]}>{task[lang==='ar'?3:lang==='fr'?5:4]}</span></button>)}</div><button className="ref-link" onClick={()=>setActive(1)}>{t('عرض جميع المهام','View all action items','Voir toutes les actions')} <ArrowUpRight size={14}/></button></article>
+      <article className="ref-card ref-security"><div className="ref-security-icon"><ShieldCheck size={22}/></div><div className="ref-card-top"><span>{t('درجة أمان مساحة العمل','WORKSPACE HEALTH','SANTÉ DE L’ESPACE')}</span><span className="ref-pill positive">+6.4%</span></div><div className="ref-security-score">36<small>%</small></div><p>{t('مؤشر الحماية والتوافق','Protection & compliance score','Score de protection et conformité')}</p><div className="ref-security-bar"><i/></div><div className="ref-card-foot"><span>{t('مستوى الحماية','Protection level','Niveau de protection')}</span><b>{t('جيد','Good','Bon')}</b></div></article>
+      <article className="ref-card ref-finance"><div className="ref-card-top"><div><span className="ref-kicker">{t('الملخص المالي','FINANCIAL SUMMARY','RÉSUMÉ FINANCIER')}</span><h2>{t('نظرة مالية','Financial overview','Vue financière')}</h2></div><CreditCard size={18} className="ref-muted"/></div><div className="ref-finance-values"><div><span>{t('الإيرادات','Revenue','Revenus')}</span><b>$1,250</b><small className="up">↗ 12.5%</small></div><div><span>{t('المصروفات','Expenses','Dépenses')}</span><b>$1,400</b><small className="down">↘ 3.2%</small></div></div><div className="ref-finance-bars"><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/><i/></div></article>
+      <article className="ref-card ref-select-card"><div className="ref-card-top"><div><span className="ref-kicker">{t('تفاصيل إضافية','MORE DETAILS','PLUS DE DÉTAILS')}</span><h2>{t('ملخص الفريق','Team summary','Résumé de l’équipe')}</h2></div><Users size={18} className="ref-muted"/></div><button className="ref-dropdown" onClick={()=>setMenu(!menu)}><span><span className="ref-avatar mini">T</span>{t('فريق التصميم','Design team','Équipe design')}</span><ChevronDown size={15}/></button>{menu&&<div className="ref-dropdown-options"><button onClick={()=>setMenu(false)}>{t('فريق المبيعات','Sales team','Équipe commerciale')}</button><button onClick={()=>setMenu(false)}>{t('فريق العمليات','Operations team','Équipe opérations')}</button></div>}<div className="ref-team-members"><span>AM</span><span>JD</span><span>SK</span><span>+8</span><small>{t('11 عضوًا نشطًا','11 active members','11 membres actifs')}</small></div></article>
+     </div>
+     <div className="ref-column">
+      <article className="ref-card ref-settings-card"><div className="ref-settings-visual"><div className="ref-orbit orbit-a"/><div className="ref-orbit orbit-b"/><span><Settings2 size={29}/></span><i className="orb-dot dot-a"/><i className="orb-dot dot-b"/><i className="orb-dot dot-c"/></div><span className="ref-kicker">{t('مساحة عمل ذكية','SMART WORKSPACE','ESPACE INTELLIGENT')}</span><h2>{t('كل شيء في مكانه.','Everything in its place.','Tout à sa place.')}</h2><p>{t('خصص مساحة عملك، ونظم الأدوات، وحافظ على تركيز فريقك من لوحة واحدة.','Customize your workspace, organize your tools, and keep your team focused from one place.','Personnalisez votre espace, organisez vos outils et gardez votre équipe concentrée.')}</p><button className="ref-link" onClick={()=>setActive(7)}>{t('تخصيص مساحة العمل','Customize workspace','Personnaliser')} <ArrowUpRight size={14}/></button></article>
+      <article className="ref-card ref-priority"><div className="ref-card-top"><div><span className="ref-kicker">{t('الأولويات','PRIORITY','PRIORITÉ')}</span><h2>{t('توزيع الأولويات','Priority distribution','Répartition des priorités')}</h2></div><button className="ref-dots"><MoreHorizontal size={18}/></button></div><div className="ref-priority-total"><b>84</b><span>{t('إجمالي العناصر','Total items','Éléments au total')}</span><small className="up">↗ 8.2%</small></div><div className="ref-priority-chart">{[48,72,55,86,64,95,76,59,82,68,100,74,88,61,79,93,66,84].map((h,i)=><i key={i} style={{height:h+'%'}} className={i===10?'highlight':''}/>)}</div><div className="ref-chart-labels"><span>{t('منخفض','Low','Faible')}</span><span>{t('متوسط','Medium','Moyen')}</span><span>{t('مرتفع','High','Élevé')}</span></div></article>
+      <article className="ref-card ref-mini-chart"><div className="ref-card-top"><div><span className="ref-kicker">{t('النشاط بمرور الوقت','ACTIVITY OVER TIME','ACTIVITÉ DANS LE TEMPS')}</span><h2>{t('معدل الإنتاجية','Productivity rate','Taux de productivité')}</h2></div><span className="ref-pill positive"><ArrowUpRight size={13}/> 14.8%</span></div><div className="ref-mini-bars">{bars.map((h,i)=><i key={i} style={{height:h+'%','--delay':i*28+'ms'}}/>)}</div><div className="ref-mini-footer"><span>{t('هذا الأسبوع','This week','Cette semaine')}</span><b>+24.6%</b></div></article>
+      <article className="ref-card ref-tip"><span className="ref-tip-icon"><Zap size={16}/></span><div><b>{t('نصيحة ذكية','Smart insight','Conseil intelligent')}</b><p>{t('أنجزت 4 مهام أكثر من الأسبوع الماضي. استمر!','You completed 4 more tasks than last week. Keep it up!','Vous avez terminé 4 tâches de plus que la semaine passée. Continuez !')}</p></div></article>
+     </div>
+    </div>
+    <footer className="ref-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span><ShieldCheck size={13}/> {t('بيئة عمل آمنة','Secure workspace','Espace sécurisé')}</span><span>{t('مصمم للأعمال. مبني للسرعة.','Designed for business. Built for speed.','Conçu pour les entreprises.')}</span></footer>
+   </div>
+  </section>
+ </main>
 }
