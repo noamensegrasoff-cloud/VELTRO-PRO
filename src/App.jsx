@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight,
+  Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, Moon, Sun,
   MoreHorizontal, CalendarDays, Package, ReceiptText,
   Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
   ShoppingCart, X, Globe, ClipboardList, History,
@@ -33,7 +33,7 @@ const copy = {
     profit: 'الربح التقديري', viewDetails: 'عرض التفاصيل', allSections: 'الأقسام',
     searchResults: 'نتائج البحث', noResults: 'لا توجد نتائج مطابقة.',
     topProducts: 'أكثر المنتجات حركة', activity: 'النشاط حسب الفترة',
-    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد',
+    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد', darkMode: 'الوضع الداكن', lightMode: 'الوضع الفاتح',
   },
   en: {
     workspace: 'Workspace', search: 'Search sections and actions...', demo: 'Design preview · Sample data',
@@ -58,7 +58,7 @@ const copy = {
     profit: 'Estimated profit', viewDetails: 'View details', allSections: 'Sections',
     searchResults: 'Search results', noResults: 'No matching results.',
     topProducts: 'Top moving products', activity: 'Activity by period',
-    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'UI preview — store transactions are not connected yet',
+    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'UI preview — store transactions are not connected yet', darkMode: 'Dark mode', lightMode: 'Light mode',
   },
   fr: {
     workspace: 'Espace de travail', search: 'Rechercher une rubrique...', demo: 'Aperçu du design · Données fictives',
@@ -237,9 +237,11 @@ function ModulePage({ page, parent, t, lang, onBack }) {
 }
 
 export default function App() {
+  const [theme,setTheme]=useState(()=>{try{return localStorage.getItem('veltro.theme')==='dark'?'dark':'light';}catch{return 'light';}});
   const [lang,setLang]=useState(()=>{try{return ['ar','fr','en'].includes(localStorage.getItem('veltro.language'))?localStorage.getItem('veltro.language'):'ar';}catch{return 'ar';}});
   const [cloudState,setCloudState]=useState('checking');
   useEffect(()=>{try{localStorage.setItem('veltro.language',lang);}catch{};document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title=lang==='ar'?'VELTRO-PRO — نظام إدارة المتجر':lang==='fr'?'VELTRO-PRO — Gestion commerciale':'VELTRO-PRO — Business Suite';},[lang]);
+  useEffect(()=>{try{localStorage.setItem('veltro.theme',theme);}catch{};document.documentElement.dataset.theme=theme;},[theme]);
   useEffect(()=>{let alive=true;getCloudStatus().then(status=>{if(alive)setCloudState(status);}).catch(()=>{if(alive)setCloudState('error');});return()=>{alive=false;};},[]);
   const [activePage,setActivePage]=useState(dashboard);
   const [activeParent,setActiveParent]=useState(null);
@@ -252,7 +254,7 @@ export default function App() {
   const dir=lang==='ar'?'rtl':'ltr';
   const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setNotificationsOpen(false);};
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
-  return <div className={'app-shell lang-'+lang} dir={dir}>
+  return <div className={'app-shell lang-'+lang+' theme-'+theme} dir={dir}>
     <div className="app-layout">
       <Sidebar lang={lang} t={t} activeId={activePage.id} onNavigate={navigate} onLogout={()=>setLogoutOpen(true)} search={search} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen}/>
       <main className="workspace">
@@ -260,6 +262,7 @@ export default function App() {
           <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>setMobileOpen(true)} aria-label="Open navigation"><Menu size={18}/></button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
           <div className="topbar-actions">
             <label className="global-search"><Search size={15}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>⌕</kbd></label>
+            <button className="icon-button theme-toggle" onClick={()=>setTheme(v=>v==='dark'?'light':'dark')} aria-label={theme==='dark'?t('lightMode'):t('darkMode')} title={theme==='dark'?t('lightMode'):t('darkMode')}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
             <label className="language-select"><Globe size={15}/><select value={lang} onChange={e=>setLang(e.target.value)} aria-label="Language"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select><ChevronDown size={12}/></label>
             <div className="notification-wrap"><button className="icon-button notification-button" onClick={()=>setNotificationsOpen(v=>!v)} aria-label={t('notifications')}><Bell size={17}/><i/></button>{notificationsOpen&&<div className="notification-popover"><b>{t('notifications')}</b><p>{t('noNotifications')}</p></div>}</div>
             <div className="profile-chip"><span className="profile-avatar">V</span><span><b>VELTRO</b><small>PRO</small></span><ChevronDown size={13}/></div>
