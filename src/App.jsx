@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, Moon, Sun,
+  Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, Moon, Sun, RotateCw,
   MoreHorizontal, CalendarDays, Package, ReceiptText,
   Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
   ShoppingCart, X, Globe, ClipboardList, History,
@@ -262,6 +262,7 @@ export default function App() {
           <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>setMobileOpen(true)} aria-label="Open navigation"><Menu size={18}/></button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
           <div className="topbar-actions">
             <label className="global-search"><Search size={15}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>⌕</kbd></label>
+            <button className="icon-button refresh-button" onClick={()=>window.location.reload()} aria-label={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'} title={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'}><RotateCw size={17}/></button>
             <button className="icon-button theme-toggle" onClick={()=>setTheme(v=>v==='dark'?'light':'dark')} aria-label={theme==='dark'?t('lightMode'):t('darkMode')} title={theme==='dark'?t('lightMode'):t('darkMode')}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
             <label className="language-select"><Globe size={15}/><select value={lang} onChange={e=>setLang(e.target.value)} aria-label="Language"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select><ChevronDown size={12}/></label>
             <div className="notification-wrap"><button className="icon-button notification-button" onClick={()=>setNotificationsOpen(v=>!v)} aria-label={t('notifications')}><Bell size={17}/><i/></button>{notificationsOpen&&<div className="notification-popover"><b>{t('notifications')}</b><p>{t('noNotifications')}</p></div>}</div>
