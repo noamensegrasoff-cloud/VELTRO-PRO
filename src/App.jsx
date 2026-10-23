@@ -4,7 +4,8 @@ import { sections } from './data/navigation.js';
 import RadialMenu from './components/RadialMenu.jsx';
 
 export default function App() {
-  const [selected, setSelected] = useState(null);\n  const [menuOpen, setMenuOpen] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [chosen, setChosen] = useState(null);
   const [pulse, setPulse] = useState(0);
 
