@@ -1,4 +1,5 @@
 import { isSupabaseConfigured, supabase } from '../lib/supabase.js';
+import { isFullCloudPage } from './syncQueuePolicy.js';
 
 const DEVICE_KEY = 'veltro-pro-device-id';
 
@@ -19,7 +20,16 @@ export async function getCloudStatus() {
   if (!isSupabaseConfigured || !supabase) return 'not_configured';
   const { data, error } = await supabase.auth.getSession();
   if (error) return 'error';
-  return data.session?.user ? 'connected' : 'configured';
+  if (!data.session?.user) return 'configured';
+
+  // A valid session alone does not prove the database schema is installed.
+  // Read-only probes keep the UI from reporting "connected" when tables are absent.
+  const [workspaceProbe, recordsProbe] = await Promise.all([
+    supabase.from('workspaces').select('id').limit(1),
+    supabase.from('cloud_records').select('record_id').limit(1),
+  ]);
+  if (workspaceProbe.error || recordsProbe.error) return 'error';
+  return 'connected';
 }
 
 function requireCloud() {
@@ -32,15 +42,26 @@ function requireCloud() {
 export async function getCloudRecords({ workspaceId, entityType, includeDeleted = false }) {
   if (!workspaceId || !entityType) throw new Error('workspaceId and entityType are required.');
   const client = requireCloud();
-  let query = client.from('cloud_records')
-    .select('workspace_id, entity_type, record_id, payload, updated_at, deleted_at, device_id')
-    .eq('workspace_id', workspaceId)
-    .eq('entity_type', entityType)
-    .order('updated_at', { ascending: true });
-  if (!includeDeleted) query = query.is('deleted_at', null);
-  const { data, error } = await query;
-  if (error) throw error;
-  return data ?? [];
+  const pageSize = 1000;
+  const allRows = [];
+  let from = 0;
+  while (true) {
+    let query = client.from('cloud_records')
+      .select('workspace_id, entity_type, record_id, payload, updated_at, deleted_at, device_id')
+      .eq('workspace_id', workspaceId)
+      .eq('entity_type', entityType)
+      .order('updated_at', { ascending: true })
+      .order('record_id', { ascending: true })
+      .range(from, from + pageSize - 1);
+    if (!includeDeleted) query = query.is('deleted_at', null);
+    const { data, error } = await query;
+    if (error) throw error;
+    const rows = data ?? [];
+    allRows.push(...rows);
+    if (!isFullCloudPage(rows, pageSize)) break;
+    from += pageSize;
+  }
+  return allRows;
 }
 
 export async function saveCloudRecord({ workspaceId, entityType, recordId, payload }) {
