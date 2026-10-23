@@ -14,7 +14,12 @@ const bars=[35,52,43,68,57,76,61,89,72,95,66,81,58,88,73,97,64,83];
 export default function App(){
  const [lang,setLang]=useState('en'); const [active,setActive]=useState(0); const [search,setSearch]=useState(''); const [notice,setNotice]=useState(false); const [menu,setMenu]=useState(false); const [checked,setChecked]=useState([true,false,false,true]);
  const t=(ar,en,fr)=>lang==='ar'?ar:lang==='fr'?fr:en;
- return <main className={'ref-app lang-'+lang} dir={lang==='ar'?'rtl':'ltr'}>
+ return <div className={'ref-shell lang-'+lang} dir={lang==='ar'?'rtl':'ltr'}>
+  <header className="ref-topbar"><div className="ref-top-left"><button className="ref-icon-btn mobile-only" onClick={()=>setMenu(!menu)}><Menu size={18}/></button><div className="ref-breadcrumb">{t('مساحة العمل','Workspace','Espace de travail')} <span>/</span> <b>{nav[active][lang==='ar'?0:lang==='fr'?2:1]}</b></div></div>
+    <div className="ref-top-tools"><label className="ref-search"><Search size={16}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('ابحث عن أي شيء...','Search anything...','Rechercher...')}/><kbd>⌘ K</kbd></label><label className="ref-search ref-search-small"><Command size={15}/><select value={lang} onChange={e=>setLang(e.target.value)} aria-label="Language"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select><ChevronDown size={13}/></label><button className="ref-icon-btn" onClick={()=>setNotice(!notice)} aria-label="Notifications"><Bell size={17}/><i className="ref-dot"/></button><button className="ref-icon-btn" aria-label="Microphone"><Mic size={17}/></button><button className="ref-primary" onClick={()=>setActive(1)}><Sparkles size={15}/>{t('إجراء جديد','New action','Nouvelle action')}</button><button className="ref-profile" onClick={()=>setMenu(!menu)}>N <ChevronDown size={13}/></button></div>
+    {notice&&<div className="ref-popover"><b>{t('الإشعارات','Notifications','Notifications')}</b><p>{t('كل شيء محدّث. لديك 3 مهام للمراجعة.','Everything is up to date. 3 tasks need review.','Tout est à jour. 3 tâches à vérifier.')}</p></div>}
+   </header>
+  <main className="ref-app">
   <aside className="ref-sidebar">
    <div className="ref-brand"><span className="ref-brand-icon"><Sparkles size={20}/></span><span><b>VELTRO</b><small>BUSINESS SUITE</small></span></div>
    <div className="ref-workspace"><span className="ref-avatar">V</span><span><b>{t('مساحة العمل','Workspace','Espace de travail')}</b><small>{t('الخطة الاحترافية','Professional plan','Offre professionnelle')}</small></span><ChevronDown size={15}/></div>
@@ -23,10 +28,7 @@ export default function App(){
    <div className="ref-side-bottom"><div className="ref-status"><span><Activity size={16}/></span><div><b>{t('النظام مستقر','System operational','Système opérationnel')}</b><small><i/> {t('جميع الخدمات متصلة','All services connected','Tous les services connectés')}</small></div></div><div className="ref-user"><span className="ref-avatar">N</span><span><b>{t('مدير المتجر','Workspace admin','Administrateur')}</b><small>noamen@veltro.app</small></span><MoreHorizontal size={17}/></div></div>
   </aside>
   <section className="ref-main">
-   <header className="ref-topbar"><div className="ref-top-left"><button className="ref-icon-btn mobile-only" onClick={()=>setMenu(!menu)}><Menu size={18}/></button><div className="ref-breadcrumb">{t('مساحة العمل','Workspace','Espace de travail')} <span>/</span> <b>{nav[active][lang==='ar'?0:lang==='fr'?2:1]}</b></div></div>
-    <div className="ref-top-tools"><label className="ref-search"><Search size={16}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('ابحث عن أي شيء...','Search anything...','Rechercher...')}/><kbd>⌘ K</kbd></label><label className="ref-search ref-search-small"><Command size={15}/><select value={lang} onChange={e=>setLang(e.target.value)} aria-label="Language"><option value="en">English</option><option value="fr">Français</option><option value="ar">العربية</option></select><ChevronDown size={13}/></label><button className="ref-icon-btn" onClick={()=>setNotice(!notice)} aria-label="Notifications"><Bell size={17}/><i className="ref-dot"/></button><button className="ref-icon-btn" aria-label="Microphone"><Mic size={17}/></button><button className="ref-primary" onClick={()=>setActive(1)}><Sparkles size={15}/>{t('إجراء جديد','New action','Nouvelle action')}</button><button className="ref-profile" onClick={()=>setMenu(!menu)}>N <ChevronDown size={13}/></button></div>
-    {notice&&<div className="ref-popover"><b>{t('الإشعارات','Notifications','Notifications')}</b><p>{t('كل شيء محدّث. لديك 3 مهام للمراجعة.','Everything is up to date. 3 tasks need review.','Tout est à jour. 3 tâches à vérifier.')}</p></div>}
-   </header>
+
    <div className="ref-content">
     <div className="ref-heading"><div><div className="ref-eyebrow"><i/> {t('نظرة عامة على مساحة العمل','WORKSPACE OVERVIEW','APERÇU DE L’ESPACE')}</div><h1>{t('أهلاً بعودتك،','Welcome back,','Bon retour,')} <em>{t('نعمان.','Naaman.','Naaman.')}</em></h1><p>{t('إليك ملخص الأداء والنشاط لهذا اليوم.','Here’s your performance and activity summary for today.','Voici votre résumé des performances et de l’activité du jour.')}</p></div><button className="ref-date" onClick={()=>setSearch('Today')}><CalendarDays size={15}/>{t('23 أكتوبر 2026','October 23, 2026','23 octobre 2026')}<ChevronDown size={14}/></button></div>
     <div className="ref-grid">
@@ -51,5 +53,6 @@ export default function App(){
     <footer className="ref-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span><ShieldCheck size={13}/> {t('بيئة عمل آمنة','Secure workspace','Espace sécurisé')}</span><span>{t('مصمم للأعمال. مبني للسرعة.','Designed for business. Built for speed.','Conçu pour les entreprises.')}</span></footer>
    </div>
   </section>
- </main>
+  </main>
+ </div>
 }
