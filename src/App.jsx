@@ -9,6 +9,7 @@ import {
 import { dashboard, sections } from './data/navigation.js';
 import { getCloudStatus } from './services/cloudStorage.js';
 import { supabase } from './lib/supabase.js';
+import BusinessOnboarding from './BusinessOnboarding.jsx';
 
 const copy = {
   ar: {
@@ -241,9 +242,58 @@ export default function App() {
   const [theme,setTheme]=useState(()=>{try{return localStorage.getItem('veltro.theme')==='dark'?'dark':'light';}catch{return 'light';}});
   const [lang,setLang]=useState(()=>{try{return ['ar','fr','en'].includes(localStorage.getItem('veltro.language'))?localStorage.getItem('veltro.language'):'ar';}catch{return 'ar';}});
   const [cloudState,setCloudState]=useState('checking');
+  const [setupState,setSetupState]=useState('checking');
+  const [setupProfile,setSetupProfile]=useState({});
+  const [setupSaving,setSetupSaving]=useState(false);
+  const [setupError,setSetupError]=useState('');
+  const [setupLang,setSetupLang]=useState('ar');
   useEffect(()=>{try{localStorage.setItem('veltro.language',lang);}catch{};document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title=lang==='ar'?'VELTRO-PRO — نظام إدارة المتجر':lang==='fr'?'VELTRO-PRO — Gestion commerciale':'VELTRO-PRO — Business Suite';},[lang]);
   useEffect(()=>{try{localStorage.setItem('veltro.theme',theme);}catch{};document.documentElement.dataset.theme=theme;},[theme]);
   useEffect(()=>{let alive=true;getCloudStatus().then(status=>{if(alive)setCloudState(status);}).catch(()=>{if(alive)setCloudState('error');});return()=>{alive=false;};},[]);
+  useEffect(()=>{
+    let alive=true;
+    (async()=>{
+      try {
+        const {data:{session}}=await supabase.auth.getSession();
+        if(!alive)return;
+        const user=session?.user;
+        if(!user){setSetupState('complete');return;}
+        const storageKey='veltro.business-profile.'+user.id;
+        let localProfile=null;
+        try{const raw=localStorage.getItem(storageKey);if(raw)localProfile=JSON.parse(raw);}catch{}
+        const cloudProfile=user.user_metadata?.business_profile;
+        const profile=cloudProfile||localProfile;
+        if(profile&&profile.storeName&&profile.activity){
+          setSetupProfile(profile);
+          try{localStorage.setItem(storageKey,JSON.stringify(profile));}catch{}
+          setSetupState('complete');
+        }else{
+          setSetupProfile({});
+          setSetupState('required');
+        }
+      }catch{if(alive)setSetupState('required');}
+    })();
+    return()=>{alive=false;};
+  },[]);
+  async function completeBusinessSetup(profile){
+    setSetupSaving(true);setSetupError('');
+    try{
+      const {data:{user},error:userError}=await supabase.auth.getUser();
+      if(userError)throw userError;
+      if(!user)throw new Error('لم يتم العثور على جلسة المستخدم.');
+      const {error}=await supabase.auth.updateUser({data:{business_profile:profile}});
+      if(error)throw error;
+      try{localStorage.setItem('veltro.business-profile.'+user.id,JSON.stringify(profile));}catch{}
+      setSetupProfile(profile);
+      setSetupState('complete');
+    }catch(error){
+      setSetupError(error?.message||'تعذّر حفظ معلومات المحل. حاول مجددًا.');
+    }finally{setSetupSaving(false);}
+  }
+  async function logoutFromSetup(){
+    try{const {error}=await supabase.auth.signOut();if(error)throw error;setSetupState('required');}
+    catch(error){setSetupError(error?.message||'تعذّر تسجيل الخروج. حاول مجددًا.');}
+  }
   const [activePage,setActivePage]=useState(dashboard);
   const [activeParent,setActiveParent]=useState(null);
   const [search,setSearch]=useState('');
@@ -291,6 +341,8 @@ export default function App() {
     window.addEventListener('keydown', onKeyDown, true);
     return () => window.removeEventListener('keydown', onKeyDown, true);
   }, [sidebarVisible, logoutOpen, signedOut, mobileOpen, activePage.id]);
+  if(setupState==='checking') return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تجهيز مساحة العمل…':lang==='fr'?'Préparation de votre espace…':'Preparing your workspace…'}</p></div></div>;
+  if(setupState==='required') return <BusinessOnboarding lang={lang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
   return <div className={'app-shell lang-'+lang+' theme-'+theme+(sidebarVisible?'':' sidebar-collapsed')} dir={dir}>
     <div className="app-layout">
