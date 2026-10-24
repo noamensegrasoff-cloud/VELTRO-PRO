@@ -341,7 +341,7 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKeyDown, true);
   }, [sidebarVisible, logoutOpen, signedOut, mobileOpen, activePage.id]);
   if(setupState==='checking') return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تجهيز مساحة العمل…':lang==='fr'?'Préparation de votre espace…':'Preparing your workspace…'}</p></div></div>;
-  if(setupState==='required') return <BusinessOnboarding lang={lang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
+  if(setupState==='required') return <BusinessOnboarding lang={lang} onLanguageChange={setLang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
   return <div className={'app-shell lang-'+lang+' theme-'+theme+(sidebarVisible?'':' sidebar-collapsed')} dir={dir}>
     <div className="app-layout">
