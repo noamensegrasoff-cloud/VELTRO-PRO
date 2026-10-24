@@ -246,7 +246,6 @@ export default function App() {
   const [setupProfile,setSetupProfile]=useState({});
   const [setupSaving,setSetupSaving]=useState(false);
   const [setupError,setSetupError]=useState('');
-  const [setupLang,setSetupLang]=useState('ar');
   useEffect(()=>{try{localStorage.setItem('veltro.language',lang);}catch{};document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title=lang==='ar'?'VELTRO-PRO — نظام إدارة المتجر':lang==='fr'?'VELTRO-PRO — Gestion commerciale':'VELTRO-PRO — Business Suite';},[lang]);
   useEffect(()=>{try{localStorage.setItem('veltro.theme',theme);}catch{};document.documentElement.dataset.theme=theme;},[theme]);
   useEffect(()=>{let alive=true;getCloudStatus().then(status=>{if(alive)setCloudState(status);}).catch(()=>{if(alive)setCloudState('error');});return()=>{alive=false;};},[]);
