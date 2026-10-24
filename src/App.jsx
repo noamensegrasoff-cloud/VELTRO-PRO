@@ -10,6 +10,7 @@ import { dashboard, sections } from './data/navigation.js';
 import { getCloudStatus } from './services/cloudStorage.js';
 import { supabase } from './lib/supabase.js';
 import BusinessOnboarding from './BusinessOnboarding.jsx';
+import EmployeesPermissions from './EmployeesPermissions.jsx';
 
 const copy = {
   ar: {
@@ -358,7 +359,7 @@ export default function App() {
             <div className="profile-chip"><span className="profile-avatar">V</span><span><b>VELTRO</b><small>PRO</small></span><ChevronDown size={13}/></div>
           </div>
         </header>
-        {activePage.id===dashboard.id?<DashboardPage t={t} lang={lang} onNavigate={navigate}/>:<ModulePage page={activePage} parent={activeParent} t={t} lang={lang} onBack={()=>navigate(dashboard)}/>}
+        {activePage.id===dashboard.id?<DashboardPage t={t} lang={lang} onNavigate={navigate}/>:['users-roles','permissions'].includes(activePage.id)?<EmployeesPermissions lang={lang} page={activePage.id}/>:<ModulePage page={activePage} parent={activeParent} t={t} lang={lang} onBack={()=>navigate(dashboard)}/>
         <footer className="workspace-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span className={'cloud-status cloud-'+cloudState}><Cloud size={14}/><span>{cloudState==='connected'?t('cloudConnected'):cloudState==='configured'?t('cloudConfigured'):cloudState==='checking'?t('cloudChecking'):cloudState==='error'?t('cloudError'):t('cloudMissing')}</span></span><span className="prototype-note">{t('cloudPrototype')}</span></footer>
       </main>
     </div>
