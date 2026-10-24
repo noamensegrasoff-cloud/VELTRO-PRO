@@ -37,7 +37,7 @@ const copy = {
 
 const icons = [Store, BriefcaseBusiness, Compass, Building2, Sparkles, Store, Sparkles, Building2, Store, Globe2];
 
-export default function BusinessOnboarding({ lang='ar', initialProfile={}, onComplete, onLogout, saving=false, saveError='' }) {
+export default function BusinessOnboarding({ lang='ar', initialProfile={}, onComplete, onLogout, saving=false, saveError='', onLanguageChange }) {
   const t = copy[lang] || copy.ar;
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
   const [activity, setActivity] = useState(initialProfile.activity || '');
@@ -64,7 +64,7 @@ export default function BusinessOnboarding({ lang='ar', initialProfile={}, onCom
     <div className="onboard-orb onboard-orb-a"/><div className="onboard-orb onboard-orb-b"/>
     <header className="onboard-header">
       <div className="onboard-brand"><span className="onboard-mark">V</span><span><b>VELTRO</b><small>BUSINESS SUITE</small></span></div>
-      <div className="onboard-header-right"><span className="onboard-step"><i/> {t.step}</span><button className="onboard-logout" onClick={onLogout}>{t.logout}</button></div>
+      <div className="onboard-header-right"><label className="onboard-language"><Globe2 size={14}/><select value={lang} onChange={e=>onLanguageChange?.(e.target.value)} aria-label="Language"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select><ChevronDown size={12}/></label><span className="onboard-step"><i/> {t.step}</span><button className="onboard-logout" onClick={onLogout}>{t.logout}</button></div>
     </header>
     <div className="onboard-layout">
       <section className="onboard-intro">
