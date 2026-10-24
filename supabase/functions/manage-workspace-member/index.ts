@@ -79,17 +79,27 @@ Deno.serve(async (req) => {
   }
 
   const status = action === "suspend" ? "suspended" : "active";
-  const { error: profileError } = await admin.from("employee_profiles").upsert({
-    workspace_id: workspaceId, user_id: targetId, status, updated_at: new Date().toISOString(),
-  }, { onConflict: "workspace_id,user_id" });
-  if (profileError) return respond({ error: "Could not update employee status." }, 500);
+  const { data: existingProfile, error: profileReadError } = await admin.from("employee_profiles")
+    .select("workspace_id,user_id").eq("workspace_id", workspaceId).eq("user_id", targetId).maybeSingle();
+  if (profileReadError) return respond({ error: "Could not load employee profile." }, 500);
+  const profileWrite = existingProfile
+    ? await admin.from("employee_profiles").update({ status, updated_at: new Date().toISOString() })
+        .eq("workspace_id", workspaceId).eq("user_id", targetId)
+    : await admin.from("employee_profiles").insert({ workspace_id: workspaceId, user_id: targetId, status });
+  if (profileWrite.error) return respond({ error: "Could not update employee status." }, 500);
 
-  // Revoke or restore Supabase Auth access, not just a visual status badge.
+  // Ban future sign-ins/token refreshes and mark tracked sessions revoked.
   const { error: authUpdateError } = await admin.auth.admin.updateUserById(targetId, {
     ban_duration: action === "suspend" ? "876000h" : "none",
   });
   if (authUpdateError) {
     return respond({ error: "Employee status was saved, but authentication access could not be changed: " + authUpdateError.message }, 500);
+  }
+  if (action === "suspend") {
+    const { error: sessionError } = await admin.from("workspace_sessions")
+      .update({ revoked_at: new Date().toISOString() })
+      .eq("workspace_id", workspaceId).eq("user_id", targetId).is("revoked_at", null);
+    if (sessionError) return respond({ error: "Account was suspended, but tracked sessions could not all be revoked." }, 500);
   }
   await admin.from("workspace_audit_logs").insert({
     workspace_id: workspaceId, actor_user_id: callerId, action: "employee.status.update",
