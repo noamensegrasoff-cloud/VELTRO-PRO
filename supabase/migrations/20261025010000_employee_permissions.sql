@@ -125,7 +125,7 @@ insert into public.role_permission_templates(role, permission_key) values
 ('viewer','dashboard.view'),('viewer','sales.view'),('viewer','products.view'),('viewer','purchases.view'),('viewer','customers.view'),('viewer','reports.sales.view')
 on conflict do nothing;
 
-create or replace function public.has_workspace_permission(target_workspace uuid, permission_key text)
+create or replace function public.has_workspace_permission(target_workspace uuid, requested_permission text)
 returns boolean
 language sql stable security definer set search_path = ''
 as $$
@@ -138,10 +138,10 @@ as $$
       and wm.user_id = (select auth.uid())
       and (
         wm.role = 'owner'
-        or coalesce((wr.permissions ->> permission_key)::boolean, false)
+        or coalesce((wr.permissions ->> requested_permission)::boolean, false)
         or exists (
           select 1 from public.role_permission_templates rpt
-          where rpt.role = wm.role and rpt.permission_key = has_workspace_permission.permission_key
+          where rpt.role = wm.role and rpt.permission_key = requested_permission
         )
       )
   );
