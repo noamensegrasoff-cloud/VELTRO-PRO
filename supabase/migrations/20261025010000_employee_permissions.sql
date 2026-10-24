@@ -277,6 +277,11 @@ create policy "Owners can remove non-owner workspace members" on public.workspac
     public.is_workspace_owner(workspace_id) and role <> 'owner'
   );
 
+revoke all on function public.is_workspace_owner(uuid) from public, anon;
+revoke all on function public.has_workspace_permission(uuid, text) from public, anon;
+grant execute on function public.is_workspace_owner(uuid) to authenticated, service_role;
+grant execute on function public.has_workspace_permission(uuid, text) to authenticated, service_role;
+
 comment on table public.workspace_roles is 'Workspace-scoped custom roles. Only the workspace owner may manage role definitions and permission grants.';
 comment on table public.workspace_audit_logs is 'Append-oriented audit log for sensitive workspace actions.';
 comment on table public.workspace_approval_requests is 'Approval queue for sensitive operations such as voids, returns, and manual stock changes.';
