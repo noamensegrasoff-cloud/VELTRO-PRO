@@ -216,16 +216,17 @@ export default function EmployeesPermissions({ lang = 'ar', page = 'users-roles'
 
   async function changeEmployeeStatus(employee) {
     if (!isOwner || employee.role === 'owner' || employee.user_id === currentUser?.id) { setError(t.onlyOwner); return; }
-    const next = employee.status === 'suspended' ? 'active' : 'suspended';
-    if (next === 'suspended' && !window.confirm(t.confirmSuspend)) return;
+    const action = employee.status === 'suspended' ? 'activate' : 'suspend';
+    if (action === 'suspend' && !window.confirm(t.confirmSuspend)) return;
     setBusy(true); setError(''); setNotice('');
     try {
-      const { error: updateError } = await supabase.from('employee_profiles').upsert({
-        workspace_id:workspace.id,user_id:employee.user_id,full_name:employee.full_name || '',email:employee.email || '',phone:employee.phone || '',status:next,updated_at:new Date().toISOString()
+      const { data, error: invokeError } = await supabase.functions.invoke('manage-workspace-member', {
+        body: { workspace_id: workspace.id, user_id: employee.user_id, action }
       });
-      if (updateError) throw updateError;
-      await writeAudit('employee.status.update','employee',employee.user_id,{status:next});
-      setNotice(next === 'active' ? t.activeDone : t.suspendedDone); await load();
+      if (invokeError) throw invokeError;
+      if (data?.error) throw new Error(data.error);
+      setNotice(action === 'activate' ? t.activeDone : t.suspendedDone);
+      await load();
     } catch (e) { setError(errorText(e)); }
     finally { setBusy(false); }
   }
@@ -234,11 +235,11 @@ export default function EmployeesPermissions({ lang = 'ar', page = 'users-roles'
     if (!isOwner || employee.role === 'owner' || employee.user_id === currentUser?.id) { setError(t.onlyOwner); return; }
     setBusy(true); setError(''); setNotice('');
     try {
-      const isCustom = roles.some(role => role.id === roleId);
-      const { error: updateError } = await supabase.from('workspace_members').update({
-        role: isCustom ? 'member' : roleId, custom_role_id:isCustom ? roleId : null
-      }).eq('workspace_id',workspace.id).eq('user_id',employee.user_id);
-      if (updateError) throw updateError;
+      const { data, error: invokeError } = await supabase.functions.invoke('manage-workspace-member', {
+        body: { workspace_id: workspace.id, user_id: employee.user_id, action: 'set_role', role: roleId }
+      });
+      if (invokeError) throw invokeError;
+      if (data?.error) throw new Error(data.error);
       await writeAudit('employee.role.update','employee',employee.user_id,{role:roleId});
       await load();
     } catch (e) { setError(errorText(e)); }
