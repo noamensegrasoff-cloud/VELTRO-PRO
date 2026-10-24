@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { dashboard, sections } from './data/navigation.js';
 import { getCloudStatus } from './services/cloudStorage.js';
+import { supabase } from './lib/supabase.js';
 
 const copy = {
   ar: {
@@ -310,6 +311,6 @@ export default function App() {
         <footer className="workspace-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span className={'cloud-status cloud-'+cloudState}><Cloud size={14}/><span>{cloudState==='connected'?t('cloudConnected'):cloudState==='configured'?t('cloudConfigured'):cloudState==='checking'?t('cloudChecking'):cloudState==='error'?t('cloudError'):t('cloudMissing')}</span></span><span className="prototype-note">{t('cloudPrototype')}</span></footer>
       </main>
     </div>
-    {logoutOpen&&<div className="modal-backdrop" role="presentation"><section className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title"><span className="modal-icon"><LogOut size={22}/></span><h2 id="logout-title">{t('logoutConfirm')}</h2><p>VELTRO BUSINESS SUITE</p><div><button className="button-secondary" onClick={()=>setLogoutOpen(false)}>{t('cancel')}</button><button className="button-danger" onClick={()=>{setLogoutOpen(false);setSignedOut(true);}}>{t('confirm')}</button></div><button className="modal-close" onClick={()=>setLogoutOpen(false)} aria-label="Close"><X size={16}/></button></section></div>}
+    {logoutOpen&&<div className="modal-backdrop" role="presentation"><section className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title"><span className="modal-icon"><LogOut size={22}/></span><h2 id="logout-title">{t('logoutConfirm')}</h2><p>VELTRO BUSINESS SUITE</p><div><button className="button-secondary" onClick={()=>setLogoutOpen(false)}>{t('cancel')}</button><button className="button-danger" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;setLogoutOpen(false);setSignedOut(false);}catch(error){window.alert(error?.message||'تعذّر تسجيل الخروج. حاول مجددًا.');}}}>{t('confirm')}</button></div><button className="modal-close" onClick={()=>setLogoutOpen(false)} aria-label="Close"><X size={16}/></button></section></div>}
   </div>;
 }
