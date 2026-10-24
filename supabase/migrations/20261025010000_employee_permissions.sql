@@ -107,6 +107,24 @@ as $$
   );
 $$;
 
+create table if not exists public.role_permission_templates (
+  role text not null check (role in ('admin','manager','cashier','member','viewer')),
+  permission_key text not null,
+  primary key (role, permission_key)
+);
+alter table public.role_permission_templates enable row level security;
+drop policy if exists "Authenticated users can read role permission templates" on public.role_permission_templates;
+create policy "Authenticated users can read role permission templates" on public.role_permission_templates
+  for select to authenticated using (true);
+
+insert into public.role_permission_templates(role, permission_key) values
+('admin','dashboard.view'),('admin','sales.view'),('admin','sales.create'),('admin','sales.edit'),('admin','sales.discount'),('admin','sales.return'),('admin','cash.view'),('admin','cash.open_close'),('admin','cash.expense.create'),('admin','products.view'),('admin','products.create'),('admin','products.edit'),('admin','products.cost.view'),('admin','products.price.edit'),('admin','inventory.adjust'),('admin','inventory.count'),('admin','purchases.view'),('admin','purchases.create'),('admin','purchases.confirm'),('admin','suppliers.manage'),('admin','customers.view'),('admin','customers.manage'),('admin','customers.debts.view'),('admin','reports.sales.view'),('admin','reports.profit.view'),('admin','reports.export'),('admin','reports.staff.view'),('admin','employees.view'),('admin','employees.manage'),('admin','approvals.review'),('admin','audit.view'),
+('manager','dashboard.view'),('manager','sales.view'),('manager','sales.create'),('manager','sales.edit'),('manager','sales.discount'),('manager','sales.return'),('manager','cash.view'),('manager','cash.open_close'),('manager','cash.expense.create'),('manager','products.view'),('manager','products.create'),('manager','products.edit'),('manager','products.cost.view'),('manager','products.price.edit'),('manager','inventory.adjust'),('manager','inventory.count'),('manager','purchases.view'),('manager','purchases.create'),('manager','purchases.confirm'),('manager','suppliers.manage'),('manager','customers.view'),('manager','customers.manage'),('manager','customers.debts.view'),('manager','reports.sales.view'),('manager','reports.staff.view'),('manager','employees.view'),('manager','approvals.review'),
+('cashier','dashboard.view'),('cashier','sales.view'),('cashier','sales.create'),('cashier','sales.edit'),('cashier','cash.view'),('cashier','cash.open_close'),('cashier','products.view'),('cashier','customers.view'),
+('member','dashboard.view'),('member','sales.view'),('member','products.view'),
+('viewer','dashboard.view'),('viewer','sales.view'),('viewer','products.view'),('viewer','purchases.view'),('viewer','customers.view'),('viewer','reports.sales.view')
+on conflict do nothing;
+
 create or replace function public.has_workspace_permission(target_workspace uuid, permission_key text)
 returns boolean
 language sql stable security definer set search_path = ''
@@ -121,6 +139,10 @@ as $$
       and (
         wm.role = 'owner'
         or coalesce((wr.permissions ->> permission_key)::boolean, false)
+        or exists (
+          select 1 from public.role_permission_templates rpt
+          where rpt.role = wm.role and rpt.permission_key = has_workspace_permission.permission_key
+        )
       )
   );
 $$;
