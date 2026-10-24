@@ -24,7 +24,7 @@ const permissionGroups = [
   { id: 'purchases', ar: 'المشتريات والموردون', fr: 'Achats et fournisseurs', en: 'Purchases & suppliers', items: [['purchases.view','عرض المشتريات'],['purchases.create','إنشاء فاتورة شراء'],['purchases.confirm','تأكيد استلام البضاعة'],['suppliers.manage','إدارة الموردين']] },
   { id: 'customers', ar: 'العملاء', fr: 'Clients', en: 'Customers', items: [['customers.view','عرض العملاء'],['customers.manage','إدارة بيانات العملاء'],['customers.debts.view','عرض ديون العملاء']] },
   { id: 'reports', ar: 'التقارير والبيانات المالية', fr: 'Rapports et finances', en: 'Reports & finance', items: [['reports.sales.view','تقرير المبيعات'],['reports.profit.view','عرض الأرباح'],['reports.export','تصدير التقارير'],['reports.staff.view','عرض أداء العمال']] },
-  { id: 'admin', ar: 'الإدارة والأمان', fr: 'Administration et sécurité', en: 'Administration & security', items: [['employees.view','عرض العمال'],['employees.manage','إدارة حسابات العمال'],['roles.manage','إدارة الأدوار والصلاحيات'],['branches.manage','إدارة الفروع'],['audit.view','عرض سجل النشاطات'],['approvals.review','مراجعة طلبات الموافقة']] },
+  { id: 'admin', ar: 'الإدارة والأمان', fr: 'Administration et sécurité', en: 'Administration & security', items: [['employees.view','عرض العمال'],['audit.view','عرض سجل النشاطات'],['approvals.review','مراجعة طلبات الموافقة']] },
 ];
 const allPermissionKeys = permissionGroups.flatMap(group => group.items.map(item => item[0]));
 const defaultPermissions = {
