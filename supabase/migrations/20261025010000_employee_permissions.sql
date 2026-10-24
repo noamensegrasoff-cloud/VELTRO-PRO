@@ -225,6 +225,36 @@ create policy "Owners manage sessions" on public.workspace_sessions
   for all to authenticated using (public.is_workspace_owner(workspace_id))
   with check (public.is_workspace_owner(workspace_id));
 
+drop policy if exists "Owners can add non-owner workspace members" on public.workspace_members;
+create policy "Owners can add non-owner workspace members" on public.workspace_members
+  for insert to authenticated with check (
+    public.is_workspace_owner(workspace_id)
+    and role <> 'owner'
+    and (custom_role_id is null or exists (
+      select 1 from public.workspace_roles wr
+      where wr.id = custom_role_id and wr.workspace_id = workspace_id
+    ))
+  );
+
+drop policy if exists "Owners can update non-owner workspace members" on public.workspace_members;
+create policy "Owners can update non-owner workspace members" on public.workspace_members
+  for update to authenticated using (
+    public.is_workspace_owner(workspace_id) and role <> 'owner'
+  ) with check (
+    public.is_workspace_owner(workspace_id)
+    and role <> 'owner'
+    and (custom_role_id is null or exists (
+      select 1 from public.workspace_roles wr
+      where wr.id = custom_role_id and wr.workspace_id = workspace_id
+    ))
+  );
+
+drop policy if exists "Owners can remove non-owner workspace members" on public.workspace_members;
+create policy "Owners can remove non-owner workspace members" on public.workspace_members
+  for delete to authenticated using (
+    public.is_workspace_owner(workspace_id) and role <> 'owner'
+  );
+
 comment on table public.workspace_roles is 'Workspace-scoped custom roles. Only the workspace owner may manage role definitions and permission grants.';
 comment on table public.workspace_audit_logs is 'Append-oriented audit log for sensitive workspace actions.';
 comment on table public.workspace_approval_requests is 'Approval queue for sensitive operations such as voids, returns, and manual stock changes.';
