@@ -37,7 +37,7 @@ const copy = {
 
 const icons = [Store, BriefcaseBusiness, Compass, Building2, Sparkles, Store, Sparkles, Building2, Store, Globe2];
 
-export default function BusinessOnboarding({ lang='ar', initialProfile={}, onComplete, onLogout, saving=false }) {
+export default function BusinessOnboarding({ lang='ar', initialProfile={}, onComplete, onLogout, saving=false, saveError='' }) {
   const t = copy[lang] || copy.ar;
   const dir = lang === 'ar' ? 'rtl' : 'ltr';
   const [activity, setActivity] = useState(initialProfile.activity || '');
@@ -94,7 +94,7 @@ export default function BusinessOnboarding({ lang='ar', initialProfile={}, onCom
             <label className="onboard-field"><span>{t.address} <small>· {t.optional}</small></span><div className="onboard-input-icon"><MapPin size={16}/><input value={form.address} onChange={e=>update('address',e.target.value)} placeholder={t.addressPlaceholder} autoComplete="street-address"/></div></label>
             <label className="onboard-field"><span>{t.city} <small>· {t.optional}</small></span><input value={form.city} onChange={e=>update('city',e.target.value)} placeholder={t.cityPlaceholder} autoComplete="address-level2"/></label>
           </div>
-          {error&&<div className="onboard-error" role="alert">{error}</div>}
+          {(error||saveError)&&<div className="onboard-error" role="alert">{error||saveError}</div>}
           <button className="onboard-submit" type="submit" disabled={saving}><span>{saving?t.saving:t.continue}</span><span className="submit-arrow">{saving?<span className="onboard-spinner"/>:dir==='rtl'?<ArrowLeft size={18}/>:<ArrowRight size={18}/>}</span></button>
           <p className="onboard-form-foot"><Check size={13}/>{t.note}</p>
         </form>
