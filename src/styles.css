@@ -1614,3 +1614,194 @@ input,select,textarea{border-radius:9px}
 @media (prefers-reduced-motion:reduce){
   .sidebar,.sidebar-open,.sidebar-scrim{transition:none!important}
 }
+
+
+/* VELTRO visual refinement: clearer customer accounts and cohesive premium colors */
+:root{
+  --navy:#172b4d;
+  --blue:#2563eb;
+  --pale:#f3f6fc;
+  --green:#0f9f83;
+  --muted:#64748b;
+  --line:#dce5f1;
+  --panel:#ffffff;
+  --shadow:0 8px 24px rgba(31,55,90,.065);
+  --veltro-teal:#0d9488;
+  --veltro-cyan:#0891b2;
+  --veltro-blue:#3b82f6;
+  --veltro-violet:#7c3aed;
+  --veltro-amber:#d97706;
+  --veltro-rose:#e11d48;
+}
+.workspace{background:var(--pale)}
+.topbar{background:rgba(255,255,255,.96);border-color:#dce5f1}
+.page-content{scrollbar-color:#bdcbe0 transparent}
+.page-heading h1{color:#172b4d}
+.page-heading p,.heading-kicker{color:#64748b}
+.metric-card,.chart-panel,.mix-panel,.recent-panel,.stock-panel,.panel{
+  border-color:#dce5f1;
+  box-shadow:0 7px 22px rgba(31,55,90,.055);
+}
+.metric-card{border-radius:13px;transition:transform .18s ease,box-shadow .18s ease}
+.metric-card:hover{transform:translateY(-2px);box-shadow:0 12px 26px rgba(31,55,90,.10)}
+.metric-icon.tone-blue{background:#e8efff;color:#315fe5}
+.metric-icon.tone-green{background:#ddf7ee;color:#078466}
+.metric-icon.tone-violet{background:#efe8ff;color:#7543d6}
+.metric-icon.tone-amber{background:#fff0d8;color:#b86a09}
+.workspace .supplier-accounts-page{
+  gap:16px;
+  padding:18px 4px 14px;
+}
+.workspace .supplier-accounts-heading{
+  padding:0 2px 10px;
+  border-bottom:1px solid #dce5f1;
+}
+.workspace .supplier-accounts-heading h1{font-size:clamp(23px,1.9vw,30px);letter-spacing:-.65px}
+.workspace .supplier-accounts-heading .heading-kicker b{color:#0d9488}
+.workspace .supplier-accounts-live{
+  border-color:#ccebe6;
+  background:linear-gradient(135deg,#effcf9,#f2f8ff);
+  color:#0f766e;
+  border-radius:12px;
+}
+.workspace .supplier-accounts-metrics{
+  gap:16px;
+  padding:2px 2px 5px;
+}
+.workspace .supplier-account-card{
+  position:relative;
+  border:1px solid #dce5f1;
+  border-radius:18px;
+  padding:16px 17px;
+  box-shadow:0 8px 22px rgba(31,55,90,.065);
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.workspace .supplier-account-card:hover{
+  transform:translateY(-2px);
+  border-color:#c6d8ed;
+  box-shadow:0 13px 28px rgba(31,55,90,.10);
+}
+.workspace .supplier-account-card:nth-child(1){
+  background:linear-gradient(145deg,#ffffff 0%,#f0fdfa 100%);
+  border-color:#cdeee7;
+}
+.workspace .supplier-debt-chart-card{
+  background:linear-gradient(145deg,#ffffff 0%,#f2f7ff 100%);
+  border-color:#d5e4fb;
+}
+.workspace .supplier-total-debt-card{
+  background:linear-gradient(145deg,#ffffff 0%,#f5f0ff 100%);
+  border-color:#e2d5ff;
+}
+.workspace .supplier-account-icon{box-shadow:0 3px 9px rgba(37,99,235,.08)}
+.workspace .supplier-account-card:nth-child(1) .supplier-account-icon{
+  background:#ccfbf1;color:#0f766e;
+}
+.workspace .supplier-debt-chart-card .supplier-account-icon{
+  background:#dbeafe;color:#1d4ed8;
+}
+.workspace .supplier-total-debt-card .supplier-account-icon{
+  background:#ede9fe;color:#6d28d9;
+}
+.workspace .supplier-account-card>strong{color:#172b4d}
+.workspace .supplier-total-debt-card .supplier-total-debt-value{color:#6d28d9}
+.workspace .supplier-total-debt-card>button{
+  background:linear-gradient(110deg,#7c3aed,#6d28d9);
+  box-shadow:0 5px 13px rgba(124,58,237,.2);
+}
+.workspace .supplier-total-debt-card>button:hover{background:linear-gradient(110deg,#6d28d9,#5b21b6)}
+.workspace .supplier-accounts-directory{
+  border:1px solid #dce5f1;
+  border-radius:18px;
+  box-shadow:0 9px 25px rgba(31,55,90,.06);
+  background:#fff;
+}
+.workspace .supplier-accounts-toolbar{
+  background:linear-gradient(90deg,#f8fbff,#f0fdfa);
+  border-bottom-color:#dce8f3;
+  padding:15px 18px;
+}
+.workspace .supplier-accounts-toolbar h2{color:#172b4d;font-size:15px}
+.workspace .supplier-accounts-searches>label{
+  border-color:#d8e3f0;
+  background:#f7f9fd;
+  border-radius:11px;
+  transition:border-color .18s ease,box-shadow .18s ease,background .18s ease;
+}
+.workspace .supplier-accounts-searches>label:focus-within{
+  border-color:#5b9bf5;
+  background:#fff;
+  box-shadow:0 0 0 3px rgba(59,130,246,.12);
+}
+.workspace .supplier-accounts-table th{
+  background:#f0f5fc;
+  color:#526782;
+  border-bottom:1px solid #dce5f1;
+}
+.workspace .supplier-accounts-table tbody tr{transition:background .15s ease}
+.workspace .supplier-accounts-table tbody tr:hover{background:#f0fdfa}
+.workspace .supplier-accounts-table td{border-bottom-color:#edf1f7}
+.workspace .supplier-account-name-button:hover b{color:#0d9488}
+.workspace .supplier-account-view{
+  border:1px solid #ccebe6;
+  background:#ecfdf8;
+  color:#0f766e;
+  border-radius:9px;
+}
+.workspace .supplier-account-view:hover{background:#ccfbf1}
+.workspace .supplier-ledger-modal,.workspace .supplier-payment-form,.workspace .supplier-invoice-preview{
+  border-color:#d4e0ef;
+  border-radius:20px;
+  box-shadow:0 24px 70px rgba(4,18,40,.24);
+}
+.workspace .supplier-ledger-header{background:linear-gradient(100deg,#f0fdfa,#f2f7ff);border-bottom-color:#dce8f3}
+.workspace .supplier-ledger-stats>div:nth-child(1){background:#ecfdf8;border-color:#ccebe6}
+.workspace .supplier-ledger-stats>div:nth-child(2){background:#eff6ff;border-color:#d4e4ff}
+.workspace .supplier-ledger-stats>div:nth-child(3){background:#f5f0ff;border-color:#e2d5ff}
+.workspace .supplier-ledger-table th{background:#f0f5fc;color:#526782}
+.workspace .supplier-ledger-table tbody tr:hover{background:#f0fdfa}
+.workspace .supplier-payment-buttons .primary,
+.workspace .supplier-ledger-actions .primary{
+  background:linear-gradient(110deg,#0d9488,#0891b2);
+  border-color:#0d9488;
+  box-shadow:0 5px 13px rgba(13,148,136,.18);
+}
+.workspace button,.workspace .button-secondary{transition:background .18s ease,color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.theme-dark .workspace{background:#080c14}
+.theme-dark .topbar{background:#0d1522;border-color:#263446}
+.theme-dark .page-heading h1{color:#edf2fa}
+.theme-dark .metric-card,.theme-dark .chart-panel,.theme-dark .mix-panel,.theme-dark .recent-panel,.theme-dark .stock-panel,.theme-dark .panel{
+  background:#101722;border-color:#263446;box-shadow:0 8px 24px rgba(0,0,0,.22)
+}
+.theme-dark .workspace .supplier-accounts-heading{border-bottom-color:#263446}
+.theme-dark .workspace .supplier-accounts-live{background:#102b2b;border-color:#20524f;color:#75e5d5}
+.theme-dark .workspace .supplier-account-card,
+.theme-dark .workspace .supplier-accounts-directory{
+  background:#101722;border-color:#263446;box-shadow:0 8px 24px rgba(0,0,0,.2)
+}
+.theme-dark .workspace .supplier-account-card:nth-child(1){background:linear-gradient(145deg,#101e25,#101722);border-color:#20524f}
+.theme-dark .workspace .supplier-debt-chart-card{background:linear-gradient(145deg,#101a2a,#101722);border-color:#263f65}
+.theme-dark .workspace .supplier-total-debt-card{background:linear-gradient(145deg,#1a1429,#101722);border-color:#43316a}
+.theme-dark .workspace .supplier-account-card>strong{color:#edf2fa}
+.theme-dark .workspace .supplier-accounts-toolbar,
+.theme-dark .workspace .supplier-ledger-header{background:linear-gradient(100deg,#102321,#111c2e);border-color:#263446}
+.theme-dark .workspace .supplier-accounts-toolbar h2{color:#edf2fa}
+.theme-dark .workspace .supplier-accounts-searches>label{background:#0b1220;border-color:#2a3a50}
+.theme-dark .workspace .supplier-accounts-searches>label:focus-within{background:#111c2e;border-color:#35d6c2;box-shadow:0 0 0 3px rgba(53,214,194,.12)}
+.theme-dark .workspace .supplier-accounts-table th,
+.theme-dark .workspace .supplier-ledger-table th{background:#17263a;color:#c3d1e2}
+.theme-dark .workspace .supplier-accounts-table td,
+.theme-dark .workspace .supplier-ledger-table td{border-color:#263446;color:#d4deeb}
+.theme-dark .workspace .supplier-accounts-table tbody tr:hover,
+.theme-dark .workspace .supplier-ledger-table tbody tr:hover{background:#102b2b}
+.theme-dark .workspace .supplier-account-view{background:#102b2b;border-color:#20524f;color:#75e5d5}
+.theme-dark .workspace .supplier-ledger-stats>div:nth-child(1){background:#102b2b;border-color:#20524f}
+.theme-dark .workspace .supplier-ledger-stats>div:nth-child(2){background:#10213a;border-color:#263f65}
+.theme-dark .workspace .supplier-ledger-stats>div:nth-child(3){background:#211832;border-color:#43316a}
+@media(max-width:700px){
+  .workspace .supplier-accounts-page{padding:14px 2px 12px;gap:13px}
+  .workspace .supplier-accounts-metrics{gap:12px;padding:1px}
+  .workspace .supplier-account-card{padding:12px;border-radius:15px}
+  .workspace .supplier-accounts-directory{border-radius:15px}
+  .workspace .supplier-accounts-toolbar{padding:12px}
+}
