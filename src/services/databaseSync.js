@@ -60,9 +60,27 @@ export async function getOrCreateWorkspace() {
 }
 
 const DEFAULT_ENTITY_TYPES = [
-  'products', 'categories', 'sales', 'sales_drafts', 'invoices',
-  'purchases', 'purchase_drafts', 'suppliers', 'customers', 'orders',
-  'cash_movements', 'expenses', 'settings', 'stock_movements',
+  // Catalog and inventory
+  'products', 'product_variants', 'categories', 'brands', 'units', 'barcodes',
+  'stock', 'stock_levels', 'stock_movements', 'inventory_counts', 'inventory_adjustments',
+  // Sales, invoices, returns and pending work
+  'sales', 'sales_drafts', 'invoices', 'invoice_items', 'sales_returns',
+  'sales_return_items', 'quotes', 'orders', 'pending_invoices', 'held_sales',
+  // Purchases and supplier accounts
+  'purchases', 'purchase_drafts', 'purchase_invoices', 'purchase_items',
+  'purchase_returns', 'suppliers', 'supplier_accounts', 'supplier_payments',
+  'supplier_ledger', 'supplier_debts',
+  // Customers, balances and collections
+  'customers', 'customer_accounts', 'customer_payments', 'customer_ledger',
+  'customer_debts', 'receipts',
+  // Cash, expenses and reporting source data
+  'cash_registers', 'cash_sessions', 'cash_movements', 'expenses', 'income',
+  'payments', 'refunds', 'stock_transfers', 'stock_alerts',
+  // Store setup and operations
+  'settings', 'business_profile', 'branches', 'employees', 'users', 'roles',
+  'permissions', 'orders', 'notifications', 'audit_logs',
+  // Legacy entity names already used by the app
+  'sales', 'purchases', 'stock_movements', 'cash_movements',
 ];
 
 export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProgress } = {}) {
