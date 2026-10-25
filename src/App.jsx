@@ -278,8 +278,11 @@ function SupplierListPage({ lang }) {
     setSuppliers(current => editingId ? current.map(s => s.id===editingId ? record : s) : [record,...current]);
     setModalOpen(false); setForm(emptyForm); setEditingId(null); setError('');
   };
-  const remove = supplier => {
-    if (window.confirm(t('confirmDelete') + '\n' + supplier.name)) setSuppliers(current => current.filter(s => s.id !== supplier.id));
+  const remove = () => {
+    if (!deleteSupplier) return;
+    setSuppliers(current => current.filter(s => s.id !== deleteSupplier.id));
+    if (previewSupplier?.id === deleteSupplier.id) setPreviewSupplier(null);
+    setDeleteSupplier(null);
   };
   return <div className="page-content supplier-page">
     <div className="page-heading supplier-heading">
@@ -292,7 +295,7 @@ function SupplierListPage({ lang }) {
     </div>
     <section className="supplier-directory panel">
       <div className="supplier-toolbar"><div><h2>{t('all')}</h2><p>{lang==='ar'?'سجل الموردين المسجلين في هذا الجهاز':lang==='fr'?'Répertoire enregistré sur cet appareil':'Directory saved on this device'}</p></div><div className="supplier-searches"><label className="supplier-search"><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t('search')}/><span>{filtered.length}</span></label><label className="supplier-search supplier-ref-search"><ScanLine size={15}/><input value={refQuery} onChange={e=>setRefQuery(e.target.value)} placeholder={t('searchRef')} dir="ltr"/></label></div></div>
-      {filtered.length===0 ? <div className="supplier-empty"><span><Building2 size={27}/></span><h3>{(query||refQuery) ? (lang==='ar'?'لا توجد نتائج مطابقة':lang==='fr'?'Aucun résultat':'No matching results') : t('empty')}</h3><p>{query ? (lang==='ar'?'جرّب البحث بكلمات أخرى.':lang==='fr'?'Essayez d’autres mots-clés.':'Try another search.') : t('emptyHint')}</p>{!query&&!refQuery&&<button className="supplier-primary" onClick={openAdd}><Plus size={15}/>{t('add')}</button>}</div>
+      {filtered.length===0 ? <div className="supplier-empty"><span><Building2 size={27}/></span><h3>{(query||refQuery) ? (lang==='ar'?'لا توجد نتائج مطابقة':lang==='fr'?'Aucun résultat':'No matching results') : t('empty')}</h3><p>{(query||refQuery) ? (lang==='ar'?'جرّب البحث بكلمات أخرى.':lang==='fr'?'Essayez d’autres mots-clés.':'Try another search.') : t('emptyHint')}</p>{!query&&!refQuery&&<button className="supplier-primary" onClick={openAdd}><Plus size={15}/>{t('add')}</button>}</div>
       : <div className="supplier-table-wrap"><table className="supplier-table"><thead><tr><th>{t('name')}</th><th>{t('id')}</th><th>{t('phone')}</th><th>{t('address')}</th><th>{t('description')}</th><th>{t('actions')}</th></tr></thead><tbody>
         {filtered.map(supplier=><tr key={supplier.id}><td><div className="supplier-name-cell">{supplier.photo?<img src={supplier.photo} alt=""/>:<span className="supplier-avatar"><Building2 size={17}/></span>}<span><b>{supplier.name}</b><small>{supplier.id}</small></span></div></td><td><code className="supplier-id">{supplier.id}</code></td><td>{supplier.phone?<a className="supplier-phone" href={'tel:'+supplier.phone}><Phone size={13}/>{supplier.phone}</a>:<span className="supplier-muted">{t('noPhone')}</span>}</td><td><span className="supplier-address"><MapPin size={13}/>{supplier.address||t('noAddress')}</span></td><td><span className="supplier-description">{supplier.description||'—'}</span></td><td><div className="supplier-row-actions"><button onClick={()=>setPreviewSupplier(supplier)} aria-label="Preview" title="Preview"><Eye size={14}/></button><button onClick={()=>openEdit(supplier)} aria-label={t('edit')} title={t('edit')}><Pencil size={14}/></button><button className="danger" onClick={()=>setDeleteSupplier(supplier)} aria-label={t('delete')} title={t('delete')}><Trash2 size={14}/></button></div></td></tr>)}
       </tbody></table></div>}
