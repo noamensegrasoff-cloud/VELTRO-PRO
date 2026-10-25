@@ -328,6 +328,105 @@ function SupplierListPage({ lang }) {
   </div>;
 }
 
+function CustomerListPage({ lang }) {
+  const labels = {
+    ar: { title:'قائمة الزبائن', subtitle:'إدارة بيانات الزبائن ووسائل الاتصال بهم في مكان واحد.', add:'إضافة زبون', search:'ابحث بالاسم أو الهاتف…', searchRef:'ابحث بالمرجع أو امسح الكود…', total:'إجمالي الزبائن', shown:'المعروض', empty:'لا يوجد زبونون بعد', emptyHint:'ابدأ بإضافة أول زبون إلى سجل متجرك.', name:'اسم الزبون', phone:'رقم الهاتف', email:'البريد الإلكتروني', balance:'الرصيد المستحق (دج)', id:'المعرف', address:'العنوان', description:'الوصف', photo:'صورة الزبون', choosePhoto:'اختيار صورة', save:'حفظ الزبون', update:'حفظ التعديلات', cancel:'إلغاء', edit:'تعديل', delete:'حذف', actions:'الإجراءات', view:'معاينة', qr:'رمز QR', barcode:'الباركود', print:'طباعة بطاقة الزبون', created:'تاريخ التسجيل', noDescription:'لا توجد ملاحظات مضافة', noPhone:'لا يوجد رقم هاتف', noAddress:'لم يُحدد العنوان', confirmDelete:'هل تريد حذف هذا الزبون؟', required:'يرجى إدخال اسم الزبون.', saved:'تم حفظ بيانات الزبون محليًا.', duplicate:'هذا المعرف مستخدم بالفعل.', close:'إغلاق', details:'بيانات الزبون', all:'كل الزبائن' },
+    en: { title:'Customer list', subtitle:'Manage customer profiles and contact details in one place.', add:'Add customer', search:'Search name or phone…', searchRef:'Search reference or scan code…', total:'Total customers', shown:'Shown', empty:'No customers yet', emptyHint:'Add your first customer to the store directory.', name:'Customer name', phone:'Phone number', email:'Email address', balance:'Outstanding balance (DA)', id:'Customer ID', address:'Address', description:'Description', photo:'Customer photo', choosePhoto:'Choose photo', save:'Save customer', update:'Save changes', cancel:'Cancel', edit:'Edit', delete:'Delete', actions:'Actions', view:'Preview', qr:'QR code', barcode:'Barcode', print:'Print customer card', created:'Registered', noDescription:'No notes added', noPhone:'No phone number', noAddress:'No address added', confirmDelete:'Delete this customer?', required:'Please enter a customer name.', saved:'Customer saved locally.', duplicate:'This ID is already in use.', close:'Close', details:'Customer details', all:'All customers' },
+    fr: { title:'Liste des clients', subtitle:'Gérez les profils et coordonnées des clients au même endroit.', add:'Ajouter un client', search:'Rechercher nom ou téléphone…', searchRef:'Rechercher référence ou scanner…', total:'Total clients', shown:'Affichés', empty:'Aucun client pour le moment', emptyHint:'Ajoutez le premier client à votre répertoire.', name:'Nom du client', phone:'Téléphone', email:'E-mail', balance:'Solde dû (DA)', id:'Identifiant', address:'Adresse', description:'Description', photo:'Photo du client', choosePhoto:'Choisir une photo', save:'Enregistrer', update:'Enregistrer les modifications', cancel:'Annuler', edit:'Modifier', delete:'Supprimer', actions:'Actions', view:'Aperçu', qr:'Code QR', barcode:'Code-barres', print:'Imprimer la carte', created:'Inscrit le', noDescription:'Aucune note ajoutée', noPhone:'Aucun téléphone', noAddress:'Aucune adresse', confirmDelete:'Supprimer ce client ?', required:'Veuillez saisir le nom du client.', saved:'Client enregistré localement.', duplicate:'Cet identifiant est déjà utilisé.', close:'Fermer', details:'Coordonnées du client', all:'Tous les clients' }
+  };
+  const t = key => labels[lang]?.[key] || labels.ar[key] || key;
+  const [customers, setCustomers] = useState(() => {
+    try { const value = JSON.parse(localStorage.getItem('veltro.customers.v1') || '[]'); return Array.isArray(value) ? value : []; } catch { return []; }
+  });
+  const [query, setQuery] = useState('');
+  const [refQuery, setRefQuery] = useState('');
+  const [previewCustomer, setPreviewCustomer] = useState(null);
+  const [deleteCustomer, setDeleteCustomer] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [error, setError] = useState('');
+  const emptyForm = { name:'', phone:'', email:'', balance:'0', address:'', description:'', photo:'' };
+  const [form, setForm] = useState(emptyForm);
+  useEffect(() => { try { localStorage.setItem('veltro.customers.v1', JSON.stringify(customers)); } catch { setError(lang==='ar'?'تعذر حفظ البيانات محليًا؛ قد تكون الصور كبيرة جدًا.':'Could not save locally; images may be too large.'); } }, [customers, lang]);
+  const filtered = useMemo(() => {
+    const q = query.trim().toLocaleLowerCase();
+    const r = refQuery.trim().toLocaleLowerCase();
+    return customers.filter(s => (!q || [s.name,s.phone].some(v => String(v||'').toLocaleLowerCase().includes(q))) && (!r || String(s.id||'').toLocaleLowerCase().includes(r)));
+  }, [customers, query, refQuery]);
+  const openAdd = () => { setEditingId(null); setForm(emptyForm); setError(''); setModalOpen(true); };
+  const openEdit = customer => { setEditingId(customer.id); setForm({ name:customer.name||'', phone:customer.phone||'', email:customer.email||'', balance:String(customer.balance??customer.debt??0), address:customer.address||'', description:customer.description||'', photo:customer.photo||'' }); setError(''); setModalOpen(true); };
+  const setField = (key,value) => setForm(current => ({...current,[key]:value}));
+  const readPhoto = event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { setError(lang==='ar'?'اختر ملف صورة صالحًا.':'Please choose a valid image file.'); return; }
+    if (file.size > 2 * 1024 * 1024) { setError(lang==='ar'?'حجم الصورة يجب ألا يتجاوز 2 ميغابايت.':'Photo must be 2 MB or smaller.'); return; }
+    const reader = new FileReader();
+    reader.onload = () => setField('photo', String(reader.result || ''));
+    reader.onerror = () => setError(lang==='ar'?'تعذر قراءة الصورة.':'Could not read the photo.');
+    reader.readAsDataURL(file);
+  };
+  const save = event => {
+    event.preventDefault();
+    const name = form.name.trim();
+    if (!name) { setError(t('required')); return; }
+    const nextId = editingId || ('CUS-' + String(Math.max(0,...customers.map(s => Number(String(s.id||'').replace(/\D/g,''))||0))+1).padStart(4,'0'));
+    if (customers.some(s => s.id === nextId && s.id !== editingId)) { setError(t('duplicate')); return; }
+    const record = { ...form, name, phone:form.phone.trim(), email:form.email.trim(), balance:Number(form.balance)||0, address:form.address.trim(), description:form.description.trim(), id:nextId, updatedAt:new Date().toISOString() };
+    setCustomers(current => editingId ? current.map(s => s.id===editingId ? record : s) : [record,...current]);
+    setModalOpen(false); setForm(emptyForm); setEditingId(null); setError('');
+  };
+  const remove = () => {
+    if (!deleteCustomer) return;
+    setCustomers(current => current.filter(s => s.id !== deleteCustomer.id));
+    if (previewCustomer?.id === deleteCustomer.id) setPreviewCustomer(null);
+    setDeleteCustomer(null);
+  };
+  const printCard = customer => {
+    const win = window.open('', '_blank', 'width=720,height=560');
+    if (!win) { window.alert(lang==='ar'?'اسمح بفتح نافذة الطباعة من المتصفح.':'Allow the print window in your browser.'); return; }
+    const safe = value => String(value||'').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    const qr = document.querySelector('[data-customer-qr="'+customer.id+'"]')?.outerHTML || '';
+    const barcode = document.querySelector('[data-customer-barcode="'+customer.id+'"]')?.outerHTML || '';
+    win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+safe(customer.name)+'</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#18304a}.card{max-width:640px;margin:auto;border:1px solid #dce5ed;border-radius:14px;padding:24px;text-align:center}.ref{color:#168f91;font-weight:bold}.codes{display:flex;align-items:center;justify-content:space-around;gap:20px;flex-wrap:wrap;margin-top:22px}.codes svg{max-width:100%}.info{line-height:1.8;color:#52667d}</style></head><body><div class="card"><h2>'+safe(customer.name)+'</h2><div class="ref">'+safe(customer.id)+'</div><p class="info">'+safe(customer.phone||'')+'<br>'+safe(customer.email||'')+'<br>'+safe(customer.address||'')+'</p><div class="codes"><div>'+qr+'<p>QR Code</p></div><div>'+barcode+'<p>Barcode</p></div></div></div><script>window.onload=function(){window.print()}<\/script></body></html>');
+    win.document.close();
+  };
+  return <div className="page-content customer-page">
+    <div className="page-heading customer-heading">
+      <div><div className="heading-kicker"><span className="health-dot"/>{lang==='ar'?'الزبونون':lang==='fr'?'Clients':'Customers'}</div><h1>{t('title')}</h1><p>{t('subtitle')}</p></div>
+      <button className="customer-primary" onClick={openAdd}><Plus size={16}/>{t('add')}</button>
+    </div>
+    <div className="customer-stats">
+      <div className="customer-stat"><span className="customer-stat-icon"><Building2 size={17}/></span><div><small>{t('total')}</small><strong>{customers.length}</strong></div></div>
+      <div className="customer-stat"><span className="customer-stat-icon customer-stat-teal"><Users size={17}/></span><div><small>{t('shown')}</small><strong>{filtered.length}</strong></div></div>
+    </div>
+    <section className="customer-directory panel">
+      <div className="customer-toolbar"><div><h2>{t('all')}</h2><p>{lang==='ar'?'سجل الزبائن المسجلين في هذا الجهاز':lang==='fr'?'Répertoire enregistré sur cet appareil':'Directory saved on this device'}</p></div><div className="customer-searches"><label className="customer-search"><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t('search')}/><span>{filtered.length}</span></label><label className="customer-search customer-ref-search"><ScanLine size={15}/><input value={refQuery} onChange={e=>setRefQuery(e.target.value)} placeholder={t('searchRef')} dir="ltr"/></label></div></div>
+      {filtered.length===0 ? <div className="customer-empty"><span><Building2 size={27}/></span><h3>{(query||refQuery) ? (lang==='ar'?'لا توجد نتائج مطابقة':lang==='fr'?'Aucun résultat':'No matching results') : t('empty')}</h3><p>{(query||refQuery) ? (lang==='ar'?'جرّب البحث بكلمات أخرى.':lang==='fr'?'Essayez d’autres mots-clés.':'Try another search.') : t('emptyHint')}</p>{!query&&!refQuery&&<button className="customer-primary" onClick={openAdd}><Plus size={15}/>{t('add')}</button>}</div>
+      : <div className="customer-table-wrap"><table className="customer-table"><thead><tr><th>{t('name')}</th><th>{t('id')}</th><th>{t('phone')}</th><th>{t('email')}</th><th>{t('address')}</th><th>{t('description')}</th><th>{t('actions')}</th></tr></thead><tbody>
+        {filtered.map(customer=><tr key={customer.id}><td><div className="customer-name-cell">{customer.photo?<img src={customer.photo} alt=""/>:<span className="customer-avatar"><Building2 size={17}/></span>}<span><b>{customer.name}</b><small>{customer.id}</small></span></div></td><td><code className="customer-id">{customer.id}</code></td><td>{customer.phone?<a className="customer-phone" href={'tel:'+customer.phone}><Phone size={13}/>{customer.phone}</a>:<span className="customer-muted">{t('noPhone')}</span>}</td><td>{customer.email?<a className="customer-email" href={'mailto:'+customer.email}><Mail size={13}/>{customer.email}</a>:<span className="customer-muted">—</span>}</td><td><span className="customer-address"><MapPin size={13}/>{customer.address||t('noAddress')}</span></td><td><span className="customer-description">{customer.description||'—'}</span></td><td><div className="customer-row-actions"><button onClick={()=>setPreviewCustomer(customer)} aria-label="Preview" title="Preview"><Eye size={14}/></button><button onClick={()=>openEdit(customer)} aria-label={t('edit')} title={t('edit')}><Pencil size={14}/></button><button className="danger" onClick={()=>setDeleteCustomer(customer)} aria-label={t('delete')} title={t('delete')}><Trash2 size={14}/></button></div></td></tr>)}
+      </tbody></table></div>}
+    </section>
+    {modalOpen&&<div className="customer-modal-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setModalOpen(false);}}><section className="customer-modal" role="dialog" aria-modal="true" aria-labelledby="customer-modal-title"><div className="customer-modal-head"><div><span>{t('details')}</span><h2 id="customer-modal-title">{editingId?t('edit'):t('add')}</h2></div><button type="button" onClick={()=>setModalOpen(false)} aria-label={t('close')}><X size={17}/></button></div>
+      <form onSubmit={save}><div className="customer-photo-field"><label className="customer-photo-preview">{form.photo?<img src={form.photo} alt=""/>:<ImagePlus size={22}/>}<input type="file" accept="image/*" onChange={readPhoto}/></label><div><b>{t('photo')}</b><small>{lang==='ar'?'صورة اختيارية، حتى 2 ميغابايت':lang==='fr'?'Photo facultative, 2 Mo maximum':'Optional photo, up to 2 MB'}</small><label className="customer-photo-button"><ImagePlus size={13}/>{t('choosePhoto')}<input type="file" accept="image/*" onChange={readPhoto}/></label></div></div>
+      <div className="customer-form-grid"><label className="customer-field"><span>{t('name')} <i>*</i></span><input autoFocus value={form.name} onChange={e=>setField('name',e.target.value)} required maxLength={100} placeholder={lang==='ar'?'اسم الشركة أو الموزع':'Company or distributor name'}/></label><label className="customer-field"><span>{t('id')}</span><input value={editingId||'يُنشأ تلقائيًا / Auto'} readOnly dir="ltr"/></label><label className="customer-field"><span>{t('phone')}</span><input value={form.phone} onChange={e=>setField('phone',e.target.value)} inputMode="tel" maxLength={40} placeholder="+213 …"/></label><label className="customer-field"><span>{t('email')}</span><input type="email" value={form.email} onChange={e=>setField('email',e.target.value)} maxLength={254} placeholder="contact@example.com"/></label><label className="customer-field"><span>{t('balance')}</span><input type="number" min="0" step="0.01" inputMode="decimal" value={form.balance} onChange={e=>setField('balance',e.target.value)} placeholder="0.00"/></label><label className="customer-field"><span>{t('address')}</span><input value={form.address} onChange={e=>setField('address',e.target.value)} maxLength={200} placeholder={lang==='ar'?'المدينة، العنوان…':'City, address…'}/></label><label className="customer-field customer-field-wide"><span>{t('description')}</span><textarea value={form.description} onChange={e=>setField('description',e.target.value)} rows={3} maxLength={1000} placeholder={lang==='ar'?'ملاحظات أو نوع السلع التي يوفرها الزبون…':'Notes or goods supplied…'}/></label></div>
+      {error&&<p className="customer-form-error">{error}</p>}<div className="customer-modal-actions"><button type="button" className="customer-secondary" onClick={()=>setModalOpen(false)}>{t('cancel')}</button><button type="submit" className="customer-primary"><CircleCheck size={15}/>{editingId?t('update'):t('save')}</button></div></form>
+    </section></div>}
+  
+    {previewCustomer&&<div className="customer-modal-backdrop customer-preview-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setPreviewCustomer(null);}}><section className="customer-preview-modal" role="dialog" aria-modal="true" aria-labelledby="customer-preview-title">
+      <div className="customer-preview-top"><div><span>{t('details')}</span><h2 id="customer-preview-title">{previewCustomer.name}</h2><code>{previewCustomer.id}</code></div><button onClick={()=>setPreviewCustomer(null)} aria-label="Close"><X size={18}/></button></div>
+      <div className="customer-preview-body"><div className="customer-preview-identity">{previewCustomer.photo?<img src={previewCustomer.photo} alt=""/>:<span className="customer-preview-avatar"><Building2 size={27}/></span>}<div><h3>{previewCustomer.name}</h3><span>{t('id')}: {previewCustomer.id}</span><small>{t('phone')}: {previewCustomer.phone||t('noPhone')}</small></div></div>
+      <div className="customer-detail-grid"><div className="customer-detail-card"><Phone size={16}/><span>{t('phone')}</span><b>{previewCustomer.phone||t('noPhone')}</b></div><div className="customer-detail-card"><Mail size={16}/><span>{t('email')}</span><b>{previewCustomer.email||'—'}</b></div><div className="customer-detail-card"><MapPin size={16}/><span>{t('address')}</span><b>{previewCustomer.address||t('noAddress')}</b></div></div>
+      <div className="customer-notes"><span>{t('description')}</span><p>{previewCustomer.description||t('noDescription')}</p></div>
+      <div className="customer-codes-grid"><div className="customer-code-card"><h3>{t('qr')}</h3><div className="customer-qr" data-customer-qr={previewCustomer.id}><QRCodeSVG value={previewCustomer.id} size={124} level="M" includeMargin/></div><code>{previewCustomer.id}</code></div><div className="customer-code-card customer-barcode-card"><h3>{t('barcode')}</h3><div data-customer-barcode={previewCustomer.id}><Barcode value={previewCustomer.id} format="CODE128" width={1.4} height={52} fontSize={12} margin={6} displayValue/></div><code>{previewCustomer.id}</code></div></div></div>
+      <div className="customer-preview-actions"><button className="customer-secondary" onClick={()=>printCard(previewCustomer)}><Printer size={15}/>{t('print')}</button><button className="customer-secondary" onClick={()=>openEdit(previewCustomer)}><Pencil size={15}/>{t('edit')}</button><button className="customer-primary" onClick={()=>setPreviewCustomer(null)}>{t('close')}</button></div>
+    </section></div>}
+    {deleteCustomer&&<div className="customer-modal-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setDeleteCustomer(null);}}><section className="customer-delete-modal" role="dialog" aria-modal="true"><span className="customer-delete-icon"><Trash2 size={22}/></span><h2>{t('confirmDelete')}</h2><p><b>{deleteCustomer.name}</b></p><div><button className="customer-secondary" onClick={()=>setDeleteCustomer(null)}>{t('cancel')}</button><button className="customer-delete-confirm" onClick={remove}><Trash2 size={14}/>{t('delete')}</button></div></section></div>}
+
+  </div>;
+}
+
+
 function SupplierAccountsPage({lang}) {
  const ar=lang==='ar',fr=lang==='fr';
  const L=ar?{title:'حسابات الموردين',sub:'متابعة الأرصدة والديون المستحقة للموردين من شاشة واحدة.',count:'عدد الموردين',chart:'توزيع ديون الموردين',total:'إجمالي الديون',preview:'معاينة التفاصيل',search:'ابحث بالاسم أو رقم الهاتف…',ref:'المعرف أو الباركود أو الكودبار…',directory:'سجل حسابات الموردين',name:'المورد',id:'المعرف',phone:'الهاتف',balance:'الرصيد المستحق',status:'حالة الحساب',action:'الإجراء',details:'الوضعية المالية للمورد',close:'إغلاق',debtors:'موردون لديهم ديون',none:'لا توجد ديون مستحقة مسجلة حاليًا.',empty:'لا توجد نتائج مطابقة',noPhone:'—',due:'عليه دين',clear:'دون دين',all:'كل الموردين',cur:'دج',note:'افتح المورد لعرض معاملاته ودفعاته.',email:'البريد الإلكتروني',address:'العنوان',from:'من تاريخ',to:'إلى تاريخ',allTime:'كل الفترات',date:'التاريخ',type:'نوع المعاملة',refNo:'رقم المرجع',description:'البيان',debit:'مشتريات / مدين',credit:'دفعة / دائن',running:'الرصيد بعد العملية',invoice:'بون شراء',payment:'دفعة',addPayment:'إضافة دفعة',editPayment:'تعديل الدفعة',deletePayment:'حذف الدفعة',amount:'مبلغ الدفعة',method:'طريقة الدفع',cash:'نقدًا',transfer:'تحويل بنكي',other:'أخرى',memo:'ملاحظة',save:'حفظ الدفعة',cancel:'إلغاء',standardPrint:'طباعة الوضعية العادية',detailedPrint:'طباعة الوضعية المفصلة',previewInvoice:'معاينة البون',noTransactions:'لا توجد معاملات ضمن الفترة المحددة.',confirmDelete:'هل تريد حذف هذه الدفعة؟',balanceNow:'الرصيد الحالي',paid:'إجمالي الدفعات',purchases:'إجمالي المشتريات',invoiceDetails:'تفاصيل بون الشراء',keyboard:'تنقل بالأسهم ↑ ↓، Enter للمعاينة',required:'أدخل مبلغًا صحيحًا أكبر من صفر.',delete:'حذف',edit:'تعديل',print:'طباعة',invoiceDate:'تاريخ البون',total:'الإجمالي',statusPaid:'مدفوع',statusDue:'آجل / جزئي',supplierInfo:'بيانات المورد',transactionHistory:'سجل المعاملات'}:
@@ -421,6 +520,7 @@ function KeyboardHint({text}){return <span className="customer-keyboard-hint"><s
 
 function ModulePage({ page, parent, t, lang, onBack }) {
   if (page.id === 'supplier-list') return <SupplierListPage lang={lang} />;
+  if (page.id === 'customer-list') return <CustomerListPage lang={lang} />;
   if (page.id === 'supplier-accounts') return <SupplierAccountsPage lang={lang} />;
   if (page.id === 'customer-accounts') return <CustomerAccountsPage lang={lang} />;
   const Icon = page.icon || parent?.icon || ChartNoAxesCombined;
