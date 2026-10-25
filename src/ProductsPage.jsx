@@ -40,7 +40,6 @@ export default function ProductsPage({lang='ar'}) {
     </section>
     {modal&&<div className="pform-overlay"><section className="pform-modal" role="dialog" aria-modal="true" aria-label={tx.newTitle}>
       <header className="pform-header"><div className="pform-header-title"><span className="pform-brand-icon"><PackageCheck size={20}/></span><div><h2>{tx.newTitle}</h2><p>{tx.confirmNote}</p></div></div><button className="pform-close" type="button" onClick={()=>setModal(false)} aria-label={tx.close}><X size={19}/></button></header>
-      <div className="pform-content pform-content-all">
       <div className="pform-panel-tabs" role="tablist" aria-label={tx.newTitle}>
         <button type="button" role="tab" aria-selected={activeProductPanel===0} className={activeProductPanel===0?'active':''} onClick={()=>setActiveProductPanel(0)}><Info size={17}/><span>{tx.productInfo} / {tx.purchaseInfo} / {tx.salesInfo}</span></button>
         <button type="button" role="tab" aria-selected={activeProductPanel===1} className={activeProductPanel===1?'active':''} onClick={()=>setActiveProductPanel(1)}><Tag size={17}/><span>{tx.classification}</span></button>
