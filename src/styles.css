@@ -1323,3 +1323,81 @@
 .theme-dark .supplier-ledger-stats article:nth-child(1){background:linear-gradient(135deg,#14b8a621,#172538 75%)!important}.theme-dark .supplier-ledger-stats article:nth-child(2){background:linear-gradient(135deg,#3b82f621,#172538 75%)!important}.theme-dark .supplier-ledger-stats article:nth-child(3){background:linear-gradient(135deg,#8b5cf621,#172538 75%)!important}
 .theme-dark .supplier-ledger-table tbody tr:nth-child(even){background:#38bdf808}.theme-dark .supplier-ledger-type.invoice{background:#1e3a8a55!important;color:#bfdbfe!important;border-color:#3b82f666!important}.theme-dark .supplier-ledger-type.payment{background:#134e4a66!important;color:#99f6e4!important;border-color:#2dd4bf66!important}
 .theme-dark .supplier-invoice-preview-info>div{background:#172538!important;border-color:#334155!important}
+
+
+/* VELTRO unified turquoise + multicolor visual system across every module */
+:root{
+ --veltro-teal:#14b8a6;--veltro-teal-dark:#0f766e;--veltro-cyan:#22d3ee;
+ --veltro-blue:#3b82f6;--veltro-violet:#8b5cf6;--veltro-amber:#f59e0b;
+ --veltro-rose:#f43f5e;--veltro-mint:#34d399;
+}
+button:not(.modal-close):not(.supplier-ledger-close):not(.supplier-modal-head button):not(.supplier-preview-top button){
+ transition:background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease;
+}
+.workspace .page-content .page-heading{position:relative}
+.workspace .page-content .page-heading:after{
+ content:"";position:absolute;bottom:-9px;inset-inline-start:0;width:min(260px,42%);height:3px;border-radius:9px;
+ background:linear-gradient(90deg,var(--veltro-teal),var(--veltro-cyan),var(--veltro-blue),var(--veltro-violet),transparent);
+ opacity:.9
+}
+.workspace .panel,.workspace .supplier-directory,.workspace .supplier-stat,.workspace .supplier-detail-card{
+ border-color:color-mix(in srgb,var(--veltro-teal) 15%,var(--line))!important;
+ box-shadow:0 8px 24px rgba(13,148,136,.045),0 2px 7px rgba(59,130,246,.035);
+}
+.workspace .panel h2,.workspace .supplier-toolbar h2{color:var(--veltro-teal-dark)}
+.workspace .panel thead th,.workspace table thead th{
+ background:linear-gradient(100deg,color-mix(in srgb,var(--veltro-teal) 11%,var(--panel)),color-mix(in srgb,var(--veltro-blue) 7%,var(--panel)),color-mix(in srgb,var(--veltro-violet) 6%,var(--panel)))!important;
+ border-bottom:1px solid color-mix(in srgb,var(--veltro-teal) 30%,var(--line))!important;
+}
+.workspace .panel tbody tr:nth-child(even),.workspace table tbody tr:nth-child(even){
+ background:color-mix(in srgb,var(--veltro-teal) 3.2%,var(--panel));
+}
+.workspace .panel tbody tr:hover,.workspace table tbody tr:hover{
+ background:linear-gradient(90deg,color-mix(in srgb,var(--veltro-teal) 9%,var(--panel)),color-mix(in srgb,var(--veltro-blue) 5%,var(--panel)))!important;
+}
+.workspace .supplier-primary,.workspace .customer-primary,.workspace .button-primary{
+ background:linear-gradient(115deg,#0d9488,#14b8a6 48%,#0891b2)!important;
+ border-color:#0d9488!important;color:#fff!important;
+ box-shadow:0 5px 14px #14b8a629;
+}
+.workspace .supplier-primary:hover,.workspace .customer-primary:hover,.workspace .button-primary:hover{
+ background:linear-gradient(115deg,#0f766e,#0d9488 48%,#0369a1)!important;transform:translateY(-1px)
+}
+.workspace .supplier-stat:nth-child(1),.workspace .supplier-detail-card:nth-child(1){
+ background:linear-gradient(135deg,color-mix(in srgb,#14b8a6 12%,var(--panel)),var(--panel) 82%)!important;
+}
+.workspace .supplier-stat:nth-child(2),.workspace .supplier-detail-card:nth-child(2){
+ background:linear-gradient(135deg,color-mix(in srgb,#3b82f6 11%,var(--panel)),var(--panel) 82%)!important;
+}
+.workspace .supplier-detail-card:nth-child(3){
+ background:linear-gradient(135deg,color-mix(in srgb,#8b5cf6 11%,var(--panel)),var(--panel) 82%)!important;
+}
+.workspace .supplier-stat-icon,.workspace .supplier-avatar,.workspace .supplier-preview-avatar{
+ color:#0d9488!important;background:linear-gradient(135deg,#ccfbf1,#cffafe)!important;border-color:#99f6e4!important;
+}
+.workspace .supplier-id,.workspace code.supplier-id{
+ color:#0f766e!important;background:#ccfbf1!important;border-color:#99f6e4!important;
+}
+.workspace .supplier-search:focus-within,.workspace input:focus-visible,.workspace select:focus-visible,.workspace textarea:focus-visible{
+ outline-color:#14b8a6!important;box-shadow:0 0 0 3px #14b8a61a;
+}
+.workspace .supplier-row-actions button:first-child{color:#0891b2!important;background:#ecfeff!important;border-color:#a5f3fc!important}
+.workspace .supplier-row-actions button:nth-child(2){color:#4f46e5!important;background:#eef2ff!important;border-color:#c7d2fe!important}
+.workspace .supplier-row-actions button:last-child{color:#e11d48!important;background:#fff1f2!important;border-color:#fecdd3!important}
+.workspace .supplier-row-actions button:hover{filter:saturate(1.25);transform:translateY(-1px)}
+/* Customer directory shares the polished supplier directory primitives. */
+.customer-page .supplier-directory{border-top:3px solid #14b8a6!important}
+.customer-page .supplier-toolbar{background:linear-gradient(105deg,#14b8a60b,#3b82f608,#8b5cf608)}
+.customer-page .supplier-stat:nth-child(1){border-top:3px solid #14b8a6!important}
+.customer-page .supplier-stat:nth-child(2){border-top:3px solid #3b82f6!important}
+.theme-dark .workspace .panel,.theme-dark .workspace .supplier-directory,.theme-dark .workspace .supplier-stat,.theme-dark .workspace .supplier-detail-card{
+ border-color:#24545b!important;box-shadow:0 8px 26px #02061755,0 0 0 1px #14b8a608;
+}
+.theme-dark .workspace .panel thead th,.theme-dark .workspace table thead th{
+ background:linear-gradient(100deg,#0d948822,#3b82f614,#8b5cf614)!important;border-bottom-color:#2dd4bf55!important;
+}
+.theme-dark .workspace .panel tbody tr:nth-child(even),.theme-dark .workspace table tbody tr:nth-child(even){background:#14b8a608}
+.theme-dark .workspace .panel tbody tr:hover,.theme-dark .workspace table tbody tr:hover{background:linear-gradient(90deg,#14b8a61c,#3b82f612)!important}
+.theme-dark .workspace .supplier-stat-icon,.theme-dark .workspace .supplier-avatar,.theme-dark .workspace .supplier-preview-avatar{background:linear-gradient(135deg,#134e4a,#164e63)!important;color:#5eead4!important;border-color:#0f766e!important}
+.theme-dark .workspace .supplier-id{background:#134e4a!important;color:#99f6e4!important;border-color:#0f766e!important}
+.theme-dark .customer-page .supplier-toolbar{background:linear-gradient(105deg,#14b8a615,#3b82f610,#8b5cf610)}
