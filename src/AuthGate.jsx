@@ -24,6 +24,13 @@ export default function AuthGate({ children }) {
   const t=words[lang], dir=lang==='ar'?'rtl':'ltr';
 
   useEffect(() => {
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+    const recoveryError = hashParams.get('error_code') || hashParams.get('error');
+    if (recoveryError) {
+      setMode('reset');
+      setError(words[lang].invalidRecovery);
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
+    }
     if (!supabase) return undefined;
     let alive=true;
     supabase.auth.getSession().then(({data})=>{ if(alive) setSession(data.session); }).catch(()=>{});
@@ -37,7 +44,7 @@ export default function AuthGate({ children }) {
       }
     });
     return ()=>{alive=false;subscription.unsubscribe();};
-  }, []);
+  }, [lang]);
 
   async function signInWithGoogle() {
     setError(''); setMessage('');
