@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Search, ScanBarcode, Plus, Download, Upload, SlidersHorizontal, Package, Boxes, CircleAlert, CircleX, ArrowDownUp, MoreHorizontal, Pencil, Eye, X, Barcode, Layers3, Tag, TrendingUp, Filter } from 'lucide-react';
+import { Search, ScanBarcode, Plus, Download, Upload, SlidersHorizontal, Package, Boxes, CircleAlert, CircleX, ArrowDownUp, MoreHorizontal, Pencil, Eye, X, Barcode, Layers3, Tag, TrendingUp, Filter, Scale, CalendarClock, ImagePlus, ChevronLeft, Check, Camera, Percent, BellRing } from 'lucide-react';
 
 const samples = [
   {id:'P-0001',name:'مياه معدنية 1.5 لتر',barcode:'2000000000015',category:'المشروبات',unit:'قارورة',stock:600,min:60,cost:32,sell:45},
