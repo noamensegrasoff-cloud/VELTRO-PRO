@@ -1401,3 +1401,145 @@ button:not(.modal-close):not(.supplier-ledger-close):not(.supplier-modal-head bu
 .theme-dark .workspace .supplier-stat-icon,.theme-dark .workspace .supplier-avatar,.theme-dark .workspace .supplier-preview-avatar{background:linear-gradient(135deg,#134e4a,#164e63)!important;color:#5eead4!important;border-color:#0f766e!important}
 .theme-dark .workspace .supplier-id{background:#134e4a!important;color:#99f6e4!important;border-color:#0f766e!important}
 .theme-dark .customer-page .supplier-toolbar{background:linear-gradient(105deg,#14b8a615,#3b82f610,#8b5cf610)}
+
+
+/* VELTRO 2026 UI refresh — modern, calm, consistent across every section */
+:root{
+ --veltro-teal:#0fbaaa;--veltro-teal-dark:#0b817a;--veltro-cyan:#22d3ee;
+ --veltro-blue:#4f7df3;--veltro-violet:#8b5cf6;--veltro-amber:#f5a524;
+ --veltro-rose:#f05b78;--veltro-mint:#34d399;
+ --line:#e4eaf2;--pale:#f5f8fc;--panel:#fff;
+ --shadow:0 8px 28px rgba(23,54,92,.055);
+}
+body{background:#f5f8fc}
+.app-shell{background:radial-gradient(ellipse at 85% 0%,rgba(34,211,238,.07),transparent 28%),#f5f8fc}
+.sidebar{background:rgba(255,255,255,.96);backdrop-filter:blur(18px);border-color:#e6edf5;padding:13px 12px 11px}
+.brand-row{height:54px;min-height:54px;margin:0 2px 13px;border-bottom-color:#edf2f7}
+.brand-mark{width:36px;height:36px;flex-basis:36px;border-radius:12px;background:linear-gradient(145deg,#0f766e,#14b8a6 48%,#3b82f6);box-shadow:0 7px 18px #0fbaaa35}
+.brand-copy b{font-size:16px;letter-spacing:2px}
+.brand-copy small{font-size:7px;letter-spacing:1.5px}
+.dashboard-link{height:38px;min-height:38px;border-radius:10px;font-size:12px;padding-inline:11px;gap:10px}
+.dashboard-link.active,.dashboard-link:hover{background:linear-gradient(100deg,#e1faf6,#eef7ff);color:#0f766e}
+.dashboard-link.active{box-shadow:inset 3px 0 #14b8a6;font-weight:800}
+.dashboard-link.active svg{color:#0d9488}
+.sidebar-caption{height:28px;min-height:28px;margin:8px 4px 6px;font-size:9px;color:#9aa9ba}
+.side-nav{gap:4px;padding:2px 1px 12px}
+.nav-group{padding:3px;border:1px solid transparent;border-radius:12px;transition:background .2s,border-color .2s}
+.nav-group.group-active{background:linear-gradient(145deg,#f0fdfa,#f8fbff);border-color:#d7f3ee}
+.nav-group-title{height:34px;min-height:34px;border-radius:9px;font-size:11px;padding:0 9px;gap:9px}
+.nav-group-title svg{color:#64839a}
+.group-active .nav-group-title{background:linear-gradient(100deg,#d9f7f0,#eaf3ff);color:#0f766e}
+.nav-children{gap:3px 4px;padding:3px 2px 5px}
+.nav-child{height:28px;border-radius:8px;padding:0 8px;font-size:10px;gap:6px}
+.nav-child svg{flex-basis:13px}
+.nav-child.active{background:#fff;color:#0f766e;box-shadow:0 2px 8px #0f766e12;border:1px solid #c9eee7}
+.nav-child.active svg{color:#0d9488}
+.sidebar-bottom{border-top:1px solid #edf2f7;padding-top:8px}
+.sidebar-health{height:28px;font-size:10px}
+.logout-link{height:34px;border-radius:9px;font-size:11px}
+.workspace{background:transparent}
+.topbar{height:62px;min-height:62px;padding-inline:26px;background:rgba(255,255,255,.84);backdrop-filter:blur(18px);border-bottom:1px solid #e7edf5}
+.breadcrumbs{font-size:12px;gap:10px}
+.breadcrumbs b{color:#243b53}
+.global-search{height:36px;border-radius:11px;background:#f7f9fc;border-color:#e5ebf3;padding-inline:12px}
+.global-search:focus-within{border-color:#83dfd3;box-shadow:0 0 0 4px #14b8a615;background:#fff}
+.language-select,.icon-button{height:36px;border-radius:10px;border-color:#e3eaf2;background:#fff}
+.icon-button{width:36px}
+.profile-avatar{width:32px;height:32px;border-radius:10px;background:linear-gradient(145deg,#ccfbf1,#dbeafe);color:#0f766e}
+.page-content{padding:22px 26px 16px;scrollbar-color:#cbd8e6 transparent}
+.page-heading{min-height:64px;margin-bottom:18px}
+.heading-kicker{font-size:10px;gap:9px;margin-bottom:6px}
+.heading-kicker b{color:#0d9488;font-size:9px;letter-spacing:1px}
+.page-heading h1{font-size:26px;letter-spacing:-.7px;color:#172f4c}
+.page-heading p{font-size:11px;color:#8190a3}
+.date-button,.demo-badge{height:35px;border-radius:10px;padding-inline:12px;font-size:10px}
+.metrics-grid{gap:13px;margin-bottom:15px}
+.metric-card{height:112px;padding:14px 15px;border-radius:15px;border-color:#e8edf4;box-shadow:0 5px 18px #183c6210;transition:transform .2s,box-shadow .2s}
+.metric-card:hover{transform:translateY(-2px);box-shadow:0 12px 25px #183c6215}
+.metric-icon{width:34px;height:34px;border-radius:11px}
+.metric-label{top:16px;left:58px;right:14px;font-size:10px}
+.metric-value{margin-top:10px;font-size:23px;letter-spacing:-.6px;color:#183552}
+.metric-foot{bottom:11px;right:15px;font-size:9px}
+.charts-grid,.lower-grid{gap:14px;margin-bottom:14px}
+.panel{border-radius:16px;border-color:#e7edf4;box-shadow:0 6px 22px rgba(23,54,92,.045);overflow:hidden}
+.chart-panel,.mix-panel{height:244px;padding:16px 17px}
+.panel h2{font-size:13px;color:#233f5b}
+.eyebrow{font-size:9px}
+.more-button{width:30px;height:30px;border-radius:9px;background:#f8fafc}
+.chart-total strong{font-size:20px}
+.bar-chart{height:127px;border-color:#e9eff6}
+.bar-slot i{border-radius:7px 7px 3px 3px;background:linear-gradient(180deg,#67e8d2,#b5f3e9)}
+.bar-slot i.bar-highlight{background:linear-gradient(180deg,#14b8a6,#0f766e);box-shadow:0 5px 12px #14b8a625}
+.mix-content{height:157px}
+.mix-donut{background:conic-gradient(#14b8a6 0 56%,#4f7df3 56% 78%,#8b5cf6 78% 87%,#eaf0f6 87% 100%)}
+.mix-donut:before{background:#fff}
+.recent-panel,.stock-panel{height:210px;padding:15px 16px}
+th{height:31px;background:#f6f9fc;color:#7c8da2;font-size:9px;padding-inline:10px}
+td{height:38px;border-bottom-color:#edf2f7;font-size:10px;padding:5px 10px}
+tbody tr{transition:background .16s}
+tbody tr:hover{background:#f0fdfa}
+.product-mini,.stock-avatar{width:30px;height:30px;flex-basis:30px;border-radius:9px;background:linear-gradient(145deg,#e0f2fe,#ccfbf1);color:#0d9488}
+.product-cell b,.stock-name b{font-size:10px;color:#263f5a}
+.operation-pill,.status-pill{border-radius:6px;padding:4px 7px;font-size:9px}
+.quick-actions{gap:8px}
+.quick-actions button{height:31px;border-radius:9px;padding-inline:11px;border-color:#e1e9f2;font-size:10px;transition:all .18s}
+.quick-actions button:hover{background:linear-gradient(100deg,#e0faf5,#eff6ff);border-color:#b7e9e0;color:#0f766e;transform:translateY(-1px)}
+.workspace-footer{height:29px;min-height:29px;background:rgba(255,255,255,.75);border-top-color:#e7edf5;padding-inline:26px;font-size:9px}
+.module-metric{border-radius:14px;padding:15px;border-color:#e6edf4;box-shadow:0 5px 18px #183c6208}
+.module-metric>b{font-size:13px}
+.module-workspace{border:1px solid #e5edf5;border-radius:18px;background:radial-gradient(ellipse at 50% 0%,#e7faf7 0%,#fff 60%);box-shadow:0 8px 24px #183c6208}
+.module-icon,.module-empty-icon{border-radius:15px;background:linear-gradient(145deg,#ccfbf1,#dbeafe);color:#0d9488}
+.module-workspace h2{font-size:19px;color:#193956}
+.module-empty-actions button{border-radius:9px;background:linear-gradient(110deg,#e0faf5,#eff6ff);border-color:#bdebe3;color:#0f766e}
+.modal-backdrop{background:rgba(13,28,46,.46);backdrop-filter:blur(7px)}
+.confirm-modal{border-radius:20px;border-color:#e5edf5;box-shadow:0 28px 90px #0f243d35}
+.confirm-modal>div button{border-radius:10px}
+.button-primary,.supplier-primary,.customer-primary{background:linear-gradient(115deg,#0f9488,#14b8a6 52%,#3b82f6)!important;border:1px solid #0d9488!important;color:#fff!important;box-shadow:0 6px 16px #14b8a626}
+button{transition:background-color .18s,border-color .18s,box-shadow .18s,transform .18s}
+input,select,textarea{border-radius:9px}
+.workspace .panel,.workspace .supplier-directory,.workspace .supplier-stat,.workspace .supplier-detail-card{border-radius:15px}
+.workspace .supplier-toolbar{border-radius:14px}
+.workspace .supplier-directory{box-shadow:0 8px 25px #17365c0b}
+.workspace .supplier-stat,.workspace .supplier-detail-card{box-shadow:0 6px 18px #17365c09;transition:transform .18s,box-shadow .18s}
+.workspace .supplier-stat:hover,.workspace .supplier-detail-card:hover{transform:translateY(-2px);box-shadow:0 12px 24px #17365c12}
+.workspace .supplier-primary,.workspace .customer-primary{border-radius:10px!important}
+.workspace .supplier-search,.workspace .customer-search{border-radius:11px}
+.workspace table thead th{font-size:10px}
+.workspace table tbody tr:hover{transition:background .16s}
+.theme-dark .app-shell{background:radial-gradient(ellipse at 85% 0%,#0d948815,transparent 32%),#0b1220}
+.theme-dark .sidebar{background:rgba(13,22,38,.96);border-color:#243247}
+.theme-dark .brand-row,.theme-dark .sidebar-bottom{border-color:#26364b}
+.theme-dark .nav-group.group-active{background:linear-gradient(145deg,#0f766e22,#1d4ed81a);border-color:#155e5a}
+.theme-dark .group-active .nav-group-title,.theme-dark .nav-child.active{background:#0f766e2b;color:#99f6e4;border-color:#155e5a}
+.theme-dark .dashboard-link.active,.theme-dark .dashboard-link:hover{background:linear-gradient(100deg,#0f766e35,#1d4ed820);color:#99f6e4}
+.theme-dark .topbar{background:rgba(12,20,34,.88);border-color:#243247}
+.theme-dark .page-heading h1{color:#e5eef9}
+.theme-dark .metric-card,.theme-dark .panel,.theme-dark .module-metric,.theme-dark .module-workspace{background:#111c2e;border-color:#25364b;box-shadow:0 8px 24px #02061722}
+.theme-dark .metric-value,.theme-dark .panel h2,.theme-dark .product-cell b,.theme-dark .stock-name b{color:#e0eaf7}
+.theme-dark th{background:#17263a;color:#a5b7cb}
+.theme-dark td{border-color:#233248;color:#b7c5d7}
+.theme-dark tbody tr:hover{background:#0f766e1c}
+.theme-dark .module-workspace{background:radial-gradient(ellipse at 50% 0%,#0f766e20,#111c2e 65%)}
+.theme-dark .mix-donut:before{background:#111c2e}
+.theme-dark .workspace-footer{background:#0d1727;border-color:#243247}
+.theme-dark .quick-actions button{background:#142238;border-color:#2a3a50;color:#c1d1e4}
+.theme-dark .quick-actions button:hover{background:#103b3a;color:#99f6e4;border-color:#176b65}
+@media(max-height:720px) and (min-width:761px){
+ .sidebar{padding-top:8px;padding-bottom:6px}.brand-row{height:45px;min-height:45px}
+ .nav-group-title{height:29px;min-height:29px}.nav-child{height:24px}
+ .page-content{padding-top:13px}.metric-card{height:96px}
+ .chart-panel,.mix-panel{height:218px}.bar-chart{height:108px}
+ .recent-panel,.stock-panel{height:188px}
+}
+@media(max-width:1100px) and (min-width:761px){
+ .sidebar{flex-basis:300px;width:300px}.nav-child{font-size:9px}.page-content{padding:16px 14px}
+ .topbar{padding-inline:15px}.metric-card{height:100px}.metric-value{font-size:19px}
+}
+@media(max-width:760px){
+ .sidebar{padding:12px}.brand-row{height:50px;min-height:50px}.nav-group-title{height:35px;min-height:35px}
+ .nav-child{height:30px;font-size:10px}.topbar{height:56px;min-height:56px;padding-inline:10px}
+ .page-content{padding:15px 11px 12px}.page-heading h1{font-size:22px}
+ .metric-card{height:96px;border-radius:13px}.metric-value{font-size:20px}
+ .chart-panel,.mix-panel{height:220px;padding:13px}.recent-panel,.stock-panel{padding:13px;border-radius:14px}
+ .workspace-footer{padding-inline:11px}
+}
