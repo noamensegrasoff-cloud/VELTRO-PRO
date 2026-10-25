@@ -460,3 +460,76 @@
   border-color:#a83f54!important;
   color:#fff!important;
 }
+
+
+/* Product barcode count badge: explicit contrast in both themes.
+   The old badge inherited dark surface colors in light mode, making "0" hard to read. */
+.app-shell .pform-manage-list{
+  min-width:0;
+  color:#40566d;
+  background:#f7fafc;
+  border-color:#d7e4ed;
+}
+.app-shell .pform-manage-list > b{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 auto;
+  min-width:25px;
+  height:24px;
+  padding:0 7px;
+  margin-inline-start:auto;
+  border:1px solid #c9e8e3;
+  border-radius:7px;
+  background:#def6f1!important;
+  color:#087f78!important;
+  font:800 11px/1 Inter,'IBM Plex Sans Arabic',sans-serif;
+  opacity:1;
+  text-align:center;
+}
+.app-shell .pform-manage-list:hover{
+  background:#eaf8f5;
+  border-color:#75cfc3;
+  color:#087f78;
+}
+.app-shell .pform-manage-list > svg:first-child{
+  flex:0 0 auto;
+  color:#0b9489!important;
+}
+.app-shell.theme-dark .pform-manage-list{
+  color:#d7e4f2;
+  background:#0b1320;
+  border-color:#2a3a50;
+}
+.app-shell.theme-dark .pform-manage-list > b{
+  background:#153e3b!important;
+  color:#70e3d3!important;
+  border-color:#286b65;
+}
+.app-shell.theme-dark .pform-manage-list:hover{
+  background:#183b3b;
+  border-color:#237b75;
+  color:#70e3d3;
+}
+.app-shell.theme-dark .pform-manage-list > svg:first-child{
+  color:#5eead4!important;
+}
+/* Keep related numeric and empty-state details legible in both color schemes. */
+.app-shell:not(.theme-dark) .pform-step-number,
+.app-shell:not(.theme-dark) .pform-footer-left{
+  color:#71839a;
+}
+.app-shell:not(.theme-dark) .pform-footer-left b{
+  color:#087f78;
+}
+.app-shell:not(.theme-dark) .pform-code-list > p{
+  color:#71839a;
+}
+.app-shell.theme-dark .pform-step-number,
+.app-shell.theme-dark .pform-footer-left,
+.app-shell.theme-dark .pform-code-list > p{
+  color:#91a4ba;
+}
+.app-shell.theme-dark .pform-footer-left b{
+  color:#70e3d3;
+}
