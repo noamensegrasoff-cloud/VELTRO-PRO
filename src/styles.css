@@ -1046,3 +1046,40 @@
 .app-shell:not(.theme-dark) .sidebar .logout-link:focus-visible {
   outline-color: #168f89;
 }
+
+
+/* Definitive sidebar row correction: no white halo/frame on expanded or hovered groups. */
+.app-shell .sidebar .nav-group,
+.app-shell .sidebar .nav-group-title {
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+.app-shell .sidebar .nav-group-title,
+.app-shell .sidebar .nav-group-title:hover,
+.app-shell .sidebar .nav-group-title:active,
+.app-shell .sidebar .nav-group-title:focus,
+.app-shell .sidebar .nav-group-title:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+}
+.app-shell.theme-dark .sidebar .nav-group-title:hover,
+.app-shell.theme-dark .sidebar .nav-group-title:focus,
+.app-shell.theme-dark .sidebar .nav-group-title:focus-visible {
+  background: #172535 !important;
+  border-color: transparent !important;
+}
+.app-shell:not(.theme-dark) .sidebar .nav-group-title:hover,
+.app-shell:not(.theme-dark) .sidebar .nav-group-title:focus,
+.app-shell:not(.theme-dark) .sidebar .nav-group-title:focus-visible {
+  background: #eaf6f4 !important;
+  border-color: transparent !important;
+}
+.app-shell .sidebar .nav-group.group-active .nav-group-title,
+.app-shell.theme-dark .sidebar .nav-group.group-active .nav-group-title,
+.app-shell:not(.theme-dark) .sidebar .nav-group.group-active .nav-group-title {
+  outline: none !important;
+  box-shadow: none !important;
+}
