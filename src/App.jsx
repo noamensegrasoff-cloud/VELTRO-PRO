@@ -239,7 +239,7 @@ function ModulePage({ page, parent, t, lang, onBack }) {
 }
 
 export default function App() {
-  const [theme,setTheme]=useState(()=>{try{return localStorage.getItem('veltro.theme')==='dark'?'dark':'light';}catch{return 'light';}});
+  const [theme,setTheme]=useState(()=>{try{if(localStorage.getItem('veltro.theme.palette.v2')!=='1'){localStorage.setItem('veltro.theme.palette.v2','1');localStorage.setItem('veltro.theme','dark');return 'dark';}return localStorage.getItem('veltro.theme')==='light'?'light':'dark';}catch{return 'dark';}});
   const [lang,setLang]=useState(()=>{try{return ['ar','fr','en'].includes(localStorage.getItem('veltro.language'))?localStorage.getItem('veltro.language'):'ar';}catch{return 'ar';}});
   const [cloudState,setCloudState]=useState('checking');
   const [setupState,setSetupState]=useState('checking');
