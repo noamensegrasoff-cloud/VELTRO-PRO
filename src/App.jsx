@@ -515,8 +515,6 @@ function CustomerAccountsPage({lang}) {
  </section></div>}
  </div>;
 }
-function rowsAllDebts(customers,bal){return customers.map(s=>({...s,_bal:bal(s)})).filter(s=>s._bal>0).sort((a,b)=>b._bal-a._bal)}
-function KeyboardHint({text}){return <span className="customer-keyboard-hint"><span aria-hidden="true">↑↓</span>{text}</span>}
 
 function ModulePage({ page, parent, t, lang, onBack }) {
   if (page.id === 'supplier-list') return <SupplierListPage lang={lang} />;
