@@ -303,8 +303,8 @@
 /* VELTRO-PRO global dark mode */
 .app-shell.theme-dark{
   color-scheme:dark;
-  --navy:#d8e7fb;--blue:#70b7ff;--pale:#0b1220;--green:#4dd5ad;--muted:#91a2ba;--line:#29364a;--panel:#141e2e;--shadow:0 8px 24px rgba(0,0,0,.18);
-  color:#e5edf8;background:#0b1220;
+  --navy:#edf2fa;--blue:#35d6c2;--pale:#080c14;--green:#51e5d1;--muted:#8491a7;--line:#263446;--panel:#101722;--shadow:0 8px 24px rgba(0,0,0,.24);
+  color:#edf2fa;background:#080c14;
 }
 .theme-dark .workspace,.theme-dark .app-layout,.theme-dark .workspace-main,.theme-dark .page-content{background:#0b1220;color:#e5edf8}
 .theme-dark .sidebar,.theme-dark .topbar,.theme-dark .panel,.theme-dark .metric-card,.theme-dark .module-card,.theme-dark .table-panel,.theme-dark .profile-menu,.theme-dark .notification-popover,.theme-dark .confirm-modal,.theme-dark .search-results,.theme-dark .quick-card,.theme-dark .activity-card,.theme-dark .stock-card{background:#141e2e;color:#e5edf8;border-color:#29364a;box-shadow:var(--shadow)}
@@ -321,14 +321,14 @@
 
 /* Cohesive dark theme refinement: one shared surface, border and text palette */
 .app-shell.theme-dark{
-  --dark-bg:#0c1220;
-  --dark-surface:#141d2d;
-  --dark-raised:#192538;
-  --dark-hover:#202f45;
-  --dark-border:#2a3950;
-  --dark-text:#e7edf7;
-  --dark-muted:#9aaac0;
-  --dark-subtle:#71839d;
+  --dark-bg:#080c14;
+  --dark-surface:#101722;
+  --dark-raised:#0b1220;
+  --dark-hover:#172535;
+  --dark-border:#263446;
+  --dark-text:#edf2fa;
+  --dark-muted:#8491a7;
+  --dark-subtle:#64748b;
   background:var(--dark-bg)!important;color:var(--dark-text)!important;
 }
 .theme-dark .workspace,.theme-dark .app-layout,.theme-dark .page-content,.theme-dark .dashboard-content,.theme-dark .module-content,.theme-dark .module-workspace{background:var(--dark-bg)!important;color:var(--dark-text)!important}
@@ -660,3 +660,73 @@
 @media(prefers-reduced-motion:reduce){
   .app-shell .sidebar,.app-shell .sidebar-toggle-button{transition:none!important;animation:none!important}
 }
+
+
+/* VELTRO legacy brand palette restoration: midnight navy, turquoise and violet */
+.app-shell.theme-dark{background:#080c14!important;color:#edf2fa!important}
+.app-shell.theme-dark .sidebar,
+.app-shell.theme-dark .topbar,
+.app-shell.theme-dark .panel,
+.app-shell.theme-dark .metric-card,
+.app-shell.theme-dark .module-metric,
+.app-shell.theme-dark .module-workspace,
+.app-shell.theme-dark .notification-popover,
+.app-shell.theme-dark .confirm-modal,
+.app-shell.theme-dark .signed-out-card{background:#101722!important;border-color:#263446!important;color:#edf2fa!important}
+.app-shell.theme-dark .workspace,
+.app-shell.theme-dark .page-content,
+.app-shell.theme-dark .dashboard-content,
+.app-shell.theme-dark .module-content,
+.app-shell.theme-dark .workspace-footer{background:#080c14!important;color:#edf2fa!important;border-color:#263446!important}
+.app-shell.theme-dark .brand-mark{background:linear-gradient(145deg,#35d6c2,#a78bfa)!important;color:#080c14!important;box-shadow:0 4px 18px #35d6c226!important}
+.app-shell.theme-dark .brand-copy b,
+.app-shell.theme-dark .page-heading h1,
+.app-shell.theme-dark .module-workspace h2,
+.app-shell.theme-dark .metric-value,
+.app-shell.theme-dark .chart-total strong,
+.app-shell.theme-dark .mix-donut strong{color:#edf2fa!important}
+.app-shell.theme-dark .brand-version,
+.app-shell.theme-dark .health-tag{background:#172535!important;border-color:#263446!important;color:#35d6c2!important}
+.app-shell.theme-dark .dashboard-link.active,
+.app-shell.theme-dark .nav-child.active,
+.app-shell.theme-dark .nav-group.group-active .nav-group-title{background:#17302f!important;color:#51e5d1!important;border-color:#24514e!important}
+.app-shell.theme-dark .dashboard-link.active svg,
+.app-shell.theme-dark .nav-child.active svg,
+.app-shell.theme-dark .nav-group-title svg{color:#51e5d1!important}
+.app-shell.theme-dark .nav-group-icon,
+.app-shell.theme-dark .metric-icon,
+.app-shell.theme-dark .module-icon,
+.app-shell.theme-dark .module-empty-icon{background:#172535!important;border-color:#263446!important;color:#35d6c2!important}
+.app-shell.theme-dark .tone-violet{background:#28213d!important;color:#b9a4ff!important}
+.app-shell.theme-dark .tone-blue{background:#17302f!important;color:#51e5d1!important}
+.app-shell.theme-dark .tone-green{background:#17352f!important;color:#51e5d1!important}
+.app-shell.theme-dark .tone-amber{background:#382d1e!important;color:#ffc274!important}
+.app-shell.theme-dark .bar-slot i{background:linear-gradient(180deg,#a78bfa,#493d70)!important}
+.app-shell.theme-dark .bar-slot i.bar-highlight{background:linear-gradient(180deg,#35d6c2,#167d79)!important;box-shadow:0 2px 12px #35d6c226!important}
+.app-shell.theme-dark .mix-donut{background:conic-gradient(#35d6c2 0 56%,#a78bfa 56% 78%,#78b8ff 78% 87%,#263446 87% 100%)!important}
+.app-shell.theme-dark .mix-donut:before{background:#101722!important}
+.app-shell.theme-dark .legend-blue{background:#35d6c2!important}
+.app-shell.theme-dark .legend-green{background:#51e5d1!important}
+.app-shell.theme-dark .legend-violet{background:#a78bfa!important}
+.app-shell.theme-dark .icon-button:hover,
+.app-shell.theme-dark .more-button:hover,
+.app-shell.theme-dark .quick-actions button:hover{background:#172535!important;color:#51e5d1!important}
+.app-shell.theme-dark .quick-actions button,
+.app-shell.theme-dark .date-button,
+.app-shell.theme-dark .global-search,
+.app-shell.theme-dark .language-select,
+.app-shell.theme-dark .sidebar-toggle-button{background:#0b1220!important;border-color:#263446!important;color:#edf2fa!important}
+.app-shell.theme-dark .global-search input,
+.app-shell.theme-dark .language-select select{color:#edf2fa!important}
+.app-shell.theme-dark .global-search input::placeholder{color:#8491a7!important}
+.app-shell.theme-dark th{background:#0b1220!important;color:#8491a7!important;border-color:#263446!important}
+.app-shell.theme-dark td{border-color:#263446!important}
+.app-shell.theme-dark .operation-pill.sold{background:#17302f!important;color:#51e5d1!important}
+.app-shell.theme-dark .operation-pill.bought{background:#17352f!important;color:#51e5d1!important}
+.app-shell.theme-dark .operation-pill.returned{background:#28213d!important;color:#b9a4ff!important}
+.app-shell.theme-dark .status-pill.completed,.app-shell.theme-dark .status-pill.received{background:#17352f!important;color:#51e5d1!important}
+.app-shell.theme-dark .status-pill.pending{background:#382d1e!important;color:#ffc274!important}
+.app-shell.theme-dark .positive,.app-shell.theme-dark .metric-trend{background:#17352f!important;color:#51e5d1!important}
+.app-shell.theme-dark .demo-badge{background:#28213d!important;color:#b9a4ff!important;border-color:#493d70!important}
+.app-shell.theme-dark .button-danger{background:#a83f54!important;border-color:#a83f54!important}
+@media(prefers-reduced-motion:reduce){.app-shell.theme-dark *{scroll-behavior:auto}}
