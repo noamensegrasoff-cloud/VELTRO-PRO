@@ -11,6 +11,91 @@ import { deleteCloudRecord, getCloudRecords, saveCloudRecord } from './cloudStor
 
 let syncInFlight = null;
 
+const LEGACY_STORAGE_ENTITY = 'local_storage';
+const LEGACY_STORAGE_BASELINE_KEY = 'veltro.cloud-sync.local-storage-baseline.v1';
+const LEGACY_STORAGE_EXCLUDED = /^(?:veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|sb-[^-]+-auth-token)$/i;
+
+function readStorageBaseline() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(LEGACY_STORAGE_BASELINE_KEY) || '{}');
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch { return {}; }
+}
+
+function isSyncableStorageKey(key) {
+  if (!key || LEGACY_STORAGE_EXCLUDED.test(key)) return false;
+  // Sync business records/settings only; do not replicate arbitrary browser or auth state.
+  return /^(?:veltro[._-]|products$|categories$|sales$|purchases$|customers$|suppliers$|orders$|invoices$|expenses$|stock$)/i.test(key);
+}
+
+async function syncLegacyLocalStorage(workspaceId) {
+  if (typeof localStorage === 'undefined') return { pushed: 0, pulled: 0 };
+  const baseline = readStorageBaseline();
+  const local = new Map();
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const key = localStorage.key(i);
+    if (!isSyncableStorageKey(key)) continue;
+    const value = localStorage.getItem(key);
+    if (value !== null) local.set(key, value);
+  }
+
+  const cloudRows = await getCloudRecords({
+    workspaceId, entityType: LEGACY_STORAGE_ENTITY, includeDeleted: true,
+  });
+  const remote = new Map(cloudRows.map(row => [String(row.record_id), row]));
+  const keys = new Set([...local.keys(), ...Object.keys(baseline), ...remote.keys()]);
+  let pushed = 0;
+  let pulled = 0;
+
+  for (const key of keys) {
+    if (!isSyncableStorageKey(key)) continue;
+    const localValue = local.has(key) ? local.get(key) : null;
+    const oldValue = Object.prototype.hasOwnProperty.call(baseline, key) ? baseline[key] : undefined;
+    const row = remote.get(key);
+    const remoteValue = row && !row.deleted_at && typeof row.payload?.value === 'string'
+      ? row.payload.value : null;
+
+    // On a new device, adopt existing cloud data rather than overwrite it with defaults.
+    if (oldValue === undefined && row) {
+      if (remoteValue === null) {
+        if (localValue !== null) localStorage.removeItem(key);
+      } else {
+        localStorage.setItem(key, remoteValue);
+      }
+      baseline[key] = remoteValue;
+      pulled += 1;
+      continue;
+    }
+
+    const localChanged = localValue !== oldValue;
+    const remoteChanged = (remoteValue !== oldValue) || (!row && oldValue !== undefined);
+    if (localChanged) {
+      if (localValue === null) {
+        await deleteCloudRecord({ workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key });
+        baseline[key] = null;
+      } else {
+        await saveCloudRecord({
+          workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key,
+          payload: { value: localValue },
+        });
+        baseline[key] = localValue;
+      }
+      pushed += 1;
+      continue;
+    }
+
+    if (remoteChanged) {
+      if (remoteValue === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, remoteValue);
+      baseline[key] = remoteValue;
+      pulled += 1;
+    }
+  }
+
+  try { localStorage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline)); } catch {}
+  return { pushed, pulled };
+}
+
 export async function getOrCreateWorkspace() {
   if (!isSupabaseConfigured || !supabase) throw new Error('Supabase is not configured.');
   const { data: authData, error: authError } = await supabase.auth.getUser();
@@ -93,6 +178,15 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     const pending = await listPendingSyncOperations();
     let pushed = 0;
     let pulled = 0;
+    // Bridge existing sections that still persist directly to localStorage into cloud_records.
+    // This keeps legacy screens working while their CRUD flows migrate to the shared repository.
+    try {
+      const legacy = await syncLegacyLocalStorage(workspace.id);
+      pushed += legacy.pushed;
+      pulled += legacy.pulled;
+    } catch (error) {
+      return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
+    }
     const pendingKeys = new Set(pending.map(item => item.recordKey));
 
     for (const operation of pending) {
