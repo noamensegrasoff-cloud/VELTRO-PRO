@@ -975,3 +975,52 @@
   .app-shell *::before,
   .app-shell *::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+
+/* Layout audit fix: prevent placeholder pages from stretching into a near-empty full-screen slab */
+.app-shell .module-content{gap:0}
+.app-shell .module-workspace{
+  flex:0 0 auto;
+  min-height:clamp(280px,42vh,480px);
+  max-height:none;
+  justify-content:center;
+  padding:clamp(22px,4vw,44px);
+}
+.app-shell .module-empty-icon{margin-bottom:16px}
+.app-shell .module-workspace h2{margin:0 0 8px;line-height:1.4}
+.app-shell .module-workspace p{max-width:58ch;margin:0 auto;line-height:1.7;text-wrap:pretty}
+.app-shell .module-empty-actions{margin-top:16px;flex-wrap:wrap;justify-content:center;gap:8px}
+.app-shell .module-metrics{align-items:stretch}
+.app-shell .module-metric{min-width:0;overflow-wrap:anywhere}
+.app-shell .module-metric>b{min-width:0;overflow-wrap:anywhere}
+@media(min-width:761px) and (max-width:900px){
+  .app-shell{height:auto;min-height:100svh;overflow:visible}
+  .app-shell .app-layout{height:auto;min-height:100svh}
+  .app-shell .sidebar{position:fixed;top:0;bottom:0;right:0;left:auto;width:min(340px,88vw);height:100svh;transform:translateX(105%);transition:transform .25s ease;box-shadow:none;z-index:40}
+  .app-shell .sidebar.sidebar-open{transform:translateX(0);box-shadow:-15px 0 45px rgba(8,20,38,.25)}
+  .app-shell .sidebar-scrim{display:block;position:fixed;inset:0;background:rgba(8,20,38,.48);border:0;z-index:35}
+  .app-shell.lang-en .sidebar,.app-shell.lang-fr .sidebar{left:0;right:auto;transform:translateX(-105%)}
+  .app-shell.lang-en .sidebar.sidebar-open,.app-shell.lang-fr .sidebar.sidebar-open{transform:translateX(0)}
+  .app-shell .workspace{width:100%;height:auto;min-height:100svh;overflow:visible}
+  .app-shell .topbar{position:sticky;top:0;padding-inline:10px;gap:7px}
+  .app-shell .mobile-menu-button{display:grid;place-items:center}
+  .app-shell .topbar-start,.app-shell .topbar-actions{gap:6px}
+  .app-shell .breadcrumbs>span:first-child{display:none}
+  .app-shell .global-search{width:32px;padding-inline:8px}
+  .app-shell .global-search:focus-within{width:155px}
+  .app-shell .global-search input:not(:focus){width:0;opacity:0}
+  .app-shell .global-search kbd,.app-shell .profile-chip{display:none}
+  .app-shell .page-content{overflow:visible;padding:14px 12px 18px}
+  .app-shell .module-content{min-height:0}
+  .app-shell .module-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .app-shell .module-metric{min-height:70px;padding:10px}
+  .app-shell .module-workspace{min-height:clamp(280px,38vh,420px);padding:28px 18px}
+  .app-shell .charts-grid,.app-shell .lower-grid{grid-template-columns:minmax(0,1fr);gap:10px}
+  .app-shell .workspace-footer{height:auto;min-height:28px;padding:6px 10px;flex-wrap:wrap;gap:6px 12px}
+  .app-shell .workspace-footer .prototype-note{display:none}
+}
+@media(max-width:760px){
+  .app-shell .module-workspace{min-height:280px;padding:26px 15px}
+  .app-shell .module-metrics{grid-template-columns:minmax(0,1fr);gap:7px}
+  .app-shell .module-metric{min-height:58px}
+}
