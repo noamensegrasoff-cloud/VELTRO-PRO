@@ -1271,3 +1271,19 @@
 @media(max-width:900px){.supplier-ledger-modal{width:98vw;height:94vh;border-radius:14px}.supplier-ledger-header{padding:12px}.supplier-ledger-profile{grid-template-columns:repeat(2,minmax(0,1fr))}.supplier-ledger-tools{align-items:stretch;flex-direction:column}.supplier-ledger-dates{flex-wrap:wrap}.supplier-ledger-dates input{width:clamp(115px,25vw,180px)}.supplier-ledger-actions{flex-wrap:wrap}.supplier-ledger-actions>button{flex:1}.supplier-ledger-stats{gap:6px;padding:8px}.supplier-ledger-stats article{align-items:flex-start;flex-direction:column;gap:5px;padding:9px}.supplier-ledger-footer{font-size:9px}}
 @media(max-width:520px){.supplier-ledger-backdrop{padding:4px}.supplier-ledger-modal{width:100%;height:96dvh;border-radius:12px}.supplier-ledger-identity>span,.supplier-ledger-identity>img{width:39px;height:39px;flex-basis:39px}.supplier-ledger-identity h2{font-size:17px}.supplier-ledger-profile>div{padding:8px 10px}.supplier-ledger-profile b{font-size:10px}.supplier-ledger-stats article b{font-size:12px}.supplier-ledger-dates{display:grid;grid-template-columns:1fr 1fr;width:100%}.supplier-ledger-dates label,.supplier-ledger-dates input{width:100%}.supplier-ledger-actions>button{font-size:9px;padding:0 6px}.supplier-payment-form,.supplier-invoice-preview{padding:13px}.supplier-invoice-preview-info{grid-template-columns:1fr}.supplier-ledger-footer>span:first-child{max-width:70%;line-height:1.4}}
 @media print{.supplier-ledger-backdrop,.supplier-payment-overlay{display:none!important}}
+
+/* Supplier accounts: polished cards and visible debit/credit balances */
+.supplier-ledger-modal{border-radius:24px!important;box-shadow:0 32px 110px #0008!important}
+.supplier-ledger-header{background:radial-gradient(ellipse at 100% 0%,#168f9120,transparent 48%),linear-gradient(120deg,color-mix(in srgb,#168f91 8%,var(--panel)),var(--panel))!important;padding:18px 22px!important}
+.supplier-ledger-profile{background:transparent!important;gap:10px!important;padding:12px 14px 0!important;border:0!important}
+.supplier-ledger-profile>div{border:1px solid var(--line);border-radius:14px;padding:12px 14px!important;background:color-mix(in srgb,#168f91 3%,var(--panel))!important}
+.supplier-ledger-stats{border:0!important;gap:12px!important;padding:12px 14px!important}
+.supplier-ledger-stats article{border-radius:15px!important;background:var(--panel);box-shadow:0 5px 18px #071a2b08}
+.supplier-ledger-stats article:nth-child(1){border-color:#168f9138}.supplier-ledger-stats article:nth-child(2){border-color:#647de038}.supplier-ledger-stats article:nth-child(3){border-color:#8b5cf638}
+.supplier-ledger-tools{margin:0 14px 12px!important;padding:12px!important;border:1px solid var(--line);border-radius:15px;background:color-mix(in srgb,#168f91 3%,var(--panel))}
+.supplier-ledger-table-wrap{margin:0 14px 12px!important;border:1px solid var(--line);border-radius:15px;overflow:auto}
+.supplier-ledger-table thead th{background:color-mix(in srgb,#168f91 8%,var(--panel))!important;backdrop-filter:blur(10px)}
+.supplier-ledger-type{border:1px solid color-mix(in srgb,currentColor 18%,transparent)}
+.supplier-balance-negative,.supplier-ledger-negative{color:#8b5cf6!important;font-weight:850!important}.supplier-balance-positive,.supplier-ledger-positive{color:#dc5656!important;font-weight:850!important}.supplier-balance-zero{color:#159b79!important;font-weight:850!important}
+.supplier-ledger-footer{border-radius:0 0 22px 22px}
+@media(max-width:700px){.supplier-ledger-profile{grid-template-columns:repeat(2,minmax(0,1fr))!important}.supplier-ledger-stats{grid-template-columns:1fr!important}.supplier-ledger-table-wrap{margin:0 8px 8px!important}}
