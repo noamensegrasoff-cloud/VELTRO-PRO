@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { dashboard, sections } from './data/navigation.js';
 import { getCloudStatus } from './services/cloudStorage.js';
+import { startAutoSync, syncWorkspace } from './services/databaseSync.js';
 import { supabase } from './lib/supabase.js';
 import BusinessOnboarding from './BusinessOnboarding.jsx';
 import { QRCodeSVG } from 'qrcode.react';
@@ -542,6 +543,34 @@ export default function App() {
   useEffect(()=>{try{localStorage.setItem('veltro.language',lang);}catch{};document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title=lang==='ar'?'VELTRO-PRO — نظام إدارة المتجر':lang==='fr'?'VELTRO-PRO — Gestion commerciale':'VELTRO-PRO — Business Suite';},[lang]);
   useEffect(()=>{try{localStorage.setItem('veltro.theme',theme);}catch{};document.documentElement.dataset.theme=theme;},[theme]);
   useEffect(()=>{let alive=true;getCloudStatus().then(status=>{if(alive)setCloudState(status);}).catch(()=>{if(alive)setCloudState('error');});return()=>{alive=false;};},[]);
+  // Keep the local outbox and every registered business entity synchronized while
+  // the authenticated workspace is open. Offline edits remain local and retry online.
+  useEffect(()=>{
+    let alive=true;
+    let refreshTimer=null;
+    const stopAutoSync=startAutoSync({
+      onStatus: result=>{
+        if(!alive)return;
+        if(result?.status==='synced')setCloudState('connected');
+        else if(result?.status==='not_configured')setCloudState('not_configured');
+        else if(result?.status==='error'||result?.status==='partial')setCloudState('error');
+        else if(result?.status==='offline')setCloudState('configured');
+      }
+    });
+    const refresh=()=>{ if(alive && typeof navigator!=='undefined' && navigator.onLine) void syncWorkspace().catch(()=>{}); };
+    refreshTimer=window.setInterval(refresh,30000);
+    const channel=supabase?.channel('veltro-workspace-cloud-sync')
+      .on('postgres_changes',{event:'*',schema:'public',table:'cloud_records'},()=>{
+        // Let the active sync finish first; a later tick reconciles the new rows.
+        window.setTimeout(refresh,800);
+      }).subscribe();
+    return()=>{
+      alive=false;
+      stopAutoSync();
+      if(refreshTimer)window.clearInterval(refreshTimer);
+      if(channel)supabase.removeChannel(channel);
+    };
+  },[]);
   useEffect(()=>{
     let alive=true;
     (async()=>{
