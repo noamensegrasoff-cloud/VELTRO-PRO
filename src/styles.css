@@ -1083,3 +1083,20 @@
   outline: none !important;
   box-shadow: none !important;
 }
+
+
+/* Theme-aware expanded navigation container.
+   The earlier light-only gradient was leaking into dark mode as a thick white halo. */
+.app-shell.theme-dark .sidebar .nav-group.group-expanded {
+  background: #101a28 !important;
+  border-color: #263649 !important;
+  box-shadow: none !important;
+}
+.app-shell:not(.theme-dark) .sidebar .nav-group.group-expanded {
+  background: #f4f8fc !important;
+  border-color: #e1eaf4 !important;
+  box-shadow: none !important;
+}
+.app-shell .sidebar .nav-group {
+  box-shadow: none !important;
+}
