@@ -1287,3 +1287,39 @@
 .supplier-balance-negative,.supplier-ledger-negative{color:#8b5cf6!important;font-weight:850!important}.supplier-balance-positive,.supplier-ledger-positive{color:#dc5656!important;font-weight:850!important}.supplier-balance-zero{color:#159b79!important;font-weight:850!important}
 .supplier-ledger-footer{border-radius:0 0 22px 22px}
 @media(max-width:700px){.supplier-ledger-profile{grid-template-columns:repeat(2,minmax(0,1fr))!important}.supplier-ledger-stats{grid-template-columns:1fr!important}.supplier-ledger-table-wrap{margin:0 8px 8px!important}}
+
+/* VELTRO supplier accounts — richer turquoise, blue, violet, green and amber accents */
+.supplier-ledger-header{position:relative;background:radial-gradient(ellipse at 95% 0%,#22d3ee30,transparent 34%),radial-gradient(ellipse at 0% 100%,#8b5cf61c,transparent 38%),linear-gradient(115deg,#102c46 0%,#124c5b 54%,#17365c 100%)!important;color:#f5fdff!important;border-bottom:1px solid #2dd4bf55!important}
+.supplier-ledger-header .supplier-ledger-identity h2,.supplier-ledger-header .supplier-ledger-identity p,.supplier-ledger-header .supplier-ledger-identity small{color:#f4fbff!important}
+.supplier-ledger-identity>span,.supplier-ledger-identity>img{background:linear-gradient(135deg,#2dd4bf,#38bdf8)!important;color:#083344!important;box-shadow:0 7px 22px #22d3ee35}
+.supplier-ledger-close{background:#ffffff12!important;border-color:#ffffff35!important;color:#e0f2fe!important}
+.supplier-ledger-profile>div{position:relative;overflow:hidden;background:linear-gradient(135deg,color-mix(in srgb,#22d3ee 9%,var(--panel)),var(--panel))!important;border-color:#22b8b044!important}
+.supplier-ledger-profile>div:nth-child(2){background:linear-gradient(135deg,color-mix(in srgb,#818cf8 10%,var(--panel)),var(--panel))!important;border-color:#818cf844}
+.supplier-ledger-profile>div:nth-child(3){background:linear-gradient(135deg,color-mix(in srgb,#a78bfa 10%,var(--panel)),var(--panel))!important;border-color:#a78bfa44}
+.supplier-ledger-profile>div:nth-child(4){background:linear-gradient(135deg,color-mix(in srgb,#fbbf24 10%,var(--panel)),var(--panel))!important;border-color:#fbbf2444}
+.supplier-ledger-stats article{position:relative;overflow:hidden;border-radius:16px!important}
+.supplier-ledger-stats article:nth-child(1){background:linear-gradient(135deg,#14b8a61c,var(--panel) 75%)!important;border-color:#14b8a655!important}
+.supplier-ledger-stats article:nth-child(2){background:linear-gradient(135deg,#3b82f61b,var(--panel) 75%)!important;border-color:#3b82f655!important}
+.supplier-ledger-stats article:nth-child(3){background:linear-gradient(135deg,#8b5cf61b,var(--panel) 75%)!important;border-color:#8b5cf655!important}
+.supplier-ledger-stats article:nth-child(1) b{color:#0f9f8e!important}.supplier-ledger-stats article:nth-child(2) b{color:#3977d6!important}.supplier-ledger-stats article:nth-child(3) b{color:#8b5cf6!important}
+.supplier-ledger-tools{background:linear-gradient(110deg,#14b8a60d,#3b82f60b,#8b5cf60a)!important;border-color:#22b8b044!important}
+.supplier-ledger-dates input:focus{border-color:#14b8a6!important;box-shadow:0 0 0 3px #14b8a61e!important}
+.supplier-ledger-actions>button.primary,.supplier-payment-buttons>button.primary,.supplier-invoice-preview footer>button.primary{background:linear-gradient(120deg,#0d9488,#0891b2)!important;border-color:#0d9488!important;box-shadow:0 5px 14px #0d94882b}
+.supplier-ledger-actions>button.primary:hover,.supplier-payment-buttons>button.primary:hover{background:linear-gradient(120deg,#0f766e,#0369a1)!important}
+.supplier-ledger-table th{background:linear-gradient(90deg,#14b8a615,#3b82f610)!important}
+.supplier-ledger-table tbody tr:nth-child(even){background:color-mix(in srgb,#38bdf8 2.5%,var(--panel))}
+.supplier-ledger-table tbody tr:hover,.supplier-ledger-table tbody tr.keyboard-selected{background:linear-gradient(90deg,#14b8a61b,#3b82f616,#8b5cf610)!important}
+.supplier-ledger-type.invoice{background:#dbeafe!important;color:#1d4ed8!important;border-color:#93c5fd!important}
+.supplier-ledger-type.payment{background:#ccfbf1!important;color:#0f766e!important;border-color:#5eead4!important}
+.supplier-ledger-row-actions button:first-child:hover{background:#dbeafe!important;color:#1d4ed8!important;border-color:#60a5fa!important}
+.supplier-ledger-row-actions button:last-child:hover{background:#ffe4e6!important;color:#be123c!important;border-color:#fb7185!important}
+.supplier-balance-negative,.supplier-ledger-negative{color:#7c3aed!important}.supplier-balance-positive,.supplier-ledger-positive{color:#e11d48!important}.supplier-balance-zero{color:#059669!important}
+.supplier-ledger-footer{background:linear-gradient(90deg,#14b8a60c,#3b82f60b,#8b5cf60a)!important}
+.supplier-payment-form,.supplier-invoice-preview{border-top:4px solid #14b8a6!important}
+.supplier-payment-form header small,.supplier-invoice-preview header small{color:#0891b2!important}
+.supplier-invoice-preview-info>div:nth-child(1){background:#ecfeff!important;border-color:#a5f3fc!important}.supplier-invoice-preview-info>div:nth-child(2){background:#eef2ff!important;border-color:#c7d2fe!important}.supplier-invoice-preview-info>div:nth-child(3){background:#f5f3ff!important;border-color:#ddd6fe!important}
+.theme-dark .supplier-ledger-header{background:radial-gradient(ellipse at 95% 0%,#22d3ee25,transparent 34%),radial-gradient(ellipse at 0% 100%,#8b5cf61a,transparent 38%),linear-gradient(115deg,#091827,#103c4a 54%,#142c49)!important}
+.theme-dark .supplier-ledger-profile>div:nth-child(1){background:linear-gradient(135deg,#14b8a620,#172538)!important}.theme-dark .supplier-ledger-profile>div:nth-child(2){background:linear-gradient(135deg,#818cf820,#172538)!important}.theme-dark .supplier-ledger-profile>div:nth-child(3){background:linear-gradient(135deg,#a78bfa20,#172538)!important}.theme-dark .supplier-ledger-profile>div:nth-child(4){background:linear-gradient(135deg,#fbbf2418,#172538)!important}
+.theme-dark .supplier-ledger-stats article:nth-child(1){background:linear-gradient(135deg,#14b8a621,#172538 75%)!important}.theme-dark .supplier-ledger-stats article:nth-child(2){background:linear-gradient(135deg,#3b82f621,#172538 75%)!important}.theme-dark .supplier-ledger-stats article:nth-child(3){background:linear-gradient(135deg,#8b5cf621,#172538 75%)!important}
+.theme-dark .supplier-ledger-table tbody tr:nth-child(even){background:#38bdf808}.theme-dark .supplier-ledger-type.invoice{background:#1e3a8a55!important;color:#bfdbfe!important;border-color:#3b82f666!important}.theme-dark .supplier-ledger-type.payment{background:#134e4a66!important;color:#99f6e4!important;border-color:#2dd4bf66!important}
+.theme-dark .supplier-invoice-preview-info>div{background:#172538!important;border-color:#334155!important}
