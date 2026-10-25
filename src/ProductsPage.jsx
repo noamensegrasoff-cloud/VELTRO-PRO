@@ -11,7 +11,7 @@ export default function ProductsPage({lang='ar'}) {
   const set=(key,value)=>setForm(prev=>({...prev,[key]:value}));
   const unitCount=Math.max(1,Number(form.unitsPerCarton)||1);
   const calculatedUnitCost=form.cartonCost!==''?(Number(form.cartonCost)/unitCount).toFixed(2):'';
-  const calculatedUnitSell=form.cartonSell!==''?(Number(form.cartonSell)/unitCount).toFixed(2):'';
+  const calculatedUnitSell=form.unitSell;
   const rows=useMemo(()=>samples.filter(p=>{const q=query.trim().toLocaleLowerCase();const match=!q||[p.name,p.barcode,p.id,p.category].some(v=>String(v).toLocaleLowerCase().includes(q));return match&&(filter==='all'||(filter==='low'&&p.stock>0&&p.stock<=p.min)||(filter==='out'&&p.stock===0))&&(category==='all'||p.category===category);}),[query,filter,category]);
   const categories=[...new Set(samples.map(p=>p.category))];
   const low=samples.filter(p=>p.stock>0&&p.stock<=p.min).length, out=samples.filter(p=>p.stock===0).length;
@@ -24,9 +24,9 @@ export default function ProductsPage({lang='ar'}) {
   const generateBarcode=()=>String(Date.now()).slice(-13).padStart(13,'0');
   const totalUnitsCalculated=Math.max(0,Number(form.cartonsPurchased)||0)*Math.max(1,Number(form.unitsPerCarton)||1);
   const updateCartonCount=(value)=>setForm(prev=>({...prev,cartonsPurchased:value,totalUnits:''}));
-  const updateUnitsPerCarton=(value)=>setForm(prev=>({...prev,unitsPerCarton:value,totalUnits:'',unitCost:prev.cartonCost!==''?(Number(prev.cartonCost)/Math.max(1,Number(value)||1)).toFixed(2):prev.unitCost,unitSell:prev.cartonSell!==''?(Number(prev.cartonSell)/Math.max(1,Number(value)||1)).toFixed(2):prev.unitSell}));
-  const updateCartonPrice=(kind,value)=>setForm(prev=>({...prev,[kind==='purchase'?'cartonCost':'cartonSell']:value,[kind==='purchase'?'unitCost':'unitSell']:value!==''?(Number(value)/Math.max(1,Number(prev.unitsPerCarton)||1)).toFixed(2):''}));
-  const updateUnitPrice=(kind,value)=>setForm(prev=>({...prev,[kind==='purchase'?'unitCost':'unitSell']:value,[kind==='purchase'?'cartonCost':'cartonSell']:value!==''?(Number(value)*Math.max(1,Number(prev.unitsPerCarton)||1)).toFixed(2):''}));
+  const updateUnitsPerCarton=(value)=>setForm(prev=>({...prev,unitsPerCarton:value,totalUnits:'',unitCost:prev.cartonCost!==''?(Number(prev.cartonCost)/Math.max(1,Number(value)||1)).toFixed(2):prev.unitCost,unitSell:prev.unitSell}));
+  const updateCartonPrice=(kind,value)=>setForm(prev=>({...prev,[kind==='purchase'?'cartonCost':'cartonSell']:value,...(kind==='purchase'?{unitCost:value!==''?(Number(value)/Math.max(1,Number(prev.unitsPerCarton)||1)).toFixed(2):''}:{})}));
+  const updateUnitPrice=(kind,value)=>setForm(prev=>({...prev,[kind==='purchase'?'unitCost':'unitSell']:value,...(kind==='purchase'?{cartonCost:value!==''?(Number(value)*Math.max(1,Number(prev.unitsPerCarton)||1)).toFixed(2):''}:{})}));
   const field=(label,key,placeholder='',type='text',props={})=><label className="pform-field"><span>{label}</span><input type={type} value={form[key]} onChange={e=>set(key,e.target.value)} placeholder={placeholder} {...props}/></label>;
   const barcodeField=(label,key,manageKey,placeholder='')=><div className="pform-field"><span>{label}</span><div className="pform-code-input"><input dir="ltr" value={form[key]} onChange={e=>set(key,e.target.value)} placeholder={placeholder||'1234567890123'}/><button type="button" title={tx.manage} onClick={()=>openCodeManager(manageKey)}><Barcode size={16}/><span>{tx.manage}</span></button></div></div>;
   const codeList=(label,key)=> <div className="pform-field"><span>{label}</span><button type="button" className="pform-manage-list" onClick={()=>openCodeManager(key)}><Barcode size={17}/><span>{tx.secondaryCodesButton}</span><b>{form[key].length}</b><ChevronLeft size={15}/></button>{form[key].length>0&&<div className="pform-code-chips">{form[key].map((code,i)=><span key={code+'-'+i}>{code}<button type="button" onClick={()=>set(key,form[key].filter((_,j)=>i!==j))} aria-label={tx.delete}><X size={12}/></button></span>)}</div>}</div>;
