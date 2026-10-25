@@ -5,7 +5,7 @@ import {
   Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
   ShoppingCart, X, Globe, ClipboardList, History,
   CircleCheck, PackageCheck, Cloud, PanelLeftClose, PanelLeftOpen,
-  Plus, Phone, MapPin, Pencil, Trash2, ImagePlus, Building2, FileText
+  Plus, Phone, MapPin, Pencil, Trash2, ImagePlus, Building2, FileText, Users
 } from 'lucide-react';
 import { dashboard, sections } from './data/navigation.js';
 import { getCloudStatus } from './services/cloudStorage.js';
