@@ -1138,3 +1138,37 @@
   background: #172535 !important;
   border-color: transparent !important;
 }
+
+
+/* Dashboard sidebar button: force dark-theme colors after all legacy theme rules. */
+.app-shell.theme-dark .sidebar .dashboard-link,
+.app-shell.theme-dark .sidebar .dashboard-link:visited {
+  background: #141e2e !important;
+  background-image: none !important;
+  color: #d7e4f6 !important;
+  border-color: #29364a !important;
+  box-shadow: none !important;
+}
+.app-shell.theme-dark .sidebar .dashboard-link svg {
+  color: #9aabc2 !important;
+}
+.app-shell.theme-dark .sidebar .dashboard-link:hover,
+.app-shell.theme-dark .sidebar .dashboard-link:focus,
+.app-shell.theme-dark .sidebar .dashboard-link:focus-visible {
+  background: #1c2b40 !important;
+  background-image: none !important;
+  color: #51e5d1 !important;
+  border-color: #30425b !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+.app-shell.theme-dark .sidebar .dashboard-link.active {
+  background: #17302f !important;
+  background-image: none !important;
+  color: #51e5d1 !important;
+  border-color: #24514e !important;
+  box-shadow: inset 3px 0 0 #35d6c2 !important;
+}
+.app-shell.theme-dark .sidebar .dashboard-link.active svg {
+  color: #51e5d1 !important;
+}
