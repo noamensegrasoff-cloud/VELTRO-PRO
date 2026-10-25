@@ -20,6 +20,7 @@ export default function ProductsPage({lang='ar'}) {
   const openCodeManager=(type)=>{setCodeManager(type);setDraftCode('');setDraftType(type==='unitBarcodes'?'unit':'carton')};
   const saveCode=()=>{const value=draftCode.trim();if(!value||!codeManager)return;setForm(prev=>({...prev,[codeManager]:[...prev[codeManager],value]}));setDraftCode('')};
   const navStep=n=>setStep(Math.max(0,Math.min(2,n)));
+  const [activeProductPanel,setActiveProductPanel]=useState(0);
   const generateBarcode=()=>String(Date.now()).slice(-13).padStart(13,'0');
   const totalUnitsCalculated=Math.max(0,Number(form.cartonsPurchased)||0)*Math.max(1,Number(form.unitsPerCarton)||1);
   const updateCartonCount=(value)=>setForm(prev=>({...prev,cartonsPurchased:value,totalUnits:''}));
@@ -40,6 +41,12 @@ export default function ProductsPage({lang='ar'}) {
     {modal&&<div className="pform-overlay"><section className="pform-modal" role="dialog" aria-modal="true" aria-label={tx.newTitle}>
       <header className="pform-header"><div className="pform-header-title"><span className="pform-brand-icon"><PackageCheck size={20}/></span><div><h2>{tx.newTitle}</h2><p>{tx.confirmNote}</p></div></div><button className="pform-close" type="button" onClick={()=>setModal(false)} aria-label={tx.close}><X size={19}/></button></header>
       <div className="pform-content pform-content-all">
+      <div className="pform-panel-tabs" role="tablist" aria-label={tx.newTitle}>
+        <button type="button" role="tab" aria-selected={activeProductPanel===0} className={activeProductPanel===0?'active':''} onClick={()=>setActiveProductPanel(0)}><Info size={17}/><span>{tx.productInfo} / {tx.purchaseInfo} / {tx.salesInfo}</span></button>
+        <button type="button" role="tab" aria-selected={activeProductPanel===1} className={activeProductPanel===1?'active':''} onClick={()=>setActiveProductPanel(1)}><Tag size={17}/><span>{tx.classification}</span></button>
+      </div>
+      <div className="pform-content pform-content-all">
+        <div className="pform-panel-view" hidden={activeProductPanel!==0}>
         <section className="pform-section">
           <div className="pform-section-heading"><div><h3>{tx.productInfo}</h3></div><span><Hash size={15}/> 01</span></div>
           <div className="pform-feature-card">
@@ -72,6 +79,8 @@ export default function ProductsPage({lang='ar'}) {
             </div>
           </div>
         </section>
+        </div>
+        <div className="pform-panel-view" hidden={activeProductPanel!==1}>
         <section className="pform-section">
           <div className="pform-section-heading"><div><h3>{tx.classification}</h3></div><span><Hash size={15}/> 02</span></div>
           <div className="pform-feature-card">
@@ -94,6 +103,7 @@ export default function ProductsPage({lang='ar'}) {
             {form.sellByMeasure&&<div className="pform-feature-options"><label className="pform-field"><span>{tx.measureUnit}</span><select value={form.measureUnit} onChange={e=>set('measureUnit',e.target.value)}>{(ar?['كغ','غرام','لتر','ملليلتر','متر']:fr?['kg','g','L','ml','m']:['kg','gram','litre','ml','meter']).map(v=><option key={v}>{v}</option>)}</select></label>{barcodeField(ar?'كودبار الميزان':fr?'Code-barres balance':'Scale barcode','weightedBarcode','unitBarcodes')}</div>}
           </div>
         </section>
+        </div>
       </div>
       <footer className="pform-footer"><div className="pform-footer-left"><span>{tx.section} <b>02</b> {tx.of} 02</span></div><div className="pform-footer-actions"><button type="button" className="pform-back-btn" onClick={()=>setModal(false)}>{tx.cancel}</button><button type="button" className="pform-next-btn" onClick={()=>{setModal(false);window.alert(tx.confirmNote)}}><Check size={17}/>{tx.save}</button></div></footer>
     </section></div>}
