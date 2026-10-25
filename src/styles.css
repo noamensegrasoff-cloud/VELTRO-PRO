@@ -1100,3 +1100,41 @@
 .app-shell .sidebar .nav-group {
   box-shadow: none !important;
 }
+
+
+/* Hard reset for the Achats/Ventes sidebar halo.
+   Keep the visual state on the clickable row itself, never on its wrapper. */
+.app-shell .sidebar .nav-group,
+.app-shell .sidebar .nav-group:hover,
+.app-shell .sidebar .nav-group.group-expanded,
+.app-shell .sidebar .nav-group.group-active {
+  background: transparent !important;
+  border-color: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  padding-inline: 0 !important;
+}
+.app-shell .sidebar .nav-group::before,
+.app-shell .sidebar .nav-group::after,
+.app-shell .sidebar .nav-group-title::before,
+.app-shell .sidebar .nav-group-title::after {
+  content: none !important;
+  display: none !important;
+}
+.app-shell .sidebar .nav-group-title,
+.app-shell .sidebar .nav-group-title:hover,
+.app-shell .sidebar .nav-group-title:active,
+.app-shell .sidebar .nav-group-title:focus,
+.app-shell .sidebar .nav-group-title:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+.app-shell.theme-dark .sidebar .nav-group-title:hover,
+.app-shell.theme-dark .sidebar .nav-group.group-active .nav-group-title,
+.app-shell.theme-dark .sidebar .nav-group.group-expanded .nav-group-title {
+  background: #172535 !important;
+  border-color: transparent !important;
+}
