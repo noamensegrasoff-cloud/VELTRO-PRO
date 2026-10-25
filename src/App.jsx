@@ -12,6 +12,7 @@ import { getCloudStatus } from './services/cloudStorage.js';
 import { startAutoSync, syncWorkspace } from './services/databaseSync.js';
 import { supabase } from './lib/supabase.js';
 import BusinessOnboarding from './BusinessOnboarding.jsx';
+import ProductsPage from './ProductsPage.jsx';
 import { QRCodeSVG } from 'qrcode.react';
 import Barcode from 'react-barcode';
 
@@ -518,6 +519,7 @@ function CustomerAccountsPage({lang}) {
 }
 
 function ModulePage({ page, parent, t, lang, onBack }) {
+  if (page.id === 'product-list') return <ProductsPage lang={lang} />;
   if (page.id === 'supplier-list') return <SupplierListPage lang={lang} />;
   if (page.id === 'customer-list') return <CustomerListPage lang={lang} />;
   if (page.id === 'supplier-accounts') return <SupplierAccountsPage lang={lang} />;
