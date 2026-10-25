@@ -284,6 +284,15 @@ function SupplierListPage({ lang }) {
     if (previewSupplier?.id === deleteSupplier.id) setPreviewSupplier(null);
     setDeleteSupplier(null);
   };
+  const printCard = supplier => {
+    const win = window.open('', '_blank', 'width=720,height=560');
+    if (!win) { window.alert(lang==='ar'?'اسمح بفتح نافذة الطباعة من المتصفح.':'Allow the print window in your browser.'); return; }
+    const safe = value => String(value||'').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    const qr = document.querySelector('[data-supplier-qr="'+supplier.id+'"]')?.outerHTML || '';
+    const barcode = document.querySelector('[data-supplier-barcode="'+supplier.id+'"]')?.outerHTML || '';
+    win.document.write('<!doctype html><html><head><meta charset="utf-8"><title>'+safe(supplier.name)+'</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#18304a}.card{max-width:640px;margin:auto;border:1px solid #dce5ed;border-radius:14px;padding:24px;text-align:center}.ref{color:#168f91;font-weight:bold}.codes{display:flex;align-items:center;justify-content:space-around;gap:20px;flex-wrap:wrap;margin-top:22px}.codes svg{max-width:100%}.info{line-height:1.8;color:#52667d}</style></head><body><div class="card"><h2>'+safe(supplier.name)+'</h2><div class="ref">'+safe(supplier.id)+'</div><p class="info">'+safe(supplier.phone||'')+'<br>'+safe(supplier.address||'')+'</p><div class="codes"><div>'+qr+'<p>QR Code</p></div><div>'+barcode+'<p>Barcode</p></div></div></div><script>window.onload=function(){window.print()}<\/script></body></html>');
+    win.document.close();
+  };
   return <div className="page-content supplier-page">
     <div className="page-heading supplier-heading">
       <div><div className="heading-kicker"><span className="health-dot"/>{lang==='ar'?'الموردون':lang==='fr'?'Fournisseurs':'Suppliers'}</div><h1>{t('title')}</h1><p>{t('subtitle')}</p></div>
