@@ -4,7 +4,8 @@ import {
   MoreHorizontal, CalendarDays, Package, ReceiptText,
   Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
   ShoppingCart, X, Globe, ClipboardList, History,
-  CircleCheck, PackageCheck, Cloud, PanelLeftClose, PanelLeftOpen
+  CircleCheck, PackageCheck, Cloud, PanelLeftClose, PanelLeftOpen,
+  Plus, Phone, MapPin, Pencil, Trash2, ImagePlus, Building2, FileText
 } from 'lucide-react';
 import { dashboard, sections } from './data/navigation.js';
 import { getCloudStatus } from './services/cloudStorage.js';
@@ -227,7 +228,79 @@ function DashboardPage({ t, lang, onNavigate }) {
   </div>;
 }
 
+function SupplierListPage({ lang }) {
+  const labels = {
+    ar: { title:'قائمة الموردين', subtitle:'إدارة بيانات الموردين ووسائل الاتصال بهم في مكان واحد.', add:'إضافة مورد', search:'ابحث بالاسم أو المعرف أو الهاتف…', total:'إجمالي الموردين', shown:'المعروض', empty:'لا يوجد موردون بعد', emptyHint:'ابدأ بإضافة أول مورد إلى سجل متجرك.', name:'اسم المورد', phone:'رقم الهاتف', id:'المعرف', address:'العنوان', description:'الوصف', photo:'صورة المورد', choosePhoto:'اختيار صورة', save:'حفظ المورد', update:'حفظ التعديلات', cancel:'إلغاء', edit:'تعديل', delete:'حذف', actions:'الإجراءات', noPhone:'لا يوجد رقم هاتف', noAddress:'لم يُحدد العنوان', confirmDelete:'هل تريد حذف هذا المورد؟', required:'يرجى إدخال اسم المورد.', saved:'تم حفظ بيانات المورد محليًا.', duplicate:'هذا المعرف مستخدم بالفعل.', close:'إغلاق', details:'بيانات المورد', all:'كل الموردين' },
+    en: { title:'Supplier list', subtitle:'Manage supplier profiles and contact details in one place.', add:'Add supplier', search:'Search name, ID or phone…', total:'Total suppliers', shown:'Shown', empty:'No suppliers yet', emptyHint:'Add your first supplier to the store directory.', name:'Supplier name', phone:'Phone number', id:'Supplier ID', address:'Address', description:'Description', photo:'Supplier photo', choosePhoto:'Choose photo', save:'Save supplier', update:'Save changes', cancel:'Cancel', edit:'Edit', delete:'Delete', actions:'Actions', noPhone:'No phone number', noAddress:'No address added', confirmDelete:'Delete this supplier?', required:'Please enter a supplier name.', saved:'Supplier saved locally.', duplicate:'This ID is already in use.', close:'Close', details:'Supplier details', all:'All suppliers' },
+    fr: { title:'Liste des fournisseurs', subtitle:'Gérez les profils et coordonnées des fournisseurs au même endroit.', add:'Ajouter un fournisseur', search:'Rechercher nom, ID ou téléphone…', total:'Total fournisseurs', shown:'Affichés', empty:'Aucun fournisseur pour le moment', emptyHint:'Ajoutez le premier fournisseur à votre répertoire.', name:'Nom du fournisseur', phone:'Téléphone', id:'Identifiant', address:'Adresse', description:'Description', photo:'Photo du fournisseur', choosePhoto:'Choisir une photo', save:'Enregistrer', update:'Enregistrer les modifications', cancel:'Annuler', edit:'Modifier', delete:'Supprimer', actions:'Actions', noPhone:'Aucun téléphone', noAddress:'Aucune adresse', confirmDelete:'Supprimer ce fournisseur ?', required:'Veuillez saisir le nom du fournisseur.', saved:'Fournisseur enregistré localement.', duplicate:'Cet identifiant est déjà utilisé.', close:'Fermer', details:'Coordonnées du fournisseur', all:'Tous les fournisseurs' }
+  };
+  const t = key => labels[lang]?.[key] || labels.ar[key] || key;
+  const [suppliers, setSuppliers] = useState(() => {
+    try { const value = JSON.parse(localStorage.getItem('veltro.suppliers.v1') || '[]'); return Array.isArray(value) ? value : []; } catch { return []; }
+  });
+  const [query, setQuery] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+  const [error, setError] = useState('');
+  const emptyForm = { name:'', phone:'', address:'', description:'', photo:'' };
+  const [form, setForm] = useState(emptyForm);
+  useEffect(() => { try { localStorage.setItem('veltro.suppliers.v1', JSON.stringify(suppliers)); } catch { setError(lang==='ar'?'تعذر حفظ البيانات محليًا؛ قد تكون الصور كبيرة جدًا.':'Could not save locally; images may be too large.'); } }, [suppliers, lang]);
+  const filtered = useMemo(() => {
+    const q = query.trim().toLocaleLowerCase();
+    return suppliers.filter(s => !q || [s.name,s.id,s.phone,s.address,s.description].some(v => String(v||'').toLocaleLowerCase().includes(q)));
+  }, [suppliers, query]);
+  const openAdd = () => { setEditingId(null); setForm(emptyForm); setError(''); setModalOpen(true); };
+  const openEdit = supplier => { setEditingId(supplier.id); setForm({ name:supplier.name||'', phone:supplier.phone||'', address:supplier.address||'', description:supplier.description||'', photo:supplier.photo||'' }); setError(''); setModalOpen(true); };
+  const setField = (key,value) => setForm(current => ({...current,[key]:value}));
+  const readPhoto = event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { setError(lang==='ar'?'اختر ملف صورة صالحًا.':'Please choose a valid image file.'); return; }
+    if (file.size > 2 * 1024 * 1024) { setError(lang==='ar'?'حجم الصورة يجب ألا يتجاوز 2 ميغابايت.':'Photo must be 2 MB or smaller.'); return; }
+    const reader = new FileReader();
+    reader.onload = () => setField('photo', String(reader.result || ''));
+    reader.onerror = () => setError(lang==='ar'?'تعذر قراءة الصورة.':'Could not read the photo.');
+    reader.readAsDataURL(file);
+  };
+  const save = event => {
+    event.preventDefault();
+    const name = form.name.trim();
+    if (!name) { setError(t('required')); return; }
+    const nextId = editingId || ('SUP-' + String(Math.max(0,...suppliers.map(s => Number(String(s.id||'').replace(/\D/g,''))||0))+1).padStart(4,'0'));
+    if (suppliers.some(s => s.id === nextId && s.id !== editingId)) { setError(t('duplicate')); return; }
+    const record = { ...form, name, phone:form.phone.trim(), address:form.address.trim(), description:form.description.trim(), id:nextId, updatedAt:new Date().toISOString() };
+    setSuppliers(current => editingId ? current.map(s => s.id===editingId ? record : s) : [record,...current]);
+    setModalOpen(false); setForm(emptyForm); setEditingId(null); setError('');
+  };
+  const remove = supplier => {
+    if (window.confirm(t('confirmDelete') + '\n' + supplier.name)) setSuppliers(current => current.filter(s => s.id !== supplier.id));
+  };
+  return <div className="page-content supplier-page">
+    <div className="page-heading supplier-heading">
+      <div><div className="heading-kicker"><span className="health-dot"/>{lang==='ar'?'الموردون':lang==='fr'?'Fournisseurs':'Suppliers'}</div><h1>{t('title')}</h1><p>{t('subtitle')}</p></div>
+      <button className="supplier-primary" onClick={openAdd}><Plus size={16}/>{t('add')}</button>
+    </div>
+    <div className="supplier-stats">
+      <div className="supplier-stat"><span className="supplier-stat-icon"><Building2 size={17}/></span><div><small>{t('total')}</small><strong>{suppliers.length}</strong></div></div>
+      <div className="supplier-stat"><span className="supplier-stat-icon supplier-stat-teal"><Users size={17}/></span><div><small>{t('shown')}</small><strong>{filtered.length}</strong></div></div>
+    </div>
+    <section className="supplier-directory panel">
+      <div className="supplier-toolbar"><div><h2>{t('all')}</h2><p>{lang==='ar'?'سجل الموردين المسجلين في هذا الجهاز':lang==='fr'?'Répertoire enregistré sur cet appareil':'Directory saved on this device'}</p></div><label className="supplier-search"><Search size={15}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={t('search')}/><span>{filtered.length}</span></label></div>
+      {filtered.length===0 ? <div className="supplier-empty"><span><Building2 size={27}/></span><h3>{query ? (lang==='ar'?'لا توجد نتائج مطابقة':lang==='fr'?'Aucun résultat':'No matching results') : t('empty')}</h3><p>{query ? (lang==='ar'?'جرّب البحث بكلمات أخرى.':lang==='fr'?'Essayez d’autres mots-clés.':'Try another search.') : t('emptyHint')}</p>{!query&&<button className="supplier-primary" onClick={openAdd}><Plus size={15}/>{t('add')}</button>}</div>
+      : <div className="supplier-table-wrap"><table className="supplier-table"><thead><tr><th>{t('name')}</th><th>{t('id')}</th><th>{t('phone')}</th><th>{t('address')}</th><th>{t('description')}</th><th>{t('actions')}</th></tr></thead><tbody>
+        {filtered.map(supplier=><tr key={supplier.id}><td><div className="supplier-name-cell">{supplier.photo?<img src={supplier.photo} alt=""/>:<span className="supplier-avatar"><Building2 size={17}/></span>}<span><b>{supplier.name}</b><small>{supplier.id}</small></span></div></td><td><code className="supplier-id">{supplier.id}</code></td><td>{supplier.phone?<a className="supplier-phone" href={'tel:'+supplier.phone}><Phone size={13}/>{supplier.phone}</a>:<span className="supplier-muted">{t('noPhone')}</span>}</td><td><span className="supplier-address"><MapPin size={13}/>{supplier.address||t('noAddress')}</span></td><td><span className="supplier-description">{supplier.description||'—'}</span></td><td><div className="supplier-row-actions"><button onClick={()=>openEdit(supplier)} aria-label={t('edit')} title={t('edit')}><Pencil size={14}/></button><button className="danger" onClick={()=>remove(supplier)} aria-label={t('delete')} title={t('delete')}><Trash2 size={14}/></button></div></td></tr>)}
+      </tbody></table></div>}
+    </section>
+    {modalOpen&&<div className="supplier-modal-backdrop" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setModalOpen(false);}}><section className="supplier-modal" role="dialog" aria-modal="true" aria-labelledby="supplier-modal-title"><div className="supplier-modal-head"><div><span>{t('details')}</span><h2 id="supplier-modal-title">{editingId?t('edit'):t('add')}</h2></div><button type="button" onClick={()=>setModalOpen(false)} aria-label={t('close')}><X size={17}/></button></div>
+      <form onSubmit={save}><div className="supplier-photo-field"><label className="supplier-photo-preview">{form.photo?<img src={form.photo} alt=""/>:<ImagePlus size={22}/>}<input type="file" accept="image/*" onChange={readPhoto}/></label><div><b>{t('photo')}</b><small>{lang==='ar'?'صورة اختيارية، حتى 2 ميغابايت':lang==='fr'?'Photo facultative, 2 Mo maximum':'Optional photo, up to 2 MB'}</small><label className="supplier-photo-button"><ImagePlus size={13}/>{t('choosePhoto')}<input type="file" accept="image/*" onChange={readPhoto}/></label></div></div>
+      <div className="supplier-form-grid"><label className="supplier-field"><span>{t('name')} <i>*</i></span><input autoFocus value={form.name} onChange={e=>setField('name',e.target.value)} required maxLength={100} placeholder={lang==='ar'?'اسم الشركة أو الموزع':'Company or distributor name'}/></label><label className="supplier-field"><span>{t('id')}</span><input value={editingId||'يُنشأ تلقائيًا / Auto'} readOnly dir="ltr"/></label><label className="supplier-field"><span>{t('phone')}</span><input value={form.phone} onChange={e=>setField('phone',e.target.value)} inputMode="tel" maxLength={40} placeholder="+213 …"/></label><label className="supplier-field"><span>{t('address')}</span><input value={form.address} onChange={e=>setField('address',e.target.value)} maxLength={200} placeholder={lang==='ar'?'المدينة، العنوان…':'City, address…'}/></label><label className="supplier-field supplier-field-wide"><span>{t('description')}</span><textarea value={form.description} onChange={e=>setField('description',e.target.value)} rows={3} maxLength={1000} placeholder={lang==='ar'?'ملاحظات أو نوع السلع التي يوفرها المورد…':'Notes or goods supplied…'}/></label></div>
+      {error&&<p className="supplier-form-error">{error}</p>}<div className="supplier-modal-actions"><button type="button" className="supplier-secondary" onClick={()=>setModalOpen(false)}>{t('cancel')}</button><button type="submit" className="supplier-primary"><CircleCheck size={15}/>{editingId?t('update'):t('save')}</button></div></form>
+    </section></div>}
+  </div>;
+}
+
 function ModulePage({ page, parent, t, lang, onBack }) {
+  if (page.id === 'supplier-list') return <SupplierListPage lang={lang} />;
   const Icon = page.icon || parent?.icon || ChartNoAxesCombined;
   const title = getLabel(page,lang) || page.label?.ar || t('module');
   const parentLabel = parent ? getLabel(parent,lang) : t('allSections');
