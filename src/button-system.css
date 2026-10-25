@@ -257,3 +257,206 @@
   border-color:#d7e2ec;
   color:#42566d;
 }
+
+
+/* Deep cascade repair: cover the legacy dashboard, workspace, supplier and modal controls
+   that use older class names and therefore escaped the first pass. */
+.app-shell .icon-button,
+.app-shell .more-button,
+.app-shell .date-button,
+.app-shell .mobile-menu-button,
+.app-shell .sidebar-toggle-button,
+.app-shell .supplier-ledger-close,
+.app-shell .supplier-modal-head>button,
+.app-shell .supplier-preview-top>button,
+.app-shell .supplier-debt-modal-head>button,
+.app-shell .supplier-payment-form header>button,
+.app-shell .supplier-invoice-preview header>button,
+.app-shell .modal-close{
+  background:var(--btn-surface);
+  border:1px solid var(--btn-border);
+  color:var(--btn-text);
+}
+.app-shell .icon-button:hover,
+.app-shell .more-button:hover,
+.app-shell .date-button:hover,
+.app-shell .mobile-menu-button:hover,
+.app-shell .sidebar-toggle-button:hover,
+.app-shell .supplier-ledger-close:hover,
+.app-shell .supplier-modal-head>button:hover,
+.app-shell .supplier-preview-top>button:hover,
+.app-shell .supplier-debt-modal-head>button:hover,
+.app-shell .supplier-payment-form header>button:hover,
+.app-shell .supplier-invoice-preview header>button:hover,
+.app-shell .modal-close:hover{
+  background:var(--btn-hover);
+  border-color:var(--btn-accent-border);
+  color:var(--btn-accent);
+}
+.app-shell .text-action,
+.app-shell .row-more,
+.app-shell .supplier-account-name-button{
+  color:var(--btn-accent);
+  border-color:transparent;
+  background:transparent;
+}
+.app-shell .text-action:hover,
+.app-shell .row-more:hover,
+.app-shell .supplier-account-name-button:hover{
+  color:var(--btn-accent-2);
+  background:var(--btn-hover);
+}
+.app-shell .supplier-secondary,
+.app-shell .supplier-account-view,
+.app-shell .supplier-ledger-dates>button,
+.app-shell .supplier-ledger-actions>button:not(.primary),
+.app-shell .supplier-payment-buttons>button:not(.primary),
+.app-shell .supplier-invoice-preview footer>button:not(.primary),
+.app-shell .supplier-delete-confirm,
+.app-shell .confirm-modal .button-secondary{
+  background:var(--btn-surface)!important;
+  border:1px solid var(--btn-border)!important;
+  color:var(--btn-text)!important;
+  box-shadow:none;
+}
+.app-shell .supplier-secondary:hover,
+.app-shell .supplier-account-view:hover,
+.app-shell .supplier-ledger-dates>button:hover,
+.app-shell .supplier-ledger-actions>button:not(.primary):hover,
+.app-shell .supplier-payment-buttons>button:not(.primary):hover,
+.app-shell .supplier-invoice-preview footer>button:not(.primary):hover,
+.app-shell .confirm-modal .button-secondary:hover{
+  background:var(--btn-hover)!important;
+  border-color:var(--btn-accent-border)!important;
+  color:var(--btn-accent)!important;
+}
+.app-shell .supplier-primary,
+.app-shell .customer-primary,
+.app-shell .button-primary,
+.app-shell .supplier-ledger-actions>button.primary,
+.app-shell .supplier-payment-buttons>button.primary,
+.app-shell .supplier-invoice-preview footer>button.primary,
+.app-shell .workspace .primary,
+.app-shell .confirm-modal .button-primary{
+  background:linear-gradient(120deg,var(--btn-accent),var(--btn-accent-2))!important;
+  border:1px solid var(--btn-accent)!important;
+  color:#fff!important;
+  box-shadow:0 5px 14px rgba(13,148,136,.18)!important;
+}
+.app-shell .supplier-primary:hover,
+.app-shell .customer-primary:hover,
+.app-shell .button-primary:hover,
+.app-shell .supplier-ledger-actions>button.primary:hover,
+.app-shell .supplier-payment-buttons>button.primary:hover,
+.app-shell .supplier-invoice-preview footer>button.primary:hover,
+.app-shell .workspace .primary:hover,
+.app-shell .confirm-modal .button-primary:hover{
+  background:linear-gradient(120deg,#0f766e,#0369a1)!important;
+  border-color:var(--btn-accent)!important;
+  color:#fff!important;
+}
+.app-shell .danger,
+.app-shell .supplier-delete-confirm,
+.app-shell .button-danger,
+.app-shell .button-danger svg,
+.app-shell button[data-variant="danger"]{
+  background:var(--btn-danger-bg)!important;
+  border:1px solid color-mix(in srgb,var(--btn-danger) 36%,transparent)!important;
+  color:var(--btn-danger)!important;
+}
+.app-shell .danger:hover,
+.app-shell .supplier-delete-confirm:hover,
+.app-shell .button-danger:hover,
+.app-shell button[data-variant="danger"]:hover{
+  background:color-mix(in srgb,var(--btn-danger) 13%,var(--btn-surface))!important;
+  border-color:var(--btn-danger)!important;
+  color:var(--btn-danger)!important;
+}
+.app-shell .button-danger,
+.app-shell .confirm-modal .button-danger{
+  background:var(--btn-danger)!important;
+  border-color:var(--btn-danger)!important;
+  color:#fff!important;
+}
+.app-shell .logout-link:hover{
+  background:var(--btn-danger-bg);
+  color:var(--btn-danger);
+}
+.app-shell .nav-group-title:hover,
+.app-shell .sidebar-toggle-button:hover{
+  border-color:var(--btn-accent-border);
+}
+.app-shell .supplier-account-name-button{
+  border:0;
+}
+.app-shell .supplier-account-name-button:hover{
+  background:transparent;
+}
+.app-shell button:active:not(:disabled){
+  transform:translateY(0);
+}
+.app-shell button:focus-visible,
+.app-shell [role="button"]:focus-visible,
+.app-shell a:focus-visible{
+  outline:2px solid var(--btn-accent)!important;
+  outline-offset:2px;
+}
+.app-shell.theme-dark .icon-button,
+.app-shell.theme-dark .more-button,
+.app-shell.theme-dark .date-button,
+.app-shell.theme-dark .mobile-menu-button,
+.app-shell.theme-dark .sidebar-toggle-button,
+.app-shell.theme-dark .supplier-ledger-close,
+.app-shell.theme-dark .supplier-secondary,
+.app-shell.theme-dark .supplier-account-view,
+.app-shell.theme-dark .supplier-ledger-dates>button,
+.app-shell.theme-dark .supplier-ledger-actions>button:not(.primary),
+.app-shell.theme-dark .supplier-payment-buttons>button:not(.primary),
+.app-shell.theme-dark .supplier-invoice-preview footer>button:not(.primary),
+.app-shell.theme-dark .confirm-modal .button-secondary{
+  background:#142238!important;
+  border-color:#2a3a50!important;
+  color:#c3d2e3!important;
+}
+.app-shell.theme-dark .icon-button:hover,
+.app-shell.theme-dark .more-button:hover,
+.app-shell.theme-dark .date-button:hover,
+.app-shell.theme-dark .mobile-menu-button:hover,
+.app-shell.theme-dark .sidebar-toggle-button:hover,
+.app-shell.theme-dark .supplier-ledger-close:hover,
+.app-shell.theme-dark .supplier-secondary:hover,
+.app-shell.theme-dark .supplier-account-view:hover,
+.app-shell.theme-dark .supplier-ledger-dates>button:hover,
+.app-shell.theme-dark .supplier-ledger-actions>button:not(.primary):hover,
+.app-shell.theme-dark .supplier-payment-buttons>button:not(.primary):hover,
+.app-shell.theme-dark .supplier-invoice-preview footer>button:not(.primary):hover,
+.app-shell.theme-dark .confirm-modal .button-secondary:hover{
+  background:#183b3b!important;
+  border-color:#237b75!important;
+  color:#5eead4!important;
+}
+.app-shell.theme-dark .supplier-primary,
+.app-shell.theme-dark .customer-primary,
+.app-shell.theme-dark .button-primary,
+.app-shell.theme-dark .supplier-ledger-actions>button.primary,
+.app-shell.theme-dark .supplier-payment-buttons>button.primary,
+.app-shell.theme-dark .supplier-invoice-preview footer>button.primary,
+.app-shell.theme-dark .workspace .primary{
+  background:linear-gradient(120deg,#0f9488,#087ca4)!important;
+  border-color:#14b8a6!important;
+  color:#fff!important;
+}
+.app-shell.theme-dark .danger,
+.app-shell.theme-dark .supplier-delete-confirm,
+.app-shell.theme-dark .button-danger:not(.confirm-modal .button-danger),
+.app-shell.theme-dark button[data-variant="danger"]{
+  background:#3b202b!important;
+  border-color:#8e3d51!important;
+  color:#ff9aaa!important;
+}
+.app-shell.theme-dark .button-danger,
+.app-shell.theme-dark .confirm-modal .button-danger{
+  background:#a83f54!important;
+  border-color:#a83f54!important;
+  color:#fff!important;
+}
