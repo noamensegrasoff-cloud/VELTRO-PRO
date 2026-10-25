@@ -1,6 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 
-const url = import.meta.env.VITE_SUPABASE_URL?.trim();
+// VITE_SUPABASE_URL must be the project root, not a REST/Auth endpoint.
+// Normalize known API suffixes defensively so a misconfigured GitHub variable
+// cannot produce URLs such as /rest/v1/auth/v1/recover.
+const configuredUrl = import.meta.env.VITE_SUPABASE_URL?.trim();
+const url = configuredUrl
+  ?.replace(/\/(?:rest\/v1|auth\/v1|storage\/v1|realtime\/v1)(?:\/.*)?\/?$/i, '')
+  .replace(/\/+$/, '');
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim();
 
 export const isSupabaseConfigured = Boolean(url && anonKey);
