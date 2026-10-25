@@ -321,27 +321,6 @@ export default function App() {
         return;
       }
 
-      // Cancel F1–F12 browser defaults as early as browsers allow.
-      if (!/^F(?:[1-9]|1[0-2])$/.test(event.key)) return;
-      if (logoutOpen || signedOut) return;
-      event.preventDefault();
-
-      // POS has its own shortcut map; don't take its function keys away.
-      if (activePage.id === 'point-of-sale') return;
-
-      // F10–F12 are reserved from browser defaults; F1–F9 navigate sidebar groups.
-      event.stopImmediatePropagation();
-      const targetIndex = Number(event.key.slice(1)) - 1;
-      if (targetIndex < 0 || targetIndex > 8 || !sidebarVisible) return;
-
-      const sectionIds = ['sales', 'purchases', 'products', 'orders', 'suppliers', 'customers', 'daily-status', 'statistics', 'cash'];
-      const section = sections.find(item => item.id === sectionIds[targetIndex]);
-      if (section?.children?.[0]) {
-        setActivePage(section.children[0]);
-        setActiveParent(section);
-        setNotificationsOpen(false);
-        setMobileOpen(false);
-      }
     };
     // Capture phase cancels browser defaults before page-level handlers can run.
     window.addEventListener('keydown', onKeyDown, true);
