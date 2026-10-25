@@ -1543,3 +1543,74 @@ input,select,textarea{border-radius:9px}
  .chart-panel,.mix-panel{height:220px;padding:13px}.recent-panel,.stock-panel{padding:13px;border-radius:14px}
  .workspace-footer{padding-inline:11px}
 }
+
+
+/* Final layout corrections after the visual refresh */
+@media (max-width:760px){
+  .sidebar{
+    position:fixed;
+    top:0;
+    bottom:0;
+    width:min(356px,88vw);
+    flex:0 0 min(356px,88vw);
+    height:100svh;
+    overflow:hidden;
+  }
+  .sidebar .side-nav{min-height:0;overflow-y:auto}
+  .lang-ar .sidebar{right:0;left:auto;transform:translateX(105%)}
+  .lang-ar .sidebar.sidebar-open{transform:translateX(0)}
+  .lang-en .sidebar,.lang-fr .sidebar{left:0;right:auto;transform:translateX(-105%)}
+  .lang-en .sidebar.sidebar-open,.lang-fr .sidebar.sidebar-open{transform:translateX(0)}
+  .sidebar-scrim{z-index:25}
+  .sidebar{z-index:30}
+}
+.theme-dark .global-search,
+.theme-dark .language-select,
+.theme-dark .icon-button,
+.theme-dark .date-button,
+.theme-dark .more-button,
+.theme-dark .button-secondary{
+  background:#142238;
+  border-color:#2a3a50;
+  color:#c3d1e2;
+}
+.theme-dark .global-search input,
+.theme-dark .language-select select{color:#e2eaf5}
+.theme-dark input,
+.theme-dark select,
+.theme-dark textarea{
+  background-color:#111c2e;
+  border-color:#2a3a50;
+  color:#e2eaf5;
+}
+.theme-dark .supplier-directory,
+.theme-dark .customer-directory,
+.theme-dark .supplier-stat,
+.theme-dark .customer-stat,
+.theme-dark .supplier-detail-card,
+.theme-dark .customer-detail-card,
+.theme-dark .supplier-modal,
+.theme-dark .customer-modal,
+.theme-dark .supplier-preview-modal,
+.theme-dark .customer-preview-modal{
+  background:#111c2e;
+  border-color:#293a50;
+  color:#d8e3f1;
+}
+.theme-dark .supplier-modal-head,
+.theme-dark .customer-modal-head,
+.theme-dark .supplier-preview-top,
+.theme-dark .customer-preview-top{
+  border-color:#293a50;
+}
+.theme-dark .supplier-muted,
+.theme-dark .customer-muted,
+.theme-dark .supplier-field label,
+.theme-dark .customer-field label{color:#9fb0c5}
+.theme-dark .supplier-table th,
+.theme-dark .customer-table th{background:#17263a;color:#a5b7cb}
+.theme-dark .supplier-table td,
+.theme-dark .customer-table td{border-color:#26364b;color:#c4d1e0}
+@media (prefers-reduced-motion:reduce){
+  .sidebar,.sidebar-open,.sidebar-scrim{transition:none!important}
+}
