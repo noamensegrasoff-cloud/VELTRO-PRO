@@ -1,0 +1,259 @@
+/* VELTRO-PRO unified button system — centralized visual consistency */
+.app-shell{
+  --btn-accent:#0d9488;
+  --btn-accent-2:#0891b2;
+  --btn-accent-soft:#e0f7f3;
+  --btn-accent-border:#8adbd1;
+  --btn-text:#29435d;
+  --btn-surface:#ffffff;
+  --btn-border:#d7e2ec;
+  --btn-hover:#f0faf8;
+  --btn-focus:rgba(13,148,136,.28);
+  --btn-danger:#be3455;
+  --btn-danger-bg:#fff0f3;
+}
+.app-shell.theme-dark{
+  --btn-accent:#14b8a6;
+  --btn-accent-2:#0891b2;
+  --btn-accent-soft:#123b39;
+  --btn-accent-border:#237b75;
+  --btn-text:#d7e4f2;
+  --btn-surface:#142238;
+  --btn-border:#2a3a50;
+  --btn-hover:#183b3b;
+  --btn-focus:rgba(45,212,191,.3);
+  --btn-danger:#ff9aaa;
+  --btn-danger-bg:#3b202b;
+}
+/* Shared interaction, focus and disabled states */
+.app-shell button{
+  -webkit-tap-highlight-color:transparent;
+  transition:background .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease,filter .18s ease;
+}
+.app-shell button:focus-visible{
+  outline:2px solid var(--btn-accent)!important;
+  outline-offset:2px;
+}
+.app-shell button:disabled{
+  opacity:.52;
+  cursor:not-allowed;
+  transform:none!important;
+  box-shadow:none!important;
+}
+/* One consistent primary action treatment across all modules and dialogs */
+.app-shell .button-primary,
+.app-shell .supplier-primary,
+.app-shell .customer-primary,
+.app-shell .products-primary-btn,
+.app-shell .pform-next-btn,
+.app-shell .products-image-select,
+.app-shell .supplier-ledger-actions>button.primary,
+.app-shell .supplier-payment-buttons>button.primary,
+.app-shell .supplier-invoice-preview footer>button.primary,
+.app-shell .supplier-payment-buttons .primary,
+.app-shell .supplier-ledger-actions .primary,
+.app-shell .supplier-modal-actions button.primary,
+.app-shell .customer-modal-actions button.primary,
+.app-shell .button-primary[type="submit"],
+.app-shell button[data-variant="primary"]{
+  color:#fff!important;
+  background:linear-gradient(120deg,var(--btn-accent),var(--btn-accent-2))!important;
+  border:1px solid var(--btn-accent)!important;
+  box-shadow:0 5px 14px rgba(13,148,136,.18)!important;
+}
+.app-shell .button-primary:hover,
+.app-shell .supplier-primary:hover,
+.app-shell .customer-primary:hover,
+.app-shell .products-primary-btn:hover,
+.app-shell .pform-next-btn:hover,
+.app-shell .products-image-select:hover,
+.app-shell .supplier-ledger-actions>button.primary:hover,
+.app-shell .supplier-payment-buttons>button.primary:hover,
+.app-shell .supplier-invoice-preview footer>button.primary:hover,
+.app-shell button[data-variant="primary"]:hover{
+  color:#fff!important;
+  background:linear-gradient(120deg,#0f766e,#0369a1)!important;
+  border-color:#0f9488!important;
+  transform:translateY(-1px);
+  box-shadow:0 7px 17px rgba(13,148,136,.24)!important;
+}
+/* Shared secondary / neutral controls */
+.app-shell .button-secondary,
+.app-shell .products-secondary-btn,
+.app-shell .pform-back-btn,
+.app-shell .pform-text-action,
+.app-shell .pform-code-input>button,
+.app-shell .pform-manage-list,
+.app-shell .products-filter-btn,
+.app-shell .products-margin-presets button,
+.app-shell .products-editor-footer button:not(.products-primary-btn),
+.app-shell .products-modal>footer>button:first-child,
+.app-shell .products-modal>header>button,
+.app-shell .pform-close,
+.app-shell .pform-code-modal header>button,
+.app-shell .supplier-modal-head>button,
+.app-shell .supplier-preview-top>button,
+.app-shell .supplier-debt-modal-head>button,
+.app-shell .supplier-payment-form header>button,
+.app-shell .supplier-invoice-preview header>button,
+.app-shell .supplier-ledger-dates>button,
+.app-shell .supplier-ledger-actions>button:not(.primary),
+.app-shell .supplier-payment-buttons>button:not(.primary),
+.app-shell .supplier-invoice-preview footer>button:not(.primary),
+.app-shell .supplier-ledger-row-actions button{
+  background:var(--btn-surface);
+  border-color:var(--btn-border);
+  color:var(--btn-text);
+}
+.app-shell .button-secondary:hover,
+.app-shell .products-secondary-btn:hover,
+.app-shell .pform-back-btn:hover,
+.app-shell .pform-text-action:hover,
+.app-shell .pform-code-input>button:hover,
+.app-shell .pform-manage-list:hover,
+.app-shell .products-filter-btn:hover,
+.app-shell .products-margin-presets button:hover,
+.app-shell .products-modal>footer>button:first-child:hover,
+.app-shell .products-modal>header>button:hover,
+.app-shell .pform-close:hover,
+.app-shell .pform-code-modal header>button:hover,
+.app-shell .supplier-modal-head>button:hover,
+.app-shell .supplier-preview-top>button:hover,
+.app-shell .supplier-debt-modal-head>button:hover,
+.app-shell .supplier-payment-form header>button:hover,
+.app-shell .supplier-invoice-preview header>button:hover,
+.app-shell .supplier-ledger-dates>button:hover,
+.app-shell .supplier-ledger-actions>button:not(.primary):hover,
+.app-shell .supplier-payment-buttons>button:not(.primary):hover,
+.app-shell .supplier-invoice-preview footer>button:not(.primary):hover,
+.app-shell .supplier-ledger-row-actions button:hover{
+  background:var(--btn-hover);
+  border-color:var(--btn-accent-border);
+  color:var(--btn-accent);
+}
+/* Navigation and segmented tabs: shared accent and a clear selected state */
+.app-shell .products-tabs button,
+.app-shell .pform-panel-tabs button,
+.app-shell .products-editor-steps button{
+  border-color:var(--btn-border);
+  color:var(--btn-text);
+}
+.app-shell .products-tabs button:hover,
+.app-shell .pform-panel-tabs button:hover,
+.app-shell .products-editor-steps button:hover{
+  color:var(--btn-accent);
+  border-color:var(--btn-accent-border);
+}
+.app-shell .products-tabs button.active,
+.app-shell .pform-panel-tabs button.active,
+.app-shell .products-editor-steps button.active{
+  color:var(--btn-accent);
+  border-color:var(--btn-accent);
+  background:linear-gradient(135deg,var(--btn-accent-soft),rgba(111,83,230,.10));
+  box-shadow:inset 0 0 0 1px rgba(13,148,136,.10);
+}
+.app-shell .products-tabs button.active:after{
+  background:linear-gradient(90deg,var(--btn-accent),#8b5cf6);
+}
+.app-shell .products-tabs button.active b{
+  background:var(--btn-accent-soft);
+  color:var(--btn-accent);
+}
+/* Icon-only and row action buttons share consistent dimensions and neutral surfaces */
+.app-shell .icon-button,
+.app-shell .more-button,
+.app-shell .products-row-actions button,
+.app-shell .pform-code-list button:not(.pform-code-add),
+.app-shell .supplier-row-actions button,
+.app-shell .supplier-ledger-row-actions button{
+  border-radius:9px;
+}
+.app-shell .icon-button:hover,
+.app-shell .more-button:hover{
+  background:var(--btn-hover);
+  border-color:var(--btn-accent-border);
+  color:var(--btn-accent);
+}
+.app-shell .products-row-actions button,
+.app-shell .supplier-row-actions button,
+.app-shell .supplier-ledger-row-actions button{
+  background:var(--btn-surface);
+  border-color:var(--btn-border);
+  color:var(--btn-text);
+}
+.app-shell .products-row-actions button:hover,
+.app-shell .supplier-row-actions button:hover,
+.app-shell .supplier-ledger-row-actions button:hover{
+  background:var(--btn-hover);
+  border-color:var(--btn-accent-border);
+  color:var(--btn-accent);
+}
+/* Destructive actions remain visibly red; they do not inherit the primary accent */
+.app-shell .pform-remove-photo,
+.app-shell .products-row-actions button[aria-label*="Delete"],
+.app-shell .products-row-actions button[title*="Delete"],
+.app-shell .supplier-row-actions button:last-child,
+.app-shell .supplier-ledger-row-actions button:last-child,
+.app-shell button[data-variant="danger"],
+.app-shell .button-danger{
+  color:var(--btn-danger);
+}
+.app-shell .supplier-row-actions button:last-child,
+.app-shell .supplier-ledger-row-actions button:last-child,
+.app-shell button[data-variant="danger"],
+.app-shell .button-danger{
+  background:var(--btn-danger-bg);
+  border-color:color-mix(in srgb,var(--btn-danger) 30%,transparent);
+}
+.app-shell .supplier-row-actions button:last-child:hover,
+.app-shell .supplier-ledger-row-actions button:last-child:hover,
+.app-shell button[data-variant="danger"]:hover,
+.app-shell .button-danger:hover{
+  filter:saturate(1.1);
+  border-color:var(--btn-danger);
+}
+/* Light theme product editor and supplier controls use the same palette */
+.theme-light .pform-panel-tabs button,
+.theme-light .products-editor-steps button:not(.active){
+  background:linear-gradient(135deg,#f8fbfd,#f5f3ff);
+  border-color:#d8e5ed;
+  color:#42566d;
+}
+.theme-light .pform-panel-tabs button.active,
+.theme-light .products-editor-steps button.active{
+  background:linear-gradient(135deg,#dff7f2,#eee9ff);
+  border-color:#35bdb4;
+  color:#087f78;
+}
+.theme-dark .pform-panel-tabs button,
+.theme-dark .products-editor-steps button:not(.active){
+  background:linear-gradient(135deg,#142238,#1b2038);
+  border-color:#2a3a50;
+  color:#c3d2e3;
+}
+.theme-dark .pform-panel-tabs button.active,
+.theme-dark .products-editor-steps button.active{
+  background:linear-gradient(135deg,#123b39,#282344);
+  border-color:#20c7b5;
+  color:#78e8d8;
+}
+.theme-dark .pform-code-input>button,
+.theme-dark .pform-manage-list,
+.theme-dark .pform-text-action,
+.theme-dark .pform-back-btn,
+.theme-dark .products-secondary-btn,
+.theme-dark .products-filter-btn{
+  background:#142238;
+  border-color:#2a3a50;
+  color:#c3d2e3;
+}
+.theme-light .pform-code-input>button,
+.theme-light .pform-manage-list,
+.theme-light .pform-text-action,
+.theme-light .pform-back-btn,
+.theme-light .products-secondary-btn,
+.theme-light .products-filter-btn{
+  background:#fff;
+  border-color:#d7e2ec;
+  color:#42566d;
+}
