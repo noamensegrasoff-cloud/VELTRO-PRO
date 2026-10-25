@@ -1024,3 +1024,25 @@
   .app-shell .module-metrics{grid-template-columns:minmax(0,1fr);gap:7px}
   .app-shell .module-metric{min-height:58px}
 }
+
+
+/* Navigation focus audit: prevent the oversized pale ring seen after pointer clicks.
+   Keep a clear, compact accent ring for keyboard navigation only. */
+.app-shell .sidebar button:focus:not(:focus-visible),
+.app-shell .sidebar button:active {
+  outline: none;
+}
+.app-shell .sidebar .nav-group-title:focus-visible,
+.app-shell .sidebar .nav-child:focus-visible,
+.app-shell .sidebar .dashboard-link:focus-visible,
+.app-shell .sidebar .logout-link:focus-visible {
+  outline: 2px solid #35d6c2;
+  outline-offset: 1px;
+  box-shadow: none;
+}
+.app-shell:not(.theme-dark) .sidebar .nav-group-title:focus-visible,
+.app-shell:not(.theme-dark) .sidebar .nav-child:focus-visible,
+.app-shell:not(.theme-dark) .sidebar .dashboard-link:focus-visible,
+.app-shell:not(.theme-dark) .sidebar .logout-link:focus-visible {
+  outline-color: #168f89;
+}
