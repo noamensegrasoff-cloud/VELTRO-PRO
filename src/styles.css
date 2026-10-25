@@ -1929,3 +1929,48 @@ input,select,textarea{border-radius:9px}
 .theme-light .products-page .products-modal>header>button,.theme-light .products-page .products-modal>footer>button:first-child{background:#f4f7fb;border-color:#dce5ef;color:#53677e}
 .theme-light .products-page .products-modal-body label{color:#52657a}
 .theme-light .products-page .products-table-footer{color:#71839a}
+
+
+/* Final theme pass: explicitly theme every product control and its Lucide icons */
+.theme-light .products-page .products-primary-btn{background:linear-gradient(135deg,#087f8c,#0eaa9c);border:1px solid #0b9a98;color:#fff}
+.theme-light .products-page .products-primary-btn svg{color:#fff;stroke:currentColor}
+.theme-light .products-page .products-secondary-btn{background:#fff;border:1px solid #d8e2ed;color:#40566d}
+.theme-light .products-page .products-secondary-btn svg{color:#5d748b;stroke:currentColor}
+.theme-light .products-page .products-filter-btn{background:#f7f9fc;border:1px solid #d8e2ed;color:#52667d}
+.theme-light .products-page .products-filter-btn svg,.theme-light .products-page .products-controls svg{color:#657b91;stroke:currentColor}
+.theme-light .products-page .products-tabs button{color:#61748a}
+.theme-light .products-page .products-tabs button b{background:#edf2f7;color:#5d7085}
+.theme-light .products-page .products-tabs button.active{color:#087f78}
+.theme-light .products-page .products-tabs button.active:after{background:#0eaa9c}
+.theme-light .products-page .products-tabs button.active b{background:#d9f4ee;color:#087f78}
+.theme-light .products-page .products-row-actions button svg,.theme-light .products-page .products-modal>header>button svg{color:inherit;stroke:currentColor}
+.theme-light .products-page .products-row-actions button:hover{background:#eaf8f5;border-color:#83d5c8;color:#087f78}
+.theme-light .products-page .products-item-icon{background:#e0f6f1;color:#087f78}
+.theme-light .products-page .products-metric-icon{background:#e5f3f8;color:#167b91}
+.theme-light .products-page .products-metric-icon.amber{background:#fff3d8;color:#a56a09}
+.theme-light .products-page .products-metric-icon.red{background:#ffeaed;color:#c53c55}
+.theme-light .products-page .products-metric-watermark{color:#b5e8df}
+.theme-light .products-page .products-live{color:#178b7d}
+.theme-light .products-page .products-live i{background:#159b88;box-shadow:0 0 0 3px #159b881c}
+.theme-light .products-page .products-search-shortcut{color:#0b9185}
+.theme-light .products-page .products-sell-price{color:#087f78}
+.theme-light .products-page .products-margin{background:#ddf5ec;color:#087f62}
+.theme-light .products-page .products-status.ok{background:#e0f6eb;color:#14794d}
+.theme-light .products-page .products-status.low{background:#fff1d6;color:#8c5a05}
+.theme-light .products-page .products-status.out{background:#ffe7eb;color:#b4233d}
+.theme-light .products-page .products-modal-icon{background:#e0f6f1;color:#087f78}
+.theme-light .products-page .products-modal-input svg{color:#087f78}
+.theme-light .products-page .products-preview-note>span:first-child{background:#159b88}
+.theme-dark .products-page .products-primary-btn{background:linear-gradient(135deg,#087f8c,#0eaa9c);border:1px solid #1caaa0;color:#fff}
+.theme-dark .products-page .products-primary-btn svg{color:#fff;stroke:currentColor}
+.theme-dark .products-page .products-secondary-btn{background:#121e2c;border:1px solid #2b3c50;color:#c6d4e3}
+.theme-dark .products-page .products-secondary-btn svg{color:#91a7bc;stroke:currentColor}
+.theme-dark .products-page .products-filter-btn{background:#101a28;border:1px solid #2b3c50;color:#b8c8d9}
+.theme-dark .products-page .products-filter-btn svg,.theme-dark .products-page .products-controls svg{color:#8da4bb;stroke:currentColor}
+.theme-dark .products-page .products-tabs button{color:#91a4ba}
+.theme-dark .products-page .products-tabs button b{background:#1b2939;color:#aabbd0}
+.theme-dark .products-page .products-tabs button.active{color:#66e1d0}
+.theme-dark .products-page .products-tabs button.active b{background:#153e3b;color:#70e3d3}
+.theme-dark .products-page .products-row-actions button svg,.theme-dark .products-page .products-modal>header>button svg{color:inherit;stroke:currentColor}
+.theme-dark .products-page .products-item-icon{background:#18332f;color:#70dfcf}
+.theme-dark .products-page .products-modal-input svg{color:#6edccd}
