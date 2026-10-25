@@ -79,7 +79,7 @@ export default function AuthGate({ children }) {
         if(data.session) setSession(data.session);
         else setMessage(t.registered);
       } else if(mode==='reset') {
-        const redirectTo=window.location.origin+window.location.pathname+'?reset-password=true';
+        const redirectTo=window.location.origin+window.location.pathname;
         const {error}=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo});
         if(error) throw error;
         setMessage(t.resetSent);
