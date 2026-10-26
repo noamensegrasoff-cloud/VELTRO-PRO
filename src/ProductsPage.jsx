@@ -49,7 +49,7 @@ export default function ProductsPage({lang='ar'}) {
       </div>
       <div className="pform-content pform-content-all">
         <div className="pform-panel-view" hidden={activeProductPanel!==0}>
-        <section className="pform-section">
+        <section className="pform-section pform-product-grid">
           <div className="pform-section-heading"><div><h3>{tx.productInfo}</h3></div><span><Hash size={15}/> 01</span></div>
           <div className="pform-feature-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Info size={19}/></span><div><b>{tx.productInfo}</b></div></div>
@@ -74,6 +74,13 @@ export default function ProductsPage({lang='ar'}) {
             </div></div>
           </div>
           <div className="pform-feature-card">
+            <div className="pform-feature-heading"><span className="pform-feature-icon"><Tag size={19}/></span><div><b>{tx.classification}</b></div></div>
+            <div className="pform-feature-options pform-basic-grid">
+              <label className="pform-field"><span>{tx.category}</span><select value={form.category} onChange={e=>set('category',e.target.value)}><option value="">{tx.allCategories}</option>{categories.map(c=><option key={c}>{c}</option>)}</select></label>
+              <label className="pform-field"><span>{tx.unitInfo}</span><select value={form.unit} onChange={e=>set('unit',e.target.value)}>{(ar?['قطعة','قارورة','علبة','كيس','كيلوغرام','لتر','متر']:fr?['Pièce','Bouteille','Boîte','Paquet','Kilogramme','Litre','Mètre']:['Piece','Bottle','Can','Pack','Kilogram','Litre','Meter']).map(c=><option key={c}>{c}</option>)}</select></label>
+            </div>
+          </div>
+          <div className="pform-feature-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><TrendingUp size={19}/></span><div><b>{tx.salesInfo}</b></div></div>
             <div className="pform-price-grid">
               <div className="pform-price-group"><b>{tx.cartonSell}</b><div className="pform-price-input"><input type="number" min="0" step=".01" value={form.cartonSell} onChange={e=>updateCartonPrice('sale',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
@@ -85,13 +92,6 @@ export default function ProductsPage({lang='ar'}) {
         <div className="pform-panel-view" hidden={activeProductPanel!==1}>
         <section className="pform-section">
           <div className="pform-section-heading"><div><h3>{tx.classification}</h3></div><span><Hash size={15}/> 02</span></div>
-          <div className="pform-feature-card">
-            <div className="pform-feature-heading"><span className="pform-feature-icon"><Tag size={19}/></span><div><b>{tx.classification}</b></div></div>
-            <div className="pform-feature-options pform-basic-grid">
-              <label className="pform-field"><span>{tx.category}</span><select value={form.category} onChange={e=>set('category',e.target.value)}><option value="">{tx.allCategories}</option>{categories.map(c=><option key={c}>{c}</option>)}</select></label>
-              <label className="pform-field"><span>{tx.unitInfo}</span><select value={form.unit} onChange={e=>set('unit',e.target.value)}>{(ar?['قطعة','قارورة','علبة','كيس','كيلوغرام','لتر','متر']:fr?['Pièce','Bouteille','Boîte','Paquet','Kilogramme','Litre','Mètre']:['Piece','Bottle','Can','Pack','Kilogram','Litre','Meter']).map(c=><option key={c}>{c}</option>)}</select></label>
-            </div>
-          </div>
           <div className="pform-feature-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><ImagePlus size={19}/></span><div><b>{tx.photo}</b><small>{tx.photoHint}</small></div></div>
             <div className="pform-photo-layout"><div className={'pform-image-drop '+(imagePreview?'has-image':'')}>{imagePreview?<img src={imagePreview} alt={tx.photo}/>:<><span><ImagePlus size={36}/></span><b>{tx.noImage}</b><small>{ar?'PNG أو JPG أو WEBP':fr?'PNG, JPG ou WEBP':'PNG, JPG or WEBP'}</small></>}<label className="pform-upload-btn"><Camera size={16}/>{tx.choosePhoto}<input type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(f){set('imageName',f.name);const reader=new FileReader();reader.onload=()=>setImagePreview(String(reader.result));reader.readAsDataURL(f)}}}/></label>{imagePreview&&<button className="pform-remove-photo" type="button" onClick={()=>{setImagePreview('');set('imageName','')}}><Trash2 size={14}/>{tx.removePhoto}</button>}</div></div>
