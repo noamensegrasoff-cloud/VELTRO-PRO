@@ -2832,3 +2832,11 @@ input,select,textarea{border-radius:9px}
   .products-page .pform-content-all .pform-margin-control{grid-template-columns:minmax(0,1fr)}
   .products-page .pform-footer{padding:10px 12px}
 }
+
+
+/* Compact, aligned profit percentage fields in product pricing */
+.pform-sales-price-grid{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;column-gap:14px;row-gap:12px}
+.pform-margin-nearby{display:flex;flex-direction:column;gap:6px;min-width:0;margin:0}
+.pform-margin-nearby>span{font-size:12px;font-weight:700;color:var(--text-secondary,#bdcbdc)}
+.pform-margin-nearby .pform-margin-input{height:40px;border-radius:9px;border-color:var(--border,#2a3c50);background:var(--input-bg,#0b1320)}
+@media(max-width:600px){.pform-sales-price-grid{column-gap:9px;row-gap:10px}.pform-margin-nearby>span{font-size:11px}}
