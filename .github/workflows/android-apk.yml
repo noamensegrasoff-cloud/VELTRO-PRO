@@ -44,13 +44,18 @@ jobs:
           VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
-      - name: Install image tools
-        run: sudo apt-get install -y -o Acquire::Retries=1 -o Acquire::http::Timeout=20 imagemagick
+      - name: Install PNG generation tool
+        run: npm install --no-save sharp
       - name: Prepare Android app icon from VELTRO brand mark
         run: |
           mkdir -p resources
-          convert -background none public/icons/veltro.svg -resize 1024x1024 resources/icon.png
-          convert -size 2732x2732 xc:'#07162f' resources/splash.png
+          node --input-type=module <<'NODE'
+          import sharp from 'sharp';
+          import { readFile } from 'node:fs/promises';
+          const svg = await readFile('public/icons/veltro.svg');
+          await sharp(svg).resize(1024, 1024, { fit: 'contain' }).png().toFile('resources/icon.png');
+          await sharp({ create: { width: 2732, height: 2732, channels: 3, background: '#07162f' } }).png().toFile('resources/splash.png');
+          NODE
       - name: Generate native Android project and branded assets
         run: |
           npx cap add android
