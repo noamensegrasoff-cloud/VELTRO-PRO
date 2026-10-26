@@ -90,6 +90,7 @@ export async function loadAndMergeProductCatalog() {
 
 export async function persistProduct(product) {
   if (!product?.id) throw new Error('A stable product ID is required.');
+  try { await syncWorkspace({ entityTypes: [ENTITY_TYPE] }); } catch {}
   const workspaceId = await getActiveWorkspaceId();
   return saveRecord({
     entityType: ENTITY_TYPE,
@@ -101,6 +102,7 @@ export async function persistProduct(product) {
 
 export async function removeProductFromCatalog(productId) {
   if (productId == null || String(productId) === '') throw new Error('A product ID is required.');
+  try { await syncWorkspace({ entityTypes: [ENTITY_TYPE] }); } catch {}
   const workspaceId = await getActiveWorkspaceId();
   return deleteRecord({
     entityType: ENTITY_TYPE,
