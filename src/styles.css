@@ -2425,3 +2425,10 @@ input,select,textarea{border-radius:9px}
  .pform-feature-card{padding:8px}
  .pform-code-input>button span{display:none}
 }
+
+
+/* Product editor: requested four-card two-column arrangement; preserve existing card styling. */
+.pform-product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:10px}
+.pform-product-grid>.pform-section-heading{grid-column:1 / -1}
+.pform-product-grid>.pform-feature-card{min-width:0;height:100%;align-self:stretch}
+@media(max-width:700px){.pform-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
