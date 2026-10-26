@@ -533,3 +533,91 @@
 .app-shell.theme-dark .pform-footer-left b{
   color:#70e3d3;
 }
+
+
+/* Contrast audit: strengthen small text, table headings and status labels in light mode.
+   Keep decorative icons and the established turquoise/violet palette unchanged. */
+.app-shell:not(.theme-dark) .global-search,
+.app-shell:not(.theme-dark) .global-search input,
+.app-shell:not(.theme-dark) .global-search input::placeholder {
+  color:#52677e!important;
+}
+.app-shell:not(.theme-dark) .global-search kbd {
+  color:#52677e!important;
+  border-color:#d5dfe9!important;
+}
+.app-shell:not(.theme-dark) th {
+  color:#52677e!important;
+}
+.app-shell:not(.theme-dark) .workspace-footer {
+  color:#52677e!important;
+}
+.app-shell:not(.theme-dark) .nav-count {
+  color:#52677e!important;
+}
+.app-shell:not(.theme-dark) .health-tag,
+.app-shell:not(.theme-dark) .brand-version {
+  color:#076c66!important;
+}
+.app-shell:not(.theme-dark) .status-pill.pending {
+  color:#89570a!important;
+}
+.app-shell:not(.theme-dark) .operation-pill.returned {
+  color:#68478c!important;
+}
+.app-shell:not(.theme-dark) .operation-pill.bought,
+.app-shell:not(.theme-dark) .status-pill.completed,
+.app-shell:not(.theme-dark) .status-pill.received,
+.app-shell:not(.theme-dark) .supplier-account-status.no-debt,
+.app-shell:not(.theme-dark) .supplier-ledger-type.payment {
+  color:#17664f!important;
+}
+.app-shell:not(.theme-dark) .supplier-account-status.has-debt {
+  color:#a84f20!important;
+}
+.app-shell:not(.theme-dark) .supplier-ledger-type.invoice {
+  color:#245b9a!important;
+}
+.app-shell:not(.theme-dark) .supplier-id {
+  color:#4c637d!important;
+}
+.app-shell:not(.theme-dark) .supplier-photo-button {
+  color:#08766f!important;
+}
+.app-shell:not(.theme-dark) .supplier-search input::placeholder,
+.app-shell:not(.theme-dark) .supplier-accounts-searches input::placeholder,
+.app-shell:not(.theme-dark) .products-search input::placeholder {
+  color:#68798d!important;
+  opacity:1;
+}
+.app-shell:not(.theme-dark) .pform-manage-list > b {
+  color:#076a64!important;
+}
+.app-shell:not(.theme-dark) .products-tabs button.active b {
+  color:#076a64!important;
+}
+.app-shell:not(.theme-dark) .products-editor-steps button.active {
+  color:#076a64!important;
+}
+
+/* Standalone entry screens use the same readable neutral text standard. */
+.veltro-auth .auth-input-wrap input::placeholder {
+  color:#8998ad!important;
+  opacity:1;
+}
+.veltro-auth .auth-footer {
+  color:#8291a7;
+}
+.onboard-root .onboard-field input::placeholder,
+.onboard-root .onboard-field select:invalid {
+  color:#68798d!important;
+  opacity:1;
+}
+.onboard-root .activity-copy small,
+.onboard-root .onboard-footer {
+  color:#64748b!important;
+}
+.onboard-root .onboard-trust,
+.onboard-root .onboard-form-foot {
+  color:#64748b!important;
+}
