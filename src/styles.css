@@ -2645,3 +2645,70 @@ input,select,textarea{border-radius:9px}
 .app-shell.theme-dark .products-barcode-alert h2{color:#edf4fc}
 .app-shell.theme-dark .products-barcode-alert p{color:#a1b2c5}
 .app-shell.theme-dark .products-barcode-alert code{background:#0b1320;border-color:#29394d;color:#dce8f5}
+
+
+/* Product entry: all fields visible together without switching tabs or vertical scrolling on desktop. */
+.pform-modal{width:min(1480px,calc(100vw - 20px));height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);display:flex;flex-direction:column;overflow:hidden}
+.pform-panel-tabs{display:none!important}
+.pform-content-all{display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);align-items:stretch;gap:10px;padding:10px 12px;min-height:0;flex:1;overflow:hidden}
+.pform-panel-view{display:contents!important}
+.pform-content-all>.pform-section{width:100%;max-width:none;min-width:0;margin:0;align-content:start;gap:8px}
+.pform-content-all>.pform-section+.pform-section{padding:0;border:0}
+.pform-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pform-product-grid>.pform-section-heading{grid-column:1/-1}
+.pform-feature-card{min-width:0;padding:8px;border-radius:9px;gap:7px}
+.pform-feature-heading{gap:7px}
+.pform-feature-icon{width:28px;height:28px;border-radius:7px}
+.pform-feature-heading>div b{font-size:10px}
+.pform-basic-grid,.pform-content-all .pform-basic-grid,.pform-content-all .pform-carton-grid,.pform-carton-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.pform-field{gap:3px;font-size:9px}
+.pform-field>span{min-height:11px;line-height:1.2}
+.pform-field input,.pform-field select{height:30px;padding:0 7px;border-radius:6px;font-size:10px}
+.pform-code-input{gap:4px}
+.pform-code-input>button[title]{flex-basis:30px;width:30px;min-width:30px}
+.pform-manage-list{height:30px;padding:0 7px;font-size:9px}
+.pform-price-block{padding:7px;border-radius:8px}
+.pform-price-head{margin-bottom:5px}
+.pform-price-head>div b{font-size:10px}
+.pform-price-head>div small,.pform-price-head>span{font-size:8px}
+.pform-price-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.pform-price-group{gap:3px}
+.pform-price-group>b{font-size:9px}
+.pform-price-input{height:29px;padding:0 6px;border-radius:6px}
+.pform-price-input input{font-size:10px}
+.pform-margin-control{grid-column:1/-1;grid-template-columns:minmax(80px,.7fr) minmax(0,1.3fr);gap:6px}
+.pform-margin-input{height:30px;padding:0 6px;border-radius:6px}
+.pform-margin-input input{min-width:0;font-size:10px}
+.pform-margin-buttons{gap:3px}
+.pform-margin-buttons button{min-width:0;padding:4px 5px;font-size:9px}
+.pform-average-cost-card{grid-column:1/-1;padding:6px;gap:3px}
+.pform-average-cost-card small,.pform-average-cost-card span{font-size:8px;line-height:1.25}
+.pform-average-cost-card strong{font-size:12px}
+.pform-feature-options{gap:6px;margin:6px 0 0;padding-top:6px}
+.pform-photo-layout{display:block}
+.pform-image-drop{min-height:0;padding:8px;gap:6px}
+.pform-image-drop>span svg{width:23px;height:23px}
+.pform-image-drop>img{max-height:75px;object-fit:contain}
+.pform-image-drop>b,.pform-image-drop>small{font-size:9px}
+.pform-upload-btn{padding:6px 9px;font-size:9px}
+.pform-switch{width:36px;height:21px}
+.pform-switch i:before{width:15px;height:15px}
+.pform-switch input:checked+i:before{transform:translateX(15px)}
+.pform-footer{padding:8px 12px;min-height:48px}
+.pform-footer-left{display:none}
+.pform-back-btn,.pform-next-btn{height:34px;padding:0 12px;font-size:10px}
+@media(max-width:900px){
+ .pform-modal{height:calc(100dvh - 8px);max-height:calc(100dvh - 8px);width:calc(100vw - 8px)}
+ .pform-content-all{grid-template-columns:minmax(0,1fr);overflow-y:auto}
+ .pform-panel-view{display:contents!important}
+ .pform-content-all>.pform-section{max-width:none}
+}
+@media(max-width:600px){
+ .pform-content-all{padding:8px;gap:8px;overflow-y:auto}
+ .pform-product-grid{grid-template-columns:minmax(0,1fr);gap:8px}
+ .pform-product-grid>.pform-section-heading{grid-column:1}
+ .pform-content-all .pform-basic-grid,.pform-content-all .pform-carton-grid,.pform-price-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pform-feature-card{padding:8px}
+ .pform-margin-control{grid-template-columns:minmax(0,1fr)}
+ .pform-average-cost-card{grid-column:1}
+}
