@@ -630,7 +630,7 @@ export default function App() {
   const [logoutOpen,setLogoutOpen]=useState(false);
   const [signedOut,setSignedOut]=useState(false);
   const t=(key)=>copy[lang][key]||copy.ar[key]||key;
-  const handleManualSync=async()=>{if(manualSyncing)return;setManualSyncing(true);try{const result=await syncWorkspace();if(result?.status==='error'||result?.status==='partial')throw new Error('sync_failed');setCloudState(result?.status==='not_configured'?'not_configured':result?.status==='offline'?'configured':'connected');window.alert(t('syncDone'));}catch{setCloudState('error');window.alert(t('syncError'));}finally{setManualSyncing(false);}};
+  const handleManualSync=async()=>{if(manualSyncing)return;setManualSyncing(true);try{const result=await syncWorkspace();if(result?.status!=='synced')throw new Error('sync_failed');setCloudState('connected');window.alert(t('syncDone'));}catch{setCloudState('error');window.alert(t('syncError'));}finally{setManualSyncing(false);}};
   const dir=lang==='ar'?'rtl':'ltr';
   const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setNotificationsOpen(false);setSearchOpen(false);setLanguageOpen(false);};
   useEffect(() => {
