@@ -621,3 +621,32 @@
 .onboard-root .onboard-form-foot {
   color:#64748b!important;
 }
+
+
+/* Final pass for remaining small-text fields and coded identifiers. */
+.app-shell:not(.theme-dark) {
+  --muted:#52677e!important;
+}
+.app-shell:not(.theme-dark) .supplier-field>input[readonly],
+.app-shell:not(.theme-dark) .supplier-field input[readonly] {
+  color:#52677e!important;
+}
+.app-shell:not(.theme-dark) .supplier-accounts-table code,
+.app-shell:not(.theme-dark) .supplier-debt-modal-table-wrap code,
+.app-shell:not(.theme-dark) .supplier-ledger-table code,
+.app-shell:not(.theme-dark) .supplier-preview-top code {
+  color:#08766f!important;
+}
+.app-shell:not(.theme-dark) .products-page .products-preview-note,
+.app-shell:not(.theme-dark) .products-page .products-heading p,
+.app-shell:not(.theme-dark) .products-page .products-toolbar-title p {
+  color:#52677e!important;
+}
+.onboard-root .onboard-eyebrow {
+  color:#08766f!important;
+}
+.onboard-root .onboard-field>span small,
+.onboard-root .onboard-form-heading p,
+.onboard-root .onboard-brand small {
+  color:#64748b!important;
+}
