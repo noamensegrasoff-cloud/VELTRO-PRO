@@ -2535,3 +2535,21 @@ input,select,textarea{border-radius:9px}
  .pform-back-btn,.pform-next-btn{height:38px;padding:0 10px;font-size:10px;border-radius:9px}
  .pform-footer-actions{gap:6px}
 }
+
+
+/* Product pricing: margin controls and weighted average purchase cost */
+.pform-margin-control{grid-column:1/-1;display:grid;grid-template-columns:minmax(130px,.7fr) minmax(0,1.3fr);align-items:end;gap:12px;margin-top:2px}
+.pform-margin-input{height:43px;display:flex;align-items:center;gap:8px;padding:0 11px;border:1px solid var(--border,#dbe3ee);border-radius:10px;background:var(--input,#fff)}
+.pform-margin-input input{width:100%;min-width:0;height:100%;border:0;outline:0;background:transparent;color:inherit;font:inherit}
+.pform-margin-input>b{color:#0d9488;font-weight:800}
+.pform-margin-buttons{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.pform-margin-buttons button{min-width:48px;height:36px;padding:0 12px;border:1px solid var(--border,#dbe3ee);border-radius:9px;background:var(--card,#fff);color:inherit;font-size:12px;font-weight:750;cursor:pointer}
+.pform-margin-buttons button.active{border-color:#0d9488;background:rgba(13,148,136,.12);color:#0d9488}
+.pform-margin-buttons button.pform-margin-edit{min-width:36px;width:36px;padding:0;display:grid;place-items:center}
+.pform-average-cost-card{grid-column:1/-1;display:flex;flex-direction:column;gap:5px;padding:14px 16px;border:1px solid rgba(13,148,136,.28);border-radius:12px;background:linear-gradient(135deg,rgba(13,148,136,.09),rgba(20,184,166,.035))}
+.pform-average-cost-card small{font-size:12px;font-weight:750;color:var(--muted,#64748b)}
+.pform-average-cost-card strong{font-size:24px;line-height:1.25;color:#0d9488;font-variant-numeric:tabular-nums}
+.pform-average-cost-card span{font-size:11px;color:var(--muted,#64748b)}
+.pform-price-input.pform-sale-below-cost{border-color:#dc2626!important;background:rgba(220,38,38,.07)!important;box-shadow:0 0 0 1px rgba(220,38,38,.08)}
+.pform-price-input.pform-sale-below-cost input,.pform-price-input.pform-sale-below-cost span{color:#dc2626!important}
+@media(max-width:700px){.pform-margin-control{grid-template-columns:1fr;gap:8px}.pform-margin-input{height:37px}.pform-margin-buttons{gap:5px}.pform-margin-buttons button{height:32px;min-width:42px;padding:0 9px;font-size:11px}.pform-average-cost-card{padding:10px 12px}.pform-average-cost-card strong{font-size:20px}}
