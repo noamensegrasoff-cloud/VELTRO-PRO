@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Search, ScanBarcode, Plus, Download, Upload, SlidersHorizontal, Package, Boxes, CircleAlert, CircleX, ArrowDownUp, MoreHorizontal, Pencil, Eye, X, Barcode, Layers3, Tag, TrendingUp, Filter, Scale, CalendarClock, ImagePlus, Check, ChevronLeft, ChevronRight, Percent, Trash2, Camera, Info, PackageCheck, Hash, BellRing } from 'lucide-react';
+import { Search, ScanBarcode, Plus, Download, Upload, SlidersHorizontal, Package, Boxes, CircleAlert, CircleX, ArrowDownUp, MoreHorizontal, Pencil, Eye, X, Barcode, Layers3, Tag, TrendingUp, Filter, Scale, CalendarClock, ImagePlus, Check, ChevronLeft, ChevronRight, Percent, Trash2, Camera, Info, PackageCheck, Hash, BellRing, WandSparkles } from 'lucide-react';
 
 const PRODUCT_STORAGE_KEY = 'veltro-products-catalog-v1';
 const money = n => new Intl.NumberFormat('fr-DZ',{minimumFractionDigits:2,maximumFractionDigits:2}).format(Number(n)||0)+' DA';
@@ -55,9 +55,9 @@ export default function ProductsPage({lang='ar'}) {
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Info size={19}/></span><div><b>{tx.productInfo}</b></div></div>
             <div className="pform-basic-grid">
               {field(tx.productName,'name',ar?'اسم المنتج':fr?'Nom du produit':'Product name')}
-              <div className="pform-field"><span>{tx.primaryCode}</span><div className="pform-code-input"><input dir="ltr" value={form.mainBarcode} onChange={e=>set('mainBarcode',e.target.value)} placeholder={tx.barcode}/><button type="button" title={tx.generate} onClick={()=>set('mainBarcode',generateBarcode())}><Hash size={16}/></button></div></div>
+              <div className="pform-field"><span>{tx.primaryCode}</span><div className="pform-code-input"><input dir="ltr" value={form.mainBarcode} onChange={e=>set('mainBarcode',e.target.value)} placeholder={tx.barcode}/><button type="button" title={tx.generate} onClick={()=>set('mainBarcode',generateBarcode())}><WandSparkles size={16} strokeWidth={2}/></button></div></div>
               {codeList(tx.secondaryCode,'unitBarcodes')}
-              <div className="pform-field"><span>{tx.cartonCode}</span><div className="pform-code-input"><input dir="ltr" value={form.cartonBarcode} onChange={e=>set('cartonBarcode',e.target.value)} placeholder={tx.cartonCode}/><button type="button" title={tx.generate} onClick={()=>set('cartonBarcode',generateBarcode())}><Hash size={16}/></button></div></div>
+              <div className="pform-field"><span>{tx.cartonCode}</span><div className="pform-code-input"><input dir="ltr" value={form.cartonBarcode} onChange={e=>set('cartonBarcode',e.target.value)} placeholder={tx.cartonCode}/><button type="button" title={tx.generate} onClick={()=>set('cartonBarcode',generateBarcode())}><WandSparkles size={16} strokeWidth={2}/></button></div></div>
               {codeList(tx.cartonSecondary,'cartonBarcodes')}
             </div>
           </div>
