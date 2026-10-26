@@ -1,6 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="112" fill="#17365c"/>
-  <path d="M84 112h96l76 194 76-194h96L286 400h-60L84 112z" fill="#20c7b5"/>
-  <path d="M176 112h80l-76 194-39-94 35-100z" fill="#ffffff" opacity=".96"/>
-  <path d="M336 112h92L286 400h-60l39-94 71-194z" fill="#ffffff" opacity=".96"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07162f"/>
+      <stop offset=".55" stop-color="#102f68"/>
+      <stop offset="1" stop-color="#061126"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#72fff1"/>
+      <stop offset=".42" stop-color="#12e2d0"/>
+      <stop offset="1" stop-color="#087cae"/>
+    </linearGradient>
+    <linearGradient id="ice" x1="0" y1="0" x2=".8" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".48" stop-color="#e2f4ff"/>
+      <stop offset="1" stop-color="#7ebdff"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5bfff0"/>
+      <stop offset=".5" stop-color="#168dff"/>
+      <stop offset="1" stop-color="#13d9e8"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect x="12" y="12" width="488" height="488" rx="102" fill="none" stroke="url(#rim)" stroke-width="5" opacity=".9"/>
+  <rect x="22" y="22" width="468" height="468" rx="94" fill="none" stroke="#8edfff" stroke-opacity=".16" stroke-width="2"/>
+  <path d="M96 142 C140 345 354 386 422 230 C375 325 220 357 96 142Z" fill="none" stroke="#00d9f6" stroke-width="12" stroke-linecap="round" opacity=".65" filter="url(#glow)"/>
+  <path d="M96 142 C140 345 354 386 422 230 C375 325 220 357 96 142Z" fill="none" stroke="url(#rim)" stroke-width="7" stroke-linecap="round"/>
+  <path d="M95 128h81l80 211 82-211h82L281 390h-51L95 128z" fill="url(#ice)"/>
+  <path d="M95 128h81l80 211c-25-1-43-13-58-34L95 128z" fill="url(#teal)"/>
+  <path d="M176 128h80l-58 153-37-61 15-92z" fill="#ffffff" opacity=".14"/>
+  <path d="M95 128h81l80 211" fill="none" stroke="#c8fff9" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+  <path d="M338 128h82L281 390" fill="none" stroke="#8eeeff" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+  <path d="M55 55h190" stroke="#fff" stroke-opacity=".08" stroke-width="2" stroke-linecap="round"/>
 </svg>
