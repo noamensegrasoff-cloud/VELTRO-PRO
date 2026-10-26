@@ -620,6 +620,8 @@ export default function App() {
   const [activePage,setActivePage]=useState(dashboard);
   const [activeParent,setActiveParent]=useState(null);
   const [search,setSearch]=useState('');
+  const [searchOpen,setSearchOpen]=useState(false);
+  const [languageOpen,setLanguageOpen]=useState(false);
   const [notificationsOpen,setNotificationsOpen]=useState(false);
   const [mobileOpen,setMobileOpen]=useState(false);
   const [sidebarVisible,setSidebarVisible]=useState(true);
@@ -627,10 +629,11 @@ export default function App() {
   const [signedOut,setSignedOut]=useState(false);
   const t=(key)=>copy[lang][key]||copy.ar[key]||key;
   const dir=lang==='ar'?'rtl':'ltr';
-  const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setNotificationsOpen(false);};
+  const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setNotificationsOpen(false);setSearchOpen(false);setLanguageOpen(false);};
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
+        if (searchOpen || languageOpen || notificationsOpen) { event.preventDefault(); setSearchOpen(false); setLanguageOpen(false); setNotificationsOpen(false); return; }
         if (logoutOpen) {
           event.preventDefault();
           setLogoutOpen(false);
@@ -649,7 +652,7 @@ export default function App() {
     // Capture phase cancels browser defaults before page-level handlers can run.
     window.addEventListener('keydown', onKeyDown, true);
     return () => window.removeEventListener('keydown', onKeyDown, true);
-  }, [sidebarVisible, logoutOpen, signedOut, mobileOpen, activePage.id]);
+  }, [sidebarVisible, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen]);
   if(setupState==='checking') return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تجهيز مساحة العمل…':lang==='fr'?'Préparation de votre espace…':'Preparing your workspace…'}</p></div></div>;
   if(setupState==='required') return <BusinessOnboarding lang={lang} onLanguageChange={setLang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
@@ -660,11 +663,17 @@ export default function App() {
         <header className="topbar">
           <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>{setSidebarVisible(true);setMobileOpen(true);}} aria-label="Open navigation"><Menu size={18}/></button><button className="sidebar-toggle-button" onClick={()=>setSidebarVisible(v=>!v)} aria-label={sidebarVisible?(lang==='ar'?'إخفاء القائمة الجانبية':'Hide sidebar'):(lang==='ar'?'إظهار القائمة الجانبية':'Show sidebar')} title="Esc"><kbd>Esc</kbd>{sidebarVisible?<PanelLeftClose size={17}/>:<PanelLeftOpen size={17}/>}</button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
           <div className="topbar-actions">
-            <label className="global-search"><Search size={15}/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>⌕</kbd></label>
+            <div className="header-popover-wrap search-wrap">
+              <button className="icon-button" onClick={()=>{setSearchOpen(v=>!v);setLanguageOpen(false);setNotificationsOpen(false);}} aria-label={t('search')} title={t('search')} aria-expanded={searchOpen}><Search size={17}/></button>
+              {searchOpen&&<div className="header-popover search-popover" role="dialog" aria-label={t('search')}><div className="popover-title"><b>{t('searchResults')}</b><button className="popover-close" onClick={()=>setSearchOpen(false)} aria-label="Close"><X size={15}/></button></div><label className="popup-search-field"><Search size={16}/><input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>Esc</kbd></label><p className="popover-hint">{lang==='ar'?'اكتب للبحث في الأقسام والوظائف':lang==='fr'?'Saisissez pour rechercher des rubriques et actions':'Type to search sections and actions'}</p></div>}
+            </div>
             <button className="icon-button refresh-button" onClick={()=>window.location.reload()} aria-label={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'} title={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'}><RotateCw size={17}/></button>
             <button className="icon-button theme-toggle" onClick={()=>setTheme(v=>v==='dark'?'light':'dark')} aria-label={theme==='dark'?t('lightMode'):t('darkMode')} title={theme==='dark'?t('lightMode'):t('darkMode')}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
-            <label className="language-select"><Globe size={15}/><select value={lang} onChange={e=>setLang(e.target.value)} aria-label="Language"><option value="ar">العربية</option><option value="fr">Français</option><option value="en">English</option></select><ChevronDown size={12}/></label>
-            <div className="notification-wrap"><button className="icon-button notification-button" onClick={()=>setNotificationsOpen(v=>!v)} aria-label={t('notifications')}><Bell size={17}/><i/></button>{notificationsOpen&&<div className="notification-popover"><b>{t('notifications')}</b><p>{t('noNotifications')}</p></div>}</div>
+            <div className="header-popover-wrap language-wrap">
+              <button className="icon-button language-trigger" onClick={()=>{setLanguageOpen(v=>!v);setSearchOpen(false);setNotificationsOpen(false);}} aria-label={lang==='ar'?'تغيير اللغة':lang==='fr'?'Changer de langue':'Change language'} title={lang==='ar'?'تغيير اللغة':lang==='fr'?'Changer de langue':'Change language'} aria-expanded={languageOpen}><Globe size={17}/><span>{lang.toUpperCase()}</span><ChevronDown size={11}/></button>
+              {languageOpen&&<div className="header-popover language-popover" role="menu"><b className="popover-heading">{lang==='ar'?'لغة التطبيق':lang==='fr'?'Langue de l’application':'App language'}</b>{[['ar','العربية'],['fr','Français'],['en','English']].map(([value,label])=><button key={value} role="menuitem" className={'language-option '+(lang===value?'selected':'')} onClick={()=>{setLang(value);setLanguageOpen(false);}}><span>{label}</span>{lang===value&&<CircleCheck size={15}/>}</button>)}</div>}
+            </div>
+            <div className="header-popover-wrap notification-wrap"><button className="icon-button notification-button" onClick={()=>{setNotificationsOpen(v=>!v);setSearchOpen(false);setLanguageOpen(false);}} aria-label={t('notifications')} title={t('notifications')} aria-expanded={notificationsOpen}><Bell size={17}/><i/></button>{notificationsOpen&&<div className="header-popover notification-popover"><div className="popover-title"><b>{t('notifications')}</b><button className="popover-close" onClick={()=>setNotificationsOpen(false)} aria-label="Close"><X size={15}/></button></div><div className="notification-empty"><span><Bell size={18}/></span><b>{t('noNotifications')}</b><p>{lang==='ar'?'ستظهر هنا تنبيهات المخزون والعمليات المهمة.':lang==='fr'?'Les alertes de stock et les opérations importantes apparaîtront ici.':'Stock alerts and important activity will appear here.'}</p></div></div>}</div>
             <div className="profile-chip"><span className="profile-avatar">V</span><span><b>VELTRO</b><small>PRO</small></span><ChevronDown size={13}/></div>
           </div>
         </header>
