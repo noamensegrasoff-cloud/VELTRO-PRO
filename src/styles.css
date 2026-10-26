@@ -2072,3 +2072,54 @@ input,select,textarea{border-radius:9px}
 .theme-dark .products-page button svg,.theme-dark .products-page a svg{stroke:currentColor}
 .theme-light .pform-modal svg,.theme-light .pform-code-modal svg{stroke:currentColor}
 .theme-dark .pform-modal svg,.theme-dark .pform-code-modal svg{stroke:currentColor}
+
+
+/* Product management: force readable text contrast in all four top KPI cards.
+   The numeric value previously inherited --text-primary, which can remain light
+   in the light theme and become nearly invisible on white card backgrounds. */
+.app-shell.theme-light .products-page .products-metric,
+.app-shell.theme-light .products-page .products-metric > div{
+  color:#24364c;
+}
+.app-shell.theme-light .products-page .products-metric small{
+  color:#52677e!important;
+}
+.app-shell.theme-light .products-page .products-metric strong{
+  color:#172f46!important;
+}
+.app-shell.theme-light .products-page .products-metric em{
+  color:#647990!important;
+}
+.app-shell.theme-light .products-page .products-metric .products-metric-icon{
+  color:#087f78!important;
+}
+.app-shell.theme-light .products-page .products-metric .products-metric-icon.cyan{
+  color:#087f9a!important;
+}
+.app-shell.theme-light .products-page .products-metric .products-metric-icon.amber{
+  color:#9a6200!important;
+}
+.app-shell.theme-light .products-page .products-metric .products-metric-icon.red{
+  color:#b82f49!important;
+}
+.app-shell.theme-dark .products-page .products-metric small{
+  color:#a9bacd!important;
+}
+.app-shell.theme-dark .products-page .products-metric strong{
+  color:#f1f7ff!important;
+}
+.app-shell.theme-dark .products-page .products-metric em{
+  color:#91a4ba!important;
+}
+.app-shell.theme-dark .products-page .products-metric .products-metric-icon{
+  color:#70e3d3!important;
+}
+.app-shell.theme-dark .products-page .products-metric .products-metric-icon.cyan{
+  color:#75d4ff!important;
+}
+.app-shell.theme-dark .products-page .products-metric .products-metric-icon.amber{
+  color:#ffd080!important;
+}
+.app-shell.theme-dark .products-page .products-metric .products-metric-icon.red{
+  color:#ff9aa6!important;
+}
