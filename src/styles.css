@@ -2123,3 +2123,238 @@ input,select,textarea{border-radius:9px}
 .app-shell.theme-dark .products-page .products-metric .products-metric-icon.red{
   color:#ff9aa6!important;
 }
+
+
+/* Product row actions: working preview/edit/delete dialogs. */
+.app-shell .products-page .products-row-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  white-space:nowrap;
+}
+.app-shell .products-page .products-row-actions button{
+  flex:0 0 30px;
+  width:30px;
+  height:30px;
+  display:inline-grid;
+  place-items:center;
+  border-radius:9px;
+  cursor:pointer;
+  transition:background .16s ease,border-color .16s ease,color .16s ease,transform .16s ease;
+}
+.app-shell .products-page .products-row-actions .products-delete-action{
+  color:#bd344d!important;
+  border-color:#f0cbd3!important;
+  background:#fff4f5!important;
+}
+.app-shell .products-page .products-row-actions .products-delete-action:hover{
+  color:#fff!important;
+  border-color:#c93650!important;
+  background:#c93650!important;
+}
+.app-shell.theme-dark .products-page .products-row-actions .products-delete-action{
+  color:#ff9aaa!important;
+  border-color:#693443!important;
+  background:#351d28!important;
+}
+.app-shell.theme-dark .products-page .products-row-actions .products-delete-action:hover{
+  color:#fff!important;
+  border-color:#bd344d!important;
+  background:#a92e46!important;
+}
+.app-shell .product-action-overlay{
+  position:fixed;
+  inset:0;
+  z-index:2400;
+  display:grid;
+  place-items:center;
+  padding:18px;
+  background:rgba(3,10,22,.68);
+  backdrop-filter:blur(7px);
+}
+.app-shell .product-action-dialog{
+  width:min(650px,100%);
+  max-height:min(88vh,820px);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border:1px solid #dbe6ef;
+  border-radius:20px;
+  background:#fff;
+  color:#20364d;
+  box-shadow:0 28px 90px rgba(0,0,0,.32);
+}
+.app-shell .product-action-dialog>header{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:17px 19px;
+  border-bottom:1px solid #e5edf3;
+}
+.app-shell .product-action-title-icon{
+  flex:0 0 42px;
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border:1px solid #bcebe2;
+  border-radius:13px;
+  background:linear-gradient(135deg,#e0faf4,#f0edff);
+  color:#087f78;
+}
+.app-shell .product-action-title-icon.danger{
+  border-color:#f3cbd3;
+  background:#fff0f2;
+  color:#bd344d;
+}
+.app-shell .product-action-dialog>header>div:nth-child(2){min-width:0;flex:1}
+.app-shell .product-action-dialog>header h2{margin:0;color:#172f46;font-size:17px;font-weight:800}
+.app-shell .product-action-dialog>header p{margin:4px 0 0;color:#667b91;font-size:12px;overflow-wrap:anywhere}
+.app-shell .product-action-dialog>header>button{
+  flex:0 0 34px;
+  width:34px;
+  height:34px;
+  display:grid;
+  place-items:center;
+  border:1px solid #dbe5ed;
+  border-radius:10px;
+  background:#f7fafc;
+  color:#52677e;
+  cursor:pointer;
+}
+.app-shell .product-preview-content{
+  overflow:auto;
+  padding:19px;
+}
+.app-shell .product-preview-image{
+  display:block;
+  width:100%;
+  max-height:190px;
+  object-fit:contain;
+  margin:0 0 17px;
+  border:1px solid #e2ebf2;
+  border-radius:14px;
+  background:#f8fafc;
+}
+.app-shell .product-preview-heading{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:17px;
+}
+.app-shell .product-preview-heading h3{margin:0 0 8px;color:#172f46;font-size:20px;font-weight:850;overflow-wrap:anywhere}
+.app-shell .product-preview-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.app-shell .product-preview-grid>div,
+.app-shell .product-preview-codes>div{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  padding:12px;
+  border:1px solid #e1eaf1;
+  border-radius:12px;
+  background:linear-gradient(135deg,#fbfdff,#f6f9fc);
+}
+.app-shell .product-preview-grid small,
+.app-shell .product-preview-codes small{
+  color:#637990;
+  font-size:11px;
+  font-weight:700;
+}
+.app-shell .product-preview-grid b{
+  color:#20364d;
+  font-size:13px;
+  font-weight:800;
+  overflow-wrap:anywhere;
+}
+.app-shell .product-preview-codes{display:grid;gap:10px;margin-top:10px}
+.app-shell .product-preview-codes p{margin:0;color:#08766f;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.app-shell .product-action-dialog>footer{
+  flex:0 0 auto;
+  display:flex;
+  justify-content:flex-end;
+  flex-wrap:wrap;
+  gap:9px;
+  padding:14px 19px;
+  border-top:1px solid #e5edf3;
+  background:#fbfdff;
+}
+.app-shell .product-action-dialog>footer>button{
+  min-height:39px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:9px 14px;
+  border:1px solid transparent;
+  border-radius:10px;
+  font:inherit;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer;
+}
+.app-shell .product-action-secondary{
+  color:#425970!important;
+  border-color:#d7e2ec!important;
+  background:#fff!important;
+}
+.app-shell .product-action-primary{
+  color:#fff!important;
+  border-color:#0b9488!important;
+  background:linear-gradient(120deg,#0d9488,#087ca4)!important;
+}
+.app-shell .product-action-danger{
+  color:#fff!important;
+  border-color:#b92e49!important;
+  background:#b92e49!important;
+}
+.app-shell .product-delete-message{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:10px;
+  padding:22px 20px;
+}
+.app-shell .product-delete-message>b{color:#172f46;font-size:17px;font-weight:850;overflow-wrap:anywhere}
+.app-shell .product-delete-message>span{color:#52677e;font-size:13px;line-height:1.7}
+.app-shell .product-delete-message>small{color:#71839a;font-size:11px}
+.app-shell.theme-dark .product-action-dialog{
+  border-color:#2a3b50;
+  background:#101a28;
+  color:#dbe7f4;
+}
+.app-shell.theme-dark .product-action-dialog>header,
+.app-shell.theme-dark .product-action-dialog>footer{border-color:#2a3b50;background:#101a28}
+.app-shell.theme-dark .product-action-dialog>header h2,
+.app-shell.theme-dark .product-preview-heading h3,
+.app-shell.theme-dark .product-delete-message>b{color:#edf6ff}
+.app-shell.theme-dark .product-action-dialog>header p,
+.app-shell.theme-dark .product-preview-grid small,
+.app-shell.theme-dark .product-preview-codes small,
+.app-shell.theme-dark .product-delete-message>span{color:#a9bbcf}
+.app-shell.theme-dark .product-action-dialog>header>button,
+.app-shell.theme-dark .product-action-secondary{color:#d0deec!important;border-color:#34465b!important;background:#172538!important}
+.app-shell.theme-dark .product-preview-image{border-color:#2a3b50;background:#0b1320}
+.app-shell.theme-dark .product-preview-grid>div,
+.app-shell.theme-dark .product-preview-codes>div{border-color:#2a3b50;background:linear-gradient(135deg,#142238,#111a2a)}
+.app-shell.theme-dark .product-preview-grid b{color:#e4effa}
+.app-shell.theme-dark .product-preview-codes p{color:#70e3d3}
+.app-shell.theme-dark .product-delete-message>small{color:#91a4ba}
+@media(max-width:560px){
+  .app-shell .product-action-overlay{padding:9px}
+  .app-shell .product-action-dialog{max-height:92vh;border-radius:16px}
+  .app-shell .product-action-dialog>header{padding:13px}
+  .app-shell .product-preview-content{padding:13px}
+  .app-shell .product-preview-grid{grid-template-columns:1fr 1fr;gap:8px}
+  .app-shell .product-preview-grid>div,.app-shell .product-preview-codes>div{padding:10px}
+  .app-shell .product-action-dialog>footer{padding:12px}
+  .app-shell .product-action-dialog>footer>button{flex:1}
+  .app-shell .products-page .products-row-actions{gap:4px}
+  .app-shell .products-page .products-row-actions button{flex-basis:28px;width:28px;height:28px}
+}
