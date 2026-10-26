@@ -2553,3 +2553,34 @@ input,select,textarea{border-radius:9px}
 .pform-price-input.pform-sale-below-cost{border-color:#dc2626!important;background:rgba(220,38,38,.07)!important;box-shadow:0 0 0 1px rgba(220,38,38,.08)}
 .pform-price-input.pform-sale-below-cost input,.pform-price-input.pform-sale-below-cost span{color:#dc2626!important}
 @media(max-width:700px){.pform-margin-control{grid-template-columns:1fr;gap:8px}.pform-margin-input{height:37px}.pform-margin-buttons{gap:5px}.pform-margin-buttons button{height:32px;min-width:42px;padding:0 9px;font-size:11px}.pform-average-cost-card{padding:10px 12px}.pform-average-cost-card strong{font-size:20px}}
+
+
+/* Products catalog refinement: scanner input and polished table */
+.products-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 20px 13px}
+.products-controls .products-search{flex:1 1 280px;min-width:220px}
+.products-barcode-scan{height:43px;display:flex;align-items:center;gap:9px;flex:0 1 290px;min-width:220px;padding:0 11px;border:1px solid #245e61;border-radius:12px;background:linear-gradient(135deg,#102b32,#101b29);color:#69dfd0;transition:border-color .18s,box-shadow .18s}
+.products-barcode-scan:focus-within{border-color:#42dcca;box-shadow:0 0 0 3px #31cdb91c}
+.products-barcode-scan input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:var(--text-primary,#edf5fc);font-size:12px}
+.products-barcode-scan input::placeholder{color:#7f9aab}
+.products-barcode-scan>span{padding:4px 6px;border-radius:6px;background:#174640;color:#80eadb;font-size:9px;font-weight:850;letter-spacing:.7px}
+.products-barcode-scan button{display:grid;place-items:center;border:0;background:transparent;color:#91b8bd;cursor:pointer}
+.products-table-wrap{padding:0 12px 8px}
+.products-table{border-collapse:separate;border-spacing:0 5px;min-width:960px}
+.products-table thead th{position:sticky;top:0;z-index:1;padding:13px 14px;background:var(--surface-2,#0d1521);border-top:1px solid var(--border,#26364a);border-bottom:1px solid var(--border,#26364a);font-size:10px;letter-spacing:.25px}
+.products-table thead th:first-child{border-inline-start:1px solid var(--border,#26364a);border-radius:10px 0 0 10px}
+.products-table thead th:last-child{border-inline-end:1px solid var(--border,#26364a);border-radius:0 10px 10px 0}
+.products-table tbody tr{background:var(--surface-2,#0d1521);box-shadow:0 2px 7px #0000000b}
+.products-table tbody tr:hover{background:linear-gradient(90deg,#15302f,#142435)}
+.products-table tbody td{padding:13px 14px;border-top:1px solid #ffffff08;border-bottom:1px solid #ffffff08}
+.products-table tbody td:first-child{border-inline-start:1px solid #ffffff08;border-radius:11px 0 0 11px}
+.products-table tbody td:last-child{border-inline-end:1px solid #ffffff08;border-radius:0 11px 11px 0}
+.products-barcode{display:inline-flex;align-items:center;max-width:180px;overflow:hidden;text-overflow:ellipsis;border:1px solid #263b50;background:#0c1723;color:#9ab8d0;padding:6px 8px;border-radius:7px}
+.products-name-cell{min-width:205px}
+.products-item-icon{width:38px;height:38px;border:1px solid #2b5552;background:linear-gradient(145deg,#19443f,#142b34);box-shadow:inset 0 1px #ffffff0c}
+.products-name-cell b{font-size:12px}
+.products-stock-cell b{font-size:13px}
+.products-row-actions button{width:32px;height:32px;border-radius:9px;transition:transform .16s,border-color .16s,background .16s}
+.products-row-actions button:hover{transform:translateY(-1px);background:#173b3a}
+.products-row-actions .products-delete-action:hover{background:#3a2029;border-color:#8b4653;color:#ff9aa5}
+.products-table-footer{margin:0 12px;padding:14px 10px;border-top:1px solid var(--border,#26364a)}
+@media(max-width:760px){.products-controls{padding:12px;gap:8px}.products-controls .products-search,.products-barcode-scan{flex:1 1 100%;min-width:0}.products-select{flex:1;min-width:0}.products-select select{max-width:none;width:100%}.products-table-wrap{padding:0 7px 7px}.products-table{min-width:900px}}
