@@ -1,0 +1,63 @@
+name: Build VELTRO-PRO Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'index.html'
+      - 'package.json'
+      - 'capacitor.config.ts'
+      - '.github/workflows/android-apk.yml'
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Build web app
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run build
+      - name: Prepare Android app icon from VELTRO brand mark
+        run: |
+          mkdir -p resources
+          convert -background none public/icons/veltro.svg -resize 1024x1024 resources/icon.png
+          convert -size 2732x2732 xc:'#07162f' resources/splash.png
+      - name: Generate native Android project and branded assets
+        run: |
+          npx cap add android
+          npx capacitor-assets generate --android
+          npx cap sync android
+      - name: Build debug APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: VELTRO-PRO-Android-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
