@@ -31,7 +31,7 @@ const copy = {
     moduleHint: 'هذه معاينة لواجهة القسم. سيتم ربط الجداول والإجراءات ببيانات النظام عند تنفيذ الوظائف.',
     shortcuts: 'وصول سريع', addProduct: 'إضافة منتج', newSale: 'فتح نقطة البيع',
     newOrder: 'طلب سلع', openCash: 'فتح الصندوق', notifications: 'الإشعارات',
-    noNotifications: 'لا توجد إشعارات جديدة.', logout: 'تسجيل الخروج',
+    noNotifications: 'لا توجد إشعارات جديدة.', logout: 'تسجيل الخروج', sync: 'مزامنة البيانات', syncing: 'جارٍ المزامنة…', syncDone: 'اكتملت المزامنة', syncError: 'تعذرت المزامنة',
     logoutConfirm: 'هل تريد تسجيل الخروج من VELTRO-PRO؟', cancel: 'إلغاء', confirm: 'تسجيل الخروج',
     signedOut: 'تم تسجيل الخروج من المعاينة', signIn: 'العودة إلى المعاينة',
     back: 'العودة', home: 'لوحة التحكم', selected: 'القسم المحدد',
@@ -56,7 +56,7 @@ const copy = {
     moduleHint: 'This is a preview of the section. Tables and actions will connect to system data when the functionality is implemented.',
     shortcuts: 'Quick access', addProduct: 'Add product', newSale: 'Open point of sale',
     newOrder: 'Order goods', openCash: 'Open cash register', notifications: 'Notifications',
-    noNotifications: 'No new notifications.', logout: 'Log out',
+    noNotifications: 'No new notifications.', logout: 'Log out', sync: 'Sync data', syncing: 'Syncing…', syncDone: 'Sync completed', syncError: 'Sync failed',
     logoutConfirm: 'Log out of VELTRO-PRO preview?', cancel: 'Cancel', confirm: 'Log out',
     signedOut: 'You have left the preview', signIn: 'Return to preview',
     back: 'Back', home: 'Dashboard', selected: 'Selected section',
@@ -81,7 +81,7 @@ const copy = {
     moduleHint: 'Ceci est un aperçu de la rubrique. Les tableaux et actions seront reliés aux données lors de l’implémentation.',
     shortcuts: 'Accès rapide', addProduct: 'Ajouter un produit', newSale: 'Ouvrir le point de vente',
     newOrder: 'Commander', openCash: 'Ouvrir la caisse', notifications: 'Notifications',
-    noNotifications: 'Aucune nouvelle notification.', logout: 'Déconnexion',
+    noNotifications: 'Aucune nouvelle notification.', logout: 'Déconnexion', sync: 'Synchroniser les données', syncing: 'Synchronisation…', syncDone: 'Synchronisation terminée', syncError: 'Échec de la synchronisation',
     logoutConfirm: 'Voulez-vous quitter l’aperçu VELTRO-PRO ?', cancel: 'Annuler', confirm: 'Déconnexion',
     signedOut: 'Vous avez quitté l’aperçu', signIn: 'Revenir à l’aperçu',
     back: 'Retour', home: 'Tableau de bord', selected: 'Rubrique sélectionnée',
@@ -103,7 +103,7 @@ const activityRows = [
 
 function getLabel(item, lang) { return item?.label?.[lang] || item?.label?.ar || ''; }
 
-function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, setMobileOpen, sidebarVisible }) {
+function Sidebar({ lang, t, activeId, onNavigate, onLogout, onSync, syncing, search, mobileOpen, setMobileOpen, sidebarVisible }) {
   const [openSections, setOpenSections] = useState(() => {
     const active = sections.find(section => section.children.some(child => child.id === activeId));
     return active ? [active.id] : [];
@@ -159,6 +159,7 @@ function Sidebar({ lang, t, activeId, onNavigate, onLogout, search, mobileOpen, 
       </nav>
       <div className="sidebar-bottom">
         <div className="sidebar-health"><span className="health-dot"/><span>{lang === 'ar' ? 'واجهة تجريبية' : lang === 'fr' ? 'Aperçu du système' : 'System preview'}</span><span className="health-tag">DEMO</span></div>
+        <button className="sync-link" onClick={onSync} disabled={syncing} aria-busy={syncing}><RotateCw className={syncing ? "sync-spinning" : ""} size={15}/><span>{syncing ? t('syncing') : t('sync')}</span></button>
         <button className="logout-link" onClick={onLogout}><LogOut size={15}/><span>{t('logout')}</span></button>
       </div>
     </aside>
@@ -538,6 +539,7 @@ export default function App() {
   const [theme,setTheme]=useState(()=>{try{if(localStorage.getItem('veltro.theme.palette.v2')!=='1'){localStorage.setItem('veltro.theme.palette.v2','1');localStorage.setItem('veltro.theme','dark');return 'dark';}return localStorage.getItem('veltro.theme')==='light'?'light':'dark';}catch{return 'dark';}});
   const [lang,setLang]=useState(()=>{try{return ['ar','fr','en'].includes(localStorage.getItem('veltro.language'))?localStorage.getItem('veltro.language'):'ar';}catch{return 'ar';}});
   const [cloudState,setCloudState]=useState('checking');
+  const [manualSyncing,setManualSyncing]=useState(false);
   const [setupState,setSetupState]=useState('checking');
   const [setupProfile,setSetupProfile]=useState({});
   const [setupSaving,setSetupSaving]=useState(false);
@@ -628,6 +630,7 @@ export default function App() {
   const [logoutOpen,setLogoutOpen]=useState(false);
   const [signedOut,setSignedOut]=useState(false);
   const t=(key)=>copy[lang][key]||copy.ar[key]||key;
+  const handleManualSync=async()=>{if(manualSyncing)return;setManualSyncing(true);try{const result=await syncWorkspace();if(result?.status==='error'||result?.status==='partial')throw new Error('sync_failed');setCloudState(result?.status==='not_configured'?'not_configured':result?.status==='offline'?'configured':'connected');window.alert(t('syncDone'));}catch{setCloudState('error');window.alert(t('syncError'));}finally{setManualSyncing(false);}};
   const dir=lang==='ar'?'rtl':'ltr';
   const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setNotificationsOpen(false);setSearchOpen(false);setLanguageOpen(false);};
   useEffect(() => {
@@ -658,7 +661,7 @@ export default function App() {
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
   return <div className={'app-shell lang-'+lang+' theme-'+theme+(sidebarVisible?'':' sidebar-collapsed')} dir={dir}>
     <div className="app-layout">
-      <Sidebar lang={lang} t={t} activeId={activePage.id} onNavigate={navigate} onLogout={()=>setLogoutOpen(true)} search={search} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} sidebarVisible={sidebarVisible}/>
+      <Sidebar lang={lang} t={t} activeId={activePage.id} onNavigate={navigate} onLogout={()=>setLogoutOpen(true)} onSync={handleManualSync} syncing={manualSyncing} search={search} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} sidebarVisible={sidebarVisible}/>
       <main className="workspace">
         <header className="topbar">
           <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>{setSidebarVisible(true);setMobileOpen(true);}} aria-label="Open navigation"><Menu size={18}/></button><button className="sidebar-toggle-button" onClick={()=>setSidebarVisible(v=>!v)} aria-label={sidebarVisible?(lang==='ar'?'إخفاء القائمة الجانبية':'Hide sidebar'):(lang==='ar'?'إظهار القائمة الجانبية':'Show sidebar')} title="Esc"><kbd>Esc</kbd>{sidebarVisible?<PanelLeftClose size={17}/>:<PanelLeftOpen size={17}/>}</button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
