@@ -1,0 +1,16 @@
+{
+  "id": "/VELTRO-PRO/",
+  "name": "VELTRO-PRO",
+  "short_name": "VELTRO-PRO",
+  "description": "Professional business management and POS system",
+  "lang": "en",
+  "start_url": "/VELTRO-PRO/",
+  "scope": "/VELTRO-PRO/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f8fc",
+  "theme_color": "#17365c",
+  "icons": [
+    { "src": "/VELTRO-PRO/icons/veltro.svg", "sizes": "192x192 512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
