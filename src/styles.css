@@ -2960,3 +2960,12 @@ input,select,textarea{border-radius:9px}
 .workspace{min-height:0;overflow:hidden}
 .topbar{position:relative;flex:0 0 55px;z-index:120}
 .page-content{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+
+.sync-link{height:30px;width:100%;display:flex;align-items:center;gap:8px;padding:0 8px;margin:0 0 4px;border:1px solid #d7e8f6;border-radius:7px;background:linear-gradient(100deg,#edf8ff,#e8fbf7);color:#21658c;font-size:11px;font-weight:650;text-align:start;transition:background .18s,border-color .18s}
+.sync-link:hover:not(:disabled){background:linear-gradient(100deg,#dff2ff,#d9f8f0);border-color:#a9d9e7}
+.sync-link svg{color:#168c9b;flex:0 0 auto}
+.sync-spinning{animation:veltro-sync-spin .9s linear infinite}
+@keyframes veltro-sync-spin{to{transform:rotate(360deg)}}
+.app-shell.theme-dark .sync-link{background:linear-gradient(100deg,#172f49,#153b3d);border-color:#285a6b;color:#bdeaf2}
+.app-shell.theme-dark .sync-link svg{color:#69d8d1}
+.app-shell.theme-dark .sync-link:hover:not(:disabled){background:linear-gradient(100deg,#1b3d5c,#174d4a);border-color:#347f8b}
