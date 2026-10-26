@@ -48,17 +48,32 @@ export default function AuthGate({ children }) {
     });
     let appUrlListener;
     if (Capacitor.isNativePlatform()) {
-      appUrlListener = CapacitorApp.addListener('appUrlOpen', async ({ url }) => {
+      const handleAuthCallback = async (url) => {
         try {
           const callback = new URL(url);
-          const code = callback.searchParams.get('code');
-          const callbackError = callback.searchParams.get('error_description') || callback.searchParams.get('error');
+          const query = new URLSearchParams(callback.search);
+          const hash = new URLSearchParams(callback.hash.replace(/^#/, ''));
+          const callbackError = query.get('error_description') || query.get('error') || hash.get('error_description') || hash.get('error');
           if (callbackError) throw new Error(callbackError);
+          const code = query.get('code');
           if (code) {
             const { data, error } = await supabase.auth.exchangeCodeForSession(code);
             if (error) throw error;
+            if (!data.session) throw new Error('Google callback returned no session.');
             setSession(data.session);
+          } else {
+            const access_token = hash.get('access_token');
+            const refresh_token = hash.get('refresh_token');
+            if (access_token && refresh_token) {
+              const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
+              if (error) throw error;
+              setSession(data.session);
+            } else {
+              throw new Error('The app returned from Google without an authentication code.');
+            }
           }
+          setError('');
+          setMessage('');
           await Browser.close().catch(()=>{});
         } catch (e) {
           setError(e?.message || words[lang].error);
@@ -66,7 +81,15 @@ export default function AuthGate({ children }) {
         } finally {
           setBusy(false);
         }
-      });
+      };
+      appUrlListener = CapacitorApp.addListener('appUrlOpen', ({ url }) => handleAuthCallback(url));
+      // Android may relaunch the activity from the callback URL instead of emitting
+      // appUrlOpen to the already-running WebView.
+      CapacitorApp.getLaunchUrl().then(result => {
+        if (result?.url && result.url.startsWith('com.veltro.pro://auth/callback')) {
+          handleAuthCallback(result.url);
+        }
+      }).catch(()=>{});
     }
     return ()=>{alive=false;subscription.unsubscribe();if(appUrlListener)appUrlListener.then(listener=>listener.remove());};
   }, [lang]);
