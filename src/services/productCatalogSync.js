@@ -54,13 +54,20 @@ export async function loadAndMergeProductCatalog() {
   try { await syncWorkspace({ entityTypes: [ENTITY_TYPE] }); } catch {}
 
   let records = [];
-  try { records = await listRecords({ entityType: ENTITY_TYPE }); } catch {}
+  try { records = await listRecords({ entityType: ENTITY_TYPE, includeDeleted: true }); } catch {}
+  // Keep deletion tombstones in the merge input: otherwise a stale local copy on
+  // another device could be mistaken for a new product and resurrect a deletion.
+  const tombstones = new Map(records
+    .filter(row => row && row.deletedAt && row.recordId != null)
+    .map(row => [String(row.recordId), row]));
   const cloudMap = new Map(records
     .filter(row => row && !row.deletedAt && row.payload && row.recordId != null)
     .map(row => [String(row.recordId), { ...row.payload, id: String(row.recordId) }]));
 
   const merged = new Map(cloudMap);
   for (const [id, localProduct] of localMap) {
+    const tombstone = tombstones.get(id);
+    if (tombstone && Date.parse(tombstone.deletedAt || 0) >= productTime(localProduct)) continue;
     const cloudProduct = cloudMap.get(id);
     if (!cloudProduct) {
       merged.set(id, localProduct);
@@ -79,6 +86,8 @@ export async function loadAndMergeProductCatalog() {
   const workspaceId = await getActiveWorkspaceId().catch(() => 'local-device');
   for (const product of result) {
     const record = records.find(row => String(row.recordId) === String(product.id) && !row.deletedAt);
+    const tombstone = tombstones.get(String(product.id));
+    if (tombstone && Date.parse(tombstone.deletedAt || 0) >= productTime(product)) continue;
     const chosenWasCloud = record && sameProduct(record.payload, product);
     if (!chosenWasCloud) {
       await saveRecord({ entityType: ENTITY_TYPE, recordId: String(product.id), payload: product, workspaceId }).catch(() => {});
