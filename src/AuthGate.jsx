@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { Capacitor } from '@capacitor/core';
+import { App as CapacitorApp } from '@capacitor/app';
+import { Browser } from '@capacitor/browser';
 import { ArrowRight, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, ShieldCheck, Store } from 'lucide-react';
 import { isSupabaseConfigured, supabase } from './lib/supabase.js';
 import './auth.css';
@@ -43,7 +46,27 @@ export default function AuthGate({ children }) {
         setError('');
       }
     });
-    return ()=>{alive=false;subscription.unsubscribe();};
+    let appUrlListener;
+    if (Capacitor.isNativePlatform()) {
+      appUrlListener = CapacitorApp.addListener('appUrlOpen', async ({ url }) => {
+        try {
+          const callback = new URL(url);
+          const code = callback.searchParams.get('code');
+          const callbackError = callback.searchParams.get('error_description') || callback.searchParams.get('error');
+          if (callbackError) throw new Error(callbackError);
+          if (code) {
+            const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+            if (error) throw error;
+            setSession(data.session);
+          }
+          await Browser.close().catch(()=>{});
+        } catch (e) {
+          setError(e?.message || words[lang].error);
+          await Browser.close().catch(()=>{});
+        }
+      });
+    }
+    return ()=>{alive=false;subscription.unsubscribe();if(appUrlListener)appUrlListener.then(listener=>listener.remove());};
   }, [lang]);
 
   async function signInWithGoogle() {
@@ -51,12 +74,14 @@ export default function AuthGate({ children }) {
     if (!isSupabaseConfigured || !supabase) { setError(t.missing); return; }
     setBusy(true);
     try {
-      const redirectTo = window.location.origin + window.location.pathname;
-      const { error } = await supabase.auth.signInWithOAuth({
+      const native = Capacitor.isNativePlatform();
+      const redirectTo = native ? 'com.veltro.pro://auth/callback' : window.location.origin + window.location.pathname;
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        options: { redirectTo, queryParams: { prompt: 'select_account' } }
+        options: { redirectTo, skipBrowserRedirect: native, queryParams: { prompt: 'select_account' } }
       });
       if (error) throw error;
+      if (native && data?.url) await Browser.open({ url: data.url });
     } catch(e) {
       setError(e?.message || t.error);
       setBusy(false);
