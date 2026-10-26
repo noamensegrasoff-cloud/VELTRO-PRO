@@ -58,7 +58,7 @@ export default function ProductsPage({lang='ar'}) {
         <button type="button" role="tab" aria-selected={activeProductPanel===1} className={activeProductPanel===1?'active':''} onClick={()=>setActiveProductPanel(1)}><Tag size={17}/><span>{tx.classification}</span></button>
       </div>
       <div className="pform-content pform-content-all">
-        <div className="pform-panel-view" hidden={activeProductPanel!==0}>
+        <div className="pform-panel-view pform-panel-primary">
         <section className="pform-section pform-product-grid">
           <div className="pform-section-heading"><div><h3>{tx.productInfo}</h3></div><span><Hash size={15}/> 01</span></div>
           <div className="pform-feature-card">
@@ -101,7 +101,7 @@ export default function ProductsPage({lang='ar'}) {
           </div>
         </section>
         </div>
-        <div className="pform-panel-view" hidden={activeProductPanel!==1}>
+        <div className="pform-panel-view pform-panel-secondary">
         <section className="pform-section">
           <div className="pform-section-heading"><div><h3>{tx.classification}</h3></div><span><Hash size={15}/> 02</span></div>
           <div className="pform-feature-card">
