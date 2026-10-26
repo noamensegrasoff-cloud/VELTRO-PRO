@@ -63,6 +63,8 @@ export default function AuthGate({ children }) {
         } catch (e) {
           setError(e?.message || words[lang].error);
           await Browser.close().catch(()=>{});
+        } finally {
+          setBusy(false);
         }
       });
     }
