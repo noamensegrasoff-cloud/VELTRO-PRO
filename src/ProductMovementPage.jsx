@@ -1,21 +1,23 @@
 import React, { useMemo, useState } from 'react';
-import { ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Search, RotateCcw, Package, SlidersHorizontal, CalendarDays, Eye } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Search, RotateCcw, Package, SlidersHorizontal, Barcode } from 'lucide-react';
 
 const labels = {
-  ar: { title:'حركة المنتجات', sub:'سجل تتبّع دخول وخروج وتعديلات المخزون', search:'ابحث باسم المنتج أو المرجع...', all:'كل الحركات', in:'دخول', out:'خروج', adjust:'تسوية', date:'التاريخ', product:'المنتج', type:'نوع الحركة', before:'قبل', change:'التغيير', after:'بعد', source:'المصدر', user:'المستخدم', details:'التفاصيل', empty:'لا توجد حركات مسجلة بعد', emptyHint:'ستظهر الحركات هنا عند ربطها بعمليات البيع والشراء أو تسجيل تسوية مخزون.', refresh:'إعادة تحميل', note:'هذه الصفحة تعرض الحركات المسجلة فقط؛ لا يتم تعديل المخزون من هنا.', noData:'لا توجد بيانات حركة متاحة بعد' },
-  fr: { title:'Mouvements des produits', sub:'Historique des entrées, sorties et ajustements du stock', search:'Rechercher produit ou référence...', all:'Tous les mouvements', in:'Entrée', out:'Sortie', adjust:'Ajustement', date:'Date', product:'Produit', type:'Type', before:'Avant', change:'Variation', after:'Après', source:'Source', user:'Utilisateur', details:'Détails', empty:'Aucun mouvement enregistré', emptyHint:'Les mouvements apparaîtront ici une fois reliés aux ventes, achats ou ajustements de stock.', refresh:'Actualiser', note:'Cette page affiche uniquement les mouvements enregistrés ; elle ne modifie pas le stock.', noData:'Aucune donnée de mouvement disponible' },
-  en: { title:'Product movements', sub:'Track stock entries, exits and adjustments', search:'Search product or reference...', all:'All movements', in:'Stock in', out:'Stock out', adjust:'Adjustment', date:'Date', product:'Product', type:'Movement type', before:'Before', change:'Change', after:'After', source:'Source', user:'User', details:'Details', empty:'No movements recorded yet', emptyHint:'Movements will appear here once connected to sales, purchases or stock adjustments.', refresh:'Refresh', note:'This page displays recorded movements only; it does not change stock.', noData:'No movement data is available yet' }
+  ar: { title:'حركة المنتجات', sub:'سجل تتبّع دخول وخروج وتعديلات المخزون', search:'ابحث باسم المنتج أو المرجع...', barcodeSearch:'بحث بالباركود', barcodePlaceholder:'أدخل أو امسح الكودبار...', all:'كل الحركات', in:'دخول', out:'خروج', adjust:'تسوية', date:'التاريخ', product:'المنتج', type:'نوع الحركة', before:'قبل', change:'التغيير', after:'بعد', source:'المصدر', user:'المستخدم', details:'التفاصيل', empty:'لا توجد حركات مسجلة بعد', emptyHint:'ستظهر الحركات هنا عند ربطها بعمليات البيع والشراء أو تسجيل تسوية مخزون.', refresh:'إعادة تحميل', note:'هذه الصفحة تعرض الحركات المسجلة فقط؛ لا يتم تعديل المخزون من هنا.', noData:'لا توجد بيانات حركة متاحة بعد' },
+  fr: { title:'Mouvements des produits', sub:'Historique des entrées, sorties et ajustements du stock', search:'Rechercher produit ou référence...', barcodeSearch:'Recherche par code-barres', barcodePlaceholder:'Saisir ou scanner le code-barres...', all:'Tous les mouvements', in:'Entrée', out:'Sortie', adjust:'Ajustement', date:'Date', product:'Produit', type:'Type', before:'Avant', change:'Variation', after:'Après', source:'Source', user:'Utilisateur', details:'Détails', empty:'Aucun mouvement enregistré', emptyHint:'Les mouvements apparaîtront ici une fois reliés aux ventes, achats ou ajustements de stock.', refresh:'Actualiser', note:'Cette page affiche uniquement les mouvements enregistrés ; elle ne modifie pas le stock.', noData:'Aucune donnée de mouvement disponible' },
+  en: { title:'Product movements', sub:'Track stock entries, exits and adjustments', search:'Search product or reference...', barcodeSearch:'Search barcode', barcodePlaceholder:'Enter or scan barcode...', all:'All movements', in:'Stock in', out:'Stock out', adjust:'Adjustment', date:'Date', product:'Product', type:'Movement type', before:'Before', change:'Change', after:'After', source:'Source', user:'User', details:'Details', empty:'No movements recorded yet', emptyHint:'Movements will appear here once connected to sales, purchases or stock adjustments.', refresh:'Refresh', note:'This page displays recorded movements only; it does not change stock.', noData:'No movement data is available yet' }
 };
 
 const styles = {
   panel:{background:'var(--panel, rgba(20,31,49,.72))',border:'1px solid var(--border, rgba(120,160,190,.18))',borderRadius:18},
-  button:{display:'inline-flex',alignItems:'center',gap:8,border:'1px solid var(--border, rgba(120,160,190,.22))',borderRadius:10,padding:'10px 13px',background:'var(--panel, rgba(20,31,49,.72))',color:'var(--text, inherit)',cursor:'pointer'},
+  button:{display:'inline-flex',alignItems:'center',gap:8,border:'1px solid var(--border, rgba(120,160,190,.22))',borderRadius:10,padding:'10px 13px',background:'linear-gradient(135deg,rgba(37,99,235,.22),rgba(20,184,166,.16))',color:'var(--text, inherit)',borderColor:'rgba(45,190,190,.35)',fontWeight:650,boxShadow:'0 4px 14px rgba(15,100,160,.10)',cursor:'pointer'},
   field:{width:'100%',minWidth:0,background:'var(--input, rgba(9,18,32,.55))',color:'var(--text, inherit)',border:'1px solid var(--border, rgba(120,160,190,.22))',borderRadius:10,padding:'11px 12px',outline:'none'}
 };
 
 export default function ProductMovementPage({ lang='ar' }) {
   const t = key => labels[lang]?.[key] || labels.ar[key] || key;
   const [query,setQuery] = useState('');
+  const [barcodeQuery,setBarcodeQuery] = useState('');
+  const [barcodeOpen,setBarcodeOpen] = useState(false);
   const [kind,setKind] = useState('all');
   const [reload,setReload] = useState(0);
   const movements = useMemo(() => {
@@ -29,10 +31,11 @@ export default function ProductMovementPage({ lang='ar' }) {
     return [];
   },[reload]);
   const filtered = movements.filter(m => {
-    const text = [m.productName,m.name,m.product?.name,m.reference,m.source,m.id].map(v=>String(v||'')).join(' ').toLocaleLowerCase();
+    const text = [m.productName,m.name,m.product?.name,m.reference,m.barcode,m.barCode,m.productBarcode,m.product?.barcode,m.product?.barCode,m.source,m.id].map(v=>String(v||'')).join(' ').toLocaleLowerCase();
     const type = String(m.type||m.kind||'').toLowerCase();
     const normalized = /in|purchase|entry|دخل|شراء|دخول/.test(type) ? 'in' : /out|sale|exit|بيع|خروج/.test(type) ? 'out' : 'adjust';
-    return (!query || text.includes(query.toLocaleLowerCase())) && (kind==='all' || normalized===kind);
+    const barcode = [m.barcode,m.barCode,m.productBarcode,m.product?.barcode,m.product?.barCode,m.product?.barcodeValue].map(v=>String(v||'')).join(' ').toLocaleLowerCase();
+    return (!query || text.includes(query.toLocaleLowerCase())) && (!barcodeQuery || barcode.includes(barcodeQuery.toLocaleLowerCase())) && (kind==='all' || normalized===kind);
   });
   const getName = m => m.productName || m.name || m.product?.name || '—';
   const getDelta = m => Number(m.quantityChange ?? m.delta ?? m.change ?? m.quantity ?? 0);
@@ -42,12 +45,14 @@ export default function ProductMovementPage({ lang='ar' }) {
   return <div className="page-content product-movement-page">
     <div className="page-heading">
       <div><div className="heading-kicker"><span className="health-dot"/>{lang==='ar'?'المنتجات':lang==='fr'?'Produits':'Products'}</div><h1>{t('title')}</h1><p>{t('sub')}</p></div>
-      <button style={styles.button} onClick={()=>setReload(v=>v+1)}><RotateCcw size={15}/>{t('refresh')}</button>
+      <button style={{...styles.button,background:'linear-gradient(135deg,#2563eb,#0d9488)',color:'#fff',borderColor:'transparent',boxShadow:'0 6px 18px rgba(37,99,235,.22)'}} onClick={()=>setReload(v=>v+1)}><RotateCcw size={15}/>{t('refresh')}</button>
     </div>
     <div style={{...styles.panel,padding:16,marginBottom:16,display:'flex',gap:12,flexWrap:'wrap',alignItems:'center',justifyContent:'space-between'}}>
       <div style={{display:'flex',gap:10,flexWrap:'wrap',alignItems:'center',flex:1,minWidth:220}}>
         <label style={{display:'flex',gap:8,alignItems:'center',flex:'1 1 250px',minWidth:180}}><Search size={16}/><input style={styles.field} value={query} onChange={e=>setQuery(e.target.value)} placeholder={t('search')}/></label>
-        <label style={{display:'flex',gap:8,alignItems:'center'}}><SlidersHorizontal size={15}/><select style={{...styles.field,width:'auto'}} value={kind} onChange={e=>setKind(e.target.value)}><option value="all">{t('all')}</option><option value="in">{t('in')}</option><option value="out">{t('out')}</option><option value="adjust">{t('adjust')}</option></select></label>
+        <label style={{display:'flex',gap:8,alignItems:'center'}}><SlidersHorizontal size={15}/><select style={{...styles.field,width:'auto',minHeight:42,borderRadius:12,background:'linear-gradient(135deg,rgba(37,99,235,.16),rgba(20,184,166,.12))',borderColor:'rgba(45,190,190,.4)',fontWeight:650,cursor:'pointer'}} value={kind} onChange={e=>setKind(e.target.value)}><option value="all">{t('all')}</option><option value="in">{t('in')}</option><option value="out">{t('out')}</option><option value="adjust">{t('adjust')}</option></select></label>
+        <button style={{...styles.button,minHeight:42,borderRadius:12,background:barcodeOpen?'linear-gradient(135deg,#0d9488,#2563eb)':'rgba(20,184,166,.10)',color:barcodeOpen?'#fff':'var(--text, inherit)',borderColor:'rgba(45,190,190,.45)'}} onClick={()=>{setBarcodeOpen(v=>!v);setBarcodeQuery('')}}><Barcode size={16}/>{t('barcodeSearch')}</button>
+        {barcodeOpen && <label style={{display:'flex',gap:8,alignItems:'center',flex:'1 1 220px',minWidth:180}}><Barcode size={16}/><input autoFocus style={{...styles.field,borderColor:'rgba(45,190,190,.55)',boxShadow:'0 0 0 3px rgba(20,184,166,.10)'}} value={barcodeQuery} onChange={e=>setBarcodeQuery(e.target.value)} placeholder={t('barcodePlaceholder')} /></label>}
       </div>
       <span style={{fontSize:13,opacity:.75}}>{filtered.length} / {movements.length}</span>
     </div>
