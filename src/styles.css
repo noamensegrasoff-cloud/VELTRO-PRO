@@ -2726,3 +2726,109 @@ input,select,textarea{border-radius:9px}
 .product-preview-extra-grid{margin-top:8px}
 .product-preview-content{overflow-y:auto}
 .theme-light .product-preview-details-toggle{color:#1b3449;background:#e9f9f6;border-color:#a7e5dc}
+
+
+/* Product add/edit form: larger controls, one continuous page, no step/panel split. */
+.products-page .pform-modal{
+  width:min(1500px,calc(100vw - 32px));
+  height:min(940px,calc(100dvh - 28px));
+  max-height:calc(100dvh - 28px);
+}
+.products-page .pform-panel-tabs{display:none!important}
+.products-page .pform-content-all{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;
+  gap:16px;
+  padding:18px 20px;
+  min-height:0;
+  flex:1;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+.products-page .pform-panel-view{display:contents!important}
+.products-page .pform-content-all>.pform-section,
+.products-page .pform-content-all>.pform-panel-view>.pform-section{
+  display:contents!important;
+}
+.products-page .pform-content-all .pform-section-heading{
+  grid-column:1/-1;
+  margin:0;
+  padding:0 0 5px;
+}
+.products-page .pform-content-all .pform-feature-card{
+  min-width:0;
+  padding:16px;
+  gap:13px;
+  border-radius:14px;
+}
+.products-page .pform-content-all .pform-feature-heading{gap:11px}
+.products-page .pform-content-all .pform-feature-icon{width:38px;height:38px;border-radius:11px}
+.products-page .pform-content-all .pform-feature-heading>div b{font-size:14px}
+.products-page .pform-content-all .pform-basic-grid,
+.products-page .pform-content-all .pform-carton-grid,
+.products-page .pform-content-all .pform-price-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.products-page .pform-content-all .pform-field{gap:6px;font-size:12px;min-width:0}
+.products-page .pform-content-all .pform-field>span{min-height:16px;line-height:1.35}
+.products-page .pform-content-all .pform-field input,
+.products-page .pform-content-all .pform-field select{
+  height:43px;
+  padding:0 12px;
+  border-radius:9px;
+  font-size:13px;
+}
+.products-page .pform-content-all .pform-code-input{gap:7px}
+.products-page .pform-content-all .pform-code-input input{min-width:0}
+.products-page .pform-content-all .pform-code-input>button[title]{
+  flex-basis:42px;width:42px;min-width:42px;height:43px;
+}
+.products-page .pform-content-all .pform-manage-list{height:43px;padding:0 12px;font-size:12px}
+.products-page .pform-content-all .pform-price-block{padding:13px;border-radius:11px}
+.products-page .pform-content-all .pform-price-head{margin-bottom:10px}
+.products-page .pform-content-all .pform-price-head>div b{font-size:13px}
+.products-page .pform-content-all .pform-price-head>div small,
+.products-page .pform-content-all .pform-price-head>span{font-size:11px}
+.products-page .pform-content-all .pform-price-group{gap:6px}
+.products-page .pform-content-all .pform-price-group>b{font-size:12px}
+.products-page .pform-content-all .pform-price-input{height:43px;padding:0 10px;border-radius:9px}
+.products-page .pform-content-all .pform-price-input input{font-size:13px}
+.products-page .pform-content-all .pform-margin-control{gap:10px}
+.products-page .pform-content-all .pform-margin-input{height:43px;padding:0 10px}
+.products-page .pform-content-all .pform-margin-input input{font-size:13px}
+.products-page .pform-content-all .pform-margin-buttons{gap:6px}
+.products-page .pform-content-all .pform-margin-buttons button{min-width:43px;padding:0 9px;height:36px;font-size:11px}
+.products-page .pform-content-all .pform-average-cost-card{padding:12px;gap:5px}
+.products-page .pform-content-all .pform-average-cost-card small,
+.products-page .pform-content-all .pform-average-cost-card span{font-size:10px;line-height:1.4}
+.products-page .pform-content-all .pform-average-cost-card strong{font-size:20px}
+.products-page .pform-content-all .pform-feature-options{gap:12px;margin-top:10px}
+.products-page .pform-content-all .pform-photo-layout{display:block}
+.products-page .pform-content-all .pform-image-drop{min-height:155px;padding:16px;gap:10px}
+.products-page .pform-content-all .pform-image-drop>img{max-height:150px;object-fit:contain}
+.products-page .pform-content-all .pform-image-drop>b,
+.products-page .pform-content-all .pform-image-drop>small{font-size:12px}
+.products-page .pform-content-all .pform-upload-btn{padding:10px 14px;font-size:12px}
+.products-page .pform-content-all .pform-switch{width:44px;height:25px;flex-shrink:0}
+.products-page .pform-content-all .pform-switch i:before{width:18px;height:18px}
+.products-page .pform-content-all .pform-switch input:checked+i:before{transform:translateX(19px)}
+.products-page .pform-expiry-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.products-page .pform-footer{padding:14px 20px;min-height:64px}
+.products-page .pform-footer-left{display:none}
+.products-page .pform-back-btn,
+.products-page .pform-next-btn{height:43px;padding:0 18px;font-size:13px}
+@media(max-width:900px){
+  .products-page .pform-modal{width:calc(100vw - 16px);height:calc(100dvh - 16px);max-height:calc(100dvh - 16px)}
+  .products-page .pform-content-all{grid-template-columns:minmax(0,1fr);padding:12px;gap:12px}
+}
+@media(max-width:560px){
+  .products-page .pform-content-all .pform-basic-grid,
+  .products-page .pform-content-all .pform-carton-grid,
+  .products-page .pform-content-all .pform-price-grid,
+  .products-page .pform-expiry-options{grid-template-columns:minmax(0,1fr)}
+  .products-page .pform-content-all .pform-feature-card{padding:12px}
+  .products-page .pform-content-all .pform-margin-control{grid-template-columns:minmax(0,1fr)}
+  .products-page .pform-footer{padding:10px 12px}
+}
