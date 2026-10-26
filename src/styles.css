@@ -2869,3 +2869,84 @@ input,select,textarea{border-radius:9px}
 .theme-light .pform-modal .pform-panel-tabs button:hover{background:#e8fbf8;border-color:#0d9488;color:#0f766e}
 .theme-light .pform-modal .pform-panel-tabs button.active{background:#e6f8f5;border-color:#0d9488;color:#115e59;box-shadow:inset 0 0 0 1px rgba(13,148,136,.12)}
 @media(prefers-reduced-motion:reduce){.pform-modal button,.pform-code-modal button{transition:none}}
+
+
+/* Dedicated styling for the two profit-percentage fields only */
+.products-page .pform-content-all .pform-margin-nearby .pform-margin-input{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  height:44px;
+  padding:0 12px;
+  overflow:hidden;
+  border:1px solid #3b536b;
+  border-radius:11px;
+  background:#111e2d;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.18);
+  transition:border-color .16s ease,box-shadow .16s ease,background-color .16s ease;
+}
+.products-page .pform-content-all .pform-margin-nearby .pform-margin-input:focus-within{
+  border-color:#2dd4bf;
+  box-shadow:0 0 0 3px rgba(45,212,191,.14);
+}
+.products-page .pform-content-all .pform-margin-nearby .pform-margin-input input{
+  flex:1;
+  width:0;
+  min-width:0;
+  height:100%;
+  padding:0;
+  border:0!important;
+  outline:0;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#e8f4ff!important;
+  font-size:15px;
+  font-weight:750;
+  font-variant-numeric:tabular-nums;
+  appearance:textfield;
+  -moz-appearance:textfield;
+}
+.products-page .pform-content-all .pform-margin-nearby .pform-margin-input input::-webkit-inner-spin-button,
+.products-page .pform-content-all .pform-margin-nearby .pform-margin-input input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.products-page .pform-content-all .pform-margin-nearby .pform-margin-input>b{
+  display:grid;
+  place-items:center;
+  flex:0 0 30px;
+  height:28px;
+  border:1px solid rgba(45,212,191,.22);
+  border-radius:7px;
+  background:rgba(45,212,191,.12);
+  color:#5eead4;
+  font-size:13px;
+  font-weight:800;
+}
+.products-page .pform-content-all .pform-margin-nearby>span{
+  color:#a8bacd;
+  font-size:12px;
+  font-weight:700;
+}
+.theme-light .products-page .pform-content-all .pform-margin-nearby .pform-margin-input{
+  border-color:#cbd8e5;
+  background:#f8fbff;
+  box-shadow:inset 0 1px 2px rgba(30,55,80,.04);
+}
+.theme-light .products-page .pform-content-all .pform-margin-nearby .pform-margin-input:focus-within{
+  border-color:#0d9488;
+  box-shadow:0 0 0 3px rgba(13,148,136,.13);
+}
+.theme-light .products-page .pform-content-all .pform-margin-nearby .pform-margin-input input{
+  color:#172b40!important;
+}
+.theme-light .products-page .pform-content-all .pform-margin-nearby .pform-margin-input>b{
+  border-color:#b8e8e0;
+  background:#e5f8f4;
+  color:#0f766e;
+}
+.theme-light .products-page .pform-content-all .pform-margin-nearby>span{
+  color:#52677d;
+}
+@media(max-width:560px){
+  .products-page .pform-content-all .pform-margin-nearby .pform-margin-input{height:42px;padding:0 10px}
+  .products-page .pform-content-all .pform-margin-nearby .pform-margin-input input{font-size:14px}
+}
