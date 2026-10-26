@@ -27,6 +27,12 @@ export default function AuthGate({ children }) {
   const t=words[lang], dir=lang==='ar'?'rtl':'ltr';
 
   useEffect(() => {
+    try { localStorage.setItem('veltro.language', lang); } catch {}
+    document.documentElement.lang = lang;
+    document.documentElement.dir = dir;
+  }, [lang, dir]);
+
+  useEffect(() => {
     const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ''));
     const recoveryError = hashParams.get('error_code') || hashParams.get('error');
     if (recoveryError) {
