@@ -5,10 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#17365c" />
     <meta name="description" content="VELTRO-PRO — نظام إدارة المتجر والمبيعات والمخزون." />
+    <link rel="manifest" href="/VELTRO-PRO/manifest.webmanifest" />
+    <link rel="icon" href="/VELTRO-PRO/icons/veltro.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/VELTRO-PRO/icons/veltro.svg" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <title>VELTRO-PRO — Business Suite</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/VELTRO-PRO/sw.js', { scope: '/VELTRO-PRO/' }).catch((error) => {
+            console.error('VELTRO-PRO service worker registration failed:', error);
+          });
+        });
+      }
+    </script>
   </body>
 </html>
