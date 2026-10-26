@@ -45,7 +45,7 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
         run: npm run build
       - name: Install image tools
-        run: sudo apt-get update && sudo apt-get install -y imagemagick
+        run: sudo apt-get install -y -o Acquire::Retries=1 -o Acquire::http::Timeout=20 imagemagick
       - name: Prepare Android app icon from VELTRO brand mark
         run: |
           mkdir -p resources
