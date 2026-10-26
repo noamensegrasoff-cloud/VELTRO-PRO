@@ -60,6 +60,21 @@ jobs:
         run: |
           npx cap add android
           npx capacitor-assets generate --android
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('android/app/src/main/AndroidManifest.xml')
+          s = p.read_text()
+          intent = '''
+                  <intent-filter>
+                      <action android:name="android.intent.action.VIEW" />
+                      <category android:name="android.intent.category.DEFAULT" />
+                      <category android:name="android.intent.category.BROWSABLE" />
+                      <data android:scheme="com.veltro.pro" android:host="auth" android:path="/callback" />
+                  </intent-filter>'''
+          if 'android:scheme="com.veltro.pro"' not in s:
+              s = s.replace('</activity>', intent + '\\n        </activity>', 1)
+              p.write_text(s)
+          PY
           npx cap sync android
       - name: Build installable Android APK
         working-directory: android
