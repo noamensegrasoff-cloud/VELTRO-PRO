@@ -32,6 +32,11 @@ jobs:
           java-version: '21'
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            platform-tools
+            platforms;android-35
+            build-tools;35.0.0
       - name: Install dependencies
         run: npm install
       - name: Build web app
@@ -49,7 +54,7 @@ jobs:
           npx cap add android
           npx capacitor-assets generate --android
           npx cap sync android
-      - name: Build debug APK
+      - name: Build installable Android APK
         working-directory: android
         run: |
           chmod +x gradlew
