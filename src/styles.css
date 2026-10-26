@@ -2712,3 +2712,17 @@ input,select,textarea{border-radius:9px}
  .pform-margin-control{grid-template-columns:minmax(0,1fr)}
  .pform-average-cost-card{grid-column:1}
 }
+
+
+/* Reliable unknown-barcode alert and read-only expandable product preview details. */
+.products-page .products-barcode-alert-overlay{position:fixed!important;inset:0!important;z-index:2147483000!important;display:grid!important;place-items:center!important;padding:18px!important;background:rgba(3,10,20,.72)!important;backdrop-filter:blur(7px);pointer-events:auto!important}
+.products-page .products-barcode-alert{position:relative;z-index:1;max-height:calc(100dvh - 36px);overflow:auto;pointer-events:auto;border-color:rgba(32,199,193,.45);animation:productsBarcodeAlertIn .18s ease-out}
+.products-page .products-barcode-alert>button{cursor:pointer;min-height:42px}
+@keyframes productsBarcodeAlertIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.product-preview-details-toggle{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0;padding:11px 14px;border:1px solid rgba(32,199,193,.45);border-radius:10px;background:rgba(32,199,193,.09);color:var(--text-primary,#eaf8fa);font:inherit;font-size:12px;font-weight:750;cursor:pointer;transition:background .18s,border-color .18s}
+.product-preview-details-toggle:hover{border-color:#20c7c1;background:rgba(32,199,193,.16)}
+.product-preview-details-toggle svg{transform:rotate(-90deg);transition:transform .18s}
+.product-preview-details-toggle[aria-expanded="true"] svg{transform:rotate(90deg)}
+.product-preview-extra-grid{margin-top:8px}
+.product-preview-content{overflow-y:auto}
+.theme-light .product-preview-details-toggle{color:#1b3449;background:#e9f9f6;border-color:#a7e5dc}
