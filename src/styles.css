@@ -7467,18 +7467,21 @@ html body #root .products-page .pform-modal>.pform-footer{
 html body #root .app-shell .workspace > :not(.topbar) {
   display: revert !important;
 }
-html body #root .app-shell .workspace > .workspace-canvas {
-  display: flex !important;
-  flex: 1 1 auto !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  height: auto !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  overflow: auto !important;
-}
 html body #root .app-shell .workspace > .workspace-canvas > * {
   display: revert !important;
+}
+/* Preserve the original desktop workspace geometry; mobile sizing belongs only in the mobile breakpoint. */
+@media screen and (max-width: 760px) {
+  html body #root .app-shell .workspace > .workspace-canvas {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: auto !important;
+  }
 }
 @media (max-width: 760px) {
   html body #root .app-shell,
