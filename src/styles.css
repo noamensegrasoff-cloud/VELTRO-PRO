@@ -4289,3 +4289,16 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
     width: min(292px, calc(100vw - 30px)) !important;
   }
 }
+
+/* Match top-bar button icons to the connection-status icon style in both themes */
+.app-shell.theme-dark .topbar .topbar-tool svg,
+.app-shell.theme-light .topbar .topbar-tool svg {
+  width: 15px !important;
+  height: 15px !important;
+  stroke-width: 2 !important;
+  color: var(--glass-muted) !important;
+}
+.app-shell.theme-dark .topbar .topbar-tool:hover svg,
+.app-shell.theme-light .topbar .topbar-tool:hover svg {
+  color: var(--glass-muted) !important;
+}
