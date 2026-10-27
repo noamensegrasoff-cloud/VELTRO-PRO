@@ -3514,3 +3514,126 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   .app-shell *::before,
   .app-shell *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
 }
+
+
+/* Glassmorphism repair applied to the active main branch */
+.app-shell{
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(31,198,218,.20),transparent 32%),
+    radial-gradient(ellipse at 88% 14%,rgba(128,89,255,.18),transparent 31%),
+    radial-gradient(ellipse at 55% 100%,rgba(39,112,255,.13),transparent 38%),
+    linear-gradient(135deg,#07111f 0%,#0b1930 50%,#11152c 100%)!important;
+}
+.app-shell.theme-dark .sidebar,
+.app-shell.theme-dark .topbar,
+.app-shell.theme-dark .metric-card,
+.app-shell.theme-dark .panel,
+.app-shell.theme-dark .mix-panel,
+.app-shell.theme-dark .stock-panel,
+.app-shell.theme-dark .recent-panel,
+.app-shell.theme-dark .module-metric,
+.app-shell.theme-dark .module-workspace,
+.app-shell.theme-dark .section-launch-card,
+.app-shell.theme-dark .navigation-dialog,
+.app-shell.theme-dark .navigation-subcard,
+.app-shell.theme-dark .header-popover,
+.app-shell.theme-dark .confirm-modal,
+.app-shell.theme-dark .supplier-modal,
+.app-shell.theme-dark .supplier-detail-card,
+.app-shell.theme-dark .supplier-account-card,
+.app-shell.theme-dark .products-metric,
+.app-shell.theme-dark .products-editor-panel,
+.app-shell.theme-dark .products-pricing-card,
+.app-shell.theme-dark .products-option-card,
+.app-shell.theme-dark .products-image-panel,
+.app-shell.theme-dark .pform-feature-card,
+.app-shell.theme-dark .pform-average-cost-card,
+.app-shell.theme-dark .customer-preview-modal,
+.app-shell.theme-dark .workspace-footer,
+.app-shell.theme-dark .connection-card,
+.app-shell.theme-dark .quick-actions{
+  -webkit-backdrop-filter:blur(26px) saturate(165%)!important;
+  backdrop-filter:blur(26px) saturate(165%)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.105),rgba(255,255,255,.025))!important;
+  border-color:rgba(164,221,255,.22)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 16px 42px rgba(0,0,0,.23),0 0 26px rgba(57,194,225,.045)!important;
+}
+.app-shell.theme-dark .sidebar{background:rgba(7,17,32,.57)!important}
+.app-shell.theme-dark .topbar{background:rgba(8,19,36,.62)!important}
+.app-shell.theme-dark .metric-card:nth-child(1){background:linear-gradient(145deg,rgba(38,129,190,.23),rgba(18,30,54,.42))!important}
+.app-shell.theme-dark .metric-card:nth-child(2){background:linear-gradient(145deg,rgba(28,179,169,.2),rgba(18,30,54,.42))!important}
+.app-shell.theme-dark .metric-card:nth-child(3){background:linear-gradient(145deg,rgba(127,83,222,.22),rgba(18,30,54,.42))!important}
+.app-shell.theme-dark .metric-card:nth-child(4){background:linear-gradient(145deg,rgba(47,115,239,.22),rgba(18,30,54,.42))!important}
+.app-shell.theme-dark .section-launch-card,
+.app-shell.theme-dark .navigation-subcard{background:linear-gradient(135deg,rgba(39,146,190,.17),rgba(105,77,193,.12),rgba(255,255,255,.025))!important}
+.app-shell.theme-dark .metric-card,
+.app-shell.theme-dark .panel,
+.app-shell.theme-dark .section-launch-card,
+.app-shell.theme-dark .navigation-subcard,
+.app-shell.theme-dark .module-metric{position:relative;overflow:hidden}
+.app-shell.theme-dark .metric-card:before,
+.app-shell.theme-dark .panel:before,
+.app-shell.theme-dark .section-launch-card:before,
+.app-shell.theme-dark .navigation-subcard:before{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(120deg,rgba(255,255,255,.075),transparent 40%,rgba(68,224,208,.035));
+}
+.app-shell.theme-dark .metric-card:hover,
+.app-shell.theme-dark .panel:hover,
+.app-shell.theme-dark .section-launch-card:hover,
+.app-shell.theme-dark .navigation-subcard:hover{
+  border-color:rgba(92,224,238,.43)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 18px 48px rgba(0,0,0,.3),0 0 28px rgba(68,224,208,.1)!important;
+}
+.app-shell.theme-dark .navigation-overlay,
+.app-shell.theme-dark .modal-backdrop,
+.app-shell.theme-dark .supplier-modal-backdrop,
+.app-shell.theme-dark .products-modal-backdrop,
+.app-shell.theme-dark .supplier-debt-modal-backdrop{
+  background:rgba(2,7,17,.5)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(130%)!important;
+  backdrop-filter:blur(14px) saturate(130%)!important;
+}
+.app-shell.theme-dark .navigation-dialog{
+  background:linear-gradient(135deg,rgba(13,31,55,.91),rgba(18,19,48,.86))!important;
+  border-color:rgba(115,218,241,.34)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.17),0 30px 100px rgba(0,0,0,.48),0 0 60px rgba(57,179,224,.13)!important;
+}
+.app-shell.theme-light .sidebar,
+.app-shell.theme-light .topbar,
+.app-shell.theme-light .metric-card,
+.app-shell.theme-light .panel,
+.app-shell.theme-light .mix-panel,
+.app-shell.theme-light .stock-panel,
+.app-shell.theme-light .recent-panel,
+.app-shell.theme-light .module-metric,
+.app-shell.theme-light .module-workspace,
+.app-shell.theme-light .section-launch-card,
+.app-shell.theme-light .navigation-dialog,
+.app-shell.theme-light .navigation-subcard,
+.app-shell.theme-light .header-popover,
+.app-shell.theme-light .confirm-modal,
+.app-shell.theme-light .supplier-modal,
+.app-shell.theme-light .supplier-detail-card,
+.app-shell.theme-light .supplier-account-card,
+.app-shell.theme-light .products-metric,
+.app-shell.theme-light .products-editor-panel,
+.app-shell.theme-light .products-pricing-card,
+.app-shell.theme-light .products-option-card,
+.app-shell.theme-light .products-image-panel,
+.app-shell.theme-light .pform-feature-card,
+.app-shell.theme-light .pform-average-cost-card,
+.app-shell.theme-light .workspace-footer,
+.app-shell.theme-light .connection-card{
+  -webkit-backdrop-filter:blur(24px) saturate(145%)!important;
+  backdrop-filter:blur(24px) saturate(145%)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(221,241,255,.58))!important;
+  border-color:rgba(70,142,190,.23)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 14px 38px rgba(38,83,125,.13)!important;
+}
+.app-shell.theme-light .app-layout{background:transparent}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .app-shell.theme-dark .sidebar,.app-shell.theme-dark .topbar,.app-shell.theme-dark .metric-card,
+  .app-shell.theme-dark .panel,.app-shell.theme-dark .section-launch-card,
+  .app-shell.theme-dark .navigation-dialog,.app-shell.theme-dark .navigation-subcard{background:rgba(14,29,51,.96)!important}
+}
