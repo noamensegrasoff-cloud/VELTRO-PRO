@@ -642,6 +642,7 @@ export default function App() {
   const [activePage,setActivePage]=useState(dashboard);
   const [activeParent,setActiveParent]=useState(null);
   const [openNavSection,setOpenNavSection]=useState(null);
+  const [moduleModalOpen,setModuleModalOpen]=useState(false);
   const [search,setSearch]=useState('');
   const [searchOpen,setSearchOpen]=useState(false);
   const [languageOpen,setLanguageOpen]=useState(false);
@@ -654,10 +655,11 @@ export default function App() {
   const handleManualSync=async()=>{if(manualSyncing)return;setManualSyncing(true);try{const result=await syncWorkspace();if(result?.status!=='synced')throw new Error('sync_failed');setCloudState('connected');window.alert(t('syncDone'));}catch{setCloudState('error');window.alert(t('syncError'));}finally{setManualSyncing(false);}};
   const dir=lang==='ar'?'rtl':'ltr';
   const NavigationSectionIcon=openNavSection?.icon;
-  const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setOpenNavSection(null);setNotificationsOpen(false);setSearchOpen(false);setLanguageOpen(false);};
+  const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setModuleModalOpen(Boolean(parent));setOpenNavSection(null);setNotificationsOpen(false);setSearchOpen(false);setLanguageOpen(false);};
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
+        if (moduleModalOpen) { event.preventDefault(); setModuleModalOpen(false); if(activeParent)setOpenNavSection(activeParent); return; }
         if (openNavSection) { event.preventDefault(); setOpenNavSection(null); return; }
         if (searchOpen || languageOpen || notificationsOpen || profileOpen) { event.preventDefault(); setSearchOpen(false); setLanguageOpen(false); setNotificationsOpen(false); setProfileOpen(false); return; }
         if (logoutOpen) {
@@ -677,7 +679,7 @@ export default function App() {
     // Capture phase cancels browser defaults before page-level handlers can run.
     window.addEventListener('keydown', onKeyDown, true);
     return () => window.removeEventListener('keydown', onKeyDown, true);
-  }, [openNavSection, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen, profileOpen]);
+  }, [openNavSection, moduleModalOpen, activeParent, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen, profileOpen]);
   if(setupState==='checking') return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تجهيز مساحة العمل…':lang==='fr'?'Préparation de votre espace…':'Preparing your workspace…'}</p></div></div>;
   if(setupState==='required') return <BusinessOnboarding lang={lang} onLanguageChange={setLang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
@@ -765,6 +767,18 @@ export default function App() {
           </div>
         </div>
         <footer className="section-launch-modal-footer"><button type="button" onClick={()=>setOpenNavSection(null)}><ArrowLeft size={15}/>{t('backToSections')}</button><span>{openNavSection.children.length} {lang==='ar'?'فروع':lang==='fr'?'rubriques':'sections'}</span></footer>
+      </section>
+    </div>,document.body)}
+    {moduleModalOpen&&activePage?.id!=='dashboard'&&createPortal(<div className="branch-content-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget){setModuleModalOpen(false);if(activeParent)setOpenNavSection(activeParent);}}}>
+      <section className="branch-content-modal" role="dialog" aria-modal="true" aria-label={getLabel(activePage,lang)} dir={dir}>
+        <header className="branch-content-modal-head">
+          <div className="branch-content-modal-title">
+            <span className="branch-content-modal-icon">{React.createElement(activePage.icon||activeParent?.icon||Package,{size:22,strokeWidth:1.8})}</span>
+            <div><small>{getLabel(activeParent,lang)||t('allSections')}</small><h2>{getLabel(activePage,lang)}</h2></div>
+          </div>
+          <button type="button" className="branch-content-modal-close" onClick={()=>{setModuleModalOpen(false);if(activeParent)setOpenNavSection(activeParent);}} aria-label={lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}><X size={20}/></button>
+        </header>
+        <div className="branch-content-modal-body"><ModulePage page={activePage} parent={activeParent} t={t} lang={lang} onBack={()=>{setModuleModalOpen(false);if(activeParent)setOpenNavSection(activeParent);}}/></div>
       </section>
     </div>,document.body)}
     {sessionPaused&&<div className="session-pause-overlay"><section className="session-pause-card"><span><LockKeyhole size={25}/></span><h2>{lang==='ar'?'الجلسة معلّقة':lang==='fr'?'Session suspendue':'Session paused'}</h2><p>{lang==='ar'?'تم إخفاء مساحة العمل مؤقتًا. استأنف الجلسة للمتابعة.':lang==='fr'?'Votre espace est masqué temporairement. Reprenez la session.':'Your workspace is hidden temporarily. Resume to continue.'}</p><button onClick={()=>setSessionPaused(false)}>{lang==='ar'?'استئناف الجلسة':lang==='fr'?'Reprendre la session':'Resume session'}</button><button className="pause-signout" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}}>{t('logout')}</button></section></div>}
