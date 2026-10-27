@@ -5774,3 +5774,108 @@ textarea:focus,
 @media(prefers-reduced-motion:reduce){
   .app-shell button:before{animation:none!important}
 }
+
+
+/* HOTFIX: restore the frosted-glass surface globally; keep this after every legacy override. */
+.app-shell .workspace > .topbar.glass-topbar{
+  background:linear-gradient(125deg,rgba(255,255,255,.78),rgba(247,242,255,.64) 48%,rgba(232,222,250,.52))!important;
+  border:1px solid rgba(255,255,255,.88)!important;
+  outline:1px solid rgba(121,84,200,.16)!important;
+  box-shadow:0 12px 34px rgba(62,42,101,.10),inset 0 1px 0 rgba(255,255,255,.96),inset 0 -1px rgba(121,84,200,.06)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(165%)!important;
+  backdrop-filter:blur(28px) saturate(165%)!important;
+  color:#33264b!important;
+}
+.app-shell .topbar-tool,
+.app-shell .topbar-user,
+.app-shell .connection-card,
+.app-shell .topbar-tool-group,
+.app-shell .topbar-datetime,
+.app-shell .global-search,
+.app-shell .topbar .header-popover{
+  background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(242,235,253,.58))!important;
+  border:1px solid rgba(255,255,255,.84)!important;
+  box-shadow:0 5px 16px rgba(62,42,101,.055),inset 0 1px 0 rgba(255,255,255,.92)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(160%)!important;
+  backdrop-filter:blur(22px) saturate(160%)!important;
+}
+.app-shell .topbar-tool:hover,
+.app-shell .topbar-user:hover{
+  background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(231,220,250,.78))!important;
+  border-color:rgba(121,84,200,.38)!important;
+}
+/* Apply glass to card families regardless of which view or theme selector produced them. */
+.app-shell .metric-card,
+.app-shell .panel,
+.app-shell .module-metric,
+.app-shell .module-workspace,
+.app-shell .section-launcher,
+.app-shell .dashboard-overview,
+.app-shell .section-launch-card,
+.app-shell .quick-actions,
+.app-shell .quick-actions button,
+.app-shell .chart-panel,
+.app-shell .mix-panel,
+.app-shell .recent-panel,
+.app-shell .stock-panel,
+.app-shell .products-metric,
+.app-shell .products-table-wrap,
+.app-shell .products-toolbar,
+.app-shell .products-filter-bar,
+.app-shell .products-catalog .products-tabs,
+.app-shell .supplier-stat,
+.app-shell .supplier-account-card,
+.app-shell .supplier-directory,
+.app-shell .supplier-toolbar,
+.app-shell .customer-stat,
+.app-shell .customer-card,
+.app-shell .customer-toolbar,
+.app-shell .navigation-dialog,
+.app-shell .navigation-subcard,
+.app-shell .navigation-back-card,
+.app-shell .workspace-footer,
+.app-shell .welcome-sections-card,
+.app-shell .welcome-sections-side,
+.app-shell .welcome-section-button{
+  background:linear-gradient(135deg,rgba(255,255,255,.76),rgba(249,245,255,.58) 58%,rgba(235,226,250,.46))!important;
+  border-color:rgba(255,255,255,.88)!important;
+  box-shadow:0 12px 30px rgba(62,42,101,.075),inset 0 1px 0 rgba(255,255,255,.94),inset 0 -1px rgba(121,84,200,.045)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(155%)!important;
+  backdrop-filter:blur(24px) saturate(155%)!important;
+}
+/* Secondary controls receive a visible translucent surface; preserve destructive/action states. */
+.app-shell button:not(.button-primary):not(.supplier-primary):not(.customer-primary):not([class*="danger"]):not([class*="delete"]):not([class*="remove"]):not([class*="logout"]):not([class*="warning"]):not(.profile-menu-item):not(.language-option):not(.pform-next-btn):not(.pform-upload-btn){
+  background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(242,235,253,.58))!important;
+  border-color:rgba(255,255,255,.88)!important;
+  box-shadow:0 5px 16px rgba(62,42,101,.055),inset 0 1px 0 rgba(255,255,255,.92)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(155%)!important;
+  backdrop-filter:blur(20px) saturate(155%)!important;
+}
+.app-shell button.button-primary,
+.app-shell button.supplier-primary,
+.app-shell button.customer-primary,
+.app-shell .button-primary,
+.app-shell .supplier-primary,
+.app-shell .customer-primary,
+.app-shell button[class*="primary"]:not([class*="danger"]):not([class*="delete"]):not([class*="remove"]),
+.app-shell button[class*="submit"]:not([class*="danger"]),
+.app-shell button[class*="save"]:not([class*="danger"]),
+.app-shell button[class*="confirm"]:not([class*="danger"]),
+.app-shell .products-page .pform-upload-btn,
+.app-shell .products-page .pform-next-btn{
+  background:linear-gradient(125deg,rgba(91,57,164,.94),rgba(121,84,200,.91) 52%,rgba(164,138,232,.9))!important;
+  border:1px solid rgba(255,255,255,.76)!important;
+  box-shadow:0 8px 24px rgba(93,59,166,.21),inset 0 1px 0 rgba(255,255,255,.38),inset 0 -1px rgba(75,45,135,.12)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(160%)!important;
+  backdrop-filter:blur(22px) saturate(160%)!important;
+}
+.app-shell .brand-mark,
+.app-shell .module-icon,
+.app-shell .module-empty-icon,
+.app-shell .product-mini,
+.app-shell .stock-avatar,
+.app-shell .topbar-brand-mark{
+  background:linear-gradient(135deg,#eee7ff,#d9ccfb 55%,#f7f3ff)!important;
+  color:#6843ad!important;
+  border-color:rgba(121,84,200,.28)!important;
+}
