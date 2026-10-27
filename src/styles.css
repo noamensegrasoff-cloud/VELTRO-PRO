@@ -5332,7 +5332,7 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   background-size:230% 100%;animation:pform-card-glint 11s ease-in-out infinite;
 }
 @keyframes pform-card-glint{0%,100%{background-position:140% 0}50%{background-position:-100% 0}}
-.products-page .pform-overlay .pform-panel-primary .pform-product-grid>.pform-feature-card:first-of-type{grid-column:1/-1}
+.products-page .pform-overlay .pform-panel-primary .pform-product-grid>.pform-feature-card:nth-of-type(2){grid-column:1/-1}
 .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-heading>div b{color:#303d55!important;font-size:12px}
 .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-heading>div small{color:#7b879b!important}
 .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-icon{
@@ -5405,7 +5405,7 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
 @media(max-width:820px){
  .products-page .pform-overlay .pform-content-all{padding:12px!important}
  .products-page .pform-overlay .pform-panel-view.is-active>.pform-section{grid-template-columns:minmax(0,1fr)!important}
- .products-page .pform-overlay .pform-panel-primary .pform-product-grid>.pform-feature-card:first-of-type{grid-column:1!important}
+ .products-page .pform-overlay .pform-panel-primary .pform-product-grid>.pform-feature-card:nth-of-type(2){grid-column:1!important}
  .products-page .pform-overlay .pform-panel-tabs{padding:8px 10px!important}
  .products-page .pform-overlay .pform-panel-tabs button{font-size:11px;padding:7px}
 }
