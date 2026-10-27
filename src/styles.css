@@ -6194,3 +6194,34 @@ html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform
   html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field select{height:27px!important;min-height:27px!important}
   html body #root .products-page .pform-overlay .pform-footer{min-height:40px!important;padding:4px 10px!important}
 }
+
+
+/* TOPBAR MATCH: use the exact dashboard-card glass treatment for the bar and its controls. */
+html body #root .app-shell .workspace > .topbar.glass-topbar{
+  background:linear-gradient(135deg,rgba(255,255,255,.76),rgba(249,245,255,.58) 58%,rgba(235,226,250,.46))!important;
+  border:1px solid rgba(255,255,255,.88)!important;
+  outline:none!important;
+  box-shadow:0 12px 30px rgba(62,42,101,.075),inset 0 1px 0 rgba(255,255,255,.94),inset 0 -1px rgba(121,84,200,.045)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(155%)!important;
+  backdrop-filter:blur(24px) saturate(155%)!important;
+  color:#33264b!important;
+}
+html body #root .app-shell .workspace > .topbar.glass-topbar .topbar-tool,
+html body #root .app-shell .workspace > .topbar.glass-topbar .topbar-user,
+html body #root .app-shell .workspace > .topbar.glass-topbar .connection-card,
+html body #root .app-shell .workspace > .topbar.glass-topbar .topbar-tool-group,
+html body #root .app-shell .workspace > .topbar.glass-topbar .topbar-datetime,
+html body #root .app-shell .workspace > .topbar.glass-topbar .global-search,
+html body #root .app-shell .workspace > .topbar.glass-topbar .header-popover{
+  background:linear-gradient(135deg,rgba(255,255,255,.76),rgba(249,245,255,.58) 58%,rgba(235,226,250,.46))!important;
+  border:1px solid rgba(255,255,255,.88)!important;
+  box-shadow:0 12px 30px rgba(62,42,101,.075),inset 0 1px 0 rgba(255,255,255,.94),inset 0 -1px rgba(121,84,200,.045)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(155%)!important;
+  backdrop-filter:blur(24px) saturate(155%)!important;
+}
+html body #root .app-shell .workspace > .topbar.glass-topbar .topbar-tool:hover,
+html body #root .app-shell .workspace > .topbar.glass-topbar .topbar-user:hover{
+  background:linear-gradient(135deg,rgba(255,255,255,.84),rgba(249,245,255,.68) 58%,rgba(235,226,250,.56))!important;
+  border-color:rgba(255,255,255,.94)!important;
+  box-shadow:0 12px 30px rgba(62,42,101,.09),inset 0 1px 0 rgba(255,255,255,.98)!important;
+}
