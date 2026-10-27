@@ -41,3 +41,58 @@
 .search-results .language-option span{flex:1}
 @media(max-width:1200px){.section-launch-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:760px){.section-launch-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.section-launch-card{min-height:68px;padding:9px;grid-template-columns:31px minmax(0,1fr) 14px;gap:4px 7px}.section-launch-card>span{width:31px;height:31px}.section-launch-card>b{font-size:9px}.section-launch-card>small{font-size:7px}}
+
+
+/* VELTRO-PRO — visible glassmorphism pass */
+.app-shell{
+  background:
+    radial-gradient(ellipse at 12% 12%,rgba(32,198,218,.22),transparent 34%),
+    radial-gradient(ellipse at 88% 14%,rgba(128,89,255,.23),transparent 32%),
+    radial-gradient(ellipse at 60% 100%,rgba(38,116,255,.16),transparent 38%),
+    linear-gradient(135deg,#050b18 0%,#0a1930 48%,#10142b 100%) !important;
+}
+.app-shell:before,.app-shell:after{filter:blur(44px)!important;opacity:.9}
+.topbar,.sidebar,.panel,.metric-card,.navigation-dialog,.navigation-subcard,
+.header-popover,.confirm-modal,.session-pause-card,.module-metric,.module-workspace,
+.section-launch-card,.quick-actions,.workspace-footer,.profile-popover,.search-popover,
+.language-popover,.notification-popover{
+  -webkit-backdrop-filter:blur(24px) saturate(155%) !important;
+  backdrop-filter:blur(24px) saturate(155%) !important;
+  background:linear-gradient(135deg,rgba(255,255,255,.105),rgba(255,255,255,.025)) !important;
+  border:1px solid rgba(174,224,255,.2) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.13),0 14px 42px rgba(0,0,0,.22),0 0 24px rgba(47,173,222,.045) !important;
+}
+.metric-card,.panel,.section-launch-card,.navigation-subcard,.module-metric{
+  position:relative;overflow:hidden;
+}
+.metric-card:before,.panel:before,.section-launch-card:before,.navigation-subcard:before{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(120deg,rgba(255,255,255,.075),transparent 38%,rgba(68,224,208,.035));
+}
+.metric-card:hover,.panel:hover,.section-launch-card:hover,.navigation-subcard:hover{
+  border-color:rgba(92,224,238,.42)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 18px 48px rgba(0,0,0,.3),0 0 28px rgba(68,224,208,.09)!important;
+}
+.topbar{background:rgba(8,19,36,.62)!important;border-color:rgba(167,218,255,.22)!important}
+.sidebar{background:rgba(7,17,32,.58)!important;border-color:rgba(167,218,255,.18)!important}
+.metric-card{background:linear-gradient(145deg,rgba(39,119,170,.2),rgba(17,29,55,.42))!important}
+.metric-card:nth-child(2){background:linear-gradient(145deg,rgba(31,174,169,.19),rgba(17,29,55,.42))!important}
+.metric-card:nth-child(3){background:linear-gradient(145deg,rgba(122,83,220,.2),rgba(17,29,55,.42))!important}
+.metric-card:nth-child(4){background:linear-gradient(145deg,rgba(47,115,239,.2),rgba(17,29,55,.42))!important}
+.section-launch-card{background:linear-gradient(135deg,rgba(38,143,194,.16),rgba(104,78,190,.1),rgba(255,255,255,.025))!important}
+.navigation-overlay,.modal-backdrop{background:rgba(2,7,17,.48)!important;-webkit-backdrop-filter:blur(13px) saturate(125%)!important;backdrop-filter:blur(13px) saturate(125%)!important}
+.navigation-dialog{background:linear-gradient(135deg,rgba(13,31,55,.9),rgba(18,19,48,.84))!important;border-color:rgba(115,218,241,.32)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.16),0 30px 100px rgba(0,0,0,.48),0 0 60px rgba(57,179,224,.12)!important}
+.navigation-subcard{background:linear-gradient(130deg,rgba(32,143,185,.17),rgba(103,78,193,.13),rgba(255,255,255,.025))!important}
+button,.topbar-tool{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background .22s ease}
+.app-shell.theme-light .topbar,.app-shell.theme-light .sidebar,.app-shell.theme-light .panel,
+.app-shell.theme-light .metric-card,.app-shell.theme-light .navigation-dialog,
+.app-shell.theme-light .navigation-subcard,.app-shell.theme-light .section-launch-card,
+.app-shell.theme-light .header-popover,.app-shell.theme-light .quick-actions,
+.app-shell.theme-light .workspace-footer{
+  background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(228,243,255,.54))!important;
+  border-color:rgba(69,135,186,.22)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.88),0 14px 38px rgba(38,83,125,.12)!important;
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .topbar,.sidebar,.panel,.metric-card,.navigation-dialog,.navigation-subcard,.header-popover,.section-launch-card{background:rgba(14,29,51,.96)!important}
+}
