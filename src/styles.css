@@ -3569,3 +3569,117 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
 @media(prefers-reduced-motion:reduce){
   .app-shell .welcome-section-button{transition:none}
 }
+
+
+/* Layout correction: restore inset glass header and reserve room for future dashboard widgets. */
+.app-shell.theme-light .workspace{
+  background:
+    radial-gradient(ellipse at 8% 8%,rgba(35,204,196,.075),transparent 38%),
+    radial-gradient(ellipse at 92% 88%,rgba(126,91,238,.07),transparent 42%),
+    #f2f6fc!important;
+}
+.app-shell .workspace > .topbar.glass-topbar{
+  position:relative!important;
+  inset:auto!important;
+  flex:0 0 auto!important;
+  width:calc(100% - 36px)!important;
+  margin:14px 18px 0!important;
+  padding:0 clamp(12px,1.6vw,24px)!important;
+  min-height:64px!important;
+  height:64px!important;
+  border:1px solid rgba(133,165,202,.32)!important;
+  border-radius:19px!important;
+  background:linear-gradient(120deg,rgba(255,255,255,.76),rgba(239,248,255,.58) 48%,rgba(246,241,255,.64))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.92),0 10px 28px rgba(50,83,126,.09)!important;
+  -webkit-backdrop-filter:blur(26px) saturate(155%)!important;
+  backdrop-filter:blur(26px) saturate(155%)!important;
+  overflow:visible!important;
+}
+.app-shell .workspace-canvas.welcome-sections-layout{
+  flex:1 1 auto!important;
+  min-height:0!important;
+  height:auto!important;
+  padding:clamp(14px,2vw,26px) clamp(16px,2vw,28px) 24px!important;
+  align-items:flex-start!important;
+  justify-content:flex-start!important;
+  overflow:auto!important;
+  background:transparent!important;
+}
+.app-shell .welcome-sections-card{
+  width:min(1190px,100%)!important;
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+  margin:4px auto 0!important;
+  padding:clamp(18px,2vw,28px)!important;
+  grid-template-columns:minmax(220px,.72fr) minmax(0,1.28fr)!important;
+  gap:clamp(16px,2vw,28px)!important;
+  border-radius:24px!important;
+  background:linear-gradient(130deg,rgba(255,255,255,.76),rgba(226,244,249,.56) 52%,rgba(238,231,255,.59))!important;
+  border-color:rgba(113,154,195,.28)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(155%)!important;
+  backdrop-filter:blur(28px) saturate(155%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.94),0 16px 40px rgba(56,88,139,.10)!important;
+}
+.app-shell .welcome-copy{padding:4px!important}
+.app-shell .welcome-brand-line{font-size:clamp(21px,1.8vw,28px)!important;gap:9px!important}
+.app-shell .welcome-brand-symbol{width:39px!important;height:39px!important;border-radius:12px!important;font-size:21px!important}
+.app-shell .welcome-bilingual{margin-top:15px!important;font-size:12px!important}
+.app-shell .welcome-title-rule{margin:17px 0 13px!important}
+.app-shell .welcome-copy h1{font-size:clamp(25px,2.3vw,34px)!important}
+.app-shell .welcome-description{font-size:13px!important;line-height:1.75!important;margin-top:9px!important}
+.app-shell .welcome-sections-side{
+  gap:13px!important;
+  padding:15px!important;
+  border-radius:18px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.49),rgba(235,244,255,.30))!important;
+}
+.app-shell .welcome-sections-heading{gap:9px!important}
+.app-shell .welcome-sections-heading-icon{width:32px!important;height:32px!important;flex:0 0 32px!important;border-radius:10px!important}
+.app-shell .welcome-sections-heading-icon svg{width:15px!important;height:15px!important}
+.app-shell .welcome-sections-heading h2{font-size:15px!important}
+.app-shell .welcome-sections-heading p{font-size:10px!important;margin-top:2px!important}
+.app-shell .welcome-sections-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+.app-shell .welcome-section-button{
+  aspect-ratio:1.38/1!important;
+  min-height:70px!important;
+  padding:10px!important;
+  gap:7px!important;
+  border-radius:13px!important;
+}
+.app-shell .welcome-section-icon{
+  width:30px!important;height:30px!important;
+  border-radius:9px!important;
+}
+.app-shell .welcome-section-icon svg{width:16px!important;height:16px!important}
+.app-shell .welcome-section-name{font-size:11px!important;line-height:1.35!important}
+.app-shell .welcome-section-count{top:9px!important;right:9px!important;font-size:9px!important}
+.app-shell[dir="rtl"] .welcome-section-count{right:auto!important;left:9px!important}
+@media(max-width:1050px){
+  .app-shell .workspace > .topbar.glass-topbar{width:calc(100% - 24px)!important;margin:12px 12px 0!important;min-height:60px!important;height:60px!important}
+  .app-shell .welcome-sections-card{grid-template-columns:minmax(190px,.65fr) minmax(0,1.35fr)!important;padding:16px!important}
+  .app-shell .welcome-sections-grid{gap:6px!important}
+  .app-shell .welcome-section-button{padding:8px!important;min-height:64px!important}
+}
+@media(max-width:760px){
+  .app-shell .workspace > .topbar.glass-topbar{
+    width:calc(100% - 20px)!important;
+    margin:10px 10px 0!important;
+    min-height:56px!important;height:56px!important;
+    padding:0 9px!important;border-radius:15px!important;
+  }
+  .app-shell .workspace-canvas.welcome-sections-layout{padding:12px 10px 20px!important}
+  .app-shell .welcome-sections-card{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:14px!important;
+    margin-top:2px!important;
+    padding:14px!important;
+    border-radius:19px!important;
+  }
+  .app-shell .welcome-copy{padding:5px 3px!important}
+  .app-shell .welcome-sections-side{padding:11px!important}
+  .app-shell .welcome-sections-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+  .app-shell .welcome-section-button{aspect-ratio:1.08/1!important;min-height:60px!important;padding:8px!important}
+  .app-shell .welcome-section-icon{width:27px!important;height:27px!important}
+  .app-shell .welcome-section-icon svg{width:15px!important;height:15px!important}
+}
