@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-  Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, Moon, Sun, RotateCw,
+  Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, Moon, Sun, RotateCw, CloudUpload,
   MoreHorizontal, CalendarDays, Package, ReceiptText,
   Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
   ShoppingCart, X, Globe, ClipboardList, History, ArrowLeft, LayoutDashboard,
@@ -41,7 +41,7 @@ const copy = {
     profit: 'الربح التقديري', viewDetails: 'عرض التفاصيل', allSections: 'الأقسام',
     searchResults: 'نتائج البحث', noResults: 'لا توجد نتائج مطابقة.',
     topProducts: 'أكثر المنتجات حركة', activity: 'النشاط حسب الفترة',
-    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد', darkMode: 'الوضع الداكن', lightMode: 'الوضع الفاتح',
+    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد', darkMode: 'الوضع الداكن', lightMode: 'الوضع الفاتح', refreshPage: 'إعادة تحميل الصفحة',
   },
   en: {
     workspace: 'Workspace', search: 'Search sections and actions...', demo: 'Design preview · Sample data',
@@ -66,7 +66,7 @@ const copy = {
     profit: 'Estimated profit', viewDetails: 'View details', allSections: 'Sections',
     searchResults: 'Search results', noResults: 'No matching results.',
     topProducts: 'Top moving products', activity: 'Activity by period',
-    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'UI preview — store transactions are not connected yet', darkMode: 'Dark mode', lightMode: 'Light mode',
+    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'UI preview — store transactions are not connected yet', darkMode: 'Dark mode', lightMode: 'Light mode', refreshPage: 'Reload page',
   },
   fr: {
     workspace: 'Espace de travail', search: 'Rechercher une rubrique...', demo: 'Aperçu du design · Données fictives',
@@ -91,7 +91,7 @@ const copy = {
     profit: 'Bénéfice estimé', viewDetails: 'Voir les détails', allSections: 'Rubriques',
     searchResults: 'Résultats', noResults: 'Aucun résultat.',
     topProducts: 'Produits les plus actifs', activity: 'Activité par période',
-    cloudTitle: 'Stockage cloud', cloudConfigured: 'Cloud configuré ; connexion requise', cloudMissing: 'Ajoutez la configuration Supabase pour connecter le cloud', cloudConnected: 'Session du compte cloud active', cloudChecking: 'Vérification de la configuration cloud', cloudError: 'Impossible de vérifier la connexion cloud', cloudPrototype: 'Aperçu — les opérations du magasin ne sont pas encore reliées',
+    cloudTitle: 'Stockage cloud', cloudConfigured: 'Cloud configuré ; connexion requise', cloudMissing: 'Ajoutez la configuration Supabase pour connecter le cloud', cloudConnected: 'Session du compte cloud active', cloudChecking: 'Vérification de la configuration cloud', cloudError: 'Impossible de vérifier la connexion cloud', cloudPrototype: 'Aperçu — les opérations du magasin ne sont pas encore reliées', refreshPage: 'Recharger la page',
   }
 };
 
@@ -700,10 +700,10 @@ export default function App() {
             <div className="header-popover-wrap search-wrap"><button className="topbar-tool search-tool" onClick={()=>{setSearchOpen(v=>!v);setLanguageOpen(false);setNotificationsOpen(false);setProfileOpen(false)}} aria-label={t('search')}><Search size={17}/><span>{lang==='ar'?'بحث':lang==='fr'?'Rechercher':'Search'}</span></button>{searchOpen&&<div className="header-popover search-popover"><div className="popover-title"><b>{t('searchResults')}</b><button className="popover-close" onClick={()=>setSearchOpen(false)}><X size={15}/></button></div><label className="popup-search-field"><Search size={16}/><input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>Esc</kbd></label></div>}</div>
             <div className="topbar-tool-group">
               <button className="topbar-tool compact-tool home-tool" onClick={()=>navigate(dashboard)} aria-label={t('home')} title={t('home')}><LayoutDashboard size={16}/></button>
-              <button className="topbar-tool compact-tool refresh-tool" onClick={handleManualSync} disabled={manualSyncing} aria-label={lang==='ar'?'تحديث':lang==='fr'?'Actualiser':'Refresh'} title={lang==='ar'?'تحديث':lang==='fr'?'Actualiser':'Refresh'}><RotateCw className={manualSyncing?'sync-spinning':''} size={16}/></button>
+              <button className="topbar-tool compact-tool refresh-tool" onClick={()=>window.location.reload()} aria-label={t('refreshPage')} title={t('refreshPage')}><RotateCw size={16}/></button>
               <div className="header-popover-wrap notification-wrap"><button className="topbar-tool compact-tool" onClick={()=>{setNotificationsOpen(v=>!v);setSearchOpen(false);setLanguageOpen(false);setProfileOpen(false)}} aria-label={t('notifications')}><Bell size={17}/><i className="tool-indicator"/></button>{notificationsOpen&&<div className="header-popover notification-popover"><div className="popover-title"><b>{t('notifications')}</b><button className="popover-close" onClick={()=>setNotificationsOpen(false)}><X size={15}/></button></div><div className="notification-empty"><span><Bell size={18}/></span><b>{t('noNotifications')}</b><p>{lang==='ar'?'ستظهر هنا التنبيهات المهمة.':lang==='fr'?'Les alertes importantes apparaîtront ici.':'Important alerts will appear here.'}</p></div></div>}</div>
               <div className="header-popover-wrap language-wrap"><button className="topbar-tool compact-tool" onClick={()=>{setLanguageOpen(v=>!v);setSearchOpen(false);setNotificationsOpen(false);setProfileOpen(false)}} aria-label="Language"><Globe size={17}/><span>{lang.toUpperCase()}</span></button>{languageOpen&&<div className="header-popover language-popover"><b className="popover-heading">{lang==='ar'?'لغة التطبيق':lang==='fr'?'Langue':'Language'}</b>{[['ar','العربية'],['fr','Français'],['en','English']].map(([value,label])=><button key={value} className={'language-option '+(lang===value?'selected':'')} onClick={()=>{setLang(value);setLanguageOpen(false)}}><span>{label}</span>{lang===value&&<Check size={15}/>}</button>)}</div>}</div>
-              <button className="topbar-tool compact-tool" onClick={handleManualSync} disabled={manualSyncing} aria-label={t('sync')} title={t('sync')}><RotateCw className={manualSyncing?'sync-spinning':''} size={16}/></button><button className="topbar-tool compact-tool" onClick={()=>setTheme(v=>v==='dark'?'light':'dark')} aria-label={theme==='dark'?t('lightMode'):t('darkMode')}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
+              <button className="topbar-tool compact-tool sync-tool" onClick={handleManualSync} disabled={manualSyncing} aria-label={t('sync')} title={t('sync')}><CloudUpload className={manualSyncing?'sync-spinning':''} size={16}/></button><button className="topbar-tool compact-tool" onClick={()=>setTheme(v=>v==='dark'?'light':'dark')} aria-label={theme==='dark'?t('lightMode'):t('darkMode')}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
             </div>
             <div className="topbar-datetime glass-time-card"><CalendarDays size={15}/><span><b>{new Intl.DateTimeFormat(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(clockNow)}</b><strong>{clockNow.toLocaleTimeString(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</strong></span></div><span className="topbar-brand-mark" aria-label="VELTRO-PRO">V</span>
           </div>
