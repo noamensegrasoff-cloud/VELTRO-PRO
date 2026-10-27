@@ -649,6 +649,28 @@ function PurchaseInvoicesPage({ lang, currentUser }) {
 .purchase-page .purchase-actions button{padding:10px 11px}
 }
 
+/* Rebuild purchase action toolbar: new receipt, edit, delete, print, export, import, preview */
+.purchase-page .purchase-tools{display:flex!important;align-items:stretch!important;flex-wrap:wrap!important;gap:10px!important;padding:12px!important;border:1px solid #e4e2f4!important;border-radius:16px!important;background:linear-gradient(120deg,#fbfaff 0%,#f5fbfb 100%)!important;box-shadow:0 5px 18px #25244a08!important}
+.purchase-page .purchase-tools>button,.purchase-page .purchase-tools>label{box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;min-height:42px!important;min-width:112px!important;padding:10px 15px!important;border:1px solid #dfe2ef!important;border-radius:11px!important;background:#fff!important;color:#46516b!important;font-size:12px!important;font-weight:800!important;line-height:1.2!important;text-align:center!important;white-space:nowrap!important;cursor:pointer!important;box-shadow:0 2px 0 #e9eaf3!important;transition:background .15s,border-color .15s,box-shadow .15s!important}
+.purchase-page .purchase-tools>button svg,.purchase-page .purchase-tools>label svg{width:16px!important;height:16px!important;flex:0 0 auto!important;color:#7560d9!important;stroke-width:2.2!important}
+.purchase-page .purchase-tools>button.main{border-color:transparent!important;background:linear-gradient(115deg,#7551e8 0%,#6650d4 58%,#20b9b0 100%)!important;color:#fff!important;box-shadow:0 6px 15px #6b54d52b!important}
+.purchase-page .purchase-tools>button.main svg{color:#fff!important}
+.purchase-page .purchase-tools>button.del{border-color:#f1d7df!important;background:#fff7f9!important;color:#bd3d62!important}
+.purchase-page .purchase-tools>button.del svg{color:#bd3d62!important}
+.purchase-page .purchase-tools>button:hover:not(:disabled),.purchase-page .purchase-tools>label:hover{border-color:#b9adef!important;background:#f6f3ff!important;box-shadow:0 5px 13px #5542b51a!important}
+.purchase-page .purchase-tools>button.main:hover{background:linear-gradient(115deg,#6844dc,#5841c7 58%,#13a9a1)!important}
+.purchase-page .purchase-tools>button:disabled{opacity:.42!important;cursor:not-allowed!important;box-shadow:none!important}
+.purchase-page .purchase-tools>label input{display:none!important}
+@media(max-width:760px){
+ .purchase-page .purchase-tools{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;padding:9px!important}
+ .purchase-page .purchase-tools>button,.purchase-page .purchase-tools>label{min-width:0!important;width:100%!important;min-height:42px!important;padding:9px 8px!important;gap:6px!important;white-space:normal!important;font-size:11px!important}
+ .purchase-page .purchase-tools>button svg,.purchase-page .purchase-tools>label svg{width:15px!important;height:15px!important}
+}
+@media(max-width:360px){
+ .purchase-page .purchase-tools{gap:6px!important;padding:7px!important}
+ .purchase-page .purchase-tools>button,.purchase-page .purchase-tools>label{font-size:10px!important;padding:8px 5px!important}
+}
+
 `;
  return <div className="page-content purchase-page" dir={ar?'rtl':'ltr'}><style>{css}</style>
  <div className="purchase-head"><div><h1>{L.title}</h1><p>{L.sub}</p></div></div>
