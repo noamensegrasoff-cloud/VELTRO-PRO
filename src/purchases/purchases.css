@@ -542,3 +542,73 @@
   .purchase-page .purchase-filter-card { padding: 9px !important; }
   .purchase-page .purchase-empty { min-height: 125px !important; }
 }
+
+
+/* Expand purchase list to a focused, near-fullscreen workspace and restore on second click */
+.purchase-hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-inline-start: auto;
+}
+.purchase-page .purchase-expand-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 8px 11px;
+  border: 1px solid rgba(129,105,221,.25);
+  border-radius: 10px;
+  color: #6550b7;
+  background: linear-gradient(135deg,rgba(255,255,255,.88),rgba(237,232,255,.72));
+  box-shadow: 0 4px 12px rgba(99,77,204,.08), inset 0 1px 0 rgba(255,255,255,.9);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background .15s ease, box-shadow .15s ease;
+}
+.purchase-page .purchase-expand-button:hover {
+  background: linear-gradient(135deg,#fff,rgba(226,218,255,.9));
+  box-shadow: 0 6px 16px rgba(99,77,204,.15);
+}
+.purchase-page-expanded {
+  position: fixed !important;
+  z-index: 10000 !important;
+  inset: 8px !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: clamp(12px, 1.6vw, 22px) !important;
+  overflow: auto !important;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(255,255,255,.92) !important;
+  border-radius: 22px !important;
+  background: linear-gradient(135deg,rgba(247,250,255,.97),rgba(242,236,255,.97) 58%,rgba(231,247,250,.97)) !important;
+  box-shadow: 0 24px 90px rgba(29,31,65,.34), inset 0 1px 0 #fff !important;
+  -webkit-backdrop-filter: blur(26px) saturate(145%);
+  backdrop-filter: blur(26px) saturate(145%);
+}
+.purchase-page-expanded .purchase-hero {
+  flex: 0 0 auto;
+}
+.purchase-page-expanded .purchase-register {
+  min-height: 0;
+}
+@media (max-width: 600px) {
+  .purchase-hero-actions { gap: 6px; }
+  .purchase-page .purchase-expand-button { padding: 8px; }
+  .purchase-page .purchase-expand-button span { display: none; }
+  .purchase-page-expanded {
+    inset: 4px !important;
+    padding: 9px !important;
+    border-radius: 16px !important;
+  }
+}
