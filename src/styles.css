@@ -6225,3 +6225,20 @@ html body #root .app-shell .workspace > .topbar.glass-topbar .topbar-user:hover{
   border-color:rgba(255,255,255,.94)!important;
   box-shadow:0 12px 30px rgba(62,42,101,.09),inset 0 1px 0 rgba(255,255,255,.98)!important;
 }
+
+
+/* POPOVER READABILITY: make notifications and the user menu substantially less transparent. */
+html body #root .app-shell .workspace > .topbar.glass-topbar .header-popover.notification-popover,
+html body #root .app-shell .workspace > .topbar.glass-topbar .header-popover.profile-popover{
+  background:linear-gradient(145deg,rgba(255,255,255,.985),rgba(248,243,255,.97) 58%,rgba(239,230,252,.96))!important;
+  background-color:rgba(250,247,255,.98)!important;
+  border:1px solid rgba(139,94,246,.28)!important;
+  box-shadow:0 24px 58px rgba(45,28,83,.22),inset 0 1px 0 rgba(255,255,255,.98)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(145%)!important;
+  backdrop-filter:blur(30px) saturate(145%)!important;
+  opacity:1!important;
+}
+html body #root .app-shell .workspace > .topbar.glass-topbar .notification-popover *,
+html body #root .app-shell .workspace > .topbar.glass-topbar .profile-popover *{
+  opacity:1;
+}
