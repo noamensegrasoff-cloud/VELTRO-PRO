@@ -4578,3 +4578,40 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   .branch-content-modal-body .products-page .products-filter-btn,
   .branch-content-modal-body .products-page .products-expand-btn{transition:none!important}
 }
+
+
+/* User request: disable all transition/entrance animations across the app. */
+.app-shell *,
+.app-shell *::before,
+.app-shell *::after,
+.section-launch-overlay *,
+.section-launch-overlay *::before,
+.section-launch-overlay *::after,
+.branch-content-overlay *,
+.branch-content-overlay *::before,
+.branch-content-overlay *::after{
+  animation:none!important;
+  transition:none!important;
+  scroll-behavior:auto!important;
+}
+.app-shell *,
+.app-shell *::before,
+.app-shell *::after{
+  will-change:auto!important;
+}
+.navigation-dialog,
+.branch-content-modal,
+.section-launch-modal,
+.section-launch-child,
+.section-launch-card,
+.navigation-subcard,
+.navigation-dialog-close,
+.navigation-back-card,
+.products-page .products-table tbody tr,
+.products-page .products-row-actions button,
+.products-page .products-filter-btn,
+.products-page .products-expand-btn{
+  animation:none!important;
+  transition:none!important;
+  will-change:auto!important;
+}
