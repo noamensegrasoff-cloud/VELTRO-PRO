@@ -4949,3 +4949,187 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
 .pform-switch i{background:#454d68}.pform-switch input:checked+i{background:linear-gradient(90deg,#7452ce,#1ca9a8)}
 @media(max-width:850px){.pform-modal{height:calc(100dvh - 10px);border-radius:13px}.pform-panel-tabs{padding:8px 10px}.pform-panel-tabs button{flex:1;justify-content:center;padding:0 8px;font-size:10px}.pform-content-all{grid-template-columns:minmax(0,1fr);padding:10px;gap:10px}.pform-content-all .pform-section-heading{grid-column:1}.pform-content-all .pform-feature-card{grid-column:1!important}.pform-content-all .pform-feature-options{grid-template-columns:minmax(0,1fr)}.pform-footer{padding:9px 10px}}
 @media(prefers-reduced-motion:reduce){.pform-modal,.pform-panel-tabs button,.pform-next-btn,.pform-back-btn{transition:none!important;animation:none!important}}
+
+/* Scoped redesign: product add/edit form inside the Products branch only */
+.branch-content-modal-body .pform-overlay .pform-modal{
+  width:min(1320px,calc(100vw - 28px));
+  height:min(860px,calc(100dvh - 24px));
+  border-radius:18px;
+  background:#0e1322;
+  border:1px solid #3d3564;
+  color:#f0efff;
+}
+.branch-content-modal-body .pform-overlay .pform-header{
+  padding:12px 18px;
+  background:linear-gradient(105deg,#17172f 0%,#201936 52%,#103039 100%);
+  border-bottom:1px solid #37304f;
+}
+.branch-content-modal-body .pform-overlay .pform-brand-icon{
+  background:linear-gradient(135deg,#6446ad,#168f91);
+  color:#f4ffff;
+  border:1px solid #7661bd;
+}
+.branch-content-modal-body .pform-overlay .pform-panel-tabs{
+  padding:8px 18px;
+  gap:8px;
+  background:#11182a;
+  border-bottom:1px solid #302e4c;
+}
+.branch-content-modal-body .pform-overlay .pform-panel-tabs button{
+  min-height:36px;
+  border-radius:9px;
+  border:1px solid #373552;
+  background:#171d30;
+  color:#bbc1dc;
+  font-size:11px;
+  font-weight:700;
+}
+.branch-content-modal-body .pform-overlay .pform-panel-tabs button.active{
+  border-color:#7b62cf;
+  background:linear-gradient(105deg,#38295f,#12434a);
+  color:#fff;
+}
+.branch-content-modal-body .pform-overlay .pform-panel-tabs button.active svg{color:#72e5dc}
+.branch-content-modal-body .pform-overlay .pform-content-all{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+  align-content:start;
+  padding:13px 16px;
+  overflow:auto;
+  background:radial-gradient(ellipse at 0 0,#6b4ac51a,transparent 38%),radial-gradient(ellipse at 100% 0,#20b9b51a,transparent 38%),#0e1322;
+}
+.branch-content-modal-body .pform-overlay .pform-panel-view{
+  display:block!important;
+  min-width:0;
+}
+.branch-content-modal-body .pform-overlay .pform-section{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  max-width:none;
+  width:100%;
+  margin:0;
+}
+.branch-content-modal-body .pform-overlay .pform-section-heading{
+  margin:0;
+  padding:0 2px 1px;
+}
+.branch-content-modal-body .pform-overlay .pform-section-heading h3{font-size:13px;color:#f3f1ff}
+.branch-content-modal-body .pform-overlay .pform-section-heading>span{color:#6fe0d6}
+.branch-content-modal-body .pform-overlay .pform-feature-card{
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:10px;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid #34314f;
+  background:linear-gradient(145deg,#1a2035,#121b2b);
+  box-shadow:0 5px 16px #0002;
+}
+.branch-content-modal-body .pform-overlay .pform-feature-heading{gap:9px}
+.branch-content-modal-body .pform-overlay .pform-feature-icon{
+  width:32px;height:32px;flex-shrink:0;
+  border-radius:9px;
+  background:linear-gradient(135deg,#6c4ebc38,#1fb9b52b);
+  border:1px solid #514677;
+  color:#8ce7e0;
+}
+.branch-content-modal-body .pform-overlay .pform-feature-icon.expiry{background:#d89d451b;border-color:#70573b;color:#f0c277}
+.branch-content-modal-body .pform-overlay .pform-feature-heading>div b{font-size:11px;color:#f2f1ff}
+.branch-content-modal-body .pform-overlay .pform-feature-heading>div small{color:#a6aecb}
+.branch-content-modal-body .pform-overlay .pform-basic-grid,
+.branch-content-modal-body .pform-overlay .pform-carton-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+}
+.branch-content-modal-body .pform-overlay .pform-carton-grid>.pform-field:last-child{grid-column:auto}
+.branch-content-modal-body .pform-overlay .pform-field{gap:5px;color:#c3c9e0;font-size:10px}
+.branch-content-modal-body .pform-overlay .pform-field input,
+.branch-content-modal-body .pform-overlay .pform-field select{
+  width:100%;min-width:0;height:35px;
+  padding:0 9px;
+  border:1px solid #3b3958;
+  border-radius:8px;
+  background:#0b1322;
+  color:#f1f1ff;
+  font-size:11px;
+}
+.branch-content-modal-body .pform-overlay .pform-field input:focus,
+.branch-content-modal-body .pform-overlay .pform-field select:focus{
+  border-color:#39c9c1;
+  box-shadow:0 0 0 2px #39c9c11c;
+}
+.branch-content-modal-body .pform-overlay .pform-price-block{
+  padding:10px;
+  border:1px solid #383552;
+  border-radius:10px;
+  background:linear-gradient(120deg,#191d34,#172936);
+}
+.branch-content-modal-body .pform-overlay .pform-price-head{margin-bottom:8px}
+.branch-content-modal-body .pform-overlay .pform-price-head>div b{font-size:10px;color:#f2f0ff}
+.branch-content-modal-body .pform-overlay .pform-price-head>span{color:#72e2d8}
+.branch-content-modal-body .pform-overlay .pform-price-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.branch-content-modal-body .pform-overlay .pform-price-input{
+  height:34px;
+  border-color:#3b3958;
+  border-radius:8px;
+  background:#0b1322;
+}
+.branch-content-modal-body .pform-overlay .pform-price-input input{color:#f3f1ff;font-size:11px}
+.branch-content-modal-body .pform-overlay .pform-number-suffix{border-color:#3b3958;background:#0b1322}
+.branch-content-modal-body .pform-overlay .pform-number-suffix b{color:#aab2ce}
+.branch-content-modal-body .pform-overlay .pform-feature-options{
+  margin:7px 0 0;
+  padding-top:9px;
+  gap:9px;
+  border-top-color:#34324f;
+}
+.branch-content-modal-body .pform-overlay .pform-photo-layout{display:block}
+.branch-content-modal-body .pform-overlay .pform-image-drop{
+  min-height:140px;
+  padding:12px;
+  gap:7px;
+  border-color:#514679;
+  border-radius:10px;
+  background:linear-gradient(140deg,#171e32,#19172e);
+}
+.branch-content-modal-body .pform-overlay .pform-image-drop>span{width:42px;height:42px;border-radius:12px}
+.branch-content-modal-body .pform-overlay .pform-image-drop>b{font-size:11px;color:#ecebff}
+.branch-content-modal-body .pform-overlay .pform-upload-btn{
+  padding:7px 11px;
+  border:1px solid #278b91;
+  border-radius:8px;
+  background:linear-gradient(100deg,#5c3b9e,#0e8388);
+}
+.branch-content-modal-body .pform-overlay .pform-average-cost-card{
+  grid-column:1/-1;
+  padding:9px 10px;
+  border:1px solid #315c65;
+  border-radius:9px;
+  background:linear-gradient(110deg,#142d38,#20203c);
+}
+.branch-content-modal-body .pform-overlay .pform-average-cost-card strong{color:#78e8dc}
+.branch-content-modal-body .pform-overlay .pform-footer{
+  padding:10px 16px;
+  background:#11182a;
+  border-top:1px solid #302e4c;
+}
+.branch-content-modal-body .pform-overlay .pform-next-btn{
+  border:1px solid #328f93;
+  background:linear-gradient(105deg,#6142a4,#0d858b);
+  color:white;
+}
+.branch-content-modal-body .pform-overlay .pform-back-btn{
+  border:1px solid #41405e;
+  background:#191e31;
+  color:#d1d5ec;
+}
+@media(max-width:900px){
+  .branch-content-modal-body .pform-overlay .pform-modal{width:calc(100vw - 12px);height:calc(100dvh - 12px)}
+  .branch-content-modal-body .pform-overlay .pform-content-all{grid-template-columns:minmax(0,1fr);padding:10px}
+  .branch-content-modal-body .pform-overlay .pform-section-heading{grid-column:auto}
+}
