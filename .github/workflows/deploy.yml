@@ -11,11 +11,12 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: pages-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   build:
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -39,6 +40,7 @@ jobs:
           path: dist
 
   deploy:
+    timeout-minutes: 10
     if: github.ref == 'refs/heads/main'
     environment:
       name: github-pages
