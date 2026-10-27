@@ -708,8 +708,7 @@ export default function App() {
             <div className="topbar-datetime glass-time-card"><CalendarDays size={15}/><span><b>{new Intl.DateTimeFormat(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(clockNow)}</b><strong>{clockNow.toLocaleTimeString(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</strong></span></div><span className="topbar-brand-mark" aria-label="VELTRO-PRO">V</span>
           </div>
         </header>
-        {activePage.id===dashboard.id?<DashboardPage t={t} lang={lang} onNavigate={navigate} onOpenSection={setOpenNavSection}/>:<ModulePage page={activePage} parent={activeParent} t={t} lang={lang} onBack={()=>navigate(dashboard)}/>}
-        <footer className="workspace-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span className={'cloud-status cloud-'+cloudState}><Cloud size={14}/><span>{cloudState==='connected'?t('cloudConnected'):cloudState==='configured'?t('cloudConfigured'):cloudState==='checking'?t('cloudChecking'):cloudState==='error'?t('cloudError'):t('cloudMissing')}</span></span><span className="prototype-note">{t('cloudPrototype')}</span></footer>
+        <div className="workspace-canvas" aria-label={lang==='ar'?'مساحة العمل فارغة لإعادة التصميم':lang==='fr'?'Espace de travail vide pour la refonte':'Empty workspace for redesign'} />
       </main>
     </div>
     {openNavSection&&<div className="navigation-overlay" role="presentation" onMouseDown={event=>{if(event.target===event.currentTarget)setOpenNavSection(null);}}>
