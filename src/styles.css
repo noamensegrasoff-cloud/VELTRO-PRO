@@ -7097,3 +7097,404 @@ html body #root .products-page .pform-modal>.pform-footer{
   .purchase-form { padding: 8px !important; }
   .purchase-modal-head h2 { font-size: 16px !important; }
 }
+
+
+/* VELTRO-PRO — unified premium modal & popover identity (purple / turquoise) */
+:root {
+  --vp-modal-bg: #111426;
+  --vp-modal-surface: #171a31;
+  --vp-modal-surface-2: #1d203a;
+  --vp-modal-border: rgba(160, 129, 255, .34);
+  --vp-modal-purple: #a78bfa;
+  --vp-modal-purple-strong: #8057e8;
+  --vp-modal-turquoise: #51e5d1;
+  --vp-modal-text: #f5f3ff;
+  --vp-modal-muted: #a9b0c9;
+}
+html body #root .modal-backdrop,
+html body #root .supplier-modal-backdrop,
+html body #root .supplier-ledger-backdrop,
+html body #root .purchase-backdrop,
+html body #root .purchase-period-backdrop,
+html body #root .purchase-table-expand-backdrop,
+html body #root .purchase-entry-preview-overlay,
+html body #root .branch-content-overlay,
+html body #root .section-launch-overlay,
+html body #root .navigation-overlay,
+html body #root .product-action-overlay,
+html body #root .pform-code-overlay,
+html body #root .products-editor-backdrop,
+html body #root .products-modal-backdrop,
+html body #root .products-barcode-alert-overlay,
+html body #root .supplier-debt-modal-backdrop,
+html body #root .supplier-payment-overlay,
+html body #root .session-pause-overlay {
+  background: rgba(5, 7, 19, .76) !important;
+  -webkit-backdrop-filter: blur(13px) saturate(125%) !important;
+  backdrop-filter: blur(13px) saturate(125%) !important;
+}
+html body #root .confirm-modal,
+html body #root .supplier-modal,
+html body #root .supplier-preview-modal,
+html body #root .supplier-delete-modal,
+html body #root .supplier-ledger-modal,
+html body #root .purchase-modal,
+html body #root .purchase-period-dialog,
+html body #root .purchase-table-expanded-panel,
+html body #root .purchase-entry-preview,
+html body #root .branch-content-modal,
+html body #root .section-launch-modal,
+html body #root .navigation-dialog,
+html body #root .product-action-dialog,
+html body #root .pform-code-modal,
+html body #root .products-modal,
+html body #root .supplier-debt-modal,
+html body #root .supplier-payment-modal {
+  color: var(--vp-modal-text) !important;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(128, 87, 232, .16), transparent 43%),
+    radial-gradient(ellipse at 100% 100%, rgba(81, 229, 209, .075), transparent 40%),
+    linear-gradient(145deg, #171a31 0%, #111426 58%, #15172d 100%) !important;
+  border: 1px solid var(--vp-modal-border) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, .52), 0 0 0 1px rgba(81, 229, 209, .055), 0 0 34px rgba(128, 87, 232, .12) !important;
+  overflow: hidden;
+  isolation: isolate;
+  position: relative;
+}
+html body #root .confirm-modal::before,
+html body #root .supplier-modal::before,
+html body #root .supplier-preview-modal::before,
+html body #root .supplier-delete-modal::before,
+html body #root .supplier-ledger-modal::before,
+html body #root .purchase-modal::before,
+html body #root .purchase-period-dialog::before,
+html body #root .purchase-table-expanded-panel::before,
+html body #root .purchase-entry-preview::before,
+html body #root .branch-content-modal::before,
+html body #root .section-launch-modal::before,
+html body #root .navigation-dialog::before,
+html body #root .product-action-dialog::before,
+html body #root .pform-code-modal::before,
+html body #root .products-modal::before,
+html body #root .supplier-debt-modal::before,
+html body #root .supplier-payment-modal::before {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0 0 auto;
+  height: 3px;
+  pointer-events: none;
+  background: linear-gradient(90deg, #8057e8 0%, #b59bff 42%, #51e5d1 100%);
+}
+html body #root .confirm-modal > *,
+html body #root .supplier-modal > *,
+html body #root .supplier-preview-modal > *,
+html body #root .supplier-delete-modal > *,
+html body #root .supplier-ledger-modal > *,
+html body #root .purchase-modal > *,
+html body #root .purchase-period-dialog > *,
+html body #root .purchase-table-expanded-panel > *,
+html body #root .purchase-entry-preview > *,
+html body #root .branch-content-modal > *,
+html body #root .section-launch-modal > *,
+html body #root .navigation-dialog > *,
+html body #root .product-action-dialog > *,
+html body #root .pform-code-modal > *,
+html body #root .products-modal > *,
+html body #root .supplier-debt-modal > *,
+html body #root .supplier-payment-modal > * {
+  min-width: 0;
+}
+html body #root .supplier-modal-head,
+html body #root .supplier-preview-top,
+html body #root .supplier-ledger-header,
+html body #root .purchase-modal-head,
+html body #root .purchase-period-dialog > header,
+html body #root .purchase-table-expanded-panel > header,
+html body #root .purchase-entry-preview > header,
+html body #root .branch-content-modal-head,
+html body #root .section-launch-modal-head,
+html body #root .navigation-dialog-header,
+html body #root .supplier-debt-modal-head,
+html body #root .product-action-dialog > header,
+html body #root .pform-code-modal > header {
+  color: #f8f7ff !important;
+  background: linear-gradient(110deg, rgba(128, 87, 232, .19), rgba(81, 229, 209, .075)) !important;
+  border-bottom: 1px solid rgba(167, 139, 250, .2) !important;
+}
+html body #root .supplier-modal-head h2,
+html body #root .supplier-preview-top h2,
+html body #root .supplier-ledger-header h2,
+html body #root .purchase-modal-head h2,
+html body #root .purchase-period-dialog h3,
+html body #root .purchase-table-expanded-panel h2,
+html body #root .branch-content-modal-title h2,
+html body #root .section-launch-modal-identity h2,
+html body #root .navigation-dialog-header h2,
+html body #root .confirm-modal h2,
+html body #root .supplier-delete-modal h2 {
+  color: #fbfaff !important;
+  letter-spacing: -.025em;
+}
+html body #root .supplier-modal-head span,
+html body #root .supplier-preview-top span,
+html body #root .supplier-ledger-header small,
+html body #root .purchase-modal-head small,
+html body #root .purchase-period-dialog header small,
+html body #root .purchase-table-expanded-panel header small,
+html body #root .branch-content-modal-title small,
+html body #root .section-launch-modal-identity small {
+  color: var(--vp-modal-turquoise) !important;
+  font-weight: 800 !important;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+html body #root .supplier-modal input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+html body #root .supplier-modal select,
+html body #root .supplier-modal textarea,
+html body #root .supplier-ledger-modal input,
+html body #root .purchase-modal input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+html body #root .purchase-modal select,
+html body #root .purchase-modal textarea,
+html body #root .purchase-period-dialog input,
+html body #root .purchase-entry-preview input,
+html body #root .product-action-dialog input,
+html body #root .product-action-dialog select,
+html body #root .product-action-dialog textarea,
+html body #root .pform-code-modal input,
+html body #root .products-modal input,
+html body #root .products-modal select,
+html body #root .products-modal textarea {
+  color: #f5f3ff !important;
+  background: rgba(9, 12, 27, .76) !important;
+  border: 1px solid rgba(160, 129, 255, .27) !important;
+  border-radius: 11px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.025) !important;
+  outline: none;
+  min-height: 40px;
+}
+html body #root .supplier-modal input:focus,
+html body #root .supplier-modal select:focus,
+html body #root .supplier-modal textarea:focus,
+html body #root .purchase-modal input:focus,
+html body #root .purchase-modal select:focus,
+html body #root .purchase-modal textarea:focus,
+html body #root .purchase-period-dialog input:focus,
+html body #root .product-action-dialog input:focus,
+html body #root .product-action-dialog select:focus,
+html body #root .product-action-dialog textarea:focus,
+html body #root .pform-code-modal input:focus {
+  border-color: var(--vp-modal-turquoise) !important;
+  box-shadow: 0 0 0 3px rgba(81, 229, 209, .12) !important;
+}
+html body #root .supplier-modal label,
+html body #root .supplier-modal .supplier-photo-field > div > b,
+html body #root .purchase-field > span,
+html body #root .purchase-period-dialog label,
+html body #root .purchase-entry-preview > div > span {
+  color: #c8cce0 !important;
+}
+html body #root .supplier-modal button,
+html body #root .supplier-preview-modal button,
+html body #root .supplier-delete-modal button,
+html body #root .supplier-ledger-modal button,
+html body #root .purchase-modal button,
+html body #root .purchase-period-dialog button,
+html body #root .purchase-table-expanded-panel button,
+html body #root .purchase-entry-preview button,
+html body #root .branch-content-modal button,
+html body #root .section-launch-modal button,
+html body #root .navigation-dialog button,
+html body #root .product-action-dialog button,
+html body #root .pform-code-modal button,
+html body #root .products-modal button,
+html body #root .supplier-debt-modal button,
+html body #root .supplier-payment-modal button,
+html body #root .confirm-modal button {
+  transition: border-color .16s ease, background .16s ease, box-shadow .16s ease, color .16s ease;
+}
+html body #root .supplier-modal .supplier-primary,
+html body #root .purchase-modal .purchase-primary,
+html body #root .purchase-period-dialog .purchase-period-apply,
+html body #root .purchase-entry-preview footer button,
+html body #root .branch-content-modal .branch-content-modal-footer button,
+html body #root .confirm-modal .button-danger,
+html body #root .supplier-delete-confirm {
+  color: #071a20 !important;
+  background: linear-gradient(115deg, #51e5d1 0%, #8cf0df 100%) !important;
+  border: 1px solid rgba(81, 229, 209, .75) !important;
+  border-radius: 11px !important;
+  box-shadow: 0 7px 20px rgba(81, 229, 209, .13) !important;
+  font-weight: 800 !important;
+}
+html body #root .supplier-modal .supplier-secondary,
+html body #root .purchase-modal .purchase-secondary,
+html body #root .purchase-period-dialog button:not(.purchase-period-apply),
+html body #root .purchase-table-expanded-panel header button,
+html body #root .purchase-entry-preview header button,
+html body #root .confirm-modal .button-secondary,
+html body #root .supplier-ledger-modal button {
+  color: #e5e2ff !important;
+  background: rgba(128, 87, 232, .12) !important;
+  border: 1px solid rgba(167, 139, 250, .28) !important;
+  border-radius: 11px !important;
+}
+html body #root .supplier-modal button:hover,
+html body #root .supplier-preview-modal button:hover,
+html body #root .supplier-delete-modal button:hover,
+html body #root .supplier-ledger-modal button:hover,
+html body #root .purchase-modal button:hover,
+html body #root .purchase-period-dialog button:hover,
+html body #root .purchase-table-expanded-panel button:hover,
+html body #root .purchase-entry-preview button:hover,
+html body #root .branch-content-modal button:hover,
+html body #root .section-launch-modal button:hover,
+html body #root .navigation-dialog button:hover,
+html body #root .product-action-dialog button:hover,
+html body #root .pform-code-modal button:hover,
+html body #root .products-modal button:hover,
+html body #root .confirm-modal button:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 5px 20px rgba(128, 87, 232, .18);
+}
+html body #root .supplier-modal-head > button,
+html body #root .supplier-preview-top > button,
+html body #root .supplier-ledger-close,
+html body #root .purchase-modal-head > button,
+html body #root .purchase-period-close,
+html body #root .branch-content-modal-close,
+html body #root .navigation-dialog-close,
+html body #root .purchase-entry-preview header button {
+  color: #d8d1ff !important;
+  background: rgba(128, 87, 232, .15) !important;
+  border: 1px solid rgba(167, 139, 250, .25) !important;
+  border-radius: 10px !important;
+}
+html body #root .supplier-preview-identity,
+html body #root .supplier-ledger-profile > div,
+html body #root .purchase-preview-grid > article,
+html body #root .purchase-total-box,
+html body #root .purchase-entry-preview > div,
+html body #root .supplier-debt-modal-summary > *,
+html body #root .products-modal-grid > * {
+  background: linear-gradient(145deg, rgba(128, 87, 232, .105), rgba(81, 229, 209, .035)) !important;
+  border: 1px solid rgba(167, 139, 250, .16) !important;
+  border-radius: 13px !important;
+}
+html body #root .supplier-modal p,
+html body #root .supplier-preview-modal p,
+html body #root .supplier-delete-modal p,
+html body #root .confirm-modal p,
+html body #root .purchase-entry-preview,
+html body #root .purchase-preview-grid span {
+  color: #b9bfd5 !important;
+}
+html body #root .supplier-modal small,
+html body #root .supplier-preview-modal small,
+html body #root .supplier-ledger-modal small {
+  color: #a9b0c9;
+}
+html body #root .supplier-modal-backdrop,
+html body #root .supplier-ledger-backdrop,
+html body #root .purchase-backdrop,
+html body #root .purchase-period-backdrop,
+html body #root .purchase-table-expand-backdrop,
+html body #root .purchase-entry-preview-overlay,
+html body #root .branch-content-overlay,
+html body #root .section-launch-overlay,
+html body #root .navigation-overlay,
+html body #root .product-action-overlay,
+html body #root .pform-code-overlay,
+html body #root .products-editor-backdrop,
+html body #root .products-modal-backdrop,
+html body #root .products-barcode-alert-overlay,
+html body #root .supplier-debt-modal-backdrop,
+html body #root .supplier-payment-overlay,
+html body #root .session-pause-overlay {
+  z-index: 9990 !important;
+}
+html body #root .header-popover,
+html body #root .notification-popover,
+html body #root .profile-popover,
+html body #root .search-popover,
+html body #root .language-popover {
+  color: #f5f3ff !important;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(128, 87, 232, .17), transparent 50%),
+    linear-gradient(145deg, #191c34, #111426) !important;
+  border: 1px solid rgba(167, 139, 250, .3) !important;
+  border-radius: 17px !important;
+  box-shadow: 0 20px 55px rgba(0,0,0,.42), 0 0 25px rgba(128,87,232,.1) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  backdrop-filter: blur(18px) !important;
+}
+html body #root .header-popover button,
+html body #root .notification-popover button,
+html body #root .profile-popover button,
+html body #root .search-popover button,
+html body #root .language-popover button {
+  color: #e9e6ff;
+}
+html body #root .header-popover button:hover,
+html body #root .notification-popover button:hover,
+html body #root .profile-popover button:hover,
+html body #root .search-popover button:hover,
+html body #root .language-popover button:hover {
+  background: linear-gradient(100deg, rgba(128,87,232,.2), rgba(81,229,209,.09)) !important;
+}
+@media (max-width: 760px) {
+  html body #root .confirm-modal,
+  html body #root .supplier-modal,
+  html body #root .supplier-preview-modal,
+  html body #root .supplier-delete-modal,
+  html body #root .supplier-ledger-modal,
+  html body #root .purchase-modal,
+  html body #root .purchase-period-dialog,
+  html body #root .purchase-table-expanded-panel,
+  html body #root .purchase-entry-preview,
+  html body #root .branch-content-modal,
+  html body #root .section-launch-modal,
+  html body #root .navigation-dialog,
+  html body #root .product-action-dialog,
+  html body #root .pform-code-modal,
+  html body #root .products-modal,
+  html body #root .supplier-debt-modal,
+  html body #root .supplier-payment-modal {
+    border-radius: 16px !important;
+    max-width: calc(100vw - 12px) !important;
+  }
+  html body #root .supplier-modal,
+  html body #root .supplier-preview-modal,
+  html body #root .supplier-ledger-modal,
+  html body #root .purchase-modal,
+  html body #root .purchase-period-dialog,
+  html body #root .purchase-table-expanded-panel,
+  html body #root .branch-content-modal,
+  html body #root .section-launch-modal,
+  html body #root .navigation-dialog {
+    max-height: calc(100dvh - 12px) !important;
+  }
+  html body #root .supplier-modal-head,
+  html body #root .supplier-preview-top,
+  html body #root .supplier-ledger-header,
+  html body #root .purchase-modal-head,
+  html body #root .purchase-period-dialog > header,
+  html body #root .purchase-table-expanded-panel > header,
+  html body #root .branch-content-modal-head,
+  html body #root .section-launch-modal-head {
+    gap: 9px !important;
+    padding: 12px !important;
+  }
+  html body #root .supplier-modal form,
+  html body #root .supplier-preview-body,
+  html body #root .supplier-ledger-modal > div:not(header),
+  html body #root .purchase-form,
+  html body #root .purchase-period-dialog-fields,
+  html body #root .purchase-table-expanded-panel .purchase-table-wrap,
+  html body #root .branch-content-modal-body,
+  html body #root .section-launch-modal-body {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
