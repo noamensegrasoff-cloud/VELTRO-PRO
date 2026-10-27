@@ -3246,3 +3246,46 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   box-shadow:none!important;
   background:transparent!important;
 }
+
+/* HARD RESET: only the existing top bar remains visible during workspace redesign. */
+.app-shell > :not(.app-layout){
+  display:none!important;
+}
+.app-shell .app-layout > :not(.workspace){
+  display:none!important;
+}
+.app-shell .workspace > :not(.topbar){
+  display:none!important;
+}
+.app-shell .workspace{
+  display:flex!important;
+  flex-direction:column!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:100vh!important;
+  height:100vh!important;
+  overflow:hidden!important;
+  padding:0!important;
+  margin:0!important;
+  gap:0!important;
+}
+.app-shell .workspace > .topbar{
+  position:relative!important;
+  inset:auto!important;
+  flex:0 0 auto!important;
+  width:100%!important;
+  margin:0!important;
+}
+.app-shell .workspace-canvas{
+  display:block!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  height:auto!important;
+  width:100%!important;
+  padding:0!important;
+  margin:0!important;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
