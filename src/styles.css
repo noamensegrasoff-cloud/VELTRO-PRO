@@ -4615,3 +4615,57 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   transition:none!important;
   will-change:auto!important;
 }
+
+/* VELTRO-PRO — align product action buttons with the violet/turquoise identity. */
+.branch-content-modal-body .products-page .products-heading-actions .products-secondary-btn,
+.branch-content-modal-body .products-page .products-heading-actions .products-primary-btn{
+  min-height:42px!important;
+  padding:10px 15px!important;
+  gap:8px!important;
+  border-radius:13px!important;
+  font-weight:750!important;
+  letter-spacing:.01em!important;
+  color:#51469f!important;
+  border:1px solid rgba(125,101,213,.28)!important;
+  background:linear-gradient(120deg,#e0faf4 0%,#e4edff 54%,#f0e4ff 100%)!important;
+  box-shadow:0 6px 16px rgba(91,79,165,.09),inset 0 1px 0 rgba(255,255,255,.95)!important;
+}
+.branch-content-modal-body .products-page .products-heading-actions .products-secondary-btn svg{
+  color:#6555c4!important;
+  stroke:currentColor!important;
+}
+.branch-content-modal-body .products-page .products-heading-actions .products-secondary-btn:hover{
+  color:#443a92!important;
+  border-color:rgba(126,91,222,.48)!important;
+  background:linear-gradient(120deg,#d1f7ef 0%,#dbe7ff 54%,#ead9ff 100%)!important;
+  box-shadow:0 8px 20px rgba(91,79,165,.14)!important;
+}
+.branch-content-modal-body .products-page .products-heading-actions .products-primary-btn{
+  color:#fff!important;
+  border-color:rgba(111,83,204,.58)!important;
+  background:linear-gradient(120deg,#25bdb7 0%,#547de5 48%,#8c5bdb 100%)!important;
+  box-shadow:0 8px 20px rgba(103,87,197,.22),inset 0 1px 0 rgba(255,255,255,.22)!important;
+}
+.branch-content-modal-body .products-page .products-heading-actions .products-primary-btn svg{
+  color:#fff!important;
+  stroke:currentColor!important;
+}
+.branch-content-modal-body .products-page .products-heading-actions .products-primary-btn:hover{
+  color:#fff!important;
+  border-color:rgba(107,79,201,.75)!important;
+  background:linear-gradient(120deg,#1daea9 0%,#496fe0 48%,#7f4ecf 100%)!important;
+  box-shadow:0 10px 24px rgba(103,87,197,.27)!important;
+}
+.branch-content-modal-body .products-page .products-heading-actions button:focus-visible{
+  outline:3px solid rgba(120,100,219,.25)!important;
+  outline-offset:2px!important;
+}
+@media(max-width:650px){
+  .branch-content-modal-body .products-page .products-heading-actions .products-secondary-btn,
+  .branch-content-modal-body .products-page .products-heading-actions .products-primary-btn{
+    min-height:40px!important;
+    padding:9px 10px!important;
+    border-radius:11px!important;
+  }
+}
+
