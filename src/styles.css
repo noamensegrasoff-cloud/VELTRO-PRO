@@ -5133,3 +5133,113 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   .branch-content-modal-body .pform-overlay .pform-content-all{grid-template-columns:minmax(0,1fr);padding:10px}
   .branch-content-modal-body .pform-overlay .pform-section-heading{grid-column:auto}
 }
+
+
+/* FINAL FIX — product add/edit dialog must not inherit the old dark palette */
+.products-page .pform-overlay{background:rgba(28,39,58,.34)!important;backdrop-filter:blur(5px)!important}
+.products-page .pform-overlay .pform-modal{
+  background:#f7f9fd!important;color:#24364b!important;
+  border:1px solid #d9deec!important;
+  box-shadow:0 24px 70px rgba(28,37,65,.22)!important;
+}
+.products-page .pform-overlay .pform-header,
+.products-page .pform-overlay .pform-footer{
+  background:linear-gradient(105deg,#fff 0%,#f6f3ff 58%,#effcfb 100%)!important;
+  border-color:#e0e4ef!important;color:#24364b!important;
+}
+.products-page .pform-overlay .pform-header h2,
+.products-page .pform-overlay .pform-header p,
+.products-page .pform-overlay .pform-footer,
+.products-page .pform-overlay .pform-footer-left{color:#34445b!important}
+.products-page .pform-overlay .pform-close{
+  background:#fff!important;border-color:#d9deeb!important;color:#52647c!important;
+}
+.products-page .pform-overlay .pform-content-all{
+  background:radial-gradient(ellipse at 0 0,rgba(119,84,205,.075),transparent 35%),radial-gradient(ellipse at 100% 0,rgba(26,174,167,.075),transparent 35%),#f5f7fc!important;
+}
+.products-page .pform-overlay .pform-section-heading h3{color:#2b3850!important}
+.products-page .pform-overlay .pform-section-heading>span{color:#0f9995!important}
+.products-page .pform-overlay .pform-feature-card{
+  background:linear-gradient(145deg,#fff,#fbfcff)!important;
+  border-color:#e0e4ef!important;
+  box-shadow:0 3px 12px rgba(49,55,90,.055)!important;
+}
+.products-page .pform-overlay .pform-feature-heading>div b{color:#293950!important}
+.products-page .pform-overlay .pform-feature-heading>div small{color:#77849a!important}
+.products-page .pform-overlay .pform-feature-icon{
+  background:linear-gradient(135deg,rgba(112,77,190,.11),rgba(26,177,170,.12))!important;
+  border-color:#d9d1f0!important;color:#168f91!important;
+}
+.products-page .pform-overlay .pform-feature-icon.expiry{
+  background:#fff5e5!important;border-color:#f1dfbf!important;color:#b8791c!important;
+}
+.products-page .pform-overlay .pform-field,
+.products-page .pform-overlay .pform-field>span,
+.products-page .pform-overlay .pform-price-group>b,
+.products-page .pform-overlay .pform-margin-nearby>span{color:#53647a!important}
+.products-page .pform-overlay .pform-field input,
+.products-page .pform-overlay .pform-field select,
+.products-page .pform-overlay .pform-manage-list{
+  background:#fff!important;color:#24364b!important;
+  border-color:#d9e0eb!important;box-shadow:none!important;
+}
+.products-page .pform-overlay .pform-field input::placeholder{color:#9aa5b5!important}
+.products-page .pform-overlay .pform-field input:focus,
+.products-page .pform-overlay .pform-field select:focus{
+  border-color:#36bdb4!important;box-shadow:0 0 0 3px rgba(54,189,180,.12)!important;
+}
+.products-page .pform-overlay .pform-code-input>button{
+  background:linear-gradient(130deg,#7450b7,#149b9a)!important;
+  border-color:#5c8dba!important;color:#fff!important;
+}
+.products-page .pform-overlay .pform-price-block{
+  background:linear-gradient(125deg,#f5f1ff,#edfbfa)!important;border-color:#dfd9f2!important;
+}
+.products-page .pform-overlay .pform-price-head>div b{color:#33435a!important}
+.products-page .pform-overlay .pform-price-head>div small,
+.products-page .pform-overlay .pform-price-head>span{color:#168f91!important}
+.products-page .pform-overlay .pform-price-input{
+  background:#fff!important;border-color:#d7dfeb!important;
+}
+.products-page .pform-overlay .pform-price-input input{background:transparent!important;color:#26374d!important}
+.products-page .pform-overlay .pform-price-input span{color:#168f91!important}
+.products-page .pform-overlay .pform-number-suffix{
+  background:#fff!important;border-color:#d9e0eb!important;
+}
+.products-page .pform-overlay .pform-number-suffix input{background:transparent!important;color:#26374d!important}
+.products-page .pform-overlay .pform-number-suffix b{background:#eef9f8!important;color:#168f91!important}
+.products-page .pform-overlay .pform-feature-options{border-top-color:#e4e7f0!important}
+.products-page .pform-overlay .pform-image-drop{
+  background:linear-gradient(140deg,#f7f4ff,#f0fbfa)!important;
+  border-color:#d7d0ed!important;color:#51627a!important;
+}
+.products-page .pform-overlay .pform-image-drop>b{color:#33435a!important}
+.products-page .pform-overlay .pform-image-drop>small{color:#7d899c!important}
+.products-page .pform-overlay .pform-upload-btn,
+.products-page .pform-overlay .pform-next-btn{
+  background:linear-gradient(105deg,#704bb2,#129b9b)!important;
+  border-color:#6e83b7!important;color:#fff!important;
+}
+.products-page .pform-overlay .pform-back-btn{
+  background:#fff!important;border-color:#d9e0eb!important;color:#53647a!important;
+}
+.products-page .pform-overlay .pform-average-cost-card{
+  background:linear-gradient(110deg,#edf9f8,#f4f0ff)!important;border-color:#cce8e5!important;
+}
+.products-page .pform-overlay .pform-average-cost-card small,
+.products-page .pform-overlay .pform-average-cost-card span{color:#687a8e!important}
+.products-page .pform-overlay .pform-average-cost-card strong{color:#138f87!important}
+.products-page .pform-overlay .pform-margin-input{
+  background:#fff!important;border-color:#d9e0eb!important;
+}
+.products-page .pform-overlay .pform-margin-input input{background:transparent!important;color:#26374d!important}
+.products-page .pform-overlay .pform-margin-input>b{
+  background:#e7f8f5!important;border-color:#c1e9e2!important;color:#13877f!important;
+}
+.products-page .pform-overlay .pform-panel-tabs button{
+  background:#fff!important;color:#53647a!important;border-color:#dce2ed!important;
+}
+.products-page .pform-overlay .pform-panel-tabs button.active{
+  background:linear-gradient(105deg,#eee7fb,#e5f8f6)!important;
+  color:#49367e!important;border-color:#c7b8eb!important;
+}
