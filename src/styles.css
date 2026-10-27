@@ -6242,3 +6242,38 @@ html body #root .app-shell .workspace > .topbar.glass-topbar .notification-popov
 html body #root .app-shell .workspace > .topbar.glass-topbar .profile-popover *{
   opacity:1;
 }
+
+
+/* RESTORE PRODUCT ADD/VALIDATION ALERTS: these dialogs are portaled to document.body. */
+html body .products-barcode-alert-overlay{
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483647!important;
+  display:grid!important;
+  place-items:center!important;
+  padding:18px!important;
+  background:rgba(18,10,32,.62)!important;
+  -webkit-backdrop-filter:blur(7px)!important;
+  backdrop-filter:blur(7px)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  pointer-events:auto!important;
+}
+html body .products-barcode-alert-overlay .products-barcode-alert{
+  position:relative!important;
+  z-index:1!important;
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.99),rgba(248,243,255,.98))!important;
+  color:#33264b!important;
+  border:1px solid rgba(139,94,246,.3)!important;
+  box-shadow:0 24px 70px rgba(25,12,48,.28),inset 0 1px 0 rgba(255,255,255,.98)!important;
+}
+html body .products-barcode-alert-overlay .products-barcode-alert h2,
+html body .products-barcode-alert-overlay .products-barcode-alert p{
+  color:#33264b!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
