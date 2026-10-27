@@ -4234,3 +4234,107 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
  .branch-content-modal-body{padding:10px}
 }
 @media(prefers-reduced-motion:reduce){.branch-content-overlay,.branch-content-modal{animation:none}}
+
+
+/* VELTRO-PRO visual cleanup: remove inherited dark surfaces from every branch window. */
+.section-launch-modal,.branch-content-modal{
+  color:#243451!important;
+  color-scheme:light!important;
+  background:
+    radial-gradient(ellipse at 0% 0%,rgba(44,205,199,.14),transparent 34%),
+    radial-gradient(ellipse at 100% 0%,rgba(151,91,235,.16),transparent 36%),
+    linear-gradient(145deg,#fbfdff 0%,#f1f6ff 52%,#f8f2ff 100%)!important;
+  border:1px solid rgba(129,101,224,.48)!important;
+}
+.section-launch-modal *,
+.branch-content-modal *{color-scheme:light}
+.branch-content-modal-body{
+  background:
+    radial-gradient(ellipse at 5% 4%,rgba(41,202,198,.07),transparent 35%),
+    radial-gradient(ellipse at 95% 90%,rgba(147,91,230,.075),transparent 38%),
+    linear-gradient(180deg,#f7faff,#f3f6fd 62%,#f8f5ff)!important;
+}
+.branch-content-modal-body .page-content,
+.branch-content-modal-body .module-content,
+.branch-content-modal-body .module-workspace,
+.branch-content-modal-body .panel,
+.branch-content-modal-body section,
+.branch-content-modal-body article,
+.branch-content-modal-body [class*="panel"],
+.branch-content-modal-body [class*="card"],
+.branch-content-modal-body [class*="workspace"]{
+  color:#243451;
+}
+.branch-content-modal-body .module-content .page-heading h1,
+.branch-content-modal-body .module-content .page-heading h2,
+.branch-content-modal-body .module-content .module-workspace h2{color:#1c2d4b!important}
+.branch-content-modal-body .module-content p,
+.branch-content-modal-body .module-content .page-heading p{color:#75849d!important}
+.branch-content-modal-body .module-metrics>div{
+  border:1px solid rgba(126,113,205,.17)!important;border-radius:16px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(232,248,250,.94) 54%,rgba(245,238,255,.95))!important;
+  box-shadow:0 8px 22px rgba(73,85,149,.07),inset 0 1px 0 #fff!important;
+}
+.branch-content-modal-body .module-metrics span{color:#7485a0!important}
+.branch-content-modal-body .module-metrics b{color:#273b5a!important}
+.branch-content-modal-body .module-workspace{
+  position:relative;overflow:hidden;border:1px solid rgba(128,106,218,.22)!important;
+  border-radius:22px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.98),rgba(234,249,249,.94) 46%,rgba(246,239,255,.96))!important;
+  box-shadow:0 14px 36px rgba(59,78,140,.08),inset 0 1px 0 #fff!important;
+}
+.branch-content-modal-body .module-workspace:before{
+  content:"";position:absolute;inset:0 0 auto;height:3px;
+  background:linear-gradient(90deg,#2bc9c5,#5489ed 48%,#a16ce9);opacity:.95;
+}
+.branch-content-modal-body .module-empty-icon{
+  border:1px solid rgba(135,103,222,.23)!important;border-radius:19px!important;
+  color:#6757ce!important;background:linear-gradient(135deg,#d7faf3,#dce8ff 52%,#edddff)!important;
+  box-shadow:0 10px 25px rgba(100,91,195,.12)!important;
+}
+.branch-content-modal-body .module-empty-actions button{
+  border:1px solid rgba(126,98,218,.28)!important;border-radius:12px!important;
+  color:#5c50b7!important;background:linear-gradient(110deg,#d7f8f2,#dce8ff 52%,#ebdcff)!important;
+}
+.branch-content-modal-body input,
+.branch-content-modal-body select,
+.branch-content-modal-body textarea{
+  color:#243451!important;background:#fff!important;border-color:#dce4f1!important;
+}
+.branch-content-modal-body input::placeholder,
+.branch-content-modal-body textarea::placeholder{color:#9aa8bb!important}
+.branch-content-modal-body table{color:#293b58}
+.branch-content-modal-body th{color:#64758f!important;background:linear-gradient(100deg,#e4f8f6,#e7edff 55%,#f0e5ff)!important}
+.branch-content-modal-body td{color:#3d4f6c!important;border-color:#e5eaf3!important}
+.branch-content-modal-body tr:nth-child(even) td{background:rgba(238,245,253,.55)}
+.branch-content-modal-body button{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease}
+.branch-content-modal-body button:hover{border-color:rgba(126,91,222,.42)}
+.section-launch-overlay{background:rgba(17,20,44,.46)!important;backdrop-filter:blur(16px) saturate(1.15)!important;-webkit-backdrop-filter:blur(16px) saturate(1.15)!important}
+.section-launch-modal:before,.branch-content-modal:before{
+  content:"";position:absolute;pointer-events:none;z-index:0;inset:0;border-radius:inherit;
+  background:linear-gradient(120deg,rgba(44,205,199,.045),transparent 32%,rgba(140,94,229,.065));
+}
+.section-launch-modal,.branch-content-modal{position:relative}
+.section-launch-modal-head,.section-launch-modal-body,.section-launch-modal-footer,
+.branch-content-modal-head,.branch-content-modal-body{position:relative;z-index:1}
+.section-launch-child{
+  border-color:rgba(123,106,207,.25)!important;
+  background:linear-gradient(120deg,#fff 0%,#effafa 42%,#f1edff 100%)!important;
+  box-shadow:0 8px 24px rgba(73,81,151,.075),inset 0 1px 0 #fff!important;
+}
+.section-launch-child:hover{
+  border-color:rgba(126,91,222,.55)!important;
+  background:linear-gradient(120deg,#fff 0%,#dff9f4 35%,#e5ecff 68%,#f0e1ff 100%)!important;
+  box-shadow:0 16px 32px rgba(91,78,185,.14),0 5px 18px rgba(37,176,183,.1)!important;
+}
+.section-launch-child-icon{
+  border-color:rgba(127,103,219,.24)!important;
+  background:linear-gradient(145deg,#d7faf3,#dce8ff 54%,#edddff)!important;
+  color:#6756c7!important;box-shadow:0 6px 15px rgba(95,94,187,.1)!important;
+}
+.section-launch-modal-footer{background:linear-gradient(100deg,#def8f3,#e4edff 52%,#f0e4ff)!important}
+@media(prefers-reduced-motion:no-preference){
+ .section-launch-child,.branch-content-modal,.branch-content-modal-close{will-change:transform}
+ .branch-content-modal{animation:branchModalPolish .32s cubic-bezier(.18,.8,.25,1) both}
+}
+@keyframes branchModalPolish{from{opacity:0;transform:translateY(16px) scale(.975);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
