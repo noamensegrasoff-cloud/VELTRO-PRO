@@ -5934,54 +5934,7 @@ textarea:focus,
 }
 
 
-/* FINAL TOPBAR RESTORE — highest-priority glass treatment for the actual header element. */
-html body #root .app-shell.theme-light .app-layout > main.workspace > header.topbar.glass-topbar{
-  background:linear-gradient(125deg,rgba(255,255,255,.70) 0%,rgba(244,237,255,.58) 48%,rgba(220,205,248,.48) 100%)!important;
-  background-color:rgba(238,229,253,.52)!important;
-  border:1px solid rgba(255,255,255,.92)!important;
-  outline:1px solid rgba(121,84,200,.18)!important;
-  box-shadow:0 12px 36px rgba(69,43,116,.13),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(121,84,200,.09)!important;
-  -webkit-backdrop-filter:blur(30px) saturate(175%)!important;
-  backdrop-filter:blur(30px) saturate(175%)!important;
-  isolation:isolate!important;
-  color:#33264b!important;
-}
-html body #root .app-shell.theme-light .app-layout > main.workspace > header.topbar.glass-topbar::before{
-  content:""!important;
-  position:absolute!important;
-  inset:0!important;
-  border-radius:inherit!important;
-  pointer-events:none!important;
-  background:linear-gradient(115deg,rgba(255,255,255,.32),transparent 42%,rgba(173,150,237,.10))!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.7)!important;
-  z-index:0!important;
-}
-html body #root .app-shell.theme-light .app-layout > main.workspace > header.topbar.glass-topbar > *{
-  position:relative;
-  z-index:1;
-}
-
-
-/* GLASS RESTORE: topbar controls and product add/edit cards, headings, fields and actions. */
-html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-tool,
-html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-user,
-html body #root .app-shell.theme-light .topbar.glass-topbar .connection-card,
-html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-tool-group,
-html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-datetime,
-html body #root .app-shell.theme-light .topbar.glass-topbar .global-search,
-html body #root .app-shell.theme-light .topbar.glass-topbar .header-popover{
-  background:linear-gradient(135deg,rgba(255,255,255,.76),rgba(245,238,255,.62) 55%,rgba(225,213,249,.52))!important;
-  border:1px solid rgba(255,255,255,.9)!important;
-  box-shadow:0 6px 18px rgba(70,46,111,.09),inset 0 1px 0 rgba(255,255,255,.96)!important;
-  -webkit-backdrop-filter:blur(24px) saturate(170%)!important;
-  backdrop-filter:blur(24px) saturate(170%)!important;
-}
-html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-tool:hover,
-html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-user:hover{
-  background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(232,221,251,.82))!important;
-  border-color:rgba(137,100,203,.38)!important;
-  box-shadow:0 8px 22px rgba(83,56,132,.13),inset 0 1px 0 #fff!important;
-}
+/* Product editor glass styles only; topbar uses the established glass treatment above. */
 html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card,
 html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-price-card,
 html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-average-cost-card,
