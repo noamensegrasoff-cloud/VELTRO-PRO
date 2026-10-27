@@ -7524,3 +7524,117 @@ html body #root .app-shell .workspace > .workspace-canvas > * {
     overflow: visible !important;
   }
 }
+
+
+/* MOBILE DASHBOARD REFINEMENT — override older desktop two-column rules */
+@media screen and (max-width: 760px) {
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout,
+  html body #root .app-shell .workspace-canvas.welcome-sections-layout.home-dashboard-layout {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-flow: row !important;
+    grid-auto-rows: max-content !important;
+    align-content: start !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    gap: 12px !important;
+    padding: 12px 10px 24px !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    box-sizing: border-box !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout > .welcome-sections-card,
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout > .home-dashboard-column,
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .welcome-sections-card,
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .home-dashboard-column {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .welcome-sections-card {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    padding: 14px !important;
+    border-radius: 24px !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .welcome-copy {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 4px !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .welcome-copy h1,
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .home-dashboard-heading h1 {
+    font-size: clamp(24px, 7vw, 32px) !important;
+    line-height: 1.18 !important;
+    overflow-wrap: anywhere !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .welcome-description {
+    font-size: 15px !important;
+    line-height: 1.65 !important;
+    overflow-wrap: anywhere !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .welcome-sections-side {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .welcome-sections-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 9px !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .welcome-section-button {
+    min-height: 82px !important;
+    padding: 10px !important;
+    border-radius: 17px !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .home-dashboard-column {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .home-dashboard-heading {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 16px !important;
+    border-radius: 22px !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .home-metrics-grid,
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 9px !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .metric-card {
+    min-width: 0 !important;
+    min-height: 104px !important;
+    height: auto !important;
+    padding: 12px !important;
+    border-radius: 19px !important;
+    overflow-wrap: anywhere !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .metric-card * {
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .home-dashboard-charts,
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .home-dashboard-bottom {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+}
+@media screen and (max-width: 390px) {
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .welcome-sections-grid,
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .home-metrics-grid,
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .metrics-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  html body #root .app-shell .workspace-canvas.home-dashboard-layout .metric-card {
+    min-height: 88px !important;
+  }
+}
