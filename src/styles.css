@@ -6515,3 +6515,455 @@ html body #root .products-page .pform-modal>.pform-footer{
   html body #root .products-page .pform-modal .pform-footer-actions>button{font-size:11px!important;padding:8px 6px!important}
   html body #root .app-shell .product-action-dialog>footer>button{font-size:11px!important;padding:8px!important}
 }
+
+
+/* MOBILE LAYOUT REPAIR — final responsive layer for every app section and modal. */
+@media (max-width: 760px) {
+  html, body, #root {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow-x: clip !important;
+  }
+  body { min-height: 100dvh !important; }
+  .app-shell {
+    width: 100% !important;
+    max-width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  .app-layout, .app-shell .workspace {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+  }
+  .app-shell .workspace {
+    height: 100% !important;
+    overflow: hidden !important;
+  }
+
+  /* Header: stack controls instead of squeezing them into one row. */
+  .app-shell .workspace > .topbar.glass-topbar {
+    flex: 0 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    width: calc(100% - 16px) !important;
+    max-width: calc(100% - 16px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 8px 8px 0 !important;
+    padding: 9px !important;
+    overflow: visible !important;
+  }
+  .app-shell .topbar-identity,
+  .app-shell .topbar-tools {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 7px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .app-shell .topbar-identity { flex-wrap: wrap !important; }
+  .app-shell .topbar-user {
+    flex: 1 1 145px !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 6px 8px !important;
+  }
+  .app-shell .topbar-user-copy { min-width: 0 !important; }
+  .app-shell .connection-card {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 3px !important;
+    padding: 4px !important;
+  }
+  .app-shell .connection-state {
+    min-width: 0 !important;
+    padding: 4px !important;
+    gap: 4px !important;
+  }
+  .app-shell .connection-state > span { min-width: 0 !important; }
+  .app-shell .connection-state b,
+  .app-shell .connection-state small {
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+    white-space: normal !important;
+    font-size: 9px !important;
+  }
+  .app-shell .topbar-tools { flex-wrap: wrap !important; }
+  .app-shell .search-wrap { flex: 1 1 100px !important; min-width: 0 !important; }
+  .app-shell .search-tool { width: 100% !important; justify-content: center !important; }
+  .app-shell .topbar-tool-group { display: flex !important; flex: 0 0 auto !important; gap: 5px !important; }
+  .app-shell .topbar-tool { min-width: 34px !important; min-height: 34px !important; }
+  .app-shell .topbar-datetime { display: none !important; }
+  .app-shell .topbar-brand-mark { flex: 0 0 28px !important; }
+
+  /* Main dashboard: one column, natural height, one intentional scroll container. */
+  .app-shell .workspace-canvas.home-dashboard-layout,
+  .app-shell .workspace-canvas.welcome-sections-layout {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-rows: max-content !important;
+    align-content: start !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    flex: 1 1 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 10px 8px 18px !important;
+    gap: 10px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+  }
+  .app-shell .welcome-sections-card,
+  .app-shell .welcome-sections-card.welcome-side-card,
+  .app-shell .welcome-sections-side,
+  .app-shell .home-dashboard-column,
+  .app-shell .home-dashboard-heading,
+  .app-shell .home-dashboard-charts,
+  .app-shell .home-dashboard-bottom {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  .app-shell .welcome-sections-card,
+  .app-shell .welcome-sections-card.welcome-side-card {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+    padding: 12px !important;
+  }
+  .app-shell .welcome-sections-side { padding: 10px !important; }
+  .app-shell .welcome-sections-grid,
+  .app-shell .welcome-side-card .welcome-sections-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .app-shell .welcome-section-button {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 76px !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    padding: 9px !important;
+    overflow-wrap: anywhere !important;
+  }
+  .app-shell .welcome-section-name {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    line-height: 1.35 !important;
+  }
+  .app-shell .home-metrics-grid,
+  .app-shell .metrics-grid,
+  .app-shell .module-metrics {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+    min-width: 0 !important;
+  }
+  .app-shell .home-dashboard-charts,
+  .app-shell .home-dashboard-bottom,
+  .app-shell .charts-grid,
+  .app-shell .lower-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 9px !important;
+    min-width: 0 !important;
+  }
+  .app-shell .metric-card,
+  .app-shell .module-metric,
+  .app-shell .panel,
+  .app-shell .chart-panel,
+  .app-shell .mix-panel,
+  .app-shell .recent-panel,
+  .app-shell .stock-panel {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  .app-shell .chart-panel, .app-shell .mix-panel { min-height: 185px !important; }
+  .app-shell .recent-panel, .app-shell .stock-panel { min-height: 145px !important; }
+  .app-shell .page-heading,
+  .app-shell .heading-actions,
+  .app-shell .products-heading,
+  .app-shell .products-heading-actions,
+  .app-shell .supplier-toolbar,
+  .app-shell .customer-toolbar {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+  }
+  .app-shell .page-heading { align-items: flex-start !important; }
+  .app-shell .heading-actions,
+  .app-shell .products-heading-actions { width: 100% !important; gap: 6px !important; }
+  .app-shell .heading-actions > button,
+  .app-shell .products-heading-actions > button { min-width: 0 !important; max-width: 100% !important; white-space: normal !important; }
+  .app-shell .page-content,
+  .app-shell .module-content { min-width: 0 !important; max-width: 100% !important; }
+
+  /* Branch window and every section inside it. */
+  .branch-content-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+  .branch-content-modal {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+  }
+  .branch-content-modal-head {
+    flex: 0 0 auto !important;
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    padding: 10px !important;
+  }
+  .branch-content-modal-title { flex: 1 1 0 !important; min-width: 0 !important; gap: 8px !important; }
+  .branch-content-modal-title h2 { min-width: 0 !important; overflow-wrap: anywhere !important; font-size: 16px !important; }
+  .branch-content-modal-body {
+    flex: 1 1 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 9px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain !important;
+  }
+  .branch-content-modal-body > *,
+  .branch-content-modal-body .page-content,
+  .branch-content-modal-body .module-content,
+  .branch-content-modal-body .module-workspace {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .branch-content-modal-body .products-page {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 8px !important;
+    gap: 9px !important;
+    overflow: visible !important;
+  }
+  .branch-content-modal-body .products-page .products-catalog {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+  .branch-content-modal-body .products-page .products-table-wrap,
+  .branch-content-modal-body .supplier-table-wrap,
+  .branch-content-modal-body .supplier-accounts-table-wrap,
+  .branch-content-modal-body .table-wrap,
+  .branch-content-modal-body [class*="table-wrap"] {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .branch-content-modal-body table {
+    max-width: 100% !important;
+  }
+  .branch-content-modal-body input,
+  .branch-content-modal-body select,
+  .branch-content-modal-body textarea {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+  .branch-content-modal-body .products-page .products-controls,
+  .branch-content-modal-body .products-page .products-metrics,
+  .branch-content-modal-body .products-page .products-filter-bar,
+  .branch-content-modal-body .supplier-stats,
+  .branch-content-modal-body .supplier-accounts-metrics,
+  .branch-content-modal-body .customer-stats,
+  .branch-content-modal-body .supplier-form-grid,
+  .branch-content-modal-body .customer-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    min-width: 0 !important;
+  }
+  .branch-content-modal-body .products-page .products-controls { grid-template-columns: minmax(0, 1fr) !important; }
+  .branch-content-modal-body .supplier-modal,
+  .branch-content-modal-body .supplier-preview-modal,
+  .branch-content-modal-body .supplier-ledger-modal,
+  .branch-content-modal-body .supplier-payment-form,
+  .branch-content-modal-body .confirm-modal {
+    width: calc(100vw - 20px) !important;
+    max-width: calc(100vw - 20px) !important;
+    min-width: 0 !important;
+    max-height: calc(100dvh - 20px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Section chooser and child chooser: fit the viewport and wrap all card content. */
+  .section-launch-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    padding: 10px !important;
+    overflow: hidden !important;
+  }
+  .section-launch-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    max-height: calc(100dvh - 20px) !important;
+    min-height: 0 !important;
+    border-radius: 17px !important;
+  }
+  .section-launch-modal-head,
+  .section-launch-modal-footer { min-width: 0 !important; flex-wrap: wrap !important; gap: 8px !important; padding: 11px !important; }
+  .section-launch-modal-identity { min-width: 0 !important; gap: 8px !important; }
+  .section-launch-modal-identity h2 { min-width: 0 !important; overflow-wrap: anywhere !important; font-size: 16px !important; }
+  .section-launch-modal-body {
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 10px !important;
+  }
+  .section-launch-modal-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    min-width: 0 !important;
+  }
+  .section-launch-child,
+  .section-launch-card,
+  .navigation-subcard {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+  }
+  .section-launch-child { padding: 10px !important; gap: 8px !important; }
+  .section-launch-child b,
+  .section-launch-child span,
+  .section-launch-name { min-width: 0 !important; white-space: normal !important; overflow-wrap: anywhere !important; }
+  .navigation-overlay { padding: 8px !important; }
+  .navigation-dialog {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: calc(100dvh - 16px) !important;
+    min-width: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .navigation-subcards { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  .header-popover-wrap { min-width: 0 !important; }
+  .app-shell .header-popover,
+  .app-shell .profile-popover,
+  .app-shell .search-popover,
+  .app-shell .notification-popover,
+  .app-shell .language-popover {
+    position: fixed !important;
+    inset-inline: 10px !important;
+    top: 110px !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    max-height: calc(100dvh - 125px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    z-index: 30000 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .app-shell .connection-state svg { display: none !important; }
+  .app-shell .connection-state b, .app-shell .connection-state small { font-size: 8px !important; }
+  .app-shell .welcome-sections-grid,
+  .app-shell .welcome-side-card .welcome-sections-grid,
+  .section-launch-modal-grid,
+  .navigation-subcards { grid-template-columns: minmax(0, 1fr) !important; }
+  .app-shell .welcome-section-button { min-height: 62px !important; }
+  .app-shell .home-metrics-grid,
+  .app-shell .metrics-grid,
+  .app-shell .module-metrics,
+  .branch-content-modal-body .products-page .products-metrics,
+  .branch-content-modal-body .supplier-stats,
+  .branch-content-modal-body .supplier-accounts-metrics,
+  .branch-content-modal-body .customer-stats,
+  .branch-content-modal-body .supplier-form-grid,
+  .branch-content-modal-body .customer-form-grid { grid-template-columns: minmax(0, 1fr) !important; }
+  .app-shell .topbar-tools { gap: 4px !important; }
+  .app-shell .topbar-tool-group { gap: 3px !important; }
+  .branch-content-modal-body .products-page .products-heading-actions button { flex: 1 1 100% !important; }
+  .branch-content-modal-body .products-page .products-table { min-width: 600px !important; }
+}
+
+@media (max-width: 360px) {
+  .app-shell .workspace > .topbar.glass-topbar { padding: 7px !important; }
+  .app-shell .topbar-user-copy small { display: none !important; }
+  .app-shell .topbar-tool { min-width: 31px !important; min-height: 31px !important; }
+  .branch-content-modal-head { padding: 8px !important; }
+  .branch-content-modal-body { padding: 7px !important; }
+  .section-launch-overlay { padding: 7px !important; }
+  .section-launch-modal-body { padding: 7px !important; }
+}
