@@ -3862,3 +3862,57 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   .app-shell .home-dashboard-charts,.app-shell .home-dashboard-bottom{grid-template-columns:minmax(0,1fr);gap:8px}
   .app-shell .home-dashboard-charts .chart-panel,.app-shell .home-dashboard-charts .mix-panel{height:194px}
 }
+
+
+/* Standard desktop viewport fit: keep the home overview proportionate to the visible screen. */
+@media (min-width:761px) {
+  .app-shell .workspace-canvas.home-dashboard-layout {
+    flex:1 1 auto!important;
+    min-height:0!important;
+    height:calc(100% - 60px)!important;
+    max-height:calc(100dvh - 60px)!important;
+    overflow:hidden!important;
+    grid-template-columns:minmax(235px,.72fr) minmax(0,1.68fr)!important;
+    align-items:stretch!important;
+    gap:clamp(10px,1.1vw,16px)!important;
+    padding:clamp(10px,1.15vw,16px) clamp(12px,1.5vw,22px)!important;
+  }
+  .app-shell .welcome-sections-card.welcome-side-card {
+    min-height:0!important;
+    height:100%!important;
+    overflow:hidden!important;
+    gap:clamp(8px,1vh,14px)!important;
+    padding:clamp(11px,1.2vw,17px)!important;
+  }
+  .app-shell .welcome-side-card .welcome-sections-side {min-height:0!important;overflow:auto!important;}
+  .app-shell .welcome-side-card .welcome-sections-grid {gap:clamp(5px,.55vw,8px)!important;}
+  .app-shell .welcome-side-card .welcome-section-button {min-height:clamp(47px,7.2vh,57px)!important;padding:clamp(6px,.65vw,9px)!important;}
+  .app-shell .home-dashboard-column {
+    min-height:0!important;height:100%!important;overflow:hidden!important;
+    gap:clamp(6px,.9vh,11px)!important;
+  }
+  .app-shell .home-dashboard-heading {min-height:clamp(43px,7vh,55px)!important;padding:clamp(8px,.8vw,12px) clamp(10px,1vw,14px)!important;flex:0 0 auto;}
+  .app-shell .home-dashboard-heading h2 {font-size:clamp(16px,1.45vw,20px)!important;}
+  .app-shell .home-metrics-grid {flex:0 0 auto;gap:clamp(6px,.7vw,9px)!important;}
+  .app-shell .home-metrics-grid .metric-card {height:clamp(72px,12.2vh,94px)!important;padding:clamp(7px,.75vw,10px)!important;}
+  .app-shell .home-dashboard-charts,.app-shell .home-dashboard-bottom {min-height:0;flex:1 1 0;gap:clamp(6px,.7vw,9px)!important;}
+  .app-shell .home-dashboard-charts .chart-panel,.app-shell .home-dashboard-charts .mix-panel,
+  .app-shell .home-dashboard-bottom .stock-panel,.app-shell .home-dashboard-bottom .recent-panel {
+    height:100%!important;min-height:0!important;padding:clamp(8px,.8vw,11px)!important;
+  }
+  .app-shell .home-dashboard-charts .mix-content {height:calc(100% - 30px)!important;min-height:80px!important;}
+  .app-shell .home-dashboard-charts .bar-chart {height:clamp(64px,12vh,89px)!important;}
+  .app-shell .home-dashboard-bottom .table-wrap {max-height:calc(100% - 28px);overflow:hidden!important;}
+}
+@media (min-width:761px) and (max-height:820px) {
+  .app-shell .workspace-canvas.home-dashboard-layout {padding-top:9px!important;padding-bottom:9px!important;gap:9px!important;}
+  .app-shell .welcome-side-card .welcome-copy h1 {font-size:clamp(19px,1.65vw,25px)!important;}
+  .app-shell .welcome-side-card .welcome-bilingual {margin-top:7px!important;}
+  .app-shell .welcome-side-card .welcome-title-rule {margin:8px 0 7px!important;}
+  .app-shell .welcome-side-card .welcome-description {margin-top:5px!important;line-height:1.55!important;}
+  .app-shell .home-dashboard-column {gap:7px!important;}
+  .app-shell .home-dashboard-heading {min-height:42px!important;}
+  .app-shell .home-metrics-grid .metric-card {height:72px!important;}
+  .app-shell .home-dashboard-charts .chart-panel,.app-shell .home-dashboard-charts .mix-panel {padding:8px!important;}
+  .app-shell .home-dashboard-bottom .stock-panel,.app-shell .home-dashboard-bottom .recent-panel {padding:8px!important;}
+}
