@@ -3192,3 +3192,32 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
 }
 @media(max-width:760px) {
 }
+
+/* Fast, GPU-friendly navigation transitions */
+.navigation-overlay{
+  animation:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.navigation-dialog{
+  animation:veltro-fast-nav-in 100ms ease-out both!important;
+  will-change:transform,opacity;
+}
+@keyframes veltro-fast-nav-in{
+  from{opacity:0;transform:translate3d(0,5px,0) scale(.998)}
+  to{opacity:1;transform:translate3d(0,0,0) scale(1)}
+}
+.navigation-subcard,
+.section-launch-card,
+.navigation-dialog-close,
+.navigation-back-card{
+  transition:transform 100ms ease-out,border-color 100ms ease-out,background-color 100ms ease-out,box-shadow 100ms ease-out,color 100ms ease-out!important;
+}
+.navigation-subcard:hover,
+.section-launch-card:hover{
+  transform:translate3d(0,-1px,0)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  .navigation-dialog{animation:none!important;will-change:auto}
+  .navigation-subcard,.section-launch-card,.navigation-dialog-close,.navigation-back-card{transition:none!important}
+}
