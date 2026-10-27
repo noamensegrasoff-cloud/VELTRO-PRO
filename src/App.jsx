@@ -3,7 +3,7 @@ import {
   Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, Moon, Sun, RotateCw,
   MoreHorizontal, CalendarDays, Package, ReceiptText,
   Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
-  ShoppingCart, X, Globe, ClipboardList, History,
+  ShoppingCart, X, Globe, ClipboardList, History, ArrowLeft, LayoutDashboard,
   CircleCheck, PackageCheck, Cloud, PanelLeftClose, PanelLeftOpen,
   Plus, Phone, MapPin, Pencil, Trash2, ImagePlus, Building2, FileText, Users, Eye, Printer, ScanLine, Mail
 } from 'lucide-react';
@@ -37,7 +37,7 @@ const copy = {
     signedOut: 'تم تسجيل الخروج من المعاينة', signIn: 'العودة إلى المعاينة',
     back: 'العودة', home: 'لوحة التحكم', selected: 'القسم المحدد',
     welcome: 'مرحبًا بك في', title: 'VELTRO BUSINESS SUITE',
-    daily: 'الحالة اليومية', cashBalance: 'رصيد الصندوق', expense: 'المصاريف',
+    daily: 'الحالة اليومية', cashBalance: 'رصيد الصندوق', expense: 'المصاريف', capital: 'رأس مال المحل', dailyProfit: 'الربح اليومي', capitalHint: 'يظهر بعد ربط بيانات المحل', profitHint: 'حسب المبيعات والتكاليف المسجلة', notLinked: 'بانتظار البيانات الفعلية', sectionsIntro: 'اختر القسم الذي تريد العمل فيه', backToSections: 'العودة إلى الأقسام',
     profit: 'الربح التقديري', viewDetails: 'عرض التفاصيل', allSections: 'الأقسام',
     searchResults: 'نتائج البحث', noResults: 'لا توجد نتائج مطابقة.',
     topProducts: 'أكثر المنتجات حركة', activity: 'النشاط حسب الفترة',
@@ -62,7 +62,7 @@ const copy = {
     signedOut: 'You have left the preview', signIn: 'Return to preview',
     back: 'Back', home: 'Dashboard', selected: 'Selected section',
     welcome: 'Welcome to', title: 'VELTRO BUSINESS SUITE',
-    daily: 'Daily status', cashBalance: 'Cash balance', expense: 'Expenses',
+    daily: 'Daily status', cashBalance: 'Cash balance', expense: 'Expenses', capital: 'Store capital', dailyProfit: 'Daily profit', capitalHint: 'Shown after store data is connected', profitHint: 'Based on recorded sales and costs', notLinked: 'Awaiting live data', sectionsIntro: 'Choose a section to get started', backToSections: 'Back to sections',
     profit: 'Estimated profit', viewDetails: 'View details', allSections: 'Sections',
     searchResults: 'Search results', noResults: 'No matching results.',
     topProducts: 'Top moving products', activity: 'Activity by period',
@@ -87,7 +87,7 @@ const copy = {
     signedOut: 'Vous avez quitté l’aperçu', signIn: 'Revenir à l’aperçu',
     back: 'Retour', home: 'Tableau de bord', selected: 'Rubrique sélectionnée',
     welcome: 'Bienvenue dans', title: 'VELTRO BUSINESS SUITE',
-    daily: 'Situation journalière', cashBalance: 'Solde de caisse', expense: 'Dépenses',
+    daily: 'Situation journalière', cashBalance: 'Solde de caisse', expense: 'Dépenses', capital: 'Capital du magasin', dailyProfit: 'Bénéfice du jour', capitalHint: 'Disponible après connexion des données', profitHint: 'Selon les ventes et coûts enregistrés', notLinked: 'En attente des données réelles', sectionsIntro: 'Choisissez une rubrique pour commencer', backToSections: 'Retour aux rubriques',
     profit: 'Bénéfice estimé', viewDetails: 'Voir les détails', allSections: 'Rubriques',
     searchResults: 'Résultats', noResults: 'Aucun résultat.',
     topProducts: 'Produits les plus actifs', activity: 'Activité par période',
@@ -168,7 +168,7 @@ function Sidebar({ lang, t, activeId, onNavigate, onLogout, onSync, syncing, sea
 }
 function MetricCard({ icon: Icon, label, value, trend, tone = 'blue', footer }) {
   return <article className="metric-card">
-    <div className="metric-top"><span className={'metric-icon tone-' + tone}><Icon size={17} strokeWidth={1.9}/></span><span className="metric-trend"><ArrowUpRight size={12}/> {trend}</span></div>
+    <div className="metric-top"><span className={'metric-icon tone-' + tone}><Icon size={17} strokeWidth={1.9}/></span>{trend&&<span className="metric-trend"><ArrowUpRight size={12}/> {trend}</span>}</div>
     <div className="metric-label">{label}</div><div className="metric-value">{value}</div><div className="metric-foot">{footer}</div>
   </article>;
 }
@@ -214,23 +214,34 @@ function StockOverview({ t }) {
   </article>;
 }
 
-function DashboardPage({ t, lang, onNavigate }) {
+function DashboardPage({ t, lang, onNavigate, onOpenSection }) {
   return <div className="page-content dashboard-content">
     <div className="page-heading"><div><div className="heading-kicker"><span className="health-dot"/>{t('welcome')} <b>VELTRO</b></div><h1>{t('home')}</h1><p>{t('subtitle')}</p></div><div className="heading-actions"><span className="demo-badge">{t('demo')}</span><button className="date-button"><CalendarDays size={14}/>{t('today')} <ChevronDown size={14}/></button></div></div>
-    <div className="metrics-grid">
-      <MetricCard icon={Wallet} label={t('revenue')} value="245,800 DA" trend="8.4%" tone="blue" footer={t('vsYesterday')}/>
-      <MetricCard icon={ReceiptText} label={t('invoices')} value="126" trend="5.2%" tone="green" footer={t('vsYesterday')}/>
-      <MetricCard icon={Package} label={t('products')} value="1,842" trend="2.1%" tone="violet" footer={t('available')}/>
-      <MetricCard icon={CircleAlert} label={t('lowStock')} value="08" trend="3" tone="amber" footer={t('low')}/>
-    </div>
-    <div className="charts-grid"><SalesChart t={t} lang={lang}/><MixChart t={t}/></div>
-    <div className="lower-grid"><RecentActivity t={t}/><StockOverview t={t}/></div>
-    <div className="quick-actions"><span>{t('shortcuts')}</span>
-      <button onClick={()=>onNavigate({id:'product-list',label:{ar:'قائمة المنتجات',en:'Product list',fr:'Liste des produits'}})}><Package size={14}/>{t('addProduct')}</button>
-      <button onClick={()=>onNavigate({id:'point-of-sale',label:{ar:'نقطة البيع',en:'Point of sale',fr:'Point de vente'}})}><ShoppingCart size={14}/>{t('newSale')}</button>
-      <button onClick={()=>onNavigate({id:'order-new',label:{ar:'طلب السلع',en:'Order goods',fr:'Commander des articles'}})}><ClipboardList size={14}/>{t('newOrder')}</button>
-      <button onClick={()=>onNavigate({id:'cash-summary',label:{ar:'ملخص الصندوق',en:'Cash summary',fr:'Résumé de caisse'}})}><Wallet size={14}/>{t('openCash')}</button>
-    </div>
+    <section className="section-launcher" aria-label={t('allSections')}>
+      <div className="section-launcher-heading"><div><h2>{t('allSections')}</h2><p>{t('sectionsIntro')}</p></div><span className="section-launcher-mark"><LayoutDashboard size={20}/></span></div>
+      <div className="section-launcher-grid">
+        {sections.map((section,index)=>{const Icon=section.icon;return <button type="button" key={section.id} className={'section-launch-card section-tone-'+(index%6)} onClick={()=>onOpenSection(section)}>
+          <span className="section-launch-icon"><Icon size={23} strokeWidth={1.8}/></span><span className="section-launch-name">{getLabel(section,lang)}</span><span className="section-launch-meta">{section.children.length} <span>{lang==='ar'?'أقسام فرعية':lang==='fr'?'rubriques':'items'}</span></span><ChevronDown className="section-launch-arrow" size={16}/>
+        </button>})}
+      </div>
+    </section>
+    <section className="dashboard-overview" aria-label={t('home')}>
+      <div className="dashboard-overview-heading"><div><h2>{t('home')}</h2><p>{t('subtitle')}</p></div><span className="dashboard-overview-mark"><ChartNoAxesCombined size={19}/></span></div>
+      <div className="metrics-grid">
+        <MetricCard icon={Wallet} label={t('capital')} value="— DA" trend="" tone="blue" footer={t('capitalHint')}/>
+        <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value="— DA" trend="" tone="green" footer={t('profitHint')}/>
+        <MetricCard icon={ShoppingCart} label={t('revenue')} value="245,800 DA" trend="8.4%" tone="violet" footer={t('demo')}/>
+        <MetricCard icon={ReceiptText} label={t('expense')} value="— DA" trend="" tone="amber" footer={t('notLinked')}/>
+      </div>
+      <div className="charts-grid"><SalesChart t={t} lang={lang}/><MixChart t={t}/></div>
+      <div className="lower-grid"><RecentActivity t={t}/><StockOverview t={t}/></div>
+      <div className="quick-actions"><span>{t('shortcuts')}</span>
+        <button onClick={()=>onNavigate({id:'product-list',label:{ar:'قائمة المنتجات',en:'Product list',fr:'Liste des produits'}})}><Package size={14}/>{t('addProduct')}</button>
+        <button onClick={()=>onNavigate({id:'point-of-sale',label:{ar:'نقطة البيع',en:'Point of sale',fr:'Point de vente'}})}><ShoppingCart size={14}/>{t('newSale')}</button>
+        <button onClick={()=>onNavigate({id:'order-new',label:{ar:'طلب السلع',en:'Order goods',fr:'Commander des articles'}})}><ClipboardList size={14}/>{t('newOrder')}</button>
+        <button onClick={()=>onNavigate({id:'cash-summary',label:{ar:'ملخص الصندوق',en:'Cash summary',fr:'Résumé de caisse'}})}><Wallet size={14}/>{t('openCash')}</button>
+      </div>
+    </section>
   </div>;
 }
 
@@ -623,6 +634,7 @@ export default function App() {
   }
   const [activePage,setActivePage]=useState(dashboard);
   const [activeParent,setActiveParent]=useState(null);
+  const [openNavSection,setOpenNavSection]=useState(null);
   const [search,setSearch]=useState('');
   const [searchOpen,setSearchOpen]=useState(false);
   const [languageOpen,setLanguageOpen]=useState(false);
@@ -634,10 +646,11 @@ export default function App() {
   const t=(key)=>copy[lang][key]||copy.ar[key]||key;
   const handleManualSync=async()=>{if(manualSyncing)return;setManualSyncing(true);try{const result=await syncWorkspace();if(result?.status!=='synced')throw new Error('sync_failed');setCloudState('connected');window.alert(t('syncDone'));}catch{setCloudState('error');window.alert(t('syncError'));}finally{setManualSyncing(false);}};
   const dir=lang==='ar'?'rtl':'ltr';
-  const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setNotificationsOpen(false);setSearchOpen(false);setLanguageOpen(false);};
+  const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setOpenNavSection(null);setNotificationsOpen(false);setSearchOpen(false);setLanguageOpen(false);};
   useEffect(() => {
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
+        if (openNavSection) { event.preventDefault(); setOpenNavSection(null); return; }
         if (searchOpen || languageOpen || notificationsOpen) { event.preventDefault(); setSearchOpen(false); setLanguageOpen(false); setNotificationsOpen(false); return; }
         if (logoutOpen) {
           event.preventDefault();
@@ -649,7 +662,6 @@ export default function App() {
           setMobileOpen(false);
           return;
         }
-        setSidebarVisible(visible => !visible);
         return;
       }
 
@@ -657,22 +669,23 @@ export default function App() {
     // Capture phase cancels browser defaults before page-level handlers can run.
     window.addEventListener('keydown', onKeyDown, true);
     return () => window.removeEventListener('keydown', onKeyDown, true);
-  }, [sidebarVisible, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen]);
+  }, [openNavSection, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen]);
   if(setupState==='checking') return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تجهيز مساحة العمل…':lang==='fr'?'Préparation de votre espace…':'Preparing your workspace…'}</p></div></div>;
   if(setupState==='required') return <BusinessOnboarding lang={lang} onLanguageChange={setLang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
-  return <div className={'app-shell lang-'+lang+' theme-'+theme+(sidebarVisible?'':' sidebar-collapsed')} dir={dir}>
+  return <div className={'app-shell lang-'+lang+' theme-'+theme} dir={dir}>
     <div className="app-layout">
-      <Sidebar lang={lang} t={t} activeId={activePage.id} onNavigate={navigate} onLogout={()=>setLogoutOpen(true)} onSync={handleManualSync} syncing={manualSyncing} search={search} mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} sidebarVisible={sidebarVisible}/>
       <main className="workspace">
         <header className="topbar">
-          <div className="topbar-start"><button className="mobile-menu-button" onClick={()=>{setSidebarVisible(true);setMobileOpen(true);}} aria-label="Open navigation"><Menu size={18}/></button><button className="sidebar-toggle-button" onClick={()=>setSidebarVisible(v=>!v)} aria-label={sidebarVisible?(lang==='ar'?'إخفاء القائمة الجانبية':'Hide sidebar'):(lang==='ar'?'إظهار القائمة الجانبية':'Show sidebar')} title="Esc"><kbd>Esc</kbd>{sidebarVisible?<PanelLeftClose size={17}/>:<PanelLeftOpen size={17}/>}</button><div className="breadcrumbs"><span>{t('workspace')}</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
+          <div className="topbar-start"><span className="topbar-brand-mark">V</span><div className="breadcrumbs"><span>VELTRO-PRO</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
           <div className="topbar-actions">
             <div className="header-popover-wrap search-wrap">
               <button className="icon-button" onClick={()=>{setSearchOpen(v=>!v);setLanguageOpen(false);setNotificationsOpen(false);}} aria-label={t('search')} title={t('search')} aria-expanded={searchOpen}><Search size={17}/></button>
               {searchOpen&&<div className="header-popover search-popover" role="dialog" aria-label={t('search')}><div className="popover-title"><b>{t('searchResults')}</b><button className="popover-close" onClick={()=>setSearchOpen(false)} aria-label="Close"><X size={15}/></button></div><label className="popup-search-field"><Search size={16}/><input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>Esc</kbd></label><p className="popover-hint">{lang==='ar'?'اكتب للبحث في الأقسام والوظائف':lang==='fr'?'Saisissez pour rechercher des rubriques et actions':'Type to search sections and actions'}</p></div>}
             </div>
             <button className="icon-button refresh-button" onClick={()=>window.location.reload()} aria-label={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'} title={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'}><RotateCw size={17}/></button>
+            <button className="icon-button topbar-sync" onClick={handleManualSync} disabled={manualSyncing} aria-label={t('sync')} title={t('sync')}><RotateCw className={manualSyncing?'sync-spinning':''} size={16}/></button>
+            <button className="icon-button topbar-logout" onClick={()=>setLogoutOpen(true)} aria-label={t('logout')} title={t('logout')}><LogOut size={16}/></button>
             <button className="icon-button theme-toggle" onClick={()=>setTheme(v=>v==='dark'?'light':'dark')} aria-label={theme==='dark'?t('lightMode'):t('darkMode')} title={theme==='dark'?t('lightMode'):t('darkMode')}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
             <div className="header-popover-wrap language-wrap">
               <button className="icon-button language-trigger" onClick={()=>{setLanguageOpen(v=>!v);setSearchOpen(false);setNotificationsOpen(false);}} aria-label={lang==='ar'?'تغيير اللغة':lang==='fr'?'Changer de langue':'Change language'} title={lang==='ar'?'تغيير اللغة':lang==='fr'?'Changer de langue':'Change language'} aria-expanded={languageOpen}><Globe size={17}/><span>{lang.toUpperCase()}</span><ChevronDown size={11}/></button>
@@ -682,10 +695,17 @@ export default function App() {
             <div className="profile-chip"><span className="profile-avatar">V</span><span><b>VELTRO</b><small>PRO</small></span><ChevronDown size={13}/></div>
           </div>
         </header>
-        {activePage.id===dashboard.id?<DashboardPage t={t} lang={lang} onNavigate={navigate}/>:<ModulePage page={activePage} parent={activeParent} t={t} lang={lang} onBack={()=>navigate(dashboard)}/>}
+        {activePage.id===dashboard.id?<DashboardPage t={t} lang={lang} onNavigate={navigate} onOpenSection={setOpenNavSection}/>:<ModulePage page={activePage} parent={activeParent} t={t} lang={lang} onBack={()=>navigate(dashboard)}/>}
         <footer className="workspace-footer"><span>© 2026 VELTRO BUSINESS SUITE</span><span className={'cloud-status cloud-'+cloudState}><Cloud size={14}/><span>{cloudState==='connected'?t('cloudConnected'):cloudState==='configured'?t('cloudConfigured'):cloudState==='checking'?t('cloudChecking'):cloudState==='error'?t('cloudError'):t('cloudMissing')}</span></span><span className="prototype-note">{t('cloudPrototype')}</span></footer>
       </main>
     </div>
+    {openNavSection&&<div className="navigation-overlay" role="presentation" onMouseDown={event=>{if(event.target===event.currentTarget)setOpenNavSection(null);}}>
+      <section className="navigation-dialog" role="dialog" aria-modal="true" aria-labelledby="navigation-dialog-title">
+        <header className="navigation-dialog-header"><div className="navigation-dialog-brand"><span className="navigation-dialog-icon"><openNavSection.icon size={22}/></span><div><p>{t('allSections')}</p><h2 id="navigation-dialog-title">{getLabel(openNavSection,lang)}</h2><small>{t('sectionsIntro')}</small></div></div><button className="navigation-dialog-close" onClick={()=>setOpenNavSection(null)} aria-label={lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}><X size={19}/></button></header>
+        <button className="navigation-back-card" onClick={()=>setOpenNavSection(null)}><span><ArrowLeft size={16}/></span><span>{t('backToSections')}</span></button>
+        <div className="navigation-subcards">{openNavSection.children.map((child,index)=>{const Icon=child.icon;return <button type="button" key={child.id} className={'navigation-subcard subcard-tone-'+(index%6)} onClick={()=>navigate(child,openNavSection)}><span className="navigation-subcard-icon"><Icon size={24} strokeWidth={1.8}/></span><span className="navigation-subcard-copy"><b>{getLabel(child,lang)}</b><small>{String(index+1).padStart(2,'0')}</small></span><span className="navigation-subcard-arrow"><ArrowUpRight size={17}/></span></button>})}</div>
+      </section>
+    </div>}
     {logoutOpen&&<div className="modal-backdrop" role="presentation"><section className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title"><span className="modal-icon"><LogOut size={22}/></span><h2 id="logout-title">{t('logoutConfirm')}</h2><p>VELTRO BUSINESS SUITE</p><div><button className="button-secondary" onClick={()=>setLogoutOpen(false)}>{t('cancel')}</button><button className="button-danger" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;setLogoutOpen(false);setSignedOut(false);}catch(error){window.alert(error?.message||'تعذّر تسجيل الخروج. حاول مجددًا.');}}}>{t('confirm')}</button></div><button className="modal-close" onClick={()=>setLogoutOpen(false)} aria-label="Close"><X size={16}/></button></section></div>}
   </div>;
 }
