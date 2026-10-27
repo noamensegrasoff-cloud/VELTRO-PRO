@@ -4039,3 +4039,43 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
     transition:none!important;
   }
 }
+
+
+/* Keep the user profile dropdown visually identical in dark and light themes */
+.app-shell.theme-dark .topbar .profile-popover,
+.app-shell.theme-light .topbar .profile-popover {
+  color: #30234f !important;
+  background: linear-gradient(145deg, rgba(255,255,255,.96), rgba(239,231,255,.94)) !important;
+  border: 1px solid rgba(139,94,246,.28) !important;
+  box-shadow: 0 22px 55px rgba(64,42,115,.17) !important;
+  -webkit-backdrop-filter: blur(26px) saturate(160%) !important;
+  backdrop-filter: blur(26px) saturate(160%) !important;
+}
+.app-shell.theme-dark .profile-popover .profile-popover-head b,
+.app-shell.theme-light .profile-popover .profile-popover-head b {
+  color: #30234f !important;
+}
+.app-shell.theme-dark .profile-popover .profile-popover-head small,
+.app-shell.theme-light .profile-popover .profile-popover-head small {
+  color: #6f5a94 !important;
+}
+.app-shell.theme-dark .profile-popover .profile-popover-head {
+  border-color: rgba(139,94,246,.2) !important;
+}
+.app-shell.theme-dark .profile-popover .profile-menu-item,
+.app-shell.theme-light .profile-popover .profile-menu-item {
+  color: #493568 !important;
+}
+.app-shell.theme-dark .profile-popover .profile-menu-item:hover,
+.app-shell.theme-light .profile-popover .profile-menu-item:hover {
+  background: rgba(151,112,237,.13) !important;
+  color: #30234f !important;
+}
+.app-shell.theme-dark .profile-popover .profile-menu-item.danger,
+.app-shell.theme-light .profile-popover .profile-menu-item.danger {
+  color: #c04458 !important;
+}
+.app-shell.theme-dark .profile-popover .profile-online,
+.app-shell.theme-light .profile-popover .profile-online {
+  color: #148a75 !important;
+}
