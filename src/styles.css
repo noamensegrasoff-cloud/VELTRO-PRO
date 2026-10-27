@@ -3869,3 +3869,139 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
 .app-shell.theme-dark .header-popover{background:rgba(28,20,50,.82)!important}
 @keyframes royalGlassIn{from{opacity:0;transform:translateY(12px) scale(.975);filter:blur(5px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
 @media(prefers-reduced-motion:reduce){.app-shell.theme-dark .navigation-dialog{animation:none!important}.app-shell.theme-dark .section-launch-card,.app-shell.theme-dark .navigation-subcard{transition:none!important}}
+
+
+/* Focused top-bar refinement: royal-violet glass in both themes */
+.app-shell.theme-light{
+  --royal-glass-border:rgba(139,94,246,.28);
+  --royal-lavender:#6d42c5;
+  --royal-violet:#8054df;
+  background:
+    radial-gradient(ellipse 54% 48% at 9% 5%,rgba(157,112,255,.20),transparent 72%),
+    radial-gradient(ellipse 48% 52% at 94% 10%,rgba(111,91,230,.17),transparent 72%),
+    radial-gradient(ellipse 50% 55% at 58% 100%,rgba(189,139,255,.14),transparent 72%),
+    linear-gradient(132deg,#f7f3ff 0%,#f0edff 48%,#fbf8ff 100%)!important;
+}
+.app-shell.theme-light .topbar,
+.app-shell.theme-light .connection-card,
+.app-shell.theme-light .topbar-user,
+.app-shell.theme-light .topbar-datetime,
+.app-shell.theme-light .glass-time-card,
+.app-shell.theme-light .topbar-tool,
+.app-shell.theme-light .header-popover,
+.app-shell.theme-light .profile-popover,
+.app-shell.theme-light .profile-menu-item{
+  -webkit-backdrop-filter:blur(26px) saturate(160%)!important;
+  backdrop-filter:blur(26px) saturate(160%)!important;
+}
+.app-shell.theme-light .topbar,
+.app-shell.theme-light .connection-card,
+.app-shell.theme-light .topbar-user,
+.app-shell.theme-light .glass-time-card{
+  background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(233,224,255,.63) 55%,rgba(246,240,255,.72))!important;
+  border:1px solid rgba(139,94,246,.25)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.96),0 10px 28px rgba(93,60,158,.11),0 0 20px rgba(145,103,235,.045)!important;
+}
+.app-shell.theme-light .topbar-user,
+.app-shell.theme-light .topbar-tool,
+.app-shell.theme-light .glass-time-card{
+  border-radius:14px!important;
+}
+.app-shell.theme-light .topbar-user:hover,
+.app-shell.theme-light .topbar-tool:hover{
+  border-color:rgba(132,87,225,.48)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(222,207,255,.72))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 8px 24px rgba(105,69,178,.14)!important;
+}
+.app-shell.theme-light .profile-avatar,
+.app-shell.theme-light .topbar-tool-group .compact-tool,
+.app-shell.theme-light .topbar-tool.search-tool,
+.app-shell.theme-light .section-launch-icon,
+.app-shell.theme-light .metric-icon{
+  background:linear-gradient(140deg,rgba(172,137,255,.24),rgba(111,104,225,.14))!important;
+  border-color:rgba(142,103,229,.25)!important;
+  color:#6842b7!important;
+}
+.app-shell.theme-light .topbar-user-copy b,
+.app-shell.theme-light .glass-time-card b,
+.app-shell.theme-light .glass-time-card strong{
+  color:#30234f!important;
+}
+.app-shell.theme-light .topbar-user-copy small,
+.app-shell.theme-light .glass-time-card{
+  color:#6f5a94!important;
+}
+.app-shell.theme-light .connection-card{
+  background:linear-gradient(135deg,rgba(255,255,255,.76),rgba(230,220,255,.58) 52%,rgba(247,242,255,.68))!important;
+  border-color:rgba(145,105,228,.24)!important;
+}
+.app-shell.theme-light .header-popover,
+.app-shell.theme-light .profile-popover{
+  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(239,231,255,.94))!important;
+  border-color:rgba(139,94,246,.28)!important;
+  box-shadow:0 22px 55px rgba(64,42,115,.17)!important;
+}
+.app-shell.theme-light .profile-menu-item:hover,
+.app-shell.theme-light .language-option:hover{
+  background:rgba(151,112,237,.13)!important;
+}
+.app-shell.theme-dark .topbar-user,
+.app-shell.theme-dark .topbar-tool,
+.app-shell.theme-dark .glass-time-card{
+  background:linear-gradient(135deg,rgba(255,255,255,.095),rgba(154,117,229,.105) 52%,rgba(41,29,71,.25))!important;
+  -webkit-backdrop-filter:blur(28px) saturate(165%)!important;
+  backdrop-filter:blur(28px) saturate(165%)!important;
+  border:1px solid rgba(210,190,255,.28)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.17),0 10px 26px rgba(2,0,12,.18),0 0 18px rgba(144,99,239,.055)!important;
+}
+.app-shell.theme-dark .topbar-user:hover,
+.app-shell.theme-dark .topbar-tool:hover{
+  border-color:rgba(218,197,255,.52)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.14),rgba(154,117,229,.18) 52%,rgba(41,29,71,.3))!important;
+}
+.app-shell .topbar{
+  min-height:64px!important;
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+  gap:10px!important;
+}
+.app-shell .topbar-user{
+  min-height:42px!important;
+  padding:6px 10px!important;
+}
+.app-shell .topbar-tools,
+.app-shell .topbar-tool-group{
+  gap:6px!important;
+}
+.app-shell .topbar-tool{
+  min-height:36px!important;
+  min-width:36px!important;
+}
+.app-shell .glass-time-card{
+  display:flex!important;
+  align-items:center!important;
+  gap:9px!important;
+  padding:7px 11px!important;
+  min-height:42px!important;
+  border:1px solid rgba(210,190,255,.28)!important;
+  border-radius:14px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(154,117,229,.10) 52%,rgba(41,29,71,.20))!important;
+  -webkit-backdrop-filter:blur(28px) saturate(165%)!important;
+  backdrop-filter:blur(28px) saturate(165%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 10px 26px rgba(2,0,12,.13),0 0 18px rgba(144,99,239,.05)!important;
+}
+.app-shell .glass-time-card>span{display:flex;flex-direction:column;gap:2px;line-height:1.2}
+.app-shell .glass-time-card b{font-size:11px;font-weight:600}
+.app-shell .glass-time-card strong{font-size:12px;font-weight:750;letter-spacing:.035em}
+.app-shell .home-tool,
+.app-shell .refresh-tool{flex:0 0 auto}
+.app-shell .topbar-tool:disabled{opacity:.58;cursor:wait}
+@media(max-width:1050px){
+  .app-shell .topbar{min-height:58px!important;padding:7px 9px!important;gap:7px!important}
+  .app-shell .glass-time-card{padding:6px 8px!important}
+}
+@media(max-width:760px){
+  .app-shell .glass-time-card{gap:6px;padding:6px!important}
+  .app-shell .glass-time-card b{font-size:10px}
+  .app-shell .glass-time-card strong{font-size:11px}
+}
