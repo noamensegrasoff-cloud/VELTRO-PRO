@@ -712,3 +712,19 @@
   .purchase-number-controls .purchase-secondary { font-size: 0 !important; }
   .purchase-number-controls .purchase-secondary svg { width: 15px; height: 15px; }
 }
+
+
+/* Barcode generation / quick product creation modal */
+.purchase-product-searches { padding-inline-end: 0; }
+.purchase-generate-barcode { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 34px; margin: 0 0 9px; padding: 8px 11px; border-radius: 10px; color: #6550b7; background: linear-gradient(135deg,rgba(255,255,255,.92),rgba(237,232,255,.82)); border: 1px solid rgba(129,105,221,.25); font-size: 11px; font-weight: 750; cursor: pointer; }
+.purchase-barcode-product-overlay { z-index: 10040 !important; }
+.purchase-barcode-product-modal { width: min(440px,calc(100vw - 28px)); display: flex; flex-direction: column; gap: 13px; padding: 20px; border-radius: 22px; border: 1px solid rgba(255,255,255,.95); background: linear-gradient(135deg,rgba(250,252,255,.98),rgba(244,239,255,.98) 65%,rgba(235,248,250,.98)); box-shadow: 0 24px 80px rgba(34,28,72,.3),inset 0 1px 0 #fff; -webkit-backdrop-filter: blur(24px) saturate(145%); backdrop-filter: blur(24px) saturate(145%); }
+.purchase-barcode-product-modal header { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.purchase-barcode-product-modal header h3 { margin: 0; font-size: 17px; color: #30264f; }
+.purchase-barcode-product-modal header p { margin: 5px 0 0; font-size: 11px; color: #786f90; }
+.purchase-barcode-product-modal label { display: flex; flex-direction: column; gap: 6px; font-size: 11px; font-weight: 700; color: #54486f; }
+.purchase-barcode-product-modal input { width: 100%; min-width: 0; min-height: 39px; box-sizing: border-box; padding: 9px 11px; border: 1px solid rgba(125,105,181,.22); border-radius: 10px; background: rgba(255,255,255,.82); color: #30264f; outline: none; }
+.purchase-barcode-product-modal input:focus { border-color: #8a70df; box-shadow: 0 0 0 3px rgba(138,112,223,.12); }
+.purchase-barcode-product-modal footer { display: flex; justify-content: flex-end; gap: 8px; padding-top: 5px; }
+.purchase-barcode-product-modal footer button { min-height: 36px; }
+@media (max-width: 520px) { .purchase-generate-barcode { width: 100%; } .purchase-barcode-product-modal { padding: 15px; border-radius: 18px; } }
