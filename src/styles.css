@@ -5879,3 +5879,56 @@ textarea:focus,
   color:#6843ad!important;
   border-color:rgba(121,84,200,.28)!important;
 }
+
+
+/* Product add/edit dialog: remove the duplicate heading outside the first card and use the screen normally. */
+.products-page .pform-overlay .pform-panel-primary .pform-section-heading{
+  display:none!important;
+}
+.products-page .pform-overlay .pform-modal{
+  width:min(1180px,calc(100vw - 32px))!important;
+  height:min(840px,calc(100dvh - 32px))!important;
+  max-height:calc(100dvh - 32px)!important;
+  min-height:0!important;
+}
+.products-page .pform-overlay .pform-content-all{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  flex:1 1 auto!important;
+  padding:14px 18px!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+}
+.products-page .pform-overlay .pform-panel-view.is-active{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+}
+.products-page .pform-overlay .pform-panel-view.is-active>.pform-section{
+  width:100%!important;
+  max-width:none!important;
+  margin:0!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  align-content:start!important;
+  gap:12px!important;
+}
+.products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card{
+  min-width:0!important;
+  height:100%;
+  box-sizing:border-box;
+}
+@media(max-width:760px){
+  .products-page .pform-overlay .pform-modal{
+    width:calc(100vw - 12px)!important;
+    height:calc(100dvh - 12px)!important;
+    max-height:calc(100dvh - 12px)!important;
+  }
+  .products-page .pform-overlay .pform-content-all{padding:10px!important}
+  .products-page .pform-overlay .pform-panel-view.is-active>.pform-section{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:9px!important;
+  }
+}
