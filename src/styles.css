@@ -4183,3 +4183,54 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   background:linear-gradient(100deg,rgba(255,255,255,.75),rgba(238,230,255,.72));
   color:#6c639c;
 }
+
+
+/* Branch content opens in a large centered window, keeping the dashboard behind it. */
+.branch-content-overlay{
+  position:fixed;inset:0;z-index:10020;display:flex;align-items:center;justify-content:center;
+  padding:clamp(10px,2.4vw,30px);
+  background:rgba(10,16,34,.56);backdrop-filter:blur(12px) saturate(.78);
+  -webkit-backdrop-filter:blur(12px) saturate(.78);
+  animation:branchOverlayIn .2s ease both;
+}
+.branch-content-modal{
+  display:flex;flex-direction:column;width:min(1500px,96vw);height:min(900px,92dvh);max-height:92dvh;
+  overflow:hidden;border:1px solid rgba(133,104,235,.42);border-radius:24px;
+  background:linear-gradient(145deg,#f9fbff 0%,#f1f6ff 55%,#f7f0ff 100%);
+  box-shadow:0 32px 100px rgba(3,8,25,.42),0 0 0 1px rgba(255,255,255,.35) inset;
+  animation:branchModalIn .24s cubic-bezier(.2,.8,.2,1) both;
+}
+.branch-content-modal-head{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:16px 22px;border-bottom:1px solid rgba(116,123,185,.2);
+  background:linear-gradient(105deg,rgba(38,203,198,.18),rgba(66,125,230,.13) 48%,rgba(147,91,228,.2));
+}
+.branch-content-modal-title{display:flex;align-items:center;gap:13px;min-width:0}
+.branch-content-modal-icon{
+  display:grid;place-items:center;width:46px;height:46px;flex:0 0 46px;border-radius:15px;
+  color:#6350c7;border:1px solid rgba(124,96,218,.27);
+  background:linear-gradient(135deg,#d8faf4,#dce8ff 52%,#edddff);
+  box-shadow:0 6px 18px rgba(104,86,203,.12);
+}
+.branch-content-modal-title small{display:block;margin-bottom:3px;color:#168b99;font-size:10px;font-weight:750}
+.branch-content-modal-title h2{margin:0;color:#1d2d4a;font-size:clamp(18px,2vw,25px);font-weight:800;line-height:1.25}
+.branch-content-modal-close{
+  display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border:1px solid rgba(113,108,176,.22);
+  border-radius:13px;color:#6757b4;background:rgba(255,255,255,.72);cursor:pointer;transition:.18s ease;
+}
+.branch-content-modal-close:hover{color:#fff;background:linear-gradient(135deg,#7862db,#4f8ce8);transform:rotate(4deg)}
+.branch-content-modal-body{flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:clamp(12px,1.8vw,24px)}
+.branch-content-modal-body>.page-content{width:100%;max-width:none;margin:0}
+.branch-content-modal-body .page-heading{margin-top:0}
+.branch-content-modal-body .module-workspace{min-height:260px}
+[dir="rtl"] .branch-content-modal-head{direction:rtl}
+@keyframes branchOverlayIn{from{opacity:0}to{opacity:1}}
+@keyframes branchModalIn{from{opacity:0;transform:translateY(12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:700px){
+ .branch-content-overlay{padding:8px}
+ .branch-content-modal{width:100%;height:calc(100dvh - 16px);max-height:calc(100dvh - 16px);border-radius:19px}
+ .branch-content-modal-head{padding:12px 14px}
+ .branch-content-modal-icon{width:40px;height:40px;flex-basis:40px;border-radius:12px}
+ .branch-content-modal-body{padding:10px}
+}
+@media(prefers-reduced-motion:reduce){.branch-content-overlay,.branch-content-modal{animation:none}}
