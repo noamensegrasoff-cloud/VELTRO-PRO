@@ -646,6 +646,7 @@ export default function App() {
   const t=(key)=>copy[lang][key]||copy.ar[key]||key;
   const handleManualSync=async()=>{if(manualSyncing)return;setManualSyncing(true);try{const result=await syncWorkspace();if(result?.status!=='synced')throw new Error('sync_failed');setCloudState('connected');window.alert(t('syncDone'));}catch{setCloudState('error');window.alert(t('syncError'));}finally{setManualSyncing(false);}};
   const dir=lang==='ar'?'rtl':'ltr';
+  const NavigationSectionIcon=openNavSection?.icon;
   const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setOpenNavSection(null);setNotificationsOpen(false);setSearchOpen(false);setLanguageOpen(false);};
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -701,7 +702,7 @@ export default function App() {
     </div>
     {openNavSection&&<div className="navigation-overlay" role="presentation" onMouseDown={event=>{if(event.target===event.currentTarget)setOpenNavSection(null);}}>
       <section className="navigation-dialog" role="dialog" aria-modal="true" aria-labelledby="navigation-dialog-title">
-        <header className="navigation-dialog-header"><div className="navigation-dialog-brand"><span className="navigation-dialog-icon"><openNavSection.icon size={22}/></span><div><p>{t('allSections')}</p><h2 id="navigation-dialog-title">{getLabel(openNavSection,lang)}</h2><small>{t('sectionsIntro')}</small></div></div><button className="navigation-dialog-close" onClick={()=>setOpenNavSection(null)} aria-label={lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}><X size={19}/></button></header>
+        <header className="navigation-dialog-header"><div className="navigation-dialog-brand"><span className="navigation-dialog-icon"><NavigationSectionIcon size={22}/></span><div><p>{t('allSections')}</p><h2 id="navigation-dialog-title">{getLabel(openNavSection,lang)}</h2><small>{t('sectionsIntro')}</small></div></div><button className="navigation-dialog-close" onClick={()=>setOpenNavSection(null)} aria-label={lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}><X size={19}/></button></header>
         <button className="navigation-back-card" onClick={()=>setOpenNavSection(null)}><span><ArrowLeft size={16}/></span><span>{t('backToSections')}</span></button>
         <div className="navigation-subcards">{openNavSection.children.map((child,index)=>{const Icon=child.icon;return <button type="button" key={child.id} className={'navigation-subcard subcard-tone-'+(index%6)} onClick={()=>navigate(child,openNavSection)}><span className="navigation-subcard-icon"><Icon size={24} strokeWidth={1.8}/></span><span className="navigation-subcard-copy"><b>{getLabel(child,lang)}</b><small>{String(index+1).padStart(2,'0')}</small></span><span className="navigation-subcard-arrow"><ArrowUpRight size={17}/></span></button>})}</div>
       </section>
