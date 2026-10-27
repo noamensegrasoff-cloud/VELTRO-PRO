@@ -93,3 +93,104 @@
   .auth-intro>p{font-size:12px;line-height:1.8}
   .auth-card{padding:21px 17px}
 }
+
+
+/* Login screen: light glassmorphism theme (scoped to authentication only) */
+.veltro-auth{
+  color-scheme:light;
+  color:#20253a;
+  background:
+    radial-gradient(ellipse at 15% 18%,rgba(167,139,250,.25),transparent 38%),
+    radial-gradient(ellipse at 85% 82%,rgba(96,135,245,.22),transparent 40%),
+    linear-gradient(135deg,#f4f3ff 0%,#edf3ff 48%,#faf8ff 100%);
+}
+.veltro-auth:before{
+  opacity:.32;
+  background-image:linear-gradient(rgba(111,92,190,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(91,116,190,.065) 1px,transparent 1px);
+}
+.auth-glow-a{background:radial-gradient(circle,rgba(126,105,226,.22),rgba(126,105,226,.035) 42%,transparent 70%)}
+.auth-glow-b{background:radial-gradient(circle,rgba(75,119,220,.19),rgba(75,119,220,.025) 42%,transparent 70%)}
+.auth-brand b{color:#242742}
+.auth-brand small{color:#777d98}
+.auth-language{
+  border:1px solid rgba(255,255,255,.78);
+  background:rgba(255,255,255,.48);
+  color:#454b68;
+  box-shadow:0 8px 24px rgba(70,73,130,.07);
+  backdrop-filter:blur(18px);
+}
+.auth-language option{background:#fff;color:#20253a}
+.auth-kicker{color:#6254b8}
+.auth-kicker span{background:#7968d7;box-shadow:0 0 14px rgba(121,104,215,.35)}
+.auth-intro h1{color:#252843}
+.auth-intro>p{color:#626984}
+.auth-feature{border-top-color:rgba(113,102,177,.2)}
+.auth-feature>span{
+  border-color:rgba(125,105,213,.2);
+  background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(220,222,255,.55));
+  color:#6758bd;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+.auth-feature b{color:#303451}
+.auth-feature small{color:#747b96}
+.auth-shield{color:#7565cc}
+.auth-card{
+  border:1px solid rgba(255,255,255,.88);
+  background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(255,255,255,.48));
+  box-shadow:0 28px 80px rgba(65,68,128,.15),inset 0 1px 0 rgba(255,255,255,.9),0 0 0 1px rgba(139,126,215,.06);
+  backdrop-filter:blur(28px) saturate(145%);
+  -webkit-backdrop-filter:blur(28px) saturate(145%);
+}
+.auth-card:before{background:linear-gradient(90deg,transparent,rgba(117,100,204,.45),rgba(87,119,208,.4),transparent)}
+.auth-card-icon{
+  border-color:rgba(123,105,205,.2);
+  background:linear-gradient(145deg,rgba(255,255,255,.85),rgba(226,224,255,.75));
+  color:#6758bd;
+}
+.auth-card-heading h2{color:#252843}
+.auth-card-heading p{color:#7a809b}
+.auth-field>span{color:#444a68}
+.auth-input-wrap{
+  border-color:rgba(130,137,177,.24);
+  background:rgba(255,255,255,.58);
+  color:#777d9b;
+  box-shadow:inset 0 1px 2px rgba(45,49,94,.025);
+}
+.auth-input-wrap:focus-within{
+  border-color:#8877d9;
+  box-shadow:0 0 0 3px rgba(136,119,217,.13);
+}
+.auth-input-wrap input{color:#272b47}
+.auth-input-wrap input::placeholder{color:#a0a4ba}
+.auth-eye{color:#777d9b}
+.auth-forgot{color:#6656bb}
+.auth-forgot:hover{color:#4d63b9}
+.auth-submit{
+  border-color:rgba(255,255,255,.75);
+  background:linear-gradient(110deg,#7565cc 0%,#8b78d8 52%,#6485d7 100%);
+  color:#fff;
+  box-shadow:0 10px 24px rgba(103,91,190,.22),inset 0 1px 0 rgba(255,255,255,.22);
+}
+.auth-submit:hover:not(:disabled){filter:brightness(1.045);box-shadow:0 13px 28px rgba(103,91,190,.27)}
+.auth-switch{color:#656b88}
+.auth-switch:hover{color:#6254b8}
+.auth-google{
+  border-color:rgba(133,140,179,.24);
+  background:rgba(255,255,255,.76);
+  color:#30344d;
+  box-shadow:0 5px 18px rgba(70,73,130,.06);
+}
+.auth-google:hover{background:rgba(255,255,255,.96);border-color:rgba(117,100,204,.45)}
+.auth-divider{color:#8186a0}
+.auth-divider:before,.auth-divider:after{background:linear-gradient(90deg,transparent,rgba(130,137,177,.35),transparent)}
+.auth-error{border-color:rgba(197,72,101,.2);background:rgba(255,235,240,.8);color:#9f2947}
+.auth-message{border-color:rgba(63,143,121,.22);background:rgba(231,250,244,.8);color:#236d59}
+.auth-footer{color:#8186a0}
+.auth-footer svg{color:#7565cc}
+@media(max-width:760px){
+  .veltro-auth{background:
+    radial-gradient(ellipse at 10% 8%,rgba(167,139,250,.22),transparent 40%),
+    radial-gradient(ellipse at 92% 75%,rgba(96,135,245,.18),transparent 42%),
+    linear-gradient(135deg,#f4f3ff,#edf3ff 55%,#faf8ff)}
+  .auth-card{background:rgba(255,255,255,.7)}
+}
