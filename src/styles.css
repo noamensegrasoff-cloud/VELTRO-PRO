@@ -7498,3 +7498,81 @@ html body .language-popover button:hover {
     max-width: 100% !important;
   }
 }
+
+
+/* Product editor is a separate modal implementation; bring it into the same identity. */
+html body .pform-overlay,
+html body .products-editor-backdrop,
+html body .products-modal-backdrop,
+html body .products-barcode-alert-overlay {
+  background: rgba(5, 7, 19, .78) !important;
+  -webkit-backdrop-filter: blur(13px) saturate(125%) !important;
+  backdrop-filter: blur(13px) saturate(125%) !important;
+}
+html body .products-page .pform-modal,
+html body .branch-content-modal-body .pform-overlay .pform-modal,
+html body .pform-modal {
+  color: #f5f3ff !important;
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(128,87,232,.18), transparent 43%),
+    radial-gradient(ellipse at 100% 100%, rgba(81,229,209,.07), transparent 40%),
+    linear-gradient(145deg, #171a31 0%, #111426 58%, #15172d 100%) !important;
+  border: 1px solid rgba(160,129,255,.36) !important;
+  border-radius: 22px !important;
+  box-shadow: 0 28px 90px rgba(0,0,0,.52), 0 0 0 1px rgba(81,229,209,.055), 0 0 34px rgba(128,87,232,.12) !important;
+  overflow: hidden !important;
+}
+html body .products-page .pform-modal::before,
+html body .pform-modal::before {
+  content: "";
+  position: absolute;
+  z-index: 3;
+  inset: 0 0 auto;
+  height: 3px;
+  pointer-events: none;
+  background: linear-gradient(90deg,#8057e8 0%,#b59bff 42%,#51e5d1 100%);
+}
+html body .products-page .pform-modal .pform-header,
+html body .pform-modal .pform-header {
+  color: #f8f7ff !important;
+  background: linear-gradient(110deg,rgba(128,87,232,.19),rgba(81,229,209,.075)) !important;
+  border-bottom: 1px solid rgba(167,139,250,.2) !important;
+}
+html body .products-page .pform-modal .pform-header h2,
+html body .pform-modal .pform-header h2,
+html body .products-page .pform-modal .pform-section-heading,
+html body .pform-modal .pform-section-heading {
+  color: #f5f3ff !important;
+}
+html body .products-page .pform-modal input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+html body .products-page .pform-modal select,
+html body .products-page .pform-modal textarea,
+html body .pform-modal input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+html body .pform-modal select,
+html body .pform-modal textarea {
+  color: #f5f3ff !important;
+  background: rgba(9,12,27,.76) !important;
+  border: 1px solid rgba(160,129,255,.27) !important;
+  border-radius: 10px !important;
+}
+html body .products-page .pform-modal input:focus,
+html body .products-page .pform-modal select:focus,
+html body .products-page .pform-modal textarea:focus,
+html body .pform-modal input:focus,
+html body .pform-modal select:focus,
+html body .pform-modal textarea:focus {
+  border-color: #51e5d1 !important;
+  box-shadow: 0 0 0 3px rgba(81,229,209,.12) !important;
+}
+html body .products-page .pform-modal .pform-footer,
+html body .pform-modal .pform-footer {
+  background: rgba(10,12,27,.45) !important;
+  border-top: 1px solid rgba(167,139,250,.18) !important;
+}
+@media (max-width: 760px) {
+  html body .products-page .pform-modal,
+  html body .pform-modal {
+    border-radius: 16px !important;
+    max-width: calc(100vw - 12px) !important;
+  }
+}
