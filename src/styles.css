@@ -6277,3 +6277,241 @@ html body .products-barcode-alert-overlay .products-barcode-alert p{
   opacity:1!important;
   visibility:visible!important;
 }
+
+
+/* VELTRO-PRO POPUP SYSTEM — unified amethyst glass styling and phone-safe sizing. */
+html body #root .app-shell .header-popover,
+html body #root .app-shell .profile-popover,
+html body #root .app-shell .confirm-modal,
+html body #root .app-shell .navigation-dialog,
+html body #root .app-shell .branch-content-modal,
+html body #root .app-shell .section-launch-modal,
+html body #root .app-shell .section-launch-child,
+html body #root .app-shell .product-action-dialog,
+html body #root .app-shell .pform-code-modal,
+html body #root .products-page .pform-modal,
+html body .products-barcode-alert-overlay .products-barcode-alert{
+  color:#33264b!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.985),rgba(249,245,255,.97) 58%,rgba(239,230,252,.96))!important;
+  border:1px solid rgba(139,94,246,.27)!important;
+  box-shadow:0 24px 64px rgba(45,28,83,.2),inset 0 1px 0 rgba(255,255,255,.98)!important;
+  -webkit-backdrop-filter:blur(28px) saturate(150%)!important;
+  backdrop-filter:blur(28px) saturate(150%)!important;
+}
+html body #root .app-shell .header-popover,
+html body #root .app-shell .profile-popover{
+  max-width:calc(100vw - 24px)!important;
+}
+html body #root .app-shell .product-action-overlay,
+html body #root .app-shell .pform-code-overlay,
+html body #root .products-page .pform-overlay{
+  box-sizing:border-box!important;
+  padding:clamp(8px,2.5vw,20px)!important;
+  background:rgba(24,13,43,.58)!important;
+  -webkit-backdrop-filter:blur(7px)!important;
+  backdrop-filter:blur(7px)!important;
+  overscroll-behavior:contain!important;
+}
+html body #root .app-shell .product-action-dialog,
+html body #root .app-shell .pform-code-modal,
+html body #root .products-page .pform-modal{
+  box-sizing:border-box!important;
+  min-width:0!important;
+  max-width:100%!important;
+  color:#33264b!important;
+}
+html body #root .app-shell .product-action-dialog h2,
+html body #root .app-shell .product-action-dialog p,
+html body #root .app-shell .pform-code-modal h3,
+html body #root .app-shell .pform-code-modal p,
+html body #root .products-page .pform-modal h2,
+html body #root .products-page .pform-modal h3{
+  color:#33264b!important;
+}
+html body #root .app-shell .product-action-dialog input,
+html body #root .app-shell .pform-code-modal input,
+html body #root .products-page .pform-modal input,
+html body #root .products-page .pform-modal select,
+html body #root .products-page .pform-modal textarea{
+  box-sizing:border-box!important;
+  max-width:100%!important;
+  min-width:0!important;
+  border-color:rgba(139,94,246,.22)!important;
+}
+html body #root .app-shell .product-action-dialog>header,
+html body #root .app-shell .product-action-dialog>footer,
+html body #root .app-shell .pform-code-modal>header,
+html body #root .app-shell .pform-code-modal>footer,
+html body #root .products-page .pform-modal>.pform-header,
+html body #root .products-page .pform-modal>.pform-footer{
+  border-color:rgba(139,94,246,.16)!important;
+}
+
+/* Phone layout: no off-screen edges, overlapping controls, or trapped content. */
+@media(max-width:760px){
+  html body #root .app-shell .product-action-overlay,
+  html body #root .app-shell .pform-code-overlay,
+  html body #root .products-page .pform-overlay{
+    position:fixed!important;
+    inset:0!important;
+    display:grid!important;
+    place-items:center!important;
+    width:100%!important;
+    height:100dvh!important;
+    min-height:0!important;
+    padding:8px!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+  }
+  html body #root .app-shell .product-action-dialog,
+  html body #root .app-shell .pform-code-modal{
+    width:min(100%,520px)!important;
+    max-width:100%!important;
+    max-height:calc(100dvh - 16px)!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    border-radius:17px!important;
+  }
+  html body #root .app-shell .product-action-dialog{
+    display:flex!important;
+    flex-direction:column!important;
+  }
+  html body #root .app-shell .product-preview-content,
+  html body #root .app-shell .pform-code-modal-body{
+    min-width:0!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+  }
+  html body #root .app-shell .product-preview-grid,
+  html body #root .app-shell .product-preview-extra-grid,
+  html body #root .app-shell .product-preview-codes{
+    grid-template-columns:minmax(0,1fr)!important;
+    min-width:0!important;
+  }
+  html body #root .app-shell .product-action-dialog>header,
+  html body #root .app-shell .product-action-dialog>footer,
+  html body #root .app-shell .pform-code-modal>header,
+  html body #root .app-shell .pform-code-modal>footer{
+    flex-wrap:wrap!important;
+    gap:8px!important;
+    padding:10px!important;
+  }
+  html body #root .app-shell .product-action-dialog>footer>button,
+  html body #root .app-shell .pform-code-modal>footer>button{
+    flex:1 1 110px!important;
+    min-width:0!important;
+  }
+  html body #root .products-page .pform-overlay{
+    align-items:center!important;
+    justify-content:center!important;
+    padding:6px!important;
+  }
+  html body #root .products-page .pform-modal{
+    display:flex!important;
+    flex-direction:column!important;
+    width:calc(100vw - 12px)!important;
+    max-width:calc(100vw - 12px)!important;
+    height:calc(100dvh - 12px)!important;
+    max-height:calc(100dvh - 12px)!important;
+    min-height:0!important;
+    overflow:hidden!important;
+    border-radius:15px!important;
+  }
+  html body #root .products-page .pform-modal>.pform-header,
+  html body #root .products-page .pform-modal>.pform-footer{
+    flex:0 0 auto!important;
+    min-width:0!important;
+    flex-wrap:wrap!important;
+    gap:7px!important;
+    padding:8px!important;
+  }
+  html body #root .products-page .pform-modal .pform-panel-tabs{
+    display:flex!important;
+    gap:5px!important;
+    padding:6px 7px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    scrollbar-width:thin!important;
+  }
+  html body #root .products-page .pform-modal .pform-panel-tabs>button{
+    flex:0 0 auto!important;
+    max-width:80vw!important;
+    white-space:nowrap!important;
+  }
+  html body #root .products-page .pform-modal .pform-content-all{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    height:auto!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+    padding:8px!important;
+    overscroll-behavior:contain!important;
+  }
+  html body #root .products-page .pform-modal .pform-panel-view.is-active{
+    height:auto!important;
+    min-height:0!important;
+    overflow:visible!important;
+  }
+  html body #root .products-page .pform-modal .pform-panel-view.is-active>.pform-section,
+  html body #root .products-page .pform-modal .pform-basic-grid,
+  html body #root .products-page .pform-modal .pform-feature-options,
+  html body #root .products-page .pform-modal .pform-price-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto!important;
+    min-width:0!important;
+  }
+  html body #root .products-page .pform-modal .pform-feature-card,
+  html body #root .products-page .pform-modal .pform-section{
+    min-width:0!important;
+    height:auto!important;
+    overflow:visible!important;
+  }
+  html body #root .products-page .pform-modal .pform-field,
+  html body #root .products-page .pform-modal .pform-price-group,
+  html body #root .products-page .pform-modal .pform-margin-nearby{
+    min-width:0!important;
+    width:100%!important;
+  }
+  html body #root .products-page .pform-modal .pform-footer-actions{
+    display:flex!important;
+    flex:1 1 100%!important;
+    justify-content:stretch!important;
+    gap:7px!important;
+    min-width:0!important;
+  }
+  html body #root .products-page .pform-modal .pform-footer-actions>button{
+    flex:1 1 0!important;
+    min-width:0!important;
+    white-space:normal!important;
+  }
+  html body .products-barcode-alert-overlay{
+    padding:12px!important;
+    place-items:center!important;
+    overflow-y:auto!important;
+  }
+  html body .products-barcode-alert-overlay .products-barcode-alert{
+    width:100%!important;
+    max-width:420px!important;
+    max-height:calc(100dvh - 24px)!important;
+    overflow-y:auto!important;
+    padding:20px 16px!important;
+    box-sizing:border-box!important;
+    border-radius:18px!important;
+  }
+  html body #root .app-shell .header-popover,
+  html body #root .app-shell .profile-popover{
+    width:min(320px,calc(100vw - 24px))!important;
+    max-width:calc(100vw - 24px)!important;
+    max-height:calc(100dvh - 100px)!important;
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+  }
+}
+@media(max-width:380px){
+  html body #root .products-page .pform-modal>.pform-header{padding:6px!important}
+  html body #root .products-page .pform-modal .pform-header h2{font-size:12px!important}
+  html body #root .products-page .pform-modal .pform-panel-tabs>button{font-size:10px!important;padding:5px 7px!important}
+  html body #root .products-page .pform-modal .pform-footer-actions>button{font-size:11px!important;padding:8px 6px!important}
+  html body #root .app-shell .product-action-dialog>footer>button{font-size:11px!important;padding:8px!important}
+}
