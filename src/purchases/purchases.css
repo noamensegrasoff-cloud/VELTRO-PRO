@@ -211,3 +211,34 @@
 .purchase-page .purchase-note svg{color:#7656e8}
 .purchase-page .purchase-filter-reset{border-color:#e5defb;background:#f4f0ff;color:#6c52d4}
 .purchase-page .purchase-status.closed{color:#6c52d4;background:#f0ebff}
+
+
+/* Transparent glass treatment for the purchase receipt dialog title area. */
+.purchase-page .purchase-dialog-head{
+  position:relative;
+  isolation:isolate;
+  background:linear-gradient(125deg,rgba(255,255,255,.78),rgba(246,242,255,.58) 52%,rgba(229,220,255,.48)) !important;
+  border-bottom:1px solid rgba(130,105,220,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 8px 24px rgba(83,60,160,.07);
+  backdrop-filter:blur(24px) saturate(150%);
+  -webkit-backdrop-filter:blur(24px) saturate(150%);
+}
+.purchase-page .purchase-dialog-head::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.34),transparent 48%,rgba(139,112,231,.08));
+}
+.purchase-page .purchase-dialog-head span{color:#8068cf !important;letter-spacing:.09em}
+.purchase-page .purchase-dialog-head h2{color:#30264f !important;text-shadow:0 1px 0 rgba(255,255,255,.75)}
+.purchase-page .purchase-dialog-head>button{
+  color:#6e54cc !important;
+  border-color:rgba(126,99,213,.24) !important;
+  background:rgba(255,255,255,.58) !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 4px 12px rgba(67,47,130,.07);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.purchase-page .purchase-dialog-head>button:hover{background:rgba(255,255,255,.86) !important}
