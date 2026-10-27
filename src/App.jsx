@@ -720,7 +720,7 @@ export default function App() {
             <div className="welcome-sections-side">
               <div className="welcome-sections-heading"><span className="welcome-sections-heading-icon"><LayoutDashboard size={16}/></span><div><h2>{t('allSections')}</h2><p>{t('sectionsIntro')}</p></div></div>
               <div className="welcome-sections-grid">
-                {sections.map((section,index)=>{const Icon=section.icon;return <button type="button" key={section.id} className={'welcome-section-button welcome-section-tone-'+(index%6)} onClick={()=>navigate(section.children[0],section)} title={getLabel(section,lang)}>
+                {sections.map((section,index)=>{const Icon=section.icon;return <button type="button" key={section.id} className={'welcome-section-button welcome-section-tone-'+(index%6)} onClick={()=>{setOpenNavSection(section);setSearchOpen(false);setLanguageOpen(false);setNotificationsOpen(false);setProfileOpen(false);}} aria-haspopup="dialog" title={getLabel(section,lang)}>
                   <span className="welcome-section-icon"><Icon size={16} strokeWidth={1.8}/></span>
                   <span className="welcome-section-name">{getLabel(section,lang)}</span>
                   <span className="welcome-section-count">{String(section.children.length).padStart(2,'0')}</span>
@@ -745,6 +745,27 @@ export default function App() {
         </section>
       </main>
     </div>
+    {openNavSection&&<div className="section-launch-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setOpenNavSection(null);}}>
+      <section className="section-launch-modal" role="dialog" aria-modal="true" aria-labelledby="section-launch-title" dir={dir}>
+        <header className="section-launch-modal-head">
+          <div className="section-launch-modal-identity">
+            <span className="section-launch-modal-icon"><NavigationSectionIcon size={23} strokeWidth={1.8}/></span>
+            <div><span className="section-launch-eyebrow">{t('allSections')}</span><h2 id="section-launch-title">{getLabel(openNavSection,lang)}</h2><p>{lang==='ar'?'اختر الفرع الذي تريد فتحه':lang==='fr'?'Choisissez la rubrique à ouvrir':'Choose a section to open'}</p></div>
+          </div>
+          <button className="section-launch-close" type="button" onClick={()=>setOpenNavSection(null)} aria-label={lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}><X size={19}/></button>
+        </header>
+        <div className="section-launch-modal-body">
+          <div className="section-launch-modal-grid">
+            {openNavSection.children.map((child,index)=>{const ChildIcon=child.icon;return <button type="button" className={'section-launch-child section-launch-tone-'+(index%6)} key={child.id} onClick={()=>navigate(child,openNavSection)}>
+              <span className="section-launch-child-icon"><ChildIcon size={21} strokeWidth={1.8}/></span>
+              <span className="section-launch-child-copy"><b>{getLabel(child,lang)}</b><small>{String(index+1).padStart(2,'0')} · {getLabel(openNavSection,lang)}</small></span>
+              <ArrowUpRight className="section-launch-child-arrow" size={17}/>
+            </button>})}
+          </div>
+        </div>
+        <footer className="section-launch-modal-footer"><button type="button" onClick={()=>setOpenNavSection(null)}><ArrowLeft size={15}/>{t('backToSections')}</button><span>{openNavSection.children.length} {lang==='ar'?'فروع':lang==='fr'?'rubriques':'sections'}</span></footer>
+      </section>
+    </div>}
     {sessionPaused&&<div className="session-pause-overlay"><section className="session-pause-card"><span><LockKeyhole size={25}/></span><h2>{lang==='ar'?'الجلسة معلّقة':lang==='fr'?'Session suspendue':'Session paused'}</h2><p>{lang==='ar'?'تم إخفاء مساحة العمل مؤقتًا. استأنف الجلسة للمتابعة.':lang==='fr'?'Votre espace est masqué temporairement. Reprenez la session.':'Your workspace is hidden temporarily. Resume to continue.'}</p><button onClick={()=>setSessionPaused(false)}>{lang==='ar'?'استئناف الجلسة':lang==='fr'?'Reprendre la session':'Resume session'}</button><button className="pause-signout" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}}>{t('logout')}</button></section></div>}
     {logoutOpen&&<div className="modal-backdrop" role="presentation"><section className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title"><span className="modal-icon"><LogOut size={22}/></span><h2 id="logout-title">{t('logoutConfirm')}</h2><p>VELTRO BUSINESS SUITE</p><div><button className="button-secondary" onClick={()=>setLogoutOpen(false)}>{t('cancel')}</button><button className="button-danger" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;setLogoutOpen(false);setSignedOut(false);}catch(error){window.alert(error?.message||'تعذّر تسجيل الخروج. حاول مجددًا.');}}}>{t('confirm')}</button></div><button className="modal-close" onClick={()=>setLogoutOpen(false)} aria-label="Close"><X size={16}/></button></section></div>}
   </div>;
