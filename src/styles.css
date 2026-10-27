@@ -6028,3 +6028,129 @@ html body #root .products-page .pform-overlay .pform-panel-view.is-active button
   background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(239,231,252,.68))!important;
   color:#624593!important;
 }
+
+
+/* FIT-TO-SCREEN product create/edit dialog: keep actions visible without vertical scrolling. */
+html body #root .products-page .pform-overlay{
+  padding:12px!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+html body #root .products-page .pform-overlay .pform-modal{
+  display:flex!important;
+  flex-direction:column!important;
+  width:min(1240px,calc(100vw - 24px))!important;
+  height:min(900px,calc(100dvh - 24px))!important;
+  max-height:calc(100dvh - 24px)!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html body #root .products-page .pform-overlay .pform-header{
+  flex:0 0 auto!important;
+  padding:12px 18px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-tabs{
+  flex:0 0 auto!important;
+  padding:7px 14px!important;
+  gap:8px!important;
+}
+html body #root .products-page .pform-overlay .pform-content-all{
+  flex:1 1 0!important;
+  min-height:0!important;
+  height:auto!important;
+  overflow:hidden!important;
+  padding:10px 14px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active{
+  height:100%!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active>.pform-section{
+  height:100%!important;
+  min-height:0!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  align-items:stretch!important;
+  gap:10px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card{
+  min-height:0!important;
+  height:100%!important;
+  padding:12px!important;
+  gap:9px!important;
+  overflow:hidden!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-heading{
+  min-height:30px!important;
+  padding:0 0 7px!important;
+  margin:0!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-basic-grid{
+  gap:8px 10px!important;
+  align-content:start!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field{
+  gap:4px!important;
+  min-width:0!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field>span,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-price-group>b,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-margin-nearby>span{
+  font-size:11px!important;
+  line-height:1.25!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field input,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field select{
+  height:34px!important;
+  min-height:34px!important;
+  padding:6px 9px!important;
+  font-size:12px!important;
+  box-sizing:border-box!important;
+}
+html body #root .products-page .pform-overlay .pform-footer{
+  flex:0 0 auto!important;
+  min-height:54px!important;
+  padding:8px 16px!important;
+}
+html body #root .products-page .pform-overlay .pform-footer-actions button{
+  min-height:34px!important;
+  padding:7px 13px!important;
+}
+@media(max-height:760px) and (min-width:761px){
+  html body #root .products-page .pform-overlay .pform-header{padding:8px 14px!important}
+  html body #root .products-page .pform-overlay .pform-header-title h2{font-size:17px!important}
+  html body #root .products-page .pform-overlay .pform-header-title p{font-size:11px!important;margin-top:2px!important}
+  html body #root .products-page .pform-overlay .pform-panel-tabs{padding:5px 12px!important}
+  html body #root .products-page .pform-overlay .pform-content-all{padding:7px 10px!important}
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card{padding:8px!important;gap:6px!important}
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-basic-grid{gap:5px 8px!important}
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field input,
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field select{height:30px!important;min-height:30px!important}
+  html body #root .products-page .pform-overlay .pform-footer{min-height:46px!important;padding:5px 12px!important}
+}
+@media(max-width:760px){
+  html body #root .products-page .pform-overlay{padding:6px!important}
+  html body #root .products-page .pform-overlay .pform-modal{
+    width:calc(100vw - 12px)!important;
+    height:calc(100dvh - 12px)!important;
+    max-height:calc(100dvh - 12px)!important;
+  }
+  html body #root .products-page .pform-overlay .pform-content-all{
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+  }
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active{
+    height:auto!important;
+    overflow:visible!important;
+  }
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active>.pform-section{
+    height:auto!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:auto!important;
+  }
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card{
+    height:auto!important;
+    overflow:visible!important;
+  }
+}
