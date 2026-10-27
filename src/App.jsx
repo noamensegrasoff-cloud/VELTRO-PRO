@@ -708,7 +708,27 @@ export default function App() {
             <div className="topbar-datetime glass-time-card"><CalendarDays size={15}/><span><b>{new Intl.DateTimeFormat(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(clockNow)}</b><strong>{clockNow.toLocaleTimeString(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</strong></span></div><span className="topbar-brand-mark" aria-label="VELTRO-PRO">V</span>
           </div>
         </header>
-        <div className="workspace-canvas" aria-label={lang==='ar'?'مساحة العمل فارغة لإعادة التصميم':lang==='fr'?'Espace de travail vide pour la refonte':'Empty workspace for redesign'} />
+        <section className="workspace-canvas welcome-sections-layout" aria-label={lang==='ar'?'الترحيب والأقسام':lang==='fr'?'Accueil et rubriques':'Welcome and sections'}>
+          <div className="welcome-sections-card">
+            <div className="welcome-copy">
+              <div className="welcome-brand-line"><span className="welcome-brand-symbol">V</span><span>VELTRO</span><span className="welcome-brand-pro">PRO</span></div>
+              <p className="welcome-bilingual">Welcome to VELTRO <span>·</span> Bienvenue dans VELTRO</p>
+              <div className="welcome-title-rule"><span/></div>
+              <h1>{t('home')}</h1>
+              <p className="welcome-description">{t('subtitle')}</p>
+            </div>
+            <div className="welcome-sections-side">
+              <div className="welcome-sections-heading"><span className="welcome-sections-heading-icon"><LayoutDashboard size={18}/></span><div><h2>{t('allSections')}</h2><p>{t('sectionsIntro')}</p></div></div>
+              <div className="welcome-sections-grid">
+                {sections.map((section,index)=>{const Icon=section.icon;return <button type="button" key={section.id} className={'welcome-section-button welcome-section-tone-'+(index%6)} onClick={()=>navigate(section.children[0],section)} title={getLabel(section,lang)}>
+                  <span className="welcome-section-icon"><Icon size={21} strokeWidth={1.8}/></span>
+                  <span className="welcome-section-name">{getLabel(section,lang)}</span>
+                  <span className="welcome-section-count">{String(section.children.length).padStart(2,'0')}</span>
+                </button>})}
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
     {sessionPaused&&<div className="session-pause-overlay"><section className="session-pause-card"><span><LockKeyhole size={25}/></span><h2>{lang==='ar'?'الجلسة معلّقة':lang==='fr'?'Session suspendue':'Session paused'}</h2><p>{lang==='ar'?'تم إخفاء مساحة العمل مؤقتًا. استأنف الجلسة للمتابعة.':lang==='fr'?'Votre espace est masqué temporairement. Reprenez la session.':'Your workspace is hidden temporarily. Resume to continue.'}</p><button onClick={()=>setSessionPaused(false)}>{lang==='ar'?'استئناف الجلسة':lang==='fr'?'Reprendre la session':'Resume session'}</button><button className="pause-signout" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}}>{t('logout')}</button></section></div>}
