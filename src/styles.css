@@ -5594,3 +5594,183 @@ textarea:focus,
 @media(prefers-reduced-motion:reduce){
   button,button:hover,[role="button"]{transition:none!important;transform:none!important}
 }
+
+
+/* VELTRO-PRO — unify cards and controls with the frosted-glass top bar, in Royal Amethyst. */
+.app-shell{
+  --glass-accent:#7954c8!important;
+  --glass-accent-2:#ad96ed!important;
+  --glass-focus:rgba(121,84,200,.22)!important;
+  --glass-line:rgba(133,105,194,.24)!important;
+  --glass-bg:rgba(255,255,255,.72)!important;
+  --glass-panel:rgba(255,255,255,.57)!important;
+  --glass-panel-strong:rgba(250,247,255,.9)!important;
+  --glass-accent-soft:rgba(121,84,200,.11)!important;
+  --glass-shadow:0 12px 32px rgba(67,45,111,.075),inset 0 1px rgba(255,255,255,.72)!important;
+}
+.app-shell.theme-light{
+  --glass-text:#33264b!important;
+  --glass-muted:#786c8d!important;
+  --glass-line:rgba(133,105,194,.23)!important;
+  --glass-bg:rgba(255,255,255,.70)!important;
+  --glass-panel:rgba(255,255,255,.54)!important;
+  --glass-panel-strong:rgba(250,247,255,.91)!important;
+  --glass-accent-soft:rgba(121,84,200,.10)!important;
+  --glass-shadow:0 12px 32px rgba(67,45,111,.075),inset 0 1px rgba(255,255,255,.8)!important;
+  background:
+    radial-gradient(ellipse at 12% 0%,rgba(155,123,234,.11),transparent 44%),
+    radial-gradient(ellipse at 92% 8%,rgba(121,84,200,.07),transparent 38%),
+    linear-gradient(145deg,#f0ecf8 0%,#faf9fd 52%,#eee9f7 100%)!important;
+}
+/* Match the top bar's blur, translucency, rim and soft inset highlight on app cards. */
+.app-shell.theme-light .metric-card,
+.app-shell.theme-light .panel,
+.app-shell.theme-light .module-metric,
+.app-shell.theme-light .module-workspace,
+.app-shell.theme-light .section-launcher,
+.app-shell.theme-light .dashboard-overview,
+.app-shell.theme-light .section-launch-card,
+.app-shell.theme-light .quick-actions,
+.app-shell.theme-light .quick-actions button,
+.app-shell.theme-light .chart-panel,
+.app-shell.theme-light .mix-panel,
+.app-shell.theme-light .recent-panel,
+.app-shell.theme-light .stock-panel,
+.app-shell.theme-light .products-metric,
+.app-shell.theme-light .products-table-wrap,
+.app-shell.theme-light .products-toolbar,
+.app-shell.theme-light .products-filter-bar,
+.app-shell.theme-light .products-catalog .products-tabs,
+.app-shell.theme-light .supplier-stat,
+.app-shell.theme-light .supplier-account-card,
+.app-shell.theme-light .supplier-directory,
+.app-shell.theme-light .supplier-toolbar,
+.app-shell.theme-light .customer-stat,
+.app-shell.theme-light .customer-card,
+.app-shell.theme-light .customer-toolbar,
+.app-shell.theme-light .navigation-subcard,
+.app-shell.theme-light .navigation-back-card,
+.app-shell.theme-light .workspace-footer{
+  background:linear-gradient(135deg,rgba(255,255,255,.72),rgba(250,247,255,.53) 58%,rgba(239,232,251,.42))!important;
+  border:1px solid rgba(255,255,255,.82)!important;
+  outline:1px solid rgba(133,105,194,.13);
+  box-shadow:0 12px 30px rgba(67,45,111,.065),inset 0 1px rgba(255,255,255,.92),inset 0 -1px rgba(133,105,194,.04)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(150%)!important;
+  backdrop-filter:blur(22px) saturate(150%)!important;
+}
+/* Frosted glass for regular buttons, toolbar controls, filters and icon buttons. */
+.app-shell button,
+.app-shell .icon-button,
+.app-shell .topbar-tool,
+.app-shell .topbar-user,
+.app-shell .connection-card,
+.app-shell .topbar-tool-group,
+.app-shell .topbar-datetime,
+.app-shell .global-search,
+.app-shell .products-page .products-filter-btn,
+.app-shell .products-page .products-expand-btn,
+.app-shell .products-page .products-tabs button,
+.app-shell .products-page .pform-panel-tabs button,
+.app-shell .products-page .pform-back-btn,
+.app-shell .products-page .pform-close,
+.app-shell .products-page .pform-code-input button,
+.app-shell .products-page .pform-upload-btn,
+.app-shell .products-page .pform-next-btn{
+  -webkit-backdrop-filter:blur(18px) saturate(150%);
+  backdrop-filter:blur(18px) saturate(150%);
+  border-color:rgba(133,105,194,.24);
+  box-shadow:inset 0 1px rgba(255,255,255,.72);
+}
+.app-shell.theme-light button:not(.button-primary):not(.supplier-primary):not(.customer-primary):not([class*="danger"]):not([class*="delete"]):not([class*="remove"]):not([class*="logout"]):not([class*="warning"]):not(.profile-menu-item):not(.language-option){
+  background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(245,240,253,.58))!important;
+  border-color:rgba(133,105,194,.24)!important;
+  color:#5c4680;
+  box-shadow:0 5px 15px rgba(67,45,111,.045),inset 0 1px rgba(255,255,255,.92)!important;
+}
+.app-shell.theme-light button:not(.button-primary):not(.supplier-primary):not(.customer-primary):not([class*="danger"]):not([class*="delete"]):not([class*="remove"]):not([class*="logout"]):not([class*="warning"]):not(.profile-menu-item):not(.language-option):hover{
+  background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(235,226,251,.82))!important;
+  border-color:rgba(133,105,194,.48)!important;
+  box-shadow:0 8px 20px rgba(67,45,111,.10),inset 0 1px rgba(255,255,255,.98)!important;
+}
+/* Glass primary buttons retain a richer purple surface with a moving soft highlight. */
+.app-shell button.button-primary,
+.app-shell button.supplier-primary,
+.app-shell button.customer-primary,
+.app-shell .button-primary,
+.app-shell .supplier-primary,
+.app-shell .customer-primary,
+.app-shell button[class*="primary"]:not([class*="danger"]):not([class*="delete"]):not([class*="remove"]),
+.app-shell button[class*="submit"]:not([class*="danger"]),
+.app-shell button[class*="save"]:not([class*="danger"]),
+.app-shell button[class*="confirm"]:not([class*="danger"]),
+.app-shell .products-page .pform-upload-btn,
+.app-shell .products-page .pform-next-btn{
+  position:relative;
+  overflow:hidden;
+  isolation:isolate;
+  background:linear-gradient(125deg,rgba(93,59,166,.92),rgba(121,84,200,.88) 52%,rgba(164,138,232,.86))!important;
+  border:1px solid rgba(255,255,255,.62)!important;
+  color:#fff!important;
+  -webkit-backdrop-filter:blur(20px) saturate(155%)!important;
+  backdrop-filter:blur(20px) saturate(155%)!important;
+  box-shadow:0 8px 22px rgba(93,59,166,.19),inset 0 1px rgba(255,255,255,.32),inset 0 -1px rgba(75,45,135,.12)!important;
+}
+.app-shell button.button-primary:before,
+.app-shell button.supplier-primary:before,
+.app-shell button.customer-primary:before,
+.app-shell .button-primary:before,
+.app-shell .supplier-primary:before,
+.app-shell .customer-primary:before,
+.app-shell button[class*="primary"]:not([class*="danger"]):not([class*="delete"]):not([class*="remove"]):before,
+.app-shell button[class*="submit"]:not([class*="danger"]):before,
+.app-shell button[class*="save"]:not([class*="danger"]):before,
+.app-shell button[class*="confirm"]:not([class*="danger"]):before{
+  content:"";
+  position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(112deg,transparent 18%,rgba(255,255,255,.27) 43%,transparent 66%);
+  background-size:220% 100%;
+  animation:amethyst-glass-sweep 8s ease-in-out infinite;
+}
+.app-shell button.button-primary:hover,
+.app-shell button.supplier-primary:hover,
+.app-shell button.customer-primary:hover,
+.app-shell .button-primary:hover,
+.app-shell .supplier-primary:hover,
+.app-shell .customer-primary:hover,
+.app-shell button[class*="primary"]:not([class*="danger"]):not([class*="delete"]):not([class*="remove"]):hover,
+.app-shell button[class*="submit"]:not([class*="danger"]):hover,
+.app-shell button[class*="save"]:not([class*="danger"]):hover,
+.app-shell button[class*="confirm"]:not([class*="danger"]):hover{
+  background:linear-gradient(125deg,rgba(82,48,150,.96),rgba(108,72,188,.94) 52%,rgba(145,113,218,.92))!important;
+  border-color:rgba(255,255,255,.78)!important;
+  box-shadow:0 11px 27px rgba(93,59,166,.25),inset 0 1px rgba(255,255,255,.38)!important;
+}
+.app-shell.theme-light .topbar-tool,
+.app-shell.theme-light .topbar-user,
+.app-shell.theme-light .connection-card,
+.app-shell.theme-light .topbar-tool-group,
+.app-shell.theme-light .topbar-datetime{
+  background:rgba(255,255,255,.56)!important;
+  border-color:rgba(133,105,194,.24)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.86)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(155%)!important;
+  backdrop-filter:blur(24px) saturate(155%)!important;
+}
+.app-shell.theme-light .topbar-tool:hover,
+.app-shell.theme-light .topbar-user:hover{
+  background:rgba(239,232,251,.74)!important;
+  border-color:rgba(133,105,194,.42)!important;
+}
+.app-shell.theme-light .navigation-subcard:hover,
+.app-shell.theme-light .section-launch-card:hover,
+.app-shell.theme-light .metric-card:hover{
+  border-color:rgba(133,105,194,.42)!important;
+  box-shadow:0 15px 35px rgba(67,45,111,.11),inset 0 1px rgba(255,255,255,.95)!important;
+}
+@keyframes amethyst-glass-sweep{
+  0%,100%{background-position:140% 0}
+  50%{background-position:-100% 0}
+}
+@media(prefers-reduced-motion:reduce){
+  .app-shell button:before{animation:none!important}
+}
