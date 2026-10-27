@@ -3225,3 +3225,24 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
 
 /* Empty content area reserved for the new below-topbar design */
 .workspace-canvas{flex:1 1 auto;min-height:calc(100vh - 90px);width:100%;}
+
+/* Keep the workspace completely empty beneath the top bar for the new redesign. */
+.app-shell.theme-light{
+  background:#f4f7fb!important;
+}
+.app-shell.theme-light .app-layout,
+.app-shell.theme-light .workspace{
+  background:transparent!important;
+}
+.app-shell .workspace-canvas{
+  display:block!important;
+  flex:1 1 auto!important;
+  width:100%!important;
+  min-height:calc(100vh - 74px)!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+}
