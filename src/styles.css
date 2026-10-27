@@ -6967,3 +6967,25 @@ html body #root .products-page .pform-modal>.pform-footer{
   .section-launch-overlay { padding: 7px !important; }
   .section-launch-modal-body { padding: 7px !important; }
 }
+
+
+@media (max-width: 760px) {
+  .branch-content-modal-body input[type="checkbox"],
+  .branch-content-modal-body input[type="radio"],
+  .branch-content-modal-body input[type="range"],
+  .branch-content-modal-body input[type="file"] {
+    width: auto !important;
+    max-width: 100% !important;
+    flex: 0 1 auto !important;
+  }
+  .branch-content-modal-body input[type="checkbox"],
+  .branch-content-modal-body input[type="radio"] {
+    min-width: 16px !important;
+    min-height: 16px !important;
+  }
+  .branch-content-modal-body label {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere !important;
+  }
+}
