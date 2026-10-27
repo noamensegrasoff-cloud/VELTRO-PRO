@@ -5,7 +5,7 @@ import {
   Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
   ShoppingCart, X, Globe, ClipboardList, History, ArrowLeft, LayoutDashboard,
   CircleCheck, PackageCheck, Cloud, PanelLeftClose, PanelLeftOpen,
-  Plus, Phone, MapPin, Pencil, Trash2, ImagePlus, Building2, FileText, Users, Eye, Printer, ScanLine, Mail
+  Plus, Phone, MapPin, Pencil, Trash2, ImagePlus, Building2, FileText, Users, Eye, Printer, ScanLine, Mail, Wifi, Server, UserRound, Pause, Check, LockKeyhole
 } from 'lucide-react';
 import { dashboard, sections } from './data/navigation.js';
 import { getCloudStatus } from './services/cloudStorage.js';
@@ -552,6 +552,12 @@ export default function App() {
   const [theme,setTheme]=useState(()=>{try{if(localStorage.getItem('veltro.theme.palette.v2')!=='1'){localStorage.setItem('veltro.theme.palette.v2','1');localStorage.setItem('veltro.theme','dark');return 'dark';}return localStorage.getItem('veltro.theme')==='light'?'light':'dark';}catch{return 'dark';}});
   const [lang,setLang]=useState(()=>{try{return ['ar','fr','en'].includes(localStorage.getItem('veltro.language'))?localStorage.getItem('veltro.language'):'ar';}catch{return 'ar';}});
   const [cloudState,setCloudState]=useState('checking');
+  const [currentUser,setCurrentUser]=useState(null);
+  const [profileOpen,setProfileOpen]=useState(false);
+  const [sessionPaused,setSessionPaused]=useState(false);
+  const [clockNow,setClockNow]=useState(()=>new Date());
+  useEffect(()=>{let alive=true;supabase.auth.getUser().then(({data})=>{if(alive)setCurrentUser(data?.user||null)}).catch(()=>{if(alive)setCurrentUser(null)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>setCurrentUser(session?.user||null));return()=>{alive=false;subscription?.unsubscribe()}},[]);
+  useEffect(()=>{const timer=window.setInterval(()=>setClockNow(new Date()),1000);return()=>window.clearInterval(timer)},[]);
   const [manualSyncing,setManualSyncing]=useState(false);
   const [setupState,setSetupState]=useState('checking');
   const [setupProfile,setSetupProfile]=useState({});
@@ -652,7 +658,7 @@ export default function App() {
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
         if (openNavSection) { event.preventDefault(); setOpenNavSection(null); return; }
-        if (searchOpen || languageOpen || notificationsOpen) { event.preventDefault(); setSearchOpen(false); setLanguageOpen(false); setNotificationsOpen(false); return; }
+        if (searchOpen || languageOpen || notificationsOpen || profileOpen) { event.preventDefault(); setSearchOpen(false); setLanguageOpen(false); setNotificationsOpen(false); setProfileOpen(false); return; }
         if (logoutOpen) {
           event.preventDefault();
           setLogoutOpen(false);
@@ -670,30 +676,34 @@ export default function App() {
     // Capture phase cancels browser defaults before page-level handlers can run.
     window.addEventListener('keydown', onKeyDown, true);
     return () => window.removeEventListener('keydown', onKeyDown, true);
-  }, [openNavSection, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen]);
+  }, [openNavSection, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen, profileOpen]);
   if(setupState==='checking') return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تجهيز مساحة العمل…':lang==='fr'?'Préparation de votre espace…':'Preparing your workspace…'}</p></div></div>;
   if(setupState==='required') return <BusinessOnboarding lang={lang} onLanguageChange={setLang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
   return <div className={'app-shell lang-'+lang+' theme-'+theme} dir={dir}>
     <div className="app-layout">
       <main className="workspace">
-        <header className="topbar">
-          <div className="topbar-start"><span className="topbar-brand-mark">V</span><div className="breadcrumbs"><span>VELTRO-PRO</span><span className="crumb-sep">/</span><b>{getLabel(activePage,lang)||t('home')}</b></div></div>
-          <div className="topbar-actions">
-            <div className="header-popover-wrap search-wrap">
-              <button className="icon-button" onClick={()=>{setSearchOpen(v=>!v);setLanguageOpen(false);setNotificationsOpen(false);}} aria-label={t('search')} title={t('search')} aria-expanded={searchOpen}><Search size={17}/></button>
-              {searchOpen&&<div className="header-popover search-popover" role="dialog" aria-label={t('search')}><div className="popover-title"><b>{t('searchResults')}</b><button className="popover-close" onClick={()=>setSearchOpen(false)} aria-label="Close"><X size={15}/></button></div><label className="popup-search-field"><Search size={16}/><input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>Esc</kbd></label><p className="popover-hint">{lang==='ar'?'اكتب للبحث في الأقسام والوظائف':lang==='fr'?'Saisissez pour rechercher des rubriques et actions':'Type to search sections and actions'}</p></div>}
+        <header className="topbar glass-topbar">
+          <div className="topbar-identity">
+            <div className="header-popover-wrap user-wrap">
+              <button className="topbar-user" onClick={()=>{setProfileOpen(v=>!v);setSearchOpen(false);setLanguageOpen(false);setNotificationsOpen(false)}} aria-expanded={profileOpen}><span className="profile-avatar"><UserRound size={18}/></span><span className="topbar-user-copy"><b>{currentUser?.user_metadata?.full_name||currentUser?.user_metadata?.name||currentUser?.email?.split('@')[0]||(lang==='ar'?'المستخدم الحالي':lang==='fr'?'Utilisateur actuel':'Current user')}</b><small>{setupProfile?.storeName||currentUser?.email||'VELTRO-PRO'}</small></span><ChevronDown size={13}/></button>
+              {profileOpen&&<div className="header-popover profile-popover"><div className="profile-popover-head"><span className="profile-avatar large"><UserRound size={23}/></span><div><b>{currentUser?.user_metadata?.full_name||currentUser?.user_metadata?.name||currentUser?.email?.split('@')[0]||(lang==='ar'?'المستخدم الحالي':lang==='fr'?'Utilisateur actuel':'Current user')}</b><small>{currentUser?.email||'—'}</small><span className="profile-online"><i/>{lang==='ar'?'الجلسة نشطة':lang==='fr'?'Session active':'Session active'}</span></div></div>
+                <button className="profile-menu-item" onClick={()=>setProfileOpen(false)}><ArrowLeft size={15}/>{lang==='ar'?'العودة':lang==='fr'?'Retour':'Back'}</button>
+                <button className="profile-menu-item" onClick={async()=>{setProfileOpen(false);try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}><UserRound size={15}/>{lang==='ar'?'تغيير المستخدم':lang==='fr'?'Changer d’utilisateur':'Switch user'}</button>
+                <button className="profile-menu-item" onClick={()=>{setProfileOpen(false);setSessionPaused(true)}}><Pause size={15}/>{lang==='ar'?'تعليق الجلسة':lang==='fr'?'Suspendre la session':'Pause session'}</button>
+                <button className="profile-menu-item danger" onClick={async()=>{setProfileOpen(false);try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}><LogOut size={15}/>{lang==='ar'?'تسجيل الخروج':lang==='fr'?'Déconnexion':'Sign out'}</button>
+              </div>}
             </div>
-            <button className="icon-button refresh-button" onClick={()=>window.location.reload()} aria-label={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'} title={lang==='ar'?'تحديث الصفحة':lang==='fr'?'Actualiser la page':'Refresh page'}><RotateCw size={17}/></button>
-            <button className="icon-button topbar-sync" onClick={handleManualSync} disabled={manualSyncing} aria-label={t('sync')} title={t('sync')}><RotateCw className={manualSyncing?'sync-spinning':''} size={16}/></button>
-            <button className="icon-button topbar-logout" onClick={()=>setLogoutOpen(true)} aria-label={t('logout')} title={t('logout')}><LogOut size={16}/></button>
-            <button className="icon-button theme-toggle" onClick={()=>setTheme(v=>v==='dark'?'light':'dark')} aria-label={theme==='dark'?t('lightMode'):t('darkMode')} title={theme==='dark'?t('lightMode'):t('darkMode')}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
-            <div className="header-popover-wrap language-wrap">
-              <button className="icon-button language-trigger" onClick={()=>{setLanguageOpen(v=>!v);setSearchOpen(false);setNotificationsOpen(false);}} aria-label={lang==='ar'?'تغيير اللغة':lang==='fr'?'Changer de langue':'Change language'} title={lang==='ar'?'تغيير اللغة':lang==='fr'?'Changer de langue':'Change language'} aria-expanded={languageOpen}><Globe size={17}/><span>{lang.toUpperCase()}</span><ChevronDown size={11}/></button>
-              {languageOpen&&<div className="header-popover language-popover" role="menu"><b className="popover-heading">{lang==='ar'?'لغة التطبيق':lang==='fr'?'Langue de l’application':'App language'}</b>{[['ar','العربية'],['fr','Français'],['en','English']].map(([value,label])=><button key={value} role="menuitem" className={'language-option '+(lang===value?'selected':'')} onClick={()=>{setLang(value);setLanguageOpen(false);}}><span>{label}</span>{lang===value&&<CircleCheck size={15}/>}</button>)}</div>}
+            <div className="connection-card"><span className={'connection-state '+(navigator.onLine?'is-online':'is-offline')}><Wifi size={15}/><span><b>Internet</b><small>{navigator.onLine?(lang==='ar'?'متصل':lang==='fr'?'Connecté':'Connected'):(lang==='ar'?'غير متصل':lang==='fr'?'Hors ligne':'Offline')}</small></span><i/></span><span className={'connection-state '+(cloudState==='connected'?'is-online':'is-pending')}><Cloud size={15}/><span><b>{lang==='ar'?'السحابة':'Cloud'}</b><small>{cloudState==='connected'?(lang==='ar'?'متصلة':lang==='fr'?'Connecté':'Connected'):(lang==='ar'?'قيد الفحص':lang==='fr'?'À vérifier':'Check status')}</small></span><i/></span><span className={'connection-state '+(cloudState==='error'?'is-offline':'is-online')}><Server size={15}/><span><b>{lang==='ar'?'السيرفر':'Server'}</b><small>{cloudState==='error'?(lang==='ar'?'غير متاح':lang==='fr'?'Indisponible':'Unavailable'):(lang==='ar'?'جاهز':lang==='fr'?'Prêt':'Ready')}</small></span><i/></span></div>
+          </div>
+          <div className="topbar-tools">
+            <div className="header-popover-wrap search-wrap"><button className="topbar-tool search-tool" onClick={()=>{setSearchOpen(v=>!v);setLanguageOpen(false);setNotificationsOpen(false);setProfileOpen(false)}} aria-label={t('search')}><Search size={17}/><span>{lang==='ar'?'بحث':lang==='fr'?'Rechercher':'Search'}</span></button>{searchOpen&&<div className="header-popover search-popover"><div className="popover-title"><b>{t('searchResults')}</b><button className="popover-close" onClick={()=>setSearchOpen(false)}><X size={15}/></button></div><label className="popup-search-field"><Search size={16}/><input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>Esc</kbd></label></div>}</div>
+            <div className="topbar-tool-group">
+              <div className="header-popover-wrap notification-wrap"><button className="topbar-tool compact-tool" onClick={()=>{setNotificationsOpen(v=>!v);setSearchOpen(false);setLanguageOpen(false);setProfileOpen(false)}} aria-label={t('notifications')}><Bell size={17}/><i className="tool-indicator"/></button>{notificationsOpen&&<div className="header-popover notification-popover"><div className="popover-title"><b>{t('notifications')}</b><button className="popover-close" onClick={()=>setNotificationsOpen(false)}><X size={15}/></button></div><div className="notification-empty"><span><Bell size={18}/></span><b>{t('noNotifications')}</b><p>{lang==='ar'?'ستظهر هنا التنبيهات المهمة.':lang==='fr'?'Les alertes importantes apparaîtront ici.':'Important alerts will appear here.'}</p></div></div>}</div>
+              <div className="header-popover-wrap language-wrap"><button className="topbar-tool compact-tool" onClick={()=>{setLanguageOpen(v=>!v);setSearchOpen(false);setNotificationsOpen(false);setProfileOpen(false)}} aria-label="Language"><Globe size={17}/><span>{lang.toUpperCase()}</span></button>{languageOpen&&<div className="header-popover language-popover"><b className="popover-heading">{lang==='ar'?'لغة التطبيق':lang==='fr'?'Langue':'Language'}</b>{[['ar','العربية'],['fr','Français'],['en','English']].map(([value,label])=><button key={value} className={'language-option '+(lang===value?'selected':'')} onClick={()=>{setLang(value);setLanguageOpen(false)}}><span>{label}</span>{lang===value&&<Check size={15}/>}</button>)}</div>}</div>
+              <button className="topbar-tool compact-tool" onClick={handleManualSync} disabled={manualSyncing} aria-label={t('sync')} title={t('sync')}><RotateCw className={manualSyncing?'sync-spinning':''} size={16}/></button><button className="topbar-tool compact-tool" onClick={()=>setTheme(v=>v==='dark'?'light':'dark')} aria-label={theme==='dark'?t('lightMode'):t('darkMode')}>{theme==='dark'?<Sun size={17}/>:<Moon size={17}/>}</button>
             </div>
-            <div className="header-popover-wrap notification-wrap"><button className="icon-button notification-button" onClick={()=>{setNotificationsOpen(v=>!v);setSearchOpen(false);setLanguageOpen(false);}} aria-label={t('notifications')} title={t('notifications')} aria-expanded={notificationsOpen}><Bell size={17}/><i/></button>{notificationsOpen&&<div className="header-popover notification-popover"><div className="popover-title"><b>{t('notifications')}</b><button className="popover-close" onClick={()=>setNotificationsOpen(false)} aria-label="Close"><X size={15}/></button></div><div className="notification-empty"><span><Bell size={18}/></span><b>{t('noNotifications')}</b><p>{lang==='ar'?'ستظهر هنا تنبيهات المخزون والعمليات المهمة.':lang==='fr'?'Les alertes de stock et les opérations importantes apparaîtront ici.':'Stock alerts and important activity will appear here.'}</p></div></div>}</div>
-            <div className="profile-chip"><span className="profile-avatar">V</span><span><b>VELTRO</b><small>PRO</small></span><ChevronDown size={13}/></div>
+            <div className="topbar-datetime"><CalendarDays size={15}/><span><b>{new Intl.DateTimeFormat(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(clockNow)}</b><strong>{clockNow.toLocaleTimeString(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</strong></span></div><span className="topbar-brand-mark" aria-label="VELTRO-PRO">V</span>
           </div>
         </header>
         {activePage.id===dashboard.id?<DashboardPage t={t} lang={lang} onNavigate={navigate} onOpenSection={setOpenNavSection}/>:<ModulePage page={activePage} parent={activeParent} t={t} lang={lang} onBack={()=>navigate(dashboard)}/>}
@@ -707,6 +717,7 @@ export default function App() {
         <div className="navigation-subcards">{openNavSection.children.map((child,index)=>{const Icon=child.icon;return <button type="button" key={child.id} className={'navigation-subcard subcard-tone-'+(index%6)} onClick={()=>navigate(child,openNavSection)}><span className="navigation-subcard-icon"><Icon size={24} strokeWidth={1.8}/></span><span className="navigation-subcard-copy"><b>{getLabel(child,lang)}</b><small>{String(index+1).padStart(2,'0')}</small></span><span className="navigation-subcard-arrow"><ArrowUpRight size={17}/></span></button>})}</div>
       </section>
     </div>}
+    {sessionPaused&&<div className="session-pause-overlay"><section className="session-pause-card"><span><LockKeyhole size={25}/></span><h2>{lang==='ar'?'الجلسة معلّقة':lang==='fr'?'Session suspendue':'Session paused'}</h2><p>{lang==='ar'?'تم إخفاء مساحة العمل مؤقتًا. استأنف الجلسة للمتابعة.':lang==='fr'?'Votre espace est masqué temporairement. Reprenez la session.':'Your workspace is hidden temporarily. Resume to continue.'}</p><button onClick={()=>setSessionPaused(false)}>{lang==='ar'?'استئناف الجلسة':lang==='fr'?'Reprendre la session':'Resume session'}</button><button className="pause-signout" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}}>{t('logout')}</button></section></div>}
     {logoutOpen&&<div className="modal-backdrop" role="presentation"><section className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title"><span className="modal-icon"><LogOut size={22}/></span><h2 id="logout-title">{t('logoutConfirm')}</h2><p>VELTRO BUSINESS SUITE</p><div><button className="button-secondary" onClick={()=>setLogoutOpen(false)}>{t('cancel')}</button><button className="button-danger" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;setLogoutOpen(false);setSignedOut(false);}catch(error){window.alert(error?.message||'تعذّر تسجيل الخروج. حاول مجددًا.');}}}>{t('confirm')}</button></div><button className="modal-close" onClick={()=>setLogoutOpen(false)} aria-label="Close"><X size={16}/></button></section></div>}
   </div>;
 }
