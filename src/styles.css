@@ -7460,3 +7460,67 @@ html body #root .products-page .pform-modal>.pform-footer{
   .app-shell .topbar-tool-group { justify-content: space-between !important; }
   .app-shell .topbar-tool { min-width: 34px !important; min-height: 34px !important; }
 }
+
+
+/* FIX ROOT CAUSE: restore the workspace content hidden by an old redesign reset.
+   Keep the glass header, but render the actual page beneath it on mobile and desktop. */
+html body #root .app-shell .workspace > :not(.topbar) {
+  display: revert !important;
+}
+html body #root .app-shell .workspace > .workspace-canvas {
+  display: flex !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: auto !important;
+}
+html body #root .app-shell .workspace > .workspace-canvas > * {
+  display: revert !important;
+}
+@media (max-width: 760px) {
+  html body #root .app-shell,
+  html body #root .app-shell .app-layout,
+  html body #root .app-shell .workspace {
+    height: auto !important;
+    min-height: 100dvh !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  html body #root .app-shell .workspace {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  html body #root .app-shell .workspace > .topbar.glass-topbar {
+    position: relative !important;
+    top: auto !important;
+    flex: 0 0 auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    width: calc(100% - 20px) !important;
+    margin: 10px 10px 0 !important;
+    padding: 10px !important;
+    overflow: visible !important;
+  }
+  html body #root .app-shell .workspace > .workspace-canvas {
+    display: flex !important;
+    flex: 1 0 auto !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 12px 10px 22px !important;
+  }
+  html body #root .app-shell .workspace-canvas.welcome-sections-layout {
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+}
