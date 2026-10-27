@@ -5413,3 +5413,184 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
  .products-page .pform-overlay .pform-header:after,
  .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card:before{animation:none!important}
 }
+
+
+/* VELTRO-PRO — global Royal Amethyst identity: purple/lavender only, no turquoise gradients. */
+:root{
+  --veltro-teal:#7954c8;
+  --veltro-teal-dark:#5d3ba6;
+  --veltro-cyan:#b9a2f4;
+  --veltro-purple:#7954c8;
+  --veltro-violet:#9b7bea;
+  --accent:#7954c8;
+  --accent-hover:#6844b4;
+  --focus-ring:rgba(121,84,200,.22);
+}
+.app-shell{
+  --veltro-teal:#7954c8;
+  --veltro-teal-dark:#5d3ba6;
+  --veltro-cyan:#b9a2f4;
+  --accent:#7954c8;
+  --accent-hover:#6844b4;
+  --focus-ring:rgba(121,84,200,.22);
+}
+/* Primary actions across every section */
+button.button-primary,
+button.supplier-primary,
+button.customer-primary,
+.button-primary,
+.supplier-primary,
+.customer-primary,
+button[class*="primary"]:not([class*="danger"]):not([class*="delete"]):not([class*="remove"]),
+button[class*="submit"]:not([class*="danger"]),
+button[class*="save"]:not([class*="danger"]),
+button[class*="confirm"]:not([class*="danger"]),
+.products-page .pform-overlay .pform-upload-btn,
+.products-page .pform-overlay .pform-next-btn,
+.products-page .pform-overlay .pform-footer button[type="submit"]{
+  color:#fff!important;
+  background:linear-gradient(125deg,#6843ad 0%,#8059ce 52%,#a48ae8 100%)!important;
+  border:1px solid rgba(255,255,255,.55)!important;
+  box-shadow:0 7px 18px rgba(103,67,173,.22),inset 0 1px rgba(255,255,255,.25)!important;
+  transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease!important;
+}
+button.button-primary:hover,
+button.supplier-primary:hover,
+button.customer-primary:hover,
+.button-primary:hover,
+.supplier-primary:hover,
+.customer-primary:hover,
+button[class*="primary"]:not([class*="danger"]):not([class*="delete"]):not([class*="remove"]):hover,
+button[class*="submit"]:not([class*="danger"]):hover,
+button[class*="save"]:not([class*="danger"]):hover,
+button[class*="confirm"]:not([class*="danger"]):hover,
+.products-page .pform-overlay .pform-upload-btn:hover,
+.products-page .pform-overlay .pform-next-btn:hover{
+  background:linear-gradient(125deg,#593493 0%,#7048bd 52%,#9273d9 100%)!important;
+  border-color:#bca9ec!important;
+  box-shadow:0 10px 24px rgba(103,67,173,.28),inset 0 1px rgba(255,255,255,.3)!important;
+  transform:translateY(-1px);
+}
+/* Secondary buttons: translucent glass with lavender edge */
+button:not(.button-primary):not(.supplier-primary):not(.customer-primary):not([class*="danger"]):not([class*="delete"]):not([class*="remove"]):not([class*="logout"]):not([class*="warning"]),
+.products-page .pform-overlay .pform-back-btn{
+  border-color:rgba(137,108,203,.28);
+}
+button:not(.button-primary):not(.supplier-primary):not(.customer-primary):not([class*="danger"]):not([class*="delete"]):not([class*="remove"]):not([class*="logout"]):not([class*="warning"]):hover,
+.products-page .pform-overlay .pform-back-btn:hover{
+  background:linear-gradient(125deg,rgba(239,232,255,.96),rgba(250,248,255,.94))!important;
+  border-color:#a58be0!important;
+  color:#5e3d9f!important;
+  box-shadow:0 5px 15px rgba(103,67,173,.12),inset 0 1px rgba(255,255,255,.95)!important;
+}
+/* Consistent purple focus/selection states */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible{
+  outline-color:#9876dc!important;
+  box-shadow:0 0 0 3px rgba(137,100,211,.2)!important;
+}
+.dashboard-link.active,
+.nav-child.active,
+.products-page .products-catalog .products-tabs button.active,
+.products-page .pform-overlay .pform-panel-tabs button.active,
+.products-page .pform-overlay .pform-margin-buttons button.active{
+  color:#603d9f!important;
+  border-color:rgba(137,100,203,.42)!important;
+  background:linear-gradient(125deg,rgba(232,222,255,.94),rgba(248,244,255,.96))!important;
+  box-shadow:inset 0 0 0 1px rgba(137,100,203,.12),0 4px 12px rgba(103,67,173,.07)!important;
+}
+.dashboard-link.active svg,
+.nav-child.active svg,
+.heading-kicker b,
+.workspace .panel h2,
+.workspace .supplier-toolbar h2,
+.workspace .supplier-accounts-heading .heading-kicker b,
+.pform-margin-input>b,
+.pform-price-input span{
+  color:#7650bb!important;
+}
+.brand-mark,
+.module-icon,
+.module-empty-icon,
+.product-mini,
+.stock-avatar{
+  background:linear-gradient(135deg,#eee7ff,#d9ccfb 55%,#f7f3ff)!important;
+  color:#6843ad!important;
+  border-color:rgba(137,100,211,.24)!important;
+}
+.global-search:focus-within,
+input:focus,
+select:focus,
+textarea:focus,
+.products-page .pform-overlay .pform-field input:focus,
+.products-page .pform-overlay .pform-field select:focus{
+  border-color:#9a7add!important;
+  box-shadow:0 0 0 3px rgba(137,100,203,.16)!important;
+}
+/* Product editor: replace the remaining turquoise highlights and glass tints */
+.products-page .pform-overlay .pform-panel-view.is-active .pform-section-heading>span,
+.products-page .pform-overlay .pform-panel-view.is-active .pform-feature-icon,
+.products-page .pform-overlay .pform-panel-view.is-active .pform-price-head>span,
+.products-page .pform-overlay .pform-panel-view.is-active .pform-price-input span,
+.products-page .pform-overlay .pform-panel-view.is-active .pform-number-suffix b,
+.products-page .pform-overlay .pform-panel-view.is-active .pform-margin-input>b,
+.products-page .pform-overlay .pform-average-cost-card strong{
+  color:#7650bb!important;
+}
+.products-page .pform-overlay .pform-panel-view.is-active .pform-feature-icon{
+  background:linear-gradient(135deg,rgba(121,84,200,.15),rgba(181,157,238,.18))!important;
+  border-color:rgba(137,100,203,.3)!important;
+}
+.products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card{
+  background:linear-gradient(140deg,rgba(255,255,255,.9),rgba(247,243,255,.8) 60%,rgba(237,230,253,.74))!important;
+}
+.products-page .pform-overlay .pform-panel-view.is-active .pform-price-block,
+.products-page .pform-overlay .pform-panel-view.is-active .pform-image-drop,
+.products-page .pform-overlay .pform-average-cost-card{
+  background:linear-gradient(125deg,rgba(239,232,255,.9),rgba(250,248,255,.92))!important;
+  border-color:rgba(137,100,203,.28)!important;
+}
+.products-page .pform-overlay .pform-number-suffix b,
+.products-page .pform-overlay .pform-margin-input>b{
+  background:#eee7fc!important;
+  border-color:#d8c9f4!important;
+}
+.products-page .pform-overlay .pform-back-btn{
+  background:rgba(255,255,255,.9)!important;
+  border:1px solid rgba(137,100,203,.25)!important;
+  color:#62458f!important;
+}
+/* General non-destructive action surfaces and table selection */
+.workspace .supplier-toolbar,
+.customer-page .supplier-toolbar,
+.supplier-ledger-tools,
+.supplier-ledger-footer{
+  background:linear-gradient(110deg,rgba(121,84,200,.07),rgba(181,157,238,.07),rgba(255,255,255,.3))!important;
+  border-color:rgba(137,100,203,.2)!important;
+}
+.supplier-ledger-header{
+  background:radial-gradient(ellipse at 95% 0%,rgba(181,157,238,.22),transparent 34%),radial-gradient(ellipse at 0% 100%,rgba(121,84,200,.16),transparent 38%),linear-gradient(115deg,#34234f 0%,#503678 54%,#6843ad 100%)!important;
+}
+.supplier-ledger-identity>span,
+.supplier-ledger-identity>img{
+  background:linear-gradient(135deg,#7650bb,#b9a2f4)!important;
+  color:#fff!important;
+  box-shadow:0 7px 22px rgba(103,67,173,.22)!important;
+}
+.supplier-ledger-table th,
+.supplier-ledger-table tbody tr:hover,
+.supplier-ledger-table tbody tr.keyboard-selected{
+  background:linear-gradient(90deg,rgba(121,84,200,.09),rgba(181,157,238,.07))!important;
+}
+.supplier-ledger-actions>button.primary,
+.supplier-payment-buttons>button.primary,
+.supplier-invoice-preview footer>button.primary{
+  background:linear-gradient(125deg,#6843ad,#8059ce 55%,#a48ae8)!important;
+  border-color:#7650bb!important;
+}
+@media(prefers-reduced-motion:reduce){
+  button,button:hover,[role="button"]{transition:none!important;transform:none!important}
+}
