@@ -289,12 +289,12 @@
 .purchase-page .purchase-form-tabs{
   display:flex;gap:9px;padding:13px 22px 0;flex:0 0 auto;
 }
-.purchase-page .purchase-form-tabs span{
+.purchase-page .purchase-form-tabs button{
   min-height:42px;display:flex;align-items:center;justify-content:center;gap:8px;flex:1;min-width:0;
   padding:9px 13px;border:1px solid rgba(132,112,220,.2);border-radius:12px;
-  background:rgba(255,255,255,.64);color:#7d739b;font-size:12px;font-weight:800;
+  background:rgba(255,255,255,.64);color:#7d739b;font-size:12px;font-weight:800;cursor:pointer;
 }
-.purchase-page .purchase-form-tabs span.active{
+.purchase-page .purchase-form-tabs button.active{
   border-color:rgba(121,87,232,.42);
   background:linear-gradient(130deg,rgba(121,87,232,.15),rgba(255,255,255,.8));
   color:#6848c7;box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
@@ -425,7 +425,7 @@
   .purchase-page .purchase-form-title-copy h2{font-size:15px}
   .purchase-page .purchase-form-title-copy p{display:none}
   .purchase-page .purchase-form-tabs{gap:6px;padding:9px 10px 0}
-  .purchase-page .purchase-form-tabs span{min-height:38px;padding:8px 5px;font-size:10px}
+  .purchase-page .purchase-form-tabs button{min-height:38px;padding:8px 5px;font-size:10px}
   .purchase-page .purchase-form-body{gap:10px;padding:10px}
   .purchase-page .purchase-form-section{padding:11px;border-radius:13px}
   .purchase-page .purchase-form-section-heading{margin-bottom:10px}
