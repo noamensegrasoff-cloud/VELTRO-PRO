@@ -37,7 +37,7 @@ const copy = {
     signedOut: 'تم تسجيل الخروج من المعاينة', signIn: 'العودة إلى المعاينة',
     back: 'العودة', home: 'لوحة التحكم', selected: 'القسم المحدد',
     welcome: 'مرحبًا بك في', title: 'VELTRO BUSINESS SUITE',
-    daily: 'الحالة اليومية', cashBalance: 'رصيد الصندوق', expense: 'المصاريف', capital: 'رأس مال المحل', dailyProfit: 'الربح اليومي', capitalHint: 'يظهر بعد ربط بيانات المحل', profitHint: 'حسب المبيعات والتكاليف المسجلة', notLinked: 'بانتظار البيانات الفعلية', sectionsIntro: 'اختر القسم الذي تريد العمل فيه', backToSections: 'العودة إلى الأقسام',
+    daily: 'الحالة اليومية', cashBalance: 'رصيد الصندوق', inventoryValue: 'قيمة المخزون', expense: 'المصاريف', capital: 'رأس مال المحل', dailyProfit: 'الربح اليومي', capitalHint: 'يظهر بعد ربط بيانات المحل', profitHint: 'حسب المبيعات والتكاليف المسجلة', notLinked: 'بانتظار البيانات الفعلية', sectionsIntro: 'اختر القسم الذي تريد العمل فيه', backToSections: 'العودة إلى الأقسام',
     profit: 'الربح التقديري', viewDetails: 'عرض التفاصيل', allSections: 'الأقسام',
     searchResults: 'نتائج البحث', noResults: 'لا توجد نتائج مطابقة.',
     topProducts: 'أكثر المنتجات حركة', activity: 'النشاط حسب الفترة',
@@ -62,7 +62,7 @@ const copy = {
     signedOut: 'You have left the preview', signIn: 'Return to preview',
     back: 'Back', home: 'Dashboard', selected: 'Selected section',
     welcome: 'Welcome to', title: 'VELTRO BUSINESS SUITE',
-    daily: 'Daily status', cashBalance: 'Cash balance', expense: 'Expenses', capital: 'Store capital', dailyProfit: 'Daily profit', capitalHint: 'Shown after store data is connected', profitHint: 'Based on recorded sales and costs', notLinked: 'Awaiting live data', sectionsIntro: 'Choose a section to get started', backToSections: 'Back to sections',
+    daily: 'Daily status', cashBalance: 'Cash balance', inventoryValue: 'Inventory value', expense: 'Expenses', capital: 'Store capital', dailyProfit: 'Daily profit', capitalHint: 'Shown after store data is connected', profitHint: 'Based on recorded sales and costs', notLinked: 'Awaiting live data', sectionsIntro: 'Choose a section to get started', backToSections: 'Back to sections',
     profit: 'Estimated profit', viewDetails: 'View details', allSections: 'Sections',
     searchResults: 'Search results', noResults: 'No matching results.',
     topProducts: 'Top moving products', activity: 'Activity by period',
@@ -87,7 +87,7 @@ const copy = {
     signedOut: 'Vous avez quitté l’aperçu', signIn: 'Revenir à l’aperçu',
     back: 'Retour', home: 'Tableau de bord', selected: 'Rubrique sélectionnée',
     welcome: 'Bienvenue dans', title: 'VELTRO BUSINESS SUITE',
-    daily: 'Situation journalière', cashBalance: 'Solde de caisse', expense: 'Dépenses', capital: 'Capital du magasin', dailyProfit: 'Bénéfice du jour', capitalHint: 'Disponible après connexion des données', profitHint: 'Selon les ventes et coûts enregistrés', notLinked: 'En attente des données réelles', sectionsIntro: 'Choisissez une rubrique pour commencer', backToSections: 'Retour aux rubriques',
+    daily: 'Situation journalière', cashBalance: 'Solde de caisse', inventoryValue: 'Valeur du stock', expense: 'Dépenses', capital: 'Capital du magasin', dailyProfit: 'Bénéfice du jour', capitalHint: 'Disponible après connexion des données', profitHint: 'Selon les ventes et coûts enregistrés', notLinked: 'En attente des données réelles', sectionsIntro: 'Choisissez une rubrique pour commencer', backToSections: 'Retour aux rubriques',
     profit: 'Bénéfice estimé', viewDetails: 'Voir les détails', allSections: 'Rubriques',
     searchResults: 'Résultats', noResults: 'Aucun résultat.',
     topProducts: 'Produits les plus actifs', activity: 'Activité par période',
@@ -708,8 +708,8 @@ export default function App() {
             <div className="topbar-datetime glass-time-card"><CalendarDays size={15}/><span><b>{new Intl.DateTimeFormat(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(clockNow)}</b><strong>{clockNow.toLocaleTimeString(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</strong></span></div><span className="topbar-brand-mark" aria-label="VELTRO-PRO">V</span>
           </div>
         </header>
-        <section className="workspace-canvas welcome-sections-layout" aria-label={lang==='ar'?'الترحيب والأقسام':lang==='fr'?'Accueil et rubriques':'Welcome and sections'}>
-          <div className="welcome-sections-card">
+        <section className="workspace-canvas welcome-sections-layout home-dashboard-layout" aria-label={lang==='ar'?'لوحة التحكم والأقسام':lang==='fr'?'Tableau de bord et rubriques':'Dashboard and sections'}>
+          <div className="welcome-sections-card welcome-side-card">
             <div className="welcome-copy">
               <div className="welcome-brand-line"><span className="welcome-brand-symbol">V</span><span>VELTRO</span><span className="welcome-brand-pro">PRO</span></div>
               <p className="welcome-bilingual">Welcome to VELTRO <span>·</span> Bienvenue dans VELTRO</p>
@@ -718,15 +718,29 @@ export default function App() {
               <p className="welcome-description">{t('subtitle')}</p>
             </div>
             <div className="welcome-sections-side">
-              <div className="welcome-sections-heading"><span className="welcome-sections-heading-icon"><LayoutDashboard size={18}/></span><div><h2>{t('allSections')}</h2><p>{t('sectionsIntro')}</p></div></div>
+              <div className="welcome-sections-heading"><span className="welcome-sections-heading-icon"><LayoutDashboard size={16}/></span><div><h2>{t('allSections')}</h2><p>{t('sectionsIntro')}</p></div></div>
               <div className="welcome-sections-grid">
                 {sections.map((section,index)=>{const Icon=section.icon;return <button type="button" key={section.id} className={'welcome-section-button welcome-section-tone-'+(index%6)} onClick={()=>navigate(section.children[0],section)} title={getLabel(section,lang)}>
-                  <span className="welcome-section-icon"><Icon size={21} strokeWidth={1.8}/></span>
+                  <span className="welcome-section-icon"><Icon size={16} strokeWidth={1.8}/></span>
                   <span className="welcome-section-name">{getLabel(section,lang)}</span>
                   <span className="welcome-section-count">{String(section.children.length).padStart(2,'0')}</span>
                 </button>})}
               </div>
             </div>
+          </div>
+          <div className="home-dashboard-column">
+            <div className="home-dashboard-heading">
+              <div><span className="dashboard-heading-kicker">{t('welcome')} <b>VELTRO</b></span><h2>{t('home')}</h2><p>{t('subtitle')}</p></div>
+              <span className="home-dashboard-mark"><ChartNoAxesCombined size={18}/></span>
+            </div>
+            <div className="home-metrics-grid">
+              <MetricCard icon={PackageCheck} label={t('inventoryValue')} value="— DA" tone="blue" footer={t('notLinked')}/>
+              <MetricCard icon={Wallet} label={t('capital')} value="— DA" tone="green" footer={t('capitalHint')}/>
+              <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value="— DA" tone="violet" footer={t('profitHint')}/>
+              <MetricCard icon={ShoppingCart} label={t('revenue')} value="245,800 DA" trend="8.4%" tone="amber" footer={t('demo')}/>
+            </div>
+            <div className="home-dashboard-charts"><SalesChart t={t} lang={lang}/><MixChart t={t}/></div>
+            <div className="home-dashboard-bottom"><StockOverview t={t}/><RecentActivity t={t}/></div>
           </div>
         </section>
       </main>
