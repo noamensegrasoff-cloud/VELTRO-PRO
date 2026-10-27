@@ -5960,3 +5960,71 @@ html body #root .app-shell.theme-light .app-layout > main.workspace > header.top
   position:relative;
   z-index:1;
 }
+
+
+/* GLASS RESTORE: topbar controls and product add/edit cards, headings, fields and actions. */
+html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-tool,
+html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-user,
+html body #root .app-shell.theme-light .topbar.glass-topbar .connection-card,
+html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-tool-group,
+html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-datetime,
+html body #root .app-shell.theme-light .topbar.glass-topbar .global-search,
+html body #root .app-shell.theme-light .topbar.glass-topbar .header-popover{
+  background:linear-gradient(135deg,rgba(255,255,255,.76),rgba(245,238,255,.62) 55%,rgba(225,213,249,.52))!important;
+  border:1px solid rgba(255,255,255,.9)!important;
+  box-shadow:0 6px 18px rgba(70,46,111,.09),inset 0 1px 0 rgba(255,255,255,.96)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(170%)!important;
+  backdrop-filter:blur(24px) saturate(170%)!important;
+}
+html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-tool:hover,
+html body #root .app-shell.theme-light .topbar.glass-topbar .topbar-user:hover{
+  background:linear-gradient(135deg,rgba(255,255,255,.92),rgba(232,221,251,.82))!important;
+  border-color:rgba(137,100,203,.38)!important;
+  box-shadow:0 8px 22px rgba(83,56,132,.13),inset 0 1px 0 #fff!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-price-card,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-average-cost-card,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-margin-card,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-manage-list{
+  background:linear-gradient(140deg,rgba(255,255,255,.78),rgba(247,242,255,.68) 55%,rgba(231,220,250,.56))!important;
+  border:1px solid rgba(255,255,255,.94)!important;
+  box-shadow:0 9px 24px rgba(75,49,120,.09),inset 0 1px 0 rgba(255,255,255,.98),inset 0 -1px 0 rgba(135,102,196,.07)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(155%)!important;
+  backdrop-filter:blur(20px) saturate(155%)!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-heading,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-price-head{
+  background:linear-gradient(120deg,rgba(255,255,255,.58),rgba(239,230,253,.44))!important;
+  border-bottom:1px solid rgba(135,102,196,.13)!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-icon,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-price-head>span{
+  background:linear-gradient(135deg,rgba(121,84,200,.19),rgba(187,166,235,.22))!important;
+  border:1px solid rgba(137,100,203,.28)!important;
+  color:#7650bb!important;
+  box-shadow:0 4px 12px rgba(105,75,166,.09),inset 0 1px 0 rgba(255,255,255,.96)!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field input,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field select,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-manage-list{
+  background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(247,243,255,.72))!important;
+  border:1px solid rgba(255,255,255,.98)!important;
+  box-shadow:inset 0 1px 2px rgba(86,60,132,.04),0 3px 10px rgba(77,51,120,.045)!important;
+  -webkit-backdrop-filter:blur(12px)!important;
+  backdrop-filter:blur(12px)!important;
+}
+html body #root .products-page .pform-overlay .pform-actions button,
+html body #root .products-page .pform-overlay .pform-footer button,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active button{
+  border:1px solid rgba(255,255,255,.78)!important;
+  box-shadow:0 5px 15px rgba(77,51,120,.09),inset 0 1px 0 rgba(255,255,255,.52)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(145%)!important;
+  backdrop-filter:blur(14px) saturate(145%)!important;
+}
+html body #root .products-page .pform-overlay .pform-actions button:not(.primary),
+html body #root .products-page .pform-overlay .pform-footer button:not(.primary),
+html body #root .products-page .pform-overlay .pform-panel-view.is-active button:not(.primary){
+  background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(239,231,252,.68))!important;
+  color:#624593!important;
+}
