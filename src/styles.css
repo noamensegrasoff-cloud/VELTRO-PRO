@@ -3637,3 +3637,136 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   .app-shell.theme-dark .panel,.app-shell.theme-dark .section-launch-card,
   .app-shell.theme-dark .navigation-dialog,.app-shell.theme-dark .navigation-subcard{background:rgba(14,29,51,.96)!important}
 }
+
+
+/* VELTRO visual concept: pronounced glass layers, luminous edges and atmospheric depth */
+.app-shell.theme-dark{
+  background:
+    radial-gradient(ellipse 54% 48% at 8% 4%,rgba(20,213,214,.23),transparent 72%),
+    radial-gradient(ellipse 48% 52% at 94% 10%,rgba(134,76,255,.24),transparent 72%),
+    radial-gradient(ellipse 50% 55% at 60% 100%,rgba(34,103,255,.19),transparent 72%),
+    linear-gradient(132deg,#06101f 0%,#0a1830 46%,#121329 100%)!important;
+}
+.app-shell.theme-dark .app-layout,
+.app-shell.theme-dark .workspace,
+.app-shell.theme-dark .page-content,
+.app-shell.theme-dark .dashboard-content{background:transparent!important}
+.app-shell.theme-dark .topbar,
+.app-shell.theme-dark .sidebar,
+.app-shell.theme-dark .connection-card,
+.app-shell.theme-dark .metric-card,
+.app-shell.theme-dark .dashboard-overview,
+.app-shell.theme-dark .section-launcher,
+.app-shell.theme-dark .panel,
+.app-shell.theme-dark .mix-panel,
+.app-shell.theme-dark .stock-panel,
+.app-shell.theme-dark .recent-panel,
+.app-shell.theme-dark .section-launch-card,
+.app-shell.theme-dark .navigation-dialog,
+.app-shell.theme-dark .navigation-subcard,
+.app-shell.theme-dark .header-popover,
+.app-shell.theme-dark .workspace-footer,
+.app-shell.theme-dark .quick-actions{
+  background:linear-gradient(145deg,rgba(255,255,255,.105),rgba(255,255,255,.035) 48%,rgba(40,104,154,.075))!important;
+  -webkit-backdrop-filter:blur(30px) saturate(175%)!important;
+  backdrop-filter:blur(30px) saturate(175%)!important;
+  border:1px solid rgba(180,231,255,.23)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 -1px 0 rgba(83,189,229,.07),0 18px 48px rgba(0,0,0,.23),0 0 30px rgba(49,190,221,.055)!important;
+}
+.app-shell.theme-dark .section-launcher,
+.app-shell.theme-dark .dashboard-overview{
+  border-radius:26px!important;
+  padding:clamp(16px,2vw,26px)!important;
+  background:linear-gradient(145deg,rgba(18,42,70,.56),rgba(15,24,49,.43))!important;
+  border-color:rgba(145,220,255,.2)!important;
+}
+.app-shell.theme-dark .section-launch-card{
+  min-height:142px;
+  border-radius:22px!important;
+  background:linear-gradient(145deg,rgba(44,166,201,.19),rgba(85,92,191,.13) 56%,rgba(255,255,255,.035))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.19),inset 1px 0 0 rgba(255,255,255,.06),0 14px 36px rgba(0,0,0,.2)!important;
+  transition:transform .28s ease,border-color .28s ease,box-shadow .28s ease,background .28s ease!important;
+}
+.app-shell.theme-dark .section-launch-card:nth-child(4n+2){background:linear-gradient(145deg,rgba(32,194,176,.19),rgba(40,91,136,.11),rgba(255,255,255,.03))!important}
+.app-shell.theme-dark .section-launch-card:nth-child(4n+3){background:linear-gradient(145deg,rgba(133,86,232,.2),rgba(61,72,142,.12),rgba(255,255,255,.03))!important}
+.app-shell.theme-dark .section-launch-card:nth-child(4n){background:linear-gradient(145deg,rgba(65,116,245,.2),rgba(37,64,126,.12),rgba(255,255,255,.03))!important}
+.app-shell.theme-dark .section-launch-card:before,
+.app-shell.theme-dark .metric-card:before,
+.app-shell.theme-dark .navigation-subcard:before{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(115deg,rgba(255,255,255,.11),transparent 34%,transparent 70%,rgba(87,227,224,.055));
+}
+.app-shell.theme-dark .section-launch-card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(101,231,238,.55)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.24),0 22px 46px rgba(0,0,0,.31),0 0 32px rgba(53,216,223,.12)!important;
+}
+.app-shell.theme-dark .section-launch-icon,
+.app-shell.theme-dark .navigation-dialog-icon,
+.app-shell.theme-dark .navigation-subcard-icon,
+.app-shell.theme-dark .metric-icon{
+  background:linear-gradient(140deg,rgba(76,222,230,.22),rgba(106,93,241,.2))!important;
+  border:1px solid rgba(165,235,255,.24)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.17),0 6px 20px rgba(23,154,204,.12)!important;
+}
+.app-shell.theme-dark .navigation-overlay,
+.app-shell.theme-dark .modal-backdrop,
+.app-shell.theme-dark .supplier-modal-backdrop,
+.app-shell.theme-dark .products-modal-backdrop,
+.app-shell.theme-dark .supplier-debt-modal-backdrop{
+  background:rgba(2,7,18,.56)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(135%)!important;
+  backdrop-filter:blur(20px) saturate(135%)!important;
+}
+.app-shell.theme-dark .navigation-dialog{
+  width:min(1120px,calc(100vw - 56px))!important;
+  max-height:min(84vh,860px)!important;
+  overflow:auto;
+  border-radius:30px!important;
+  background:linear-gradient(140deg,rgba(12,35,59,.88),rgba(23,24,56,.84) 58%,rgba(13,28,48,.88))!important;
+  border:1px solid rgba(138,229,245,.34)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 34px 110px rgba(0,0,0,.52),0 0 70px rgba(47,184,226,.15)!important;
+}
+.app-shell.theme-dark .navigation-subcard{
+  min-height:104px;border-radius:20px!important;
+  background:linear-gradient(135deg,rgba(49,158,195,.19),rgba(116,81,207,.15),rgba(255,255,255,.035))!important;
+}
+.app-shell.theme-dark .metric-card{border-radius:22px!important}
+.app-shell.theme-dark .topbar{border-radius:22px!important}
+.app-shell.theme-dark .sidebar{background:rgba(5,14,28,.65)!important}
+.app-shell.theme-light{
+  background:
+    radial-gradient(ellipse 52% 44% at 7% 4%,rgba(41,207,207,.19),transparent 72%),
+    radial-gradient(ellipse 48% 48% at 94% 9%,rgba(152,112,255,.16),transparent 72%),
+    linear-gradient(135deg,#edf8fc 0%,#eef2ff 55%,#f8f5ff 100%)!important;
+}
+.app-shell.theme-light .app-layout,
+.app-shell.theme-light .workspace,
+.app-shell.theme-light .page-content,
+.app-shell.theme-light .dashboard-content{background:transparent!important}
+.app-shell.theme-light .section-launcher,
+.app-shell.theme-light .dashboard-overview,
+.app-shell.theme-light .topbar,
+.app-shell.theme-light .sidebar,
+.app-shell.theme-light .metric-card,
+.app-shell.theme-light .panel,
+.app-shell.theme-light .mix-panel,
+.app-shell.theme-light .stock-panel,
+.app-shell.theme-light .recent-panel,
+.app-shell.theme-light .section-launch-card,
+.app-shell.theme-light .navigation-dialog,
+.app-shell.theme-light .navigation-subcard,
+.app-shell.theme-light .header-popover,
+.app-shell.theme-light .workspace-footer,
+.app-shell.theme-light .quick-actions{
+  -webkit-backdrop-filter:blur(26px) saturate(155%)!important;
+  backdrop-filter:blur(26px) saturate(155%)!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.76),rgba(224,244,255,.46) 52%,rgba(237,226,255,.4))!important;
+  border-color:rgba(76,147,194,.25)!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 16px 40px rgba(43,94,134,.12)!important;
+}
+@media(max-width:760px){
+ .app-shell.theme-dark .navigation-dialog{width:calc(100vw - 24px)!important;max-height:88vh!important;border-radius:22px!important}
+ .app-shell.theme-dark .section-launcher,.app-shell.theme-dark .dashboard-overview{padding:14px!important;border-radius:20px!important}
+ .app-shell.theme-dark .section-launch-card{min-height:116px;border-radius:17px!important}
+}
