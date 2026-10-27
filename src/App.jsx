@@ -547,7 +547,7 @@ function PurchaseInvoicesPage({ lang, currentUser }) {
  useEffect(()=>{try{localStorage.setItem('veltro.purchases.v1',JSON.stringify(rows))}catch{SError(ar?'تعذر حفظ البونات محليًا':'Could not save receipts locally')}},[rows,ar]);
  const periodRows=rows.filter(r=>{const d=String(r.date||'').slice(0,10);return d&&d>=fromDate&&d<=toDate}).sort((a,b)=>String(b.createdAt||b.date).localeCompare(String(a.createdAt||a.date)));
  const filtered=periodRows.filter(r=>!query.trim()||[r.number,r.supplierName].some(v=>String(v||'').toLowerCase().includes(query.trim().toLowerCase())));
- // selected receipt is constrained to the active period and search query.(r=>!query.trim()||[r.number,r.supplierName].some(v=>String(v||'').toLowerCase().includes(query.trim().toLowerCase())));
+ // selected receipt is constrained to the active period and search query.
  const selected=filtered.find(r=>r.id===selectedId)||filtered[0]||null;
  useEffect(()=>{if(selected&&!filtered.some(r=>r.id===selectedId))SI(selected.id);else if(!selected)SI(null)},[selectedId,filtered.length]);
  const total=items=>(items||[]).reduce((s,i)=>s+Math.max(0,Number(i.qty)||0)*Math.max(0,Number(i.price)||0),0);
