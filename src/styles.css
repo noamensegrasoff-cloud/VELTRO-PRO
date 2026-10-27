@@ -3221,3 +3221,7 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   .navigation-dialog{animation:none!important;will-change:auto}
   .navigation-subcard,.section-launch-card,.navigation-dialog-close,.navigation-back-card{transition:none!important}
 }
+
+
+/* Empty content area reserved for the new below-topbar design */
+.workspace-canvas{flex:1 1 auto;min-height:calc(100vh - 90px);width:100%;}
