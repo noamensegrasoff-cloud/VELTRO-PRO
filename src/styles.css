@@ -7345,3 +7345,118 @@ html body #root .products-page .pform-modal>.pform-footer{
     border-radius: 17px !important;
   }
 }
+
+
+/* MOBILE HEADER LAYOUT FIX — keep controls inside the viewport and avoid a blank overlay-like gap */
+@media (max-width: 760px) {
+  .app-shell .app-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow-x: clip !important;
+  }
+  .app-shell .workspace {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: clip !important;
+  }
+  .app-shell .topbar.glass-topbar {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 0 10px !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+  .app-shell .topbar-identity,
+  .app-shell .topbar-tools,
+  .app-shell .topbar-tool-group {
+    display: flex !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 7px !important;
+    box-sizing: border-box !important;
+  }
+  .app-shell .topbar-user {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .app-shell .topbar-user-copy {
+    min-width: 0 !important;
+    overflow-wrap: anywhere !important;
+  }
+  .app-shell .topbar-tools {
+    justify-content: stretch !important;
+  }
+  .app-shell .topbar-tools > .header-popover-wrap.search-wrap {
+    flex: 1 1 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+  .app-shell .topbar-tools > .topbar-tool-group {
+    flex: 1 1 100% !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+  .app-shell .topbar-tool,
+  .app-shell .topbar-tool-group > .topbar-tool,
+  .app-shell .topbar-tool-group > .header-popover-wrap {
+    flex: 0 1 auto !important;
+    min-width: 38px !important;
+    max-width: 100% !important;
+  }
+  .app-shell .topbar-datetime {
+    width: fit-content !important;
+    max-width: 100% !important;
+    justify-self: start !important;
+  }
+  .app-shell .topbar-brand-mark {
+    position: static !important;
+    inset: auto !important;
+    margin-inline-start: auto !important;
+  }
+  .app-shell .workspace-canvas {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  .app-shell .workspace-canvas > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .app-shell .header-popover-wrap .header-popover,
+  .app-shell .header-popover-wrap .profile-popover,
+  .app-shell .header-popover-wrap .search-popover,
+  .app-shell .header-popover-wrap .notification-popover,
+  .app-shell .header-popover-wrap .language-popover {
+    z-index: 30000 !important;
+  }
+}
+@media (max-width: 420px) {
+  .app-shell .topbar.glass-topbar { padding: 9px !important; gap: 8px !important; }
+  .app-shell .topbar-identity, .app-shell .topbar-tools, .app-shell .topbar-tool-group { gap: 5px !important; }
+  .app-shell .topbar-tool-group { justify-content: space-between !important; }
+  .app-shell .topbar-tool { min-width: 34px !important; min-height: 34px !important; }
+}
