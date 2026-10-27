@@ -4109,3 +4109,77 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
 @media(prefers-reduced-motion:reduce){
  .section-launch-modal:before,.section-launch-child:after{transition:none}
 }
+
+
+/* VELTRO branch picker — full brand palette */
+.section-launch-modal{
+  border-color:rgba(117,102,226,.42);
+  background:
+    radial-gradient(ellipse at 5% 5%,rgba(42,205,204,.18),transparent 34%),
+    radial-gradient(ellipse at 95% 7%,rgba(142,91,230,.20),transparent 36%),
+    radial-gradient(ellipse at 50% 100%,rgba(68,129,231,.10),transparent 46%),
+    linear-gradient(145deg,rgba(248,252,255,.985),rgba(233,244,253,.975) 55%,rgba(243,237,255,.98));
+}
+.section-launch-modal-head{
+  background:linear-gradient(105deg,rgba(40,202,202,.18),rgba(64,124,230,.14) 46%,rgba(145,91,228,.19));
+}
+.section-launch-modal-icon{
+  color:#087f9a;
+  border-color:rgba(39,190,198,.48);
+  background:linear-gradient(135deg,#d7fbf5 0%,#d9eaff 48%,#e8dcff 100%);
+  box-shadow:0 7px 22px rgba(36,157,188,.18),inset 0 1px 0 rgba(255,255,255,.95);
+}
+.section-launch-child{
+  overflow:hidden;
+  border-color:rgba(106,129,197,.28);
+  background:linear-gradient(115deg,rgba(255,255,255,.98),rgba(237,249,252,.95) 48%,rgba(244,238,255,.94));
+}
+.section-launch-child:before{
+  content:"";position:absolute;left:0;top:13px;bottom:13px;width:3px;border-radius:0 8px 8px 0;
+  background:linear-gradient(180deg,#28c9c8 0%,#4a82e9 48%,#a16ce8 100%);opacity:.8;
+}
+[dir="rtl"] .section-launch-child:before{left:auto;right:0;border-radius:8px 0 0 8px}
+.section-launch-tone-1 .section-launch-child-icon{
+  color:#356fd0;border-color:rgba(65,119,222,.34);
+  background:linear-gradient(145deg,#e1edff,#c5dcff 58%,#e9f5ff);
+}
+.section-launch-tone-2 .section-launch-child-icon{
+  color:#8054c8;border-color:rgba(139,91,210,.34);
+  background:linear-gradient(145deg,#f0e5ff,#dfceff 58%,#f6edff);
+}
+.section-launch-tone-3 .section-launch-child-icon{
+  color:#138b78;border-color:rgba(34,172,147,.32);
+  background:linear-gradient(145deg,#dcfbf2,#bff1e3 58%,#e9fff8);
+}
+.section-launch-tone-4 .section-launch-child-icon{
+  color:#b87d24;border-color:rgba(199,151,62,.34);
+  background:linear-gradient(145deg,#fff3dc,#ffe2ac 58%,#fff9eb);
+}
+.section-launch-tone-5 .section-launch-child-icon{
+  color:#287fba;border-color:rgba(49,133,205,.32);
+  background:linear-gradient(145deg,#e0f7ff,#c7e8ff 58%,#effbff);
+}
+.section-launch-child:hover{
+  border-color:rgba(124,92,224,.48);
+  background:linear-gradient(120deg,#ffffff 0%,#e2fbf7 38%,#e8edff 70%,#f0e5ff 100%);
+  box-shadow:inset 0 1px 0 #fff,0 14px 30px rgba(92,80,190,.14),0 5px 18px rgba(34,172,188,.08);
+}
+.section-launch-child:hover .section-launch-child-icon{
+  box-shadow:0 5px 15px rgba(112,91,210,.15),inset 0 1px 0 #fff;
+}
+.section-launch-modal-footer{
+  background:linear-gradient(100deg,rgba(218,249,247,.82),rgba(226,237,255,.82) 50%,rgba(239,226,255,.84));
+}
+.section-launch-modal-footer button{
+  border-color:rgba(124,96,218,.30);
+  background:linear-gradient(110deg,rgba(211,249,244,.9),rgba(220,232,255,.92) 52%,rgba(239,222,255,.92));
+  color:#5d4ab1;
+}
+.section-launch-modal-footer button:hover{
+  background:linear-gradient(110deg,#c8f6ef,#d4e4ff 52%,#e7d4ff);
+}
+.section-launch-modal-footer>span{
+  border-color:rgba(128,103,209,.24);
+  background:linear-gradient(100deg,rgba(255,255,255,.75),rgba(238,230,255,.72));
+  color:#6c639c;
+}
