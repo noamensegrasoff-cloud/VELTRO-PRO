@@ -6107,3 +6107,90 @@ html body #root .products-page .pform-overlay .pform-footer-actions button{
     overflow:visible!important;
   }
 }
+
+
+/* PRODUCT FORM COMPACT PASS: keep switches small beside their titles and reclaim vertical space. */
+html body #root .products-page .pform-overlay .pform-feature-heading{
+  display:flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  min-height:26px!important;
+  padding:0 0 5px!important;
+  margin:0!important;
+}
+html body #root .products-page .pform-overlay .pform-feature-heading>div{
+  flex:1 1 auto!important;
+  min-width:0!important;
+}
+html body #root .products-page .pform-overlay .pform-feature-heading>div>b{
+  line-height:1.2!important;
+}
+html body #root .products-page .pform-overlay .pform-feature-heading>.pform-switch{
+  flex:0 0 auto!important;
+  margin-inline-start:6px!important;
+  margin-inline-end:0!important;
+  transform:scale(.76)!important;
+  transform-origin:center!important;
+  width:32px!important;
+  min-width:32px!important;
+  height:19px!important;
+  padding:2px!important;
+}
+html body #root .products-page .pform-overlay .pform-feature-heading>.pform-switch i{
+  width:13px!important;
+  height:13px!important;
+}
+html body #root .products-page .pform-overlay .pform-feature-heading>.pform-switch input:checked+i{
+  transform:translateX(13px)!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active>.pform-section{
+  gap:8px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card{
+  padding:9px!important;
+  gap:6px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-icon{
+  width:28px!important;
+  height:28px!important;
+  min-width:28px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-basic-grid,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-options{
+  gap:6px 8px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field>span,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-price-group>b,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-margin-nearby>span{
+  font-size:10px!important;
+  line-height:1.15!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field input,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field select{
+  height:29px!important;
+  min-height:29px!important;
+  padding:4px 7px!important;
+  font-size:11px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-price-input input,
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-margin-input input{
+  height:29px!important;
+  min-height:29px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-price-head{
+  min-height:25px!important;
+  padding:4px 7px!important;
+}
+html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-price-grid{
+  gap:6px 8px!important;
+}
+@media(max-height:820px) and (min-width:761px){
+  html body #root .products-page .pform-overlay .pform-header{padding:6px 12px!important}
+  html body #root .products-page .pform-overlay .pform-panel-tabs{padding:4px 10px!important}
+  html body #root .products-page .pform-overlay .pform-content-all{padding:5px 8px!important}
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-card{padding:7px!important;gap:4px!important}
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-heading{min-height:23px!important;padding-bottom:3px!important}
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field input,
+  html body #root .products-page .pform-overlay .pform-panel-view.is-active .pform-field select{height:27px!important;min-height:27px!important}
+  html body #root .products-page .pform-overlay .pform-footer{min-height:40px!important;padding:4px 10px!important}
+}
