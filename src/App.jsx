@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, Moon, Sun, RotateCw, CloudUpload,
   MoreHorizontal, CalendarDays, Package, ReceiptText,
@@ -745,7 +746,7 @@ export default function App() {
         </section>
       </main>
     </div>
-    {openNavSection&&<div className="section-launch-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setOpenNavSection(null);}}>
+    {openNavSection&&createPortal(<div className="section-launch-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)setOpenNavSection(null);}}>
       <section className="section-launch-modal" role="dialog" aria-modal="true" aria-labelledby="section-launch-title" dir={dir}>
         <header className="section-launch-modal-head">
           <div className="section-launch-modal-identity">
@@ -765,7 +766,7 @@ export default function App() {
         </div>
         <footer className="section-launch-modal-footer"><button type="button" onClick={()=>setOpenNavSection(null)}><ArrowLeft size={15}/>{t('backToSections')}</button><span>{openNavSection.children.length} {lang==='ar'?'فروع':lang==='fr'?'rubriques':'sections'}</span></footer>
       </section>
-    </div>}
+    </div>,document.body)}
     {sessionPaused&&<div className="session-pause-overlay"><section className="session-pause-card"><span><LockKeyhole size={25}/></span><h2>{lang==='ar'?'الجلسة معلّقة':lang==='fr'?'Session suspendue':'Session paused'}</h2><p>{lang==='ar'?'تم إخفاء مساحة العمل مؤقتًا. استأنف الجلسة للمتابعة.':lang==='fr'?'Votre espace est masqué temporairement. Reprenez la session.':'Your workspace is hidden temporarily. Resume to continue.'}</p><button onClick={()=>setSessionPaused(false)}>{lang==='ar'?'استئناف الجلسة':lang==='fr'?'Reprendre la session':'Resume session'}</button><button className="pause-signout" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}}>{t('logout')}</button></section></div>}
     {logoutOpen&&<div className="modal-backdrop" role="presentation"><section className="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="logout-title"><span className="modal-icon"><LogOut size={22}/></span><h2 id="logout-title">{t('logoutConfirm')}</h2><p>VELTRO BUSINESS SUITE</p><div><button className="button-secondary" onClick={()=>setLogoutOpen(false)}>{t('cancel')}</button><button className="button-danger" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;setLogoutOpen(false);setSignedOut(false);}catch(error){window.alert(error?.message||'تعذّر تسجيل الخروج. حاول مجددًا.');}}}>{t('confirm')}</button></div><button className="modal-close" onClick={()=>setLogoutOpen(false)} aria-label="Close"><X size={16}/></button></section></div>}
   </div>;
