@@ -4005,3 +4005,37 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   .app-shell .glass-time-card b{font-size:10px}
   .app-shell .glass-time-card strong{font-size:11px}
 }
+
+
+/* Lightweight motion pass: short, crisp transitions without blur-heavy animation */
+.app-shell .section-launch-card,
+.app-shell .navigation-subcard,
+.app-shell .topbar-tool,
+.app-shell .topbar-user,
+.app-shell .profile-menu-item{
+  transition:transform .12s ease-out,border-color .12s ease-out,background-color .12s ease-out,box-shadow .12s ease-out!important;
+}
+.app-shell.theme-dark .navigation-dialog{
+  animation:veltroQuickIn .16s ease-out both!important;
+}
+.app-shell.theme-dark .section-launch-card:hover,
+.app-shell.theme-dark .navigation-subcard:hover{
+  transform:translateY(-2px)!important;
+}
+.app-shell.theme-dark .section-launch-card{
+  transition:transform .12s ease-out,border-color .12s ease-out,box-shadow .12s ease-out!important;
+}
+@keyframes veltroQuickIn{
+  from{opacity:0;transform:translateY(5px) scale(.995)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@media(prefers-reduced-motion:reduce){
+  .app-shell .section-launch-card,
+  .app-shell .navigation-subcard,
+  .app-shell .topbar-tool,
+  .app-shell .topbar-user,
+  .app-shell.theme-dark .navigation-dialog{
+    animation:none!important;
+    transition:none!important;
+  }
+}
