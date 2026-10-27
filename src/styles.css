@@ -4890,3 +4890,62 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
 .branch-content-modal-body .products-page .products-table-wrap{
   margin-bottom:0!important;
 }
+
+/* VELTRO-PRO product add/edit form refresh: compact cards, violet + turquoise accents */
+.pform-overlay{padding:10px;background:rgba(5,8,22,.8);backdrop-filter:blur(9px)}
+.pform-modal{width:min(1480px,100%);height:min(940px,calc(100dvh - 20px));border:1px solid #37315f;border-radius:17px;background:#0d1221;color:#eef0ff;box-shadow:0 28px 90px #03051299}
+.pform-header{padding:12px 20px;background:linear-gradient(100deg,#111a2c,#17142b 58%,#10262c);border-bottom:1px solid #292b48}
+.pform-brand-icon{background:linear-gradient(135deg,#49327f,#147f87);color:#e7ffff;border:1px solid #6450a2;box-shadow:0 5px 18px #6f4bce24}
+.pform-header h2{font-size:18px;color:#f4f3ff}.pform-header p{color:#a7aec9;font-size:10px}
+.pform-close{background:#171d31;border-color:#373652;color:#d9dcf3}
+.pform-panel-tabs{display:flex;gap:8px;padding:9px 18px;flex-shrink:0;border-bottom:1px solid #292b48;background:#101628}
+.pform-panel-tabs button{min-height:36px;display:flex;align-items:center;gap:9px;padding:0 14px;border:1px solid #303550;border-radius:9px;background:#151c30;color:#aab2ce;font-size:11px;font-weight:700}
+.pform-panel-tabs button svg{color:#8585c8}
+.pform-panel-tabs button.active{border-color:#7160c7;background:linear-gradient(110deg,#312653,#123a46);color:#f4f2ff}
+.pform-panel-tabs button.active svg{color:#66e1d6}
+.pform-content-all{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-content:start;align-items:stretch;gap:12px;padding:14px 18px 16px;overflow:auto;background:radial-gradient(ellipse at 4% 0%,#694bbe17,transparent 32%),radial-gradient(ellipse at 100% 20%,#16aeb112,transparent 34%),#0d1221}
+.pform-content-all>.pform-panel-view,.pform-content-all .pform-section{display:contents}
+.pform-content-all .pform-section-heading{grid-column:1/-1;margin:0;padding:0 2px 2px}
+.pform-content-all .pform-section-heading h3{font-size:13px;color:#f0efff}
+.pform-content-all .pform-section-heading>span{color:#70dfd4}
+.pform-content-all .pform-feature-card{min-width:0;align-self:stretch;gap:10px;padding:12px 13px;border:1px solid #30304f;border-radius:13px;background:linear-gradient(145deg,#181e33fa,#111b2afa);box-shadow:0 5px 16px #0002}
+.pform-content-all .pform-feature-heading{gap:9px}
+.pform-content-all .pform-feature-icon{width:32px;height:32px;flex-basis:32px;border-radius:9px;background:linear-gradient(145deg,#775bd538,#1dc1bb21);border:1px solid #45416e;color:#8fe7e2}
+.pform-content-all .pform-feature-icon.expiry{background:#d89d451f;border-color:#66503a;color:#edc078}
+.pform-content-all .pform-feature-heading>div b{font-size:11px;color:#f0f1ff}
+.pform-content-all .pform-feature-heading>div small{color:#9ba5c4}
+.pform-content-all .pform-basic-grid,.pform-content-all .pform-carton-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pform-content-all .pform-carton-grid>.pform-field:last-child{grid-column:auto}
+.pform-content-all .pform-field{gap:5px;color:#c0c6df;font-size:10px}
+.pform-content-all .pform-field>span{min-height:14px}
+.pform-content-all .pform-field input,.pform-content-all .pform-field select{height:35px;padding:0 9px;border-color:#343653;border-radius:8px;background:#0c1322;color:#f0f2ff;font-size:11px}
+.pform-content-all .pform-field input:focus,.pform-content-all .pform-field select:focus{border-color:#36c8c2;box-shadow:0 0 0 2px #36c8c21c}
+.pform-content-all .pform-code-input>button{border-color:#48406f;background:#211d3b}
+.pform-content-all .pform-manage-list{height:35px;border-color:#343653;background:#0c1322}
+.pform-content-all .pform-price-block{padding:10px;border-color:#343452;border-radius:10px;background:linear-gradient(130deg,#151b30,#172331)}
+.pform-content-all .pform-price-head{margin-bottom:8px}
+.pform-content-all .pform-price-head>div b{font-size:10px;color:#f1f0ff}
+.pform-content-all .pform-price-head>span{color:#6fe1d5}
+.pform-content-all .pform-price-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.pform-content-all .pform-price-input{height:34px;border-color:#343653;border-radius:8px;background:#0b1321}
+.pform-content-all .pform-price-input input{font-size:11px;color:#f5f4ff}
+.pform-content-all .pform-number-suffix{border-color:#343653;background:#0b1321}
+.pform-content-all .pform-number-suffix b{color:#9ca8c6}
+.pform-content-all .pform-feature-options{gap:9px;margin:8px 0 0;padding-top:9px;border-top-color:#30334e}
+.pform-content-all .pform-photo-layout{display:block}
+.pform-content-all .pform-image-drop{min-height:130px;gap:7px;padding:12px;border-color:#4c4676;border-radius:10px;background:linear-gradient(145deg,#141c31,#15172c)}
+.pform-content-all .pform-image-drop>span{width:42px;height:42px;border-radius:12px}
+.pform-content-all .pform-image-drop>span svg{width:23px;height:23px}
+.pform-content-all .pform-image-drop>b{font-size:11px;color:#e5e6fa}
+.pform-content-all .pform-image-drop>small{font-size:9px}
+.pform-content-all .pform-upload-btn{padding:7px 10px;border-color:#287f86;border-radius:8px;background:linear-gradient(100deg,#49357e,#117f86);color:#fff}
+.pform-content-all .pform-average-cost-card{grid-column:1/-1;padding:9px 10px;border:1px solid #315c65;border-radius:9px;background:linear-gradient(110deg,#142c37,#20203b)}
+.pform-content-all .pform-average-cost-card small{color:#b4c5de}.pform-content-all .pform-average-cost-card strong{color:#77e7dc}.pform-content-all .pform-average-cost-card span{color:#a6b1cb}
+.pform-footer{padding:10px 18px;border-top:1px solid #292b48;background:#101628}
+.pform-footer-left{color:#9fa8c6}.pform-footer-left b{color:#f0f0ff}
+.pform-back-btn,.pform-next-btn{min-height:35px;border-radius:9px;font-size:11px;font-weight:750}
+.pform-back-btn{border:1px solid #3a3b58;background:#171d30;color:#c8cde4}
+.pform-next-btn{border:1px solid #328d91;background:linear-gradient(105deg,#5940a0,#087f86);color:#fff;box-shadow:0 5px 14px #362d7b2b}
+.pform-switch i{background:#454d68}.pform-switch input:checked+i{background:linear-gradient(90deg,#7452ce,#1ca9a8)}
+@media(max-width:850px){.pform-modal{height:calc(100dvh - 10px);border-radius:13px}.pform-panel-tabs{padding:8px 10px}.pform-panel-tabs button{flex:1;justify-content:center;padding:0 8px;font-size:10px}.pform-content-all{grid-template-columns:minmax(0,1fr);padding:10px;gap:10px}.pform-content-all .pform-section-heading{grid-column:1}.pform-content-all .pform-feature-card{grid-column:1!important}.pform-content-all .pform-feature-options{grid-template-columns:minmax(0,1fr)}.pform-footer{padding:9px 10px}}
+@media(prefers-reduced-motion:reduce){.pform-modal,.pform-panel-tabs button,.pform-next-btn,.pform-back-btn{transition:none!important;animation:none!important}}
