@@ -612,3 +612,103 @@
     border-radius: 16px !important;
   }
 }
+
+
+/* Single-screen purchase receipt workflow */
+.purchase-form-shell {
+  width: min(1480px, calc(100vw - 28px)) !important;
+  max-width: 1480px !important;
+  max-height: calc(100dvh - 24px) !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border-radius: 22px !important;
+  background: linear-gradient(135deg,rgba(250,252,255,.97),rgba(245,240,255,.96) 62%,rgba(235,248,250,.96)) !important;
+  border: 1px solid rgba(255,255,255,.94) !important;
+  box-shadow: 0 24px 80px rgba(34,28,72,.24), inset 0 1px 0 #fff !important;
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  backdrop-filter: blur(24px) saturate(140%);
+}
+.purchase-form-topbar { flex: 0 0 auto !important; padding: 12px 16px !important; }
+.purchase-form-topbar .purchase-form-title-copy h2 { font-size: 19px !important; margin: 2px 0 !important; }
+.purchase-form-topbar .purchase-form-title-copy p { font-size: 11px !important; }
+.purchase-form-tabs { display: none !important; }
+.purchase-form-body {
+  display: grid !important;
+  grid-template-columns: minmax(240px, .8fr) minmax(0, 2fr) !important;
+  grid-template-rows: auto minmax(0,1fr) auto auto !important;
+  gap: 10px !important;
+  padding: 12px 15px 14px !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+}
+.purchase-form-section {
+  min-width: 0 !important;
+  padding: 12px !important;
+  margin: 0 !important;
+  border-radius: 16px !important;
+  background: rgba(255,255,255,.58) !important;
+  border: 1px solid rgba(255,255,255,.92) !important;
+  box-shadow: 0 5px 18px rgba(84,72,135,.055), inset 0 1px 0 rgba(255,255,255,.9) !important;
+}
+.purchase-form-section#purchase-form-info { grid-column: 1; grid-row: 1 / span 2; }
+.purchase-form-section#purchase-form-items { grid-column: 2; grid-row: 1 / span 2; }
+.purchase-form-section.purchase-payment-section { grid-column: 1 / -1; grid-row: 3; }
+.purchase-form-section-heading { margin-bottom: 9px !important; gap: 8px !important; }
+.purchase-form-section-heading h3 { font-size: 13px !important; }
+.purchase-form-section-heading p { font-size: 10px !important; margin-top: 3px !important; }
+.purchase-form-grid { grid-template-columns: repeat(2,minmax(0,1fr)) !important; gap: 9px !important; }
+.purchase-form-grid label { min-width: 0 !important; gap: 5px !important; }
+.purchase-form-grid label > span { font-size: 10px !important; }
+.purchase-form-grid input, .purchase-form-grid select { min-width: 0 !important; min-height: 34px !important; padding: 7px 9px !important; font-size: 12px !important; border-radius: 9px !important; }
+.purchase-number-controls { display: flex; gap: 5px; align-items: center; }
+.purchase-number-controls input { flex: 1; width: 100%; }
+.purchase-number-controls .purchase-secondary { min-height: 34px; padding: 6px 8px; font-size: 10px; white-space: nowrap; }
+.purchase-product-searches { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-bottom: 9px; }
+.purchase-product-searches .purchase-product-picker { min-width: 0; margin: 0 !important; }
+.purchase-items-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 8px 0; font-size: 11px; }
+.purchase-items-toolbar .purchase-expand-button { min-height: 30px; padding: 6px 9px; }
+.purchase-items-wrap { max-height: min(34vh,330px); overflow: auto !important; border-radius: 11px; }
+.purchase-items-wrap.purchase-items-expanded {
+  position: fixed !important; z-index: 10020 !important; inset: 12px !important;
+  max-height: none !important; height: auto !important; overflow: auto !important;
+  padding: 14px !important; border-radius: 20px !important;
+  background: linear-gradient(135deg,#f9fbff,#f2edff 65%,#eaf8fa) !important;
+  border: 1px solid rgba(255,255,255,.95) !important;
+  box-shadow: 0 22px 80px rgba(30,28,65,.35) !important;
+}
+.purchase-items-table { width: 100%; min-width: 660px; }
+.purchase-items-table th, .purchase-items-table td { padding: 7px 8px !important; font-size: 11px !important; }
+.purchase-items-table input { min-height: 31px !important; padding: 5px 7px !important; font-size: 11px !important; }
+.purchase-form-total-debt { grid-template-columns: repeat(4,minmax(0,1fr)) !important; gap: 9px !important; }
+.purchase-form-total-debt > div { padding: 10px 12px !important; border-radius: 12px !important; background: rgba(255,255,255,.72) !important; border: 1px solid rgba(255,255,255,.9) !important; }
+.purchase-form-total-debt > div:first-child b { color: #b45b70 !important; }
+.purchase-form-total-debt span { font-size: 10px !important; }
+.purchase-form-total-debt b { font-size: 15px !important; }
+.purchase-notes-field textarea { min-height: 42px !important; }
+.purchase-dialog-actions.purchase-form-footer-workflow {
+  grid-column: 1 / -1; grid-row: 4; display: flex !important; flex-wrap: wrap;
+  align-items: center; justify-content: flex-end; gap: 8px !important;
+  padding-top: 8px !important; border-top: 1px solid rgba(124,105,184,.14);
+}
+.purchase-form-footer-workflow button { min-height: 35px !important; padding: 8px 12px !important; font-size: 11px !important; }
+@media (max-width: 900px) {
+  .purchase-form-shell { width: calc(100vw - 16px) !important; max-height: calc(100dvh - 16px) !important; }
+  .purchase-form-body { grid-template-columns: minmax(0,1fr) !important; grid-template-rows: auto auto auto auto !important; padding: 9px !important; }
+  .purchase-form-section#purchase-form-info,
+  .purchase-form-section#purchase-form-items,
+  .purchase-form-section.purchase-payment-section { grid-column: 1 !important; grid-row: auto !important; }
+  .purchase-form-section#purchase-form-info { grid-row: 1 !important; }
+  .purchase-form-section#purchase-form-items { grid-row: 2 !important; }
+  .purchase-form-section.purchase-payment-section { grid-row: 3 !important; }
+  .purchase-dialog-actions.purchase-form-footer-workflow { grid-row: 4 !important; }
+  .purchase-items-wrap { max-height: 34vh; }
+}
+@media (max-width: 520px) {
+  .purchase-form-grid, .purchase-product-searches { grid-template-columns: minmax(0,1fr) !important; }
+  .purchase-form-total-debt { grid-template-columns: repeat(2,minmax(0,1fr)) !important; }
+  .purchase-form-footer-workflow { display: grid !important; grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .purchase-form-footer-workflow button { justify-content: center; }
+  .purchase-number-controls .purchase-secondary { font-size: 0 !important; }
+  .purchase-number-controls .purchase-secondary svg { width: 15px; height: 15px; }
+}
