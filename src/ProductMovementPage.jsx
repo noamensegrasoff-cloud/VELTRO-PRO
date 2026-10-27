@@ -17,7 +17,6 @@ export default function ProductMovementPage({ lang='ar' }) {
   const t = key => labels[lang]?.[key] || labels.ar[key] || key;
   const [query,setQuery] = useState('');
   const [barcodeQuery,setBarcodeQuery] = useState('');
-  const [barcodeOpen,setBarcodeOpen] = useState(false);
   const [kind,setKind] = useState('all');
   const [reload,setReload] = useState(0);
   const movements = useMemo(() => {
@@ -51,8 +50,7 @@ export default function ProductMovementPage({ lang='ar' }) {
       <div style={{display:'flex',gap:10,flexWrap:'wrap',alignItems:'center',flex:1,minWidth:220}}>
         <label style={{display:'flex',gap:8,alignItems:'center',flex:'1 1 250px',minWidth:180,padding:4,borderRadius:13,background:'linear-gradient(135deg,rgba(37,99,235,.18),rgba(20,184,166,.14))',border:'1px solid rgba(45,190,190,.48)',boxShadow:'0 4px 16px rgba(20,184,166,.08)'}}><Search size={17} color="#2dd4bf"/><input style={{...styles.field,background:'rgba(10,24,42,.78)',border:'1px solid rgba(45,190,190,.35)',borderRadius:10,color:'var(--text, #f1f5f9)',boxShadow:'inset 0 1px 3px rgba(0,0,0,.16)'}} value={query} onChange={e=>setQuery(e.target.value)} placeholder={t('search')}/></label>
         <label style={{display:'flex',gap:8,alignItems:'center'}}><SlidersHorizontal size={15}/><select style={{...styles.field,width:'auto',minHeight:42,borderRadius:12,background:'linear-gradient(135deg,rgba(37,99,235,.16),rgba(20,184,166,.12))',borderColor:'rgba(45,190,190,.4)',fontWeight:650,cursor:'pointer'}} value={kind} onChange={e=>setKind(e.target.value)}><option value="all">{t('all')}</option><option value="in">{t('in')}</option><option value="out">{t('out')}</option><option value="adjust">{t('adjust')}</option></select></label>
-        <button style={{...styles.button,minHeight:42,borderRadius:12,background:barcodeOpen?'linear-gradient(135deg,#0d9488,#2563eb)':'rgba(20,184,166,.10)',color:barcodeOpen?'#fff':'var(--text, inherit)',borderColor:'rgba(45,190,190,.45)'}} onClick={()=>{setBarcodeOpen(v=>!v);setBarcodeQuery('')}}><Barcode size={16}/>{t('barcodeSearch')}</button>
-        {barcodeOpen && <label style={{display:'flex',gap:8,alignItems:'center',flex:'1 1 220px',minWidth:180}}><Barcode size={16}/><input autoFocus style={{...styles.field,borderColor:'rgba(45,190,190,.55)',boxShadow:'0 0 0 3px rgba(20,184,166,.10)'}} value={barcodeQuery} onChange={e=>setBarcodeQuery(e.target.value)} placeholder={t('barcodePlaceholder')} /></label>}
+        <label style={{display:'flex',gap:8,alignItems:'center',flex:'1 1 220px',minWidth:180,padding:4,borderRadius:13,background:'linear-gradient(135deg,rgba(37,99,235,.18),rgba(20,184,166,.14))',border:'1px solid rgba(45,190,190,.48)',boxShadow:'0 4px 16px rgba(20,184,166,.08)'}}><Barcode size={17} color="#2dd4bf"/><input style={{...styles.field,background:'rgba(10,24,42,.78)',border:'1px solid rgba(45,190,190,.35)',borderRadius:10,color:'var(--text, #f1f5f9)',boxShadow:'inset 0 1px 3px rgba(0,0,0,.16)'}} value={barcodeQuery} onChange={e=>setBarcodeQuery(e.target.value)} placeholder={t('barcodePlaceholder')} /></label>
       </div>
       <span style={{fontSize:13,opacity:.75}}>{filtered.length} / {movements.length}</span>
     </div>
