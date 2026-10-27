@@ -41,7 +41,7 @@ const copy = {
     profit: 'الربح التقديري', viewDetails: 'عرض التفاصيل', allSections: 'الأقسام',
     searchResults: 'نتائج البحث', noResults: 'لا توجد نتائج مطابقة.',
     topProducts: 'أكثر المنتجات حركة', activity: 'النشاط حسب الفترة',
-    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد', darkMode: 'الوضع الداكن', lightMode: 'الوضع الفاتح', refreshPage: 'إعادة تحميل الصفحة',
+    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد', refreshPage: 'إعادة تحميل الصفحة',
   },
   en: {
     workspace: 'Workspace', search: 'Search sections and actions...', demo: 'Design preview · Sample data',
@@ -66,7 +66,7 @@ const copy = {
     profit: 'Estimated profit', viewDetails: 'View details', allSections: 'Sections',
     searchResults: 'Search results', noResults: 'No matching results.',
     topProducts: 'Top moving products', activity: 'Activity by period',
-    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'UI preview — store transactions are not connected yet', darkMode: 'Dark mode', lightMode: 'Light mode', refreshPage: 'Reload page',
+    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'UI preview — store transactions are not connected yet', refreshPage: 'Reload page',
   },
   fr: {
     workspace: 'Espace de travail', search: 'Rechercher une rubrique...', demo: 'Aperçu du design · Données fictives',
@@ -549,7 +549,7 @@ function ModulePage({ page, parent, t, lang, onBack }) {
 }
 
 export default function App() {
-  const theme='light';
+
   const [lang,setLang]=useState(()=>{try{return ['ar','fr','en'].includes(localStorage.getItem('veltro.language'))?localStorage.getItem('veltro.language'):'ar';}catch{return 'ar';}});
   const [cloudState,setCloudState]=useState('checking');
   const [currentUser,setCurrentUser]=useState(null);
@@ -564,7 +564,7 @@ export default function App() {
   const [setupSaving,setSetupSaving]=useState(false);
   const [setupError,setSetupError]=useState('');
   useEffect(()=>{try{localStorage.setItem('veltro.language',lang);}catch{};document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.title=lang==='ar'?'VELTRO-PRO — نظام إدارة المتجر':lang==='fr'?'VELTRO-PRO — Gestion commerciale':'VELTRO-PRO — Business Suite';},[lang]);
-  useEffect(()=>{try{localStorage.setItem('veltro.theme','light');}catch{};document.documentElement.dataset.theme='light';},[]);
+
   useEffect(()=>{let alive=true;getCloudStatus().then(status=>{if(alive)setCloudState(status);}).catch(()=>{if(alive)setCloudState('error');});return()=>{alive=false;};},[]);
   // Keep the local outbox and every registered business entity synchronized while
   // the authenticated workspace is open. Offline edits remain local and retry online.
@@ -680,7 +680,7 @@ export default function App() {
   if(setupState==='checking') return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تجهيز مساحة العمل…':lang==='fr'?'Préparation de votre espace…':'Preparing your workspace…'}</p></div></div>;
   if(setupState==='required') return <BusinessOnboarding lang={lang} onLanguageChange={setLang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
-  return <div className={'app-shell lang-'+lang+' theme-'+theme} dir={dir}>
+  return <div className={'app-shell lang-'+lang+' theme-light'} dir={dir}>
     <div className="app-layout">
       <main className="workspace">
         <header className="topbar glass-topbar">
