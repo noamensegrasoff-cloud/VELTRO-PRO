@@ -7138,3 +7138,14 @@ html body #root .products-page .pform-modal>.pform-footer{
 .purchase-product-stock-after strong{color:#7052c5}
 .purchase-product-stock-after em{font-size:11px;font-style:normal;font-weight:650;color:#39866d}
 @media(max-width:520px){.purchase-product-stock-summary{grid-template-columns:minmax(0,1fr) 16px minmax(0,1fr);gap:5px;padding:8px}.purchase-product-stock-before,.purchase-product-stock-after{padding:9px}.purchase-product-stock-before strong,.purchase-product-stock-after strong{font-size:15px}.purchase-product-stock-before small,.purchase-product-stock-after small{font-size:11px}}
+
+
+/* Compact purchase details and give carton sales a matching, usable footprint. */
+.purchase-product-purchase-compact{padding:14px 16px;min-height:0}
+.purchase-product-purchase-compact h3{margin-bottom:10px}
+.purchase-product-purchase-compact .purchase-product-fields{gap:10px}
+.purchase-product-purchase-compact .purchase-product-fields label{gap:5px}
+.purchase-product-purchase-compact input{min-height:36px;padding:7px 10px}
+.purchase-product-carton-sales{min-height:100%;display:flex;flex-direction:column}
+.purchase-product-carton-sales .purchase-product-card-inline{margin-top:auto}
+@media(max-width:520px){.purchase-product-purchase-compact{padding:12px}.purchase-product-carton-sales{min-height:0}}
