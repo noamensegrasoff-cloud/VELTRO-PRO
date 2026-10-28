@@ -1229,3 +1229,67 @@
   color: #62527d !important;
   -webkit-text-fill-color: #62527d !important;
 }
+
+
+/* Remove the segmented-cell look: one continuous glass surface */
+.purchase-page .purchase-items-wrap {
+  border-radius: 18px !important;
+  border: 1px solid rgba(153,126,220,.25) !important;
+  overflow-x: auto !important;
+}
+.purchase-page .purchase-items-table,
+.purchase-page .purchase-items-table thead,
+.purchase-page .purchase-items-table tbody,
+.purchase-page .purchase-items-table tr,
+.purchase-page .purchase-items-table th,
+.purchase-page .purchase-items-table td {
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+.purchase-page .purchase-items-table thead th,
+.purchase-page .purchase-items-table thead th + th,
+.purchase-page .purchase-items-table tbody td,
+.purchase-page .purchase-items-table tbody td + td {
+  border-inline: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+}
+.purchase-page .purchase-items-table tbody td {
+  background: transparent !important;
+  border-top: 0 !important;
+  border-bottom: 1px solid rgba(142,112,204,.10) !important;
+}
+.purchase-page .purchase-items-table tbody tr:nth-child(even) td,
+.purchase-page .purchase-items-table tbody tr:hover td {
+  background: transparent !important;
+}
+.purchase-page .purchase-items-table .purchase-table-readonly,
+.purchase-page .purchase-items-table .purchase-table-count,
+.purchase-page .purchase-items-table .purchase-table-status,
+.purchase-page .purchase-items-table .purchase-table-total {
+  display: inline !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.purchase-page .purchase-items-table .purchase-table-product-name {
+  display: inline !important;
+  font-weight: 800 !important;
+}
+.purchase-page .purchase-items-table .purchase-table-total {
+  display: inline !important;
+  font-weight: 850 !important;
+}
+.purchase-page .purchase-items-table .purchase-item-remove {
+  box-shadow: none !important;
+}
+.purchase-page .purchase-items-toolbar {
+  border-radius: 18px 18px 0 0 !important;
+}
+@media(max-width:560px) {
+  .purchase-page .purchase-items-wrap { border-radius: 14px !important; }
+}
