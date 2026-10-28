@@ -1056,3 +1056,123 @@
   .purchase-page .purchase-items-table thead th{padding:10px 8px!important}
   .purchase-page .purchase-items-table tbody td{padding:8px 7px!important}
 }
+
+
+/* Purchase products: match the surrounding VELTRO glass cards */
+.purchase-page .purchase-items-toolbar{
+  margin:14px 0 0!important;
+  padding:14px 16px 11px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+  border:1px solid rgba(153,126,220,.23)!important;
+  border-bottom:0!important;
+  border-radius:18px 18px 0 0!important;
+  background:linear-gradient(125deg,rgba(255,255,255,.66),rgba(231,220,255,.42) 48%,rgba(218,226,255,.42))!important;
+  backdrop-filter:blur(20px) saturate(145%)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(145%)!important;
+  box-shadow:inset 0 1px rgba(255,255,255,.88)!important;
+}
+.purchase-page .purchase-items-toolbar>strong{
+  font-size:13px!important;
+  font-weight:850!important;
+  letter-spacing:.01em;
+  color:transparent!important;
+  background:linear-gradient(100deg,#7650c7 0%,#8c62d9 42%,#557bd8 100%)!important;
+  background-clip:text!important;
+  -webkit-background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+}
+.purchase-page .purchase-items-wrap{
+  margin:0!important;
+  border:1px solid rgba(153,126,220,.25)!important;
+  border-top:1px solid rgba(153,126,220,.14)!important;
+  border-radius:0 0 18px 18px!important;
+  overflow:auto!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.48),rgba(237,229,255,.32) 52%,rgba(226,234,255,.32))!important;
+  backdrop-filter:blur(22px) saturate(150%)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(150%)!important;
+  box-shadow:0 14px 32px rgba(91,65,153,.09),inset 0 1px rgba(255,255,255,.78)!important;
+}
+.purchase-page .purchase-items-table{
+  min-width:680px!important;
+  border:0!important;
+  border-radius:0!important;
+  border-spacing:0!important;
+  background:transparent!important;
+}
+.purchase-page .purchase-items-table thead th{
+  padding:13px 11px!important;
+  border:0!important;
+  border-bottom:1px solid rgba(142,112,204,.19)!important;
+  background:linear-gradient(105deg,rgba(222,207,255,.57),rgba(220,224,255,.46),rgba(239,232,255,.48))!important;
+  color:transparent!important;
+  background-clip:padding-box!important;
+  text-shadow:0 1px 0 rgba(255,255,255,.62)!important;
+  font-weight:800!important;
+  letter-spacing:.01em;
+}
+.purchase-page .purchase-items-table thead th+th{
+  border-inline-start:0!important;
+}
+.purchase-page .purchase-items-table tbody td,
+.purchase-page .purchase-items-table tbody td+td{
+  border:0!important;
+  border-bottom:1px solid rgba(142,112,204,.11)!important;
+  background:transparent!important;
+  padding:10px 11px!important;
+  vertical-align:middle!important;
+}
+.purchase-page .purchase-items-table tbody tr:nth-child(even) td{
+  background:rgba(196,177,246,.075)!important;
+}
+.purchase-page .purchase-items-table tbody tr:hover td{
+  background:rgba(185,163,245,.15)!important;
+}
+.purchase-page .purchase-items-table tbody tr:last-child td{border-bottom:0!important}
+.purchase-page .purchase-items-table .purchase-table-readonly,
+.purchase-page .purchase-items-table .purchase-table-count,
+.purchase-page .purchase-items-table .purchase-table-status,
+.purchase-page .purchase-items-table .purchase-table-total{
+  border-radius:7px!important;
+  box-shadow:none!important;
+}
+.purchase-page .purchase-items-table .purchase-table-readonly{
+  border:1px solid rgba(153,126,220,.08)!important;
+  background:rgba(255,255,255,.19)!important;
+  color:#51416f!important;
+}
+.purchase-page .purchase-items-table .purchase-table-product-name{
+  font-weight:800!important;
+  color:transparent!important;
+  background:linear-gradient(100deg,#7650c7,#8d65d7 52%,#557bd8)!important;
+  -webkit-background-clip:text!important;
+  background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+}
+.purchase-page .purchase-items-table .purchase-table-money,
+.purchase-page .purchase-items-table .purchase-table-count{
+  background:rgba(255,255,255,.24)!important;
+  border-color:rgba(153,126,220,.11)!important;
+  color:#66518e!important;
+}
+.purchase-page .purchase-items-table .purchase-table-total{
+  background:linear-gradient(110deg,rgba(160,122,238,.16),rgba(103,139,231,.13))!important;
+  border:1px solid rgba(153,126,220,.14)!important;
+  color:#6246ac!important;
+}
+.purchase-page .purchase-items-empty-row td{background:transparent!important}
+.purchase-page .purchase-items-empty-state strong{
+  color:transparent!important;
+  background:linear-gradient(100deg,#7650c7,#557bd8)!important;
+  background-clip:text!important;
+  -webkit-background-clip:text!important;
+  -webkit-text-fill-color:transparent!important;
+}
+@media(max-width:560px){
+  .purchase-page .purchase-items-toolbar{padding:11px 12px 9px!important;border-radius:14px 14px 0 0!important}
+  .purchase-page .purchase-items-wrap{border-radius:0 0 14px 14px!important}
+  .purchase-page .purchase-items-table thead th{padding:10px 8px!important}
+  .purchase-page .purchase-items-table tbody td{padding:8px 8px!important}
+}
