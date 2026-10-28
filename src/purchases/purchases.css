@@ -1557,3 +1557,20 @@
 .purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table tbody td + td { background:rgba(255,255,255,.48)!important; border-bottom:1px solid rgba(132,112,220,.11)!important; border-inline-start:0!important; box-shadow:none!important; }
 .purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table tbody tr:nth-child(even) td { background:rgba(246,242,255,.48)!important; }
 .purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table tbody tr:hover td { background:rgba(237,231,255,.62)!important; }
+
+
+/* Translucent violet-blue gradient headers in both compact and expanded table modes */
+.purchase-page .purchase-items-table thead th,
+.purchase-page .purchase-items-table thead th + th,
+.purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table thead th,
+.purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table thead th + th {
+  background: linear-gradient(115deg,
+    rgba(154, 124, 222, .25) 0%,
+    rgba(185, 160, 239, .20) 48%,
+    rgba(139, 166, 245, .23) 100%) !important;
+  color: #5d4b88 !important;
+  border-bottom: 1px solid rgba(125, 105, 181, .19) !important;
+  border-inline-start: 1px solid rgba(117, 91, 185, .08) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(140%) !important;
+  backdrop-filter: blur(14px) saturate(140%) !important;
+}
