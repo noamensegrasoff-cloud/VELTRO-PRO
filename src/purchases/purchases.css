@@ -1709,3 +1709,10 @@
 .purchase-other-information-modal .purchase-product-fields input:not([type=checkbox]):not([type=file]){width:100%;min-width:0;box-sizing:border-box}
 .purchase-other-information-modal .purchase-product-fields footer{grid-column:1/-1}
 @media(max-width:560px){.purchase-other-information-modal{padding:13px;max-height:calc(100dvh - 16px)}.purchase-other-information-modal .purchase-product-fields{grid-template-columns:minmax(0,1fr)}.purchase-other-information-modal .purchase-product-fields .purchase-other-option{grid-column:auto}}
+
+/* Other Information is rendered inside the generic submodal in JSX.
+   Remove that intermediate scroll/blur box from layout so its fixed overlay
+   is not trapped by the parent's backdrop-filter/overflow containing block. */
+.purchase-product-submodal:has(> .purchase-other-info-overlay){display:contents!important}
+.purchase-product-sub-overlay:has(.purchase-other-info-overlay){position:static!important;display:contents!important;overflow:visible!important;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.purchase-other-info-overlay{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;min-height:100vh!important;z-index:2147483000!important;transform:none!important}
