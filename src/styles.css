@@ -7097,3 +7097,22 @@ html body #root .products-page .pform-modal>.pform-footer{
   .purchase-form { padding: 8px !important; }
   .purchase-modal-head h2 { font-size: 16px !important; }
 }
+
+
+/* Performance mode: keep interactions responsive on low-end devices. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* VELTRO-PRO lightweight motion policy: remove decorative motion globally. */
+*, *::before, *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
