@@ -1612,3 +1612,59 @@
  .purchase-page #purchase-form-items .purchase-items-wrap{max-height:42vh!important;min-height:150px}
  .purchase-page #purchase-form-items .purchase-items-table{min-width:660px!important}
 }
+
+
+/* Ensure purchase action buttons always have readable, opaque text and icons */
+.purchase-page button,
+.purchase-page button *,
+.purchase-overlay button,
+.purchase-overlay button *,
+.purchase-page .purchase-product-search-launch,
+.purchase-page .purchase-product-search-launch *,
+.purchase-page .purchase-generate-barcode,
+.purchase-page .purchase-generate-barcode *,
+.purchase-page .purchase-secondary,
+.purchase-page .purchase-secondary *,
+.purchase-page .purchase-primary,
+.purchase-page .purchase-primary *,
+.purchase-page .purchase-expand-button,
+.purchase-page .purchase-expand-button *,
+.purchase-page .purchase-table-back-button,
+.purchase-page .purchase-table-back-button * {
+  opacity: 1 !important;
+  -webkit-text-fill-color: currentColor !important;
+  text-shadow: none;
+}
+.purchase-page button,
+.purchase-overlay button {
+  color: #594080 !important;
+}
+.purchase-page button svg,
+.purchase-overlay button svg {
+  color: currentColor !important;
+  opacity: 1 !important;
+  stroke: currentColor !important;
+}
+.purchase-page .purchase-product-search-launch {
+  color: #594080 !important;
+  background: linear-gradient(120deg,rgba(229,218,255,.96),rgba(220,231,255,.96)) !important;
+  border-color: rgba(126,94,190,.34) !important;
+  font-weight: 750 !important;
+}
+.purchase-page .purchase-generate-barcode,
+.purchase-page .purchase-secondary,
+.purchase-page .purchase-expand-button,
+.purchase-page .purchase-table-back-button,
+.purchase-overlay .purchase-secondary {
+  color: #594080 !important;
+  -webkit-text-fill-color: #594080 !important;
+  background: linear-gradient(120deg,rgba(250,247,255,.98),rgba(229,233,255,.96)) !important;
+  border-color: rgba(126,94,190,.3) !important;
+  font-weight: 750 !important;
+}
+.purchase-page button:disabled,
+.purchase-overlay button:disabled {
+  opacity: .78 !important;
+  color: #76698c !important;
+  -webkit-text-fill-color: #76698c !important;
+}
