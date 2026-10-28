@@ -1548,3 +1548,12 @@
     bottom: 10px !important;
   }
 }
+
+/* Expanded table uses the same lavender dividers and row fills as compact mode */
+.purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table { border-color:rgba(126,105,190,.16)!important; border-spacing:0!important; background:rgba(255,255,255,.52)!important; }
+.purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table thead th,
+.purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table thead th + th { background:linear-gradient(110deg,rgba(229,220,255,.82),rgba(239,234,255,.78))!important; color:#5d4b88!important; border-bottom:1px solid rgba(125,105,181,.17)!important; border-inline-start:1px solid rgba(117,91,185,.09)!important; }
+.purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table tbody td,
+.purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table tbody td + td { background:rgba(255,255,255,.48)!important; border-bottom:1px solid rgba(132,112,220,.11)!important; border-inline-start:0!important; box-shadow:none!important; }
+.purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table tbody tr:nth-child(even) td { background:rgba(246,242,255,.48)!important; }
+.purchase-page .purchase-items-wrap.purchase-items-expanded .purchase-items-table tbody tr:hover td { background:rgba(237,231,255,.62)!important; }
