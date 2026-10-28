@@ -7141,12 +7141,11 @@ html body #root .products-page .pform-modal>.pform-footer{
 
 
 /* Compact purchase details and give carton sales a matching, usable footprint. */
-/* Compact purchase details; let carton sales occupy the available height beside it. */
-.purchase-product-purchase-compact{align-self:start;height:fit-content;padding:12px 14px;min-height:0}
-.purchase-product-purchase-compact h3{margin-bottom:8px}
-.purchase-product-purchase-compact .purchase-product-fields{gap:8px}
-.purchase-product-purchase-compact .purchase-product-fields label{gap:4px}
-.purchase-product-purchase-compact input{min-height:34px;padding:6px 9px}
-.purchase-product-carton-sales{align-self:stretch;min-height:100%;display:flex;flex-direction:column}
+.purchase-product-purchase-compact{padding:14px 16px;min-height:0}
+.purchase-product-purchase-compact h3{margin-bottom:10px}
+.purchase-product-purchase-compact .purchase-product-fields{gap:10px}
+.purchase-product-purchase-compact .purchase-product-fields label{gap:5px}
+.purchase-product-purchase-compact input{min-height:36px;padding:7px 10px}
+.purchase-product-carton-sales{min-height:100%;display:flex;flex-direction:column}
 .purchase-product-carton-sales .purchase-product-card-inline{margin-top:auto}
-@media(max-width:760px){.purchase-product-purchase-compact{align-self:stretch;height:auto;padding:12px}.purchase-product-carton-sales{min-height:0}}
+@media(max-width:520px){.purchase-product-purchase-compact{padding:12px}.purchase-product-carton-sales{min-height:0}}
