@@ -820,3 +820,32 @@
 .purchase-supplier-confirm p{line-height:1.65;color:rgba(225,222,243,.76)}
 .purchase-supplier-confirm footer{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-top:18px}
 @media(max-width:560px){.purchase-supplier-modal{width:calc(100vw - 18px);max-height:88vh;border-radius:17px}.purchase-supplier-modal-head{padding:16px}.purchase-supplier-toolbar{padding:12px;flex-direction:column}.purchase-supplier-list{padding:0 12px 10px}.purchase-supplier-option{padding:10px;gap:8px}.purchase-supplier-option-id{display:none}.purchase-supplier-modal-footer{padding:12px;gap:8px}.purchase-supplier-form-grid{grid-template-columns:minmax(0,1fr)}.purchase-supplier-form-grid label.wide{grid-column:auto}.purchase-supplier-add-modal form{padding:14px}.purchase-supplier-select-button{font-size:13px}}
+
+/* Light glass theme for supplier dialogs — keep consistent with the agreed purchase UI */
+.purchase-supplier-overlay{background:rgba(232,228,247,.48)!important;backdrop-filter:blur(13px)!important;-webkit-backdrop-filter:blur(13px)!important}
+.purchase-supplier-modal,.purchase-supplier-confirm{background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(248,246,255,.97) 58%,rgba(241,244,255,.97))!important;color:#30264f!important;border:1px solid rgba(255,255,255,.96)!important;box-shadow:0 26px 85px rgba(62,48,105,.22)!important}
+.purchase-supplier-modal-head{border-bottom-color:rgba(123,101,177,.15)!important}
+.purchase-supplier-modal-head h2,.purchase-supplier-confirm h3{color:#30264f!important}
+.purchase-supplier-modal-head>button{background:rgba(255,255,255,.86)!important;border-color:rgba(125,105,181,.2)!important;color:#594778!important}
+.purchase-supplier-toolbar{background:transparent}
+.purchase-supplier-search{background:rgba(255,255,255,.84)!important;border-color:rgba(125,105,181,.22)!important;color:#66577f!important}
+.purchase-supplier-search input{color:#30264f!important}
+.purchase-supplier-search input::placeholder,.purchase-supplier-form-grid input::placeholder,.purchase-supplier-form-grid textarea::placeholder{color:#9a90b1!important}
+.purchase-supplier-option{background:rgba(255,255,255,.68)!important;border-color:rgba(125,105,181,.15)!important;color:#30264f!important}
+.purchase-supplier-option:hover,.purchase-supplier-option.selected{background:linear-gradient(110deg,rgba(139,92,246,.10),rgba(59,130,246,.07))!important;border-color:rgba(123,89,205,.48)!important}
+.purchase-supplier-option-copy small,.purchase-supplier-option-id{color:#817695!important}
+.purchase-supplier-empty{color:#817695!important}
+.purchase-supplier-modal-footer{border-top-color:rgba(123,101,177,.15)!important}
+.purchase-supplier-select-button{background:rgba(255,255,255,.84)!important;color:#30264f!important;border-color:rgba(125,105,181,.23)!important}
+.purchase-supplier-select-button:hover{background:rgba(139,92,246,.06)!important;border-color:rgba(123,89,205,.5)!important}
+.purchase-supplier-form-grid label>span{color:#66577f!important}
+.purchase-supplier-form-grid input:not([type=file]),.purchase-supplier-form-grid textarea{background:rgba(255,255,255,.88)!important;border-color:rgba(125,105,181,.22)!important;color:#30264f!important}
+.purchase-supplier-form-grid input:focus,.purchase-supplier-form-grid textarea:focus{border-color:#8b5cf6!important;box-shadow:0 0 0 3px rgba(139,92,246,.12)!important}
+.purchase-supplier-confirm p{color:#756987!important}
+.purchase-supplier-confirm-icon{background:linear-gradient(135deg,rgba(139,92,246,.13),rgba(59,130,246,.1))!important;color:#7652c7!important}
+.purchase-supplier-avatar{background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(59,130,246,.12))!important;color:#7652c7!important}
+.purchase-supplier-photo-field img{border:1px solid rgba(125,105,181,.18)}
+.purchase-supplier-modal .purchase-primary,.purchase-supplier-confirm .purchase-primary{background:linear-gradient(110deg,#6d4acb,#4d6bdc)!important;color:#fff!important;border-color:transparent!important}
+.purchase-supplier-modal .purchase-secondary,.purchase-supplier-confirm .purchase-secondary{background:rgba(255,255,255,.88)!important;color:#594778!important;border-color:rgba(125,105,181,.22)!important}
+.purchase-supplier-modal .purchase-primary:hover,.purchase-supplier-confirm .purchase-primary:hover{filter:brightness(1.05)}
+@media(prefers-color-scheme:dark){.purchase-supplier-modal,.purchase-supplier-confirm{background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(248,246,255,.97) 58%,rgba(241,244,255,.97))!important;color:#30264f!important}.purchase-supplier-form-grid input:not([type=file]),.purchase-supplier-form-grid textarea{background:rgba(255,255,255,.88)!important;color:#30264f!important}.purchase-supplier-search input{color:#30264f!important}}
