@@ -1293,3 +1293,30 @@
 @media(max-width:560px) {
   .purchase-page .purchase-items-wrap { border-radius: 14px !important; }
 }
+
+
+/* Keep long product lists scrollable inside the glass table card */
+.purchase-page .purchase-items-wrap {
+  max-height: min(46vh, 420px) !important;
+  overflow-y: auto !important;
+  overflow-x: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.purchase-page .purchase-items-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+.purchase-page .purchase-items-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+@media (max-width: 560px) {
+  .purchase-page .purchase-items-wrap {
+    max-height: 38vh !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+  }
+}
