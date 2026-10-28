@@ -1392,3 +1392,27 @@
     min-width: 1000px !important;
   }
 }
+
+
+/* Fix expanded-table modal stacking: it lives inside the receipt dialog overlay */
+.purchase-overlay:has(.purchase-items-wrap.purchase-items-expanded) {
+  position: static !important;
+  z-index: 10001 !important;
+  overflow: visible !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.purchase-page:has(.purchase-items-wrap.purchase-items-expanded) {
+  position: relative !important;
+  z-index: 10002 !important;
+}
+.purchase-page:has(.purchase-items-wrap.purchase-items-expanded)::before {
+  z-index: 10000 !important;
+}
+.purchase-page .purchase-items-toolbar:has(+ .purchase-items-wrap.purchase-items-expanded) {
+  z-index: 10004 !important;
+}
+.purchase-page .purchase-items-wrap.purchase-items-expanded {
+  z-index: 10003 !important;
+}
