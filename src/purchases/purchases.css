@@ -1176,3 +1176,56 @@
   .purchase-page .purchase-items-table thead th{padding:10px 8px!important}
   .purchase-page .purchase-items-table tbody td{padding:8px 8px!important}
 }
+
+
+/* Readability fix: keep all purchase table text visible over glass gradients */
+.purchase-page .purchase-items-table,
+.purchase-page .purchase-items-table th,
+.purchase-page .purchase-items-table td,
+.purchase-page .purchase-items-table tbody td *,
+.purchase-page .purchase-items-toolbar,
+.purchase-page .purchase-items-toolbar * {
+  opacity: 1;
+}
+.purchase-page .purchase-items-table thead th {
+  color: #554078 !important;
+  -webkit-text-fill-color: #554078 !important;
+  text-shadow: none !important;
+  background-clip: padding-box !important;
+}
+.purchase-page .purchase-items-table .purchase-table-product-name,
+.purchase-page .purchase-items-table .purchase-items-empty-state strong,
+.purchase-page .purchase-items-toolbar > strong {
+  color: #6946ad !important;
+  background: none !important;
+  background-image: none !important;
+  -webkit-background-clip: border-box !important;
+  background-clip: border-box !important;
+  -webkit-text-fill-color: #6946ad !important;
+  text-shadow: none !important;
+}
+.purchase-page .purchase-items-table tbody td {
+  color: #433456 !important;
+}
+.purchase-page .purchase-items-table .purchase-table-readonly {
+  color: #433456 !important;
+  -webkit-text-fill-color: #433456 !important;
+}
+.purchase-page .purchase-items-table .purchase-table-money,
+.purchase-page .purchase-items-table .purchase-table-count {
+  color: #5b4780 !important;
+  -webkit-text-fill-color: #5b4780 !important;
+}
+.purchase-page .purchase-items-table .purchase-table-total {
+  color: #5636a3 !important;
+  -webkit-text-fill-color: #5636a3 !important;
+}
+.purchase-page .purchase-items-table .purchase-table-status {
+  color: #5b4780 !important;
+  -webkit-text-fill-color: #5b4780 !important;
+}
+.purchase-page .purchase-items-empty-state,
+.purchase-page .purchase-items-empty-state * {
+  color: #62527d !important;
+  -webkit-text-fill-color: #62527d !important;
+}
