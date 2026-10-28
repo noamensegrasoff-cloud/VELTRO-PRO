@@ -7125,3 +7125,16 @@ html body #root .products-page .pform-modal>.pform-footer{
 .purchase-product-profit-summary strong{font-size:18px;font-weight:750;color:var(--text-primary,#28304a);overflow-wrap:anywhere}
 .purchase-product-profit-percent strong{color:#7756c9}
 @media(max-width:520px){.purchase-product-profit-summary{grid-template-columns:minmax(0,1fr) minmax(100px,.7fr);gap:8px}.purchase-product-profit-cost,.purchase-product-profit-percent{padding:11px}.purchase-product-profit-summary strong{font-size:15px}}
+
+
+/* Purchase product editor: stock quantity before and after this addition. */
+.purchase-product-stock-summary{display:grid;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:10px;align-items:center;margin-top:12px;padding:12px;border:1px solid rgba(94,105,218,.2);border-radius:15px;background:linear-gradient(135deg,rgba(86,110,222,.07),rgba(147,88,215,.07))}
+.purchase-product-stock-before,.purchase-product-stock-after{display:flex;flex-direction:column;gap:6px;min-width:0;padding:12px;border-radius:11px;background:rgba(255,255,255,.58)}
+.purchase-product-stock-before small,.purchase-product-stock-after small{font-size:12px;line-height:1.4;color:var(--text-secondary,#68718a)}
+.purchase-product-stock-before strong,.purchase-product-stock-after strong{font-size:19px;font-weight:750;color:var(--text-primary,#28304a);overflow-wrap:anywhere}
+.purchase-product-stock-before strong span,.purchase-product-stock-after strong span{font-size:11px;font-weight:500}
+.purchase-product-stock-arrow{text-align:center;color:#7957cf;font-size:22px;font-weight:700}
+.purchase-product-stock-after{border:1px solid rgba(106,85,211,.18)}
+.purchase-product-stock-after strong{color:#7052c5}
+.purchase-product-stock-after em{font-size:11px;font-style:normal;font-weight:650;color:#39866d}
+@media(max-width:520px){.purchase-product-stock-summary{grid-template-columns:minmax(0,1fr) 16px minmax(0,1fr);gap:5px;padding:8px}.purchase-product-stock-before,.purchase-product-stock-after{padding:9px}.purchase-product-stock-before strong,.purchase-product-stock-after strong{font-size:15px}.purchase-product-stock-before small,.purchase-product-stock-after small{font-size:11px}}
