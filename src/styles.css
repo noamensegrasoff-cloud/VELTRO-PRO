@@ -7116,3 +7116,12 @@ html body #root .products-page .pform-modal>.pform-footer{
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
+
+
+/* Purchase product editor: adopted profit cost and margin summary. */
+.purchase-product-profit-summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(110px,.42fr);gap:12px;margin-top:14px;align-items:stretch}
+.purchase-product-profit-cost,.purchase-product-profit-percent{display:flex;flex-direction:column;justify-content:center;gap:7px;min-width:0;padding:14px 16px;border:1px solid rgba(109,91,220,.22);border-radius:14px;background:linear-gradient(135deg,rgba(89,105,220,.09),rgba(155,91,220,.07))}
+.purchase-product-profit-summary small{font-size:12px;line-height:1.45;color:var(--text-secondary,#68718a)}
+.purchase-product-profit-summary strong{font-size:18px;font-weight:750;color:var(--text-primary,#28304a);overflow-wrap:anywhere}
+.purchase-product-profit-percent strong{color:#7756c9}
+@media(max-width:520px){.purchase-product-profit-summary{grid-template-columns:minmax(0,1fr) minmax(100px,.7fr);gap:8px}.purchase-product-profit-cost,.purchase-product-profit-percent{padding:11px}.purchase-product-profit-summary strong{font-size:15px}}
