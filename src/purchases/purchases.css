@@ -1574,3 +1574,15 @@
   -webkit-backdrop-filter: blur(14px) saturate(140%) !important;
   backdrop-filter: blur(14px) saturate(140%) !important;
 }
+
+
+/* Product-name search opens a dedicated glass picker modal */
+.purchase-product-search-launch{width:100%;min-width:0;min-height:44px;display:flex;align-items:center;gap:10px;padding:0 13px;border:1px solid rgba(151,130,230,.3);border-radius:13px;background:linear-gradient(120deg,rgba(139,92,246,.14),rgba(59,130,246,.1));color:var(--purchase-text,#f5f3ff);font:inherit;text-align:start;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.07);transition:border-color .18s,background .18s}
+.purchase-product-search-launch span{flex:1;min-width:0}
+.purchase-product-search-launch:hover{border-color:rgba(167,139,250,.65);background:linear-gradient(120deg,rgba(139,92,246,.23),rgba(59,130,246,.17))}
+.purchase-product-search-overlay{z-index:12000}
+.purchase-product-search-modal{width:min(720px,calc(100vw - 24px))}
+.purchase-product-search-results{flex:1;min-height:150px;max-height:min(52vh,480px);overscroll-behavior:contain}
+.purchase-product-search-modal .purchase-supplier-modal-footer{display:flex;justify-content:flex-start;padding:12px 20px 18px;border-top:1px solid rgba(158,145,220,.15)}
+.purchase-product-search-modal .purchase-supplier-option-id{white-space:nowrap}
+@media(max-width:600px){.purchase-product-search-launch{min-height:42px}.purchase-product-search-modal{width:calc(100vw - 20px);max-height:88vh}.purchase-product-search-results{max-height:55vh}}
