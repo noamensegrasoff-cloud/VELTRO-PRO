@@ -74,3 +74,20 @@
 .pos-barcode-scan button{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 13px;border:1px solid rgba(126,95,188,.2);border-radius:9px;background:linear-gradient(120deg,#7959c6,#9276d8);color:#fff;font-size:11px;font-weight:700}
 .pos-barcode-scan button svg{width:15px;height:15px}
 @media(max-width:560px){.pos-barcode-scan{min-height:40px}.pos-barcode-scan button{padding:7px 9px}}
+
+
+/* Additional POS actions and stronger invoice total */
+.pos-bottom-tools{grid-template-columns:repeat(6,minmax(0,1fr));}
+.pos-grand-total{min-height:112px;padding:14px 16px;gap:5px}
+.pos-grand-total span{font-size:15px}
+.pos-grand-total strong{font-size:clamp(31px,3.2vw,46px);letter-spacing:-.5px}
+.pos-grand-total small{font-size:11px}
+.pos-scale-form{display:grid;gap:13px}
+.pos-scale-form label{display:grid;gap:7px;color:#796b93;font-size:12px;font-weight:700}
+.pos-scale-form input,.pos-scale-form select{width:100%;min-height:42px;padding:9px 11px;border:1px solid #d9cbed;border-radius:10px;background:rgba(255,255,255,.9);color:#49396e;font:inherit;outline:none}
+.pos-scale-form>strong{display:block;padding:12px;text-align:center;border-radius:12px;background:rgba(126,96,187,.09);color:#6346aa;font-size:24px}
+.pos-scale-form footer{display:flex;gap:8px}
+.pos-scale-form footer button{flex:1;padding:10px;border:1px solid #ddd3ee;border-radius:10px;background:#fff;color:#715c95;font-weight:700}
+.pos-scale-form footer .primary{background:linear-gradient(115deg,#7655ca,#9275dd);border-color:transparent;color:white}
+@media(max-width:850px){.pos-bottom-tools{grid-template-columns:repeat(3,minmax(0,1fr))}.pos-grand-total{min-height:100px}.pos-grand-total strong{font-size:clamp(29px,7vw,40px)}}
+@media(max-width:560px){.pos-bottom-tools{grid-template-columns:repeat(2,minmax(0,1fr))}}
