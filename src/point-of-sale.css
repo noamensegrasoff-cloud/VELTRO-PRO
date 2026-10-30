@@ -65,3 +65,12 @@
  .pos-work-area{flex:initial;min-height:320px}
  .pos-page:fullscreen,.pos-page.pos-is-fullscreen{height:100dvh;overflow:auto}
 }
+
+
+.pos-barcode-scan{display:flex;align-items:center;gap:9px;min-height:42px;padding:5px 9px;border:1px solid rgba(132,105,197,.26);border-radius:12px;background:linear-gradient(110deg,rgba(255,255,255,.9),rgba(241,235,252,.82));box-shadow:inset 0 1px rgba(255,255,255,.9),0 4px 12px rgba(76,53,131,.045);color:#795db7;flex:0 0 auto}
+.pos-barcode-scan>svg{width:18px;height:18px;flex:0 0 auto}
+.pos-barcode-scan input{flex:1;min-width:0;height:30px;border:0;outline:0;background:transparent;color:#49396e;font:600 12px inherit}
+.pos-barcode-scan input::placeholder{color:#9b90ad;font-weight:400}
+.pos-barcode-scan button{display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 13px;border:1px solid rgba(126,95,188,.2);border-radius:9px;background:linear-gradient(120deg,#7959c6,#9276d8);color:#fff;font-size:11px;font-weight:700}
+.pos-barcode-scan button svg{width:15px;height:15px}
+@media(max-width:560px){.pos-barcode-scan{min-height:40px}.pos-barcode-scan button{padding:7px 9px}}
