@@ -16,6 +16,7 @@ import BusinessOnboarding from './BusinessOnboarding.jsx';
 import ProductsPage from './ProductsPage.jsx';
 import ProductMovementPage from './ProductMovementPage.jsx';
 import PurchaseInvoicesPage from './purchases/PurchaseInvoicesPage.jsx';
+import PointOfSalePage from './PointOfSalePage.jsx';
 import { QRCodeSVG } from 'qrcode.react';
 import Barcode from 'react-barcode';
 
@@ -535,6 +536,7 @@ function CustomerAccountsPage({lang}) {
 
 
 function ModulePage({ page, parent, t, lang, onBack, currentUser }) {
+  if (page.id === 'point-of-sale') return <PointOfSalePage lang={lang} currentUser={currentUser} />;
   if (page.id === 'purchases-list') return <PurchaseInvoicesPage lang={lang} currentUser={currentUser} />;
   if (page.id === 'product-list') return <ProductsPage lang={lang} />;
   if (page.id === 'product-movement') return <ProductMovementPage lang={lang} />;
