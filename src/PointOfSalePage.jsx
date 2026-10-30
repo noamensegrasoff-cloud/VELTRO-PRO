@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Plus, Pencil, Check, ListChecks, Printer, UserRound, ChevronLeft, ChevronRight, Minus, Search, Calculator, Image as ImageIcon, Wallet, Wifi, Server, Cloud, CalendarClock, Receipt, Package, X, Delete, Banknote, Barcode, Pause, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
+import { Plus, Pencil, Check, ListChecks, Printer, UserRound, ChevronLeft, ChevronRight, Minus, Search, Calculator, Image as ImageIcon, Wallet, Wifi, Server, Cloud, CalendarClock, Receipt, Package, X, Delete, Banknote, Barcode, Pause, RotateCcw, Maximize2, Minimize2, ScanLine } from 'lucide-react';
 import './point-of-sale.css';
 
 const seed = [
@@ -17,11 +17,12 @@ const money = n => Number(n||0).toLocaleString('fr-FR',{minimumFractionDigits:2,
 
 export default function PointOfSalePage({ lang='ar', currentUser }) {
  const L=words[lang]||words.ar, rtl=lang==='ar';
- const [rows,setRows]=useState(seed),[selected,setSelected]=useState(0),[modal,setModal]=useState(''),[entry,setEntry]=useState(''),[query,setQuery]=useState(''),[paid,setPaid]=useState('0'),[customer,setCustomer]=useState(''),[receiptNo,setReceiptNo]=useState(1),[held,setHeld]=useState([]),[calc,setCalc]=useState('0'),[calcMemory,setCalcMemory]=useState(''),[isFullscreen,setIsFullscreen]=useState(false);
+ const [rows,setRows]=useState(seed),[selected,setSelected]=useState(0),[modal,setModal]=useState(''),[entry,setEntry]=useState(''),[query,setQuery]=useState(''),[paid,setPaid]=useState('0'),[customer,setCustomer]=useState(''),[receiptNo,setReceiptNo]=useState(1),[held,setHeld]=useState([]),[calc,setCalc]=useState('0'),[calcMemory,setCalcMemory]=useState(''),[isFullscreen,setIsFullscreen]=useState(false),[barcode,setBarcode]=useState('');
  React.useEffect(()=>{const sync=()=>setIsFullscreen(Boolean(document.fullscreenElement));document.addEventListener('fullscreenchange',sync);return()=>document.removeEventListener('fullscreenchange',sync)},[]);\n const toggleFullscreen=async()=>{try{if(document.fullscreenElement){await document.exitFullscreen()}else{await document.querySelector('.pos-page')?.requestFullscreen?.()}}catch{setIsFullscreen(false)}};\n const active=rows[selected]||rows[rows.length-1];
  const total=rows.reduce((a,r)=>a+r.qty*r.price,0),oldDebt=customer?2350:0,paidValue=Number(paid)||0,newDebt=Math.max(0,oldDebt+total-paidValue);
  const filtered=useMemo(()=>seed.filter(p=>(p.name+' '+p.id).toLowerCase().includes(query.toLowerCase())),[query]);
  const setRow=(key,value)=>setRows(old=>old.map((r,i)=>i===selected?{...r,[key]:(key==='qty'||key==='price')?Math.max(key==='qty'?1:0,Number(value)||0):value}:r));
+ const scanBarcode=()=>{const code=barcode.trim();if(!code)return;const product=seed.find(p=>p.id===code);if(product){addProduct(product);setBarcode('')}else{setQuery(code);setModal('search')}};
  const addProduct=p=>{const i=rows.findIndex(x=>x.id===p.id);if(i>=0){setSelected(i);setRows(old=>old.map((x,j)=>j===i?{...x,qty:x.qty+1}:x));}else{setSelected(rows.length);setRows(old=>[...old,{...p,qty:1}]);}setModal('');setQuery('')};
  const move=d=>setSelected(i=>Math.max(0,Math.min(rows.length-1,i+d)));
  const startEdit=kind=>{if(!active)return;setEntry(String(active[kind]));setModal(kind)};
@@ -41,6 +42,7 @@ export default function PointOfSalePage({ lang='ar', currentUser }) {
    <section className="pos-glass pos-grand-total"><span>{L.invoice}</span><strong>{money(total)}</strong><small>{rows.length} {lang==='ar'?'منتج':lang==='fr'?'articles':'items'}</small></section>
    <section className="pos-glass pos-finance"><h3>{lang==='ar'?'الملخص المالي':lang==='fr'?'Résumé financier':'Financial summary'}</h3><div className="pos-finance-grid"><div><small>{L.oldDebt}</small><b>{money(oldDebt)}</b></div><div><small>{L.total}</small><b>{money(total)}</b></div><label><small>{L.paid}</small><input value={paid} onChange={e=>setPaid(e.target.value)} inputMode="decimal"/></label><div className="debt"><small>{L.newDebt}</small><b>{money(newDebt)}</b></div></div></section>
   </div>
+  <form className="pos-barcode-scan" onSubmit={e=>{e.preventDefault();scanBarcode()}}><ScanLine/><input aria-label={lang==='ar'?'مسح الباركود':lang==='fr'?'Scanner le code-barres':'Scan barcode'} value={barcode} onChange={e=>setBarcode(e.target.value)} placeholder={lang==='ar'?'امسح الباركود أو أدخل المعرّف هنا':lang==='fr'?'Scanner ou saisir le code-barres':'Scan or enter barcode / product ID'} autoComplete="off"/><button type="submit"><Barcode/><span>{lang==='ar'?'إضافة':lang==='fr'?'Ajouter':'Add'}</span></button></form>
   <section className="pos-glass pos-product-control">
    <button className="pos-square" title={L.previous} onClick={()=>move(-1)}><ChevronLeft/></button><button className="pos-adjust" onClick={()=>startEdit('qty')}><Minus/><span>{L.quantity}</span><Plus/></button>
    <div className="pos-selected-product"><b>{active?.name||'—'}</b><span>{L.quantity}: {active?.qty??0}</span><strong>{L.price}: {money(active?.price||0)}</strong></div>
