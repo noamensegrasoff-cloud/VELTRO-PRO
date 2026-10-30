@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Plus, Pencil, Check, ListChecks, Printer, UserRound, ChevronLeft, ChevronRight, Minus, Search, Calculator, Image as ImageIcon, Wallet, Wifi, Server, Cloud, CalendarClock, Receipt, Package, X, Delete, Banknote, Barcode, Pause, RotateCcw } from 'lucide-react';
+import { Plus, Pencil, Check, ListChecks, Printer, UserRound, ChevronLeft, ChevronRight, Minus, Search, Calculator, Image as ImageIcon, Wallet, Wifi, Server, Cloud, CalendarClock, Receipt, Package, X, Delete, Banknote, Barcode, Pause, RotateCcw, Maximize2, Minimize2 } from 'lucide-react';
 import './point-of-sale.css';
 
 const seed = [
@@ -17,8 +17,8 @@ const money = n => Number(n||0).toLocaleString('fr-FR',{minimumFractionDigits:2,
 
 export default function PointOfSalePage({ lang='ar', currentUser }) {
  const L=words[lang]||words.ar, rtl=lang==='ar';
- const [rows,setRows]=useState(seed),[selected,setSelected]=useState(0),[modal,setModal]=useState(''),[entry,setEntry]=useState(''),[query,setQuery]=useState(''),[paid,setPaid]=useState('0'),[customer,setCustomer]=useState(''),[receiptNo,setReceiptNo]=useState(1),[held,setHeld]=useState([]),[calc,setCalc]=useState('0'),[calcMemory,setCalcMemory]=useState('');
- const active=rows[selected]||rows[rows.length-1];
+ const [rows,setRows]=useState(seed),[selected,setSelected]=useState(0),[modal,setModal]=useState(''),[entry,setEntry]=useState(''),[query,setQuery]=useState(''),[paid,setPaid]=useState('0'),[customer,setCustomer]=useState(''),[receiptNo,setReceiptNo]=useState(1),[held,setHeld]=useState([]),[calc,setCalc]=useState('0'),[calcMemory,setCalcMemory]=useState(''),[isFullscreen,setIsFullscreen]=useState(false);
+ React.useEffect(()=>{const sync=()=>setIsFullscreen(Boolean(document.fullscreenElement));document.addEventListener('fullscreenchange',sync);return()=>document.removeEventListener('fullscreenchange',sync)},[]);\n const toggleFullscreen=async()=>{try{if(document.fullscreenElement){await document.exitFullscreen()}else{await document.querySelector('.pos-page')?.requestFullscreen?.()}}catch{setIsFullscreen(false)}};\n const active=rows[selected]||rows[rows.length-1];
  const total=rows.reduce((a,r)=>a+r.qty*r.price,0),oldDebt=customer?2350:0,paidValue=Number(paid)||0,newDebt=Math.max(0,oldDebt+total-paidValue);
  const filtered=useMemo(()=>seed.filter(p=>(p.name+' '+p.id).toLowerCase().includes(query.toLowerCase())),[query]);
  const setRow=(key,value)=>setRows(old=>old.map((r,i)=>i===selected?{...r,[key]:(key==='qty'||key==='price')?Math.max(key==='qty'?1:0,Number(value)||0):value}:r));
@@ -35,7 +35,7 @@ export default function PointOfSalePage({ lang='ar', currentUser }) {
  return <div className="pos-page" dir={rtl?'rtl':'ltr'}>
   <div className="pos-demo-note">{L.demo}</div>
   <div className="pos-actions">
-   <button onClick={startNew}><Plus/>{L.new}</button><button onClick={()=>setModal('edit-receipt')}><Pencil/>{L.edit}</button><button className="pos-primary" onClick={()=>setModal('confirm-sale')}><Check/>{L.confirm}</button><button onClick={()=>setModal('held')}><ListChecks/>{L.held}{held.length>0&&<i>{held.length}</i>}</button><button onClick={print}><Printer/>{L.print}</button><button onClick={()=>setModal('customer')}><UserRound/>{L.customer}</button>
+   <button onClick={startNew}><Plus/>{L.new}</button><button onClick={()=>setModal('edit-receipt')}><Pencil/>{L.edit}</button><button className="pos-primary" onClick={()=>setModal('confirm-sale')}><Check/>{L.confirm}</button><button onClick={()=>setModal('held')}><ListChecks/>{L.held}{held.length>0&&<i>{held.length}</i>}</button><button onClick={print}><Printer/>{L.print}</button><button onClick={()=>setModal('customer')}><UserRound/>{L.customer}</button><button className="pos-fullscreen-button" onClick={toggleFullscreen} title={isFullscreen?(lang==='ar'?'إنهاء ملء الشاشة':'Exit full screen'):(lang==='ar'?'ملء الشاشة':'Full screen')}>{isFullscreen?<Minimize2/>:<Maximize2/>}<span>{isFullscreen?(lang==='ar'?'تصغير':'Exit full screen'):(lang==='ar'?'ملء الشاشة':lang==='fr'?'Plein écran':'Full screen')}</span></button>
   </div>
   <div className="pos-summary">
    <section className="pos-glass pos-grand-total"><span>{L.invoice}</span><strong>{money(total)}</strong><small>{rows.length} {lang==='ar'?'منتج':lang==='fr'?'articles':'items'}</small></section>
