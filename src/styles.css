@@ -7445,6 +7445,24 @@ html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pfo
   html body #root .products-page .pform-overlay .pform-modal .pform-content-all>.pform-all-cards{column-count:2!important;column-gap:9px!important}
 }
 @media(max-width:560px){
-  html body #root .products-page .pform-overlay .pform-modal .pform-content-all>.pform-all-cards{column-count:1!important}
-  html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{overflow-y:auto!important}
+  /* Keep two compact card columns on phones instead of forcing a long single column. */
+  html body #root .products-page .pform-overlay .pform-modal .pform-content-all>.pform-all-cards{
+    column-count:2!important;
+    column-gap:8px!important;
+  }
+  html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
+    overflow-x:hidden!important;
+    overflow-y:auto!important;
+  }
+  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards>.pform-feature-card{
+    padding:7px!important;
+    margin-bottom:8px!important;
+  }
+  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-basic-grid,
+  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-carton-grid,
+  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-feature-options,
+  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-price-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:5px!important;
+  }
 }
