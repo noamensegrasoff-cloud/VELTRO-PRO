@@ -85,12 +85,8 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
     </section>
     {modal&&<div className="pform-overlay"><section className="pform-modal" role="dialog" aria-modal="true" aria-label={tx.newTitle}>
       <header className="pform-header"><div className="pform-header-title"><span className="pform-brand-icon"><PackageCheck size={20}/></span><div><h2>{editingProductId?(ar?'تعديل المنتج':fr?'Modifier le produit':'Edit product'):tx.newTitle}</h2><p>{editingProductId?(ar?'عدّل المعلومات ثم احفظ التغييرات':fr?'Modifiez les informations puis enregistrez':'Update the information and save your changes'):tx.confirmNote}</p></div></div><button className="pform-close" type="button" onClick={()=>setModal(false)} aria-label={tx.close}><X size={19}/></button></header>
-      <div className="pform-panel-tabs" role="tablist" aria-label={tx.newTitle}>
-        <button type="button" role="tab" aria-selected={activeProductPanel===0} className={activeProductPanel===0?'active':''} onClick={()=>setActiveProductPanel(0)}><Info size={17}/><span>{ar?'المعلومات الأساسية':fr?'Informations principales':'Main information'}</span></button>
-        <button type="button" role="tab" aria-selected={activeProductPanel===1} className={activeProductPanel===1?'active':''} onClick={()=>setActiveProductPanel(1)}><SlidersHorizontal size={17}/><span>{ar?'التفاصيل والخيارات':fr?'Détails et options':'Details & options'}</span></button>
-      </div>
       <div className="pform-content pform-content-all">
-        <div className={"pform-panel-view pform-panel-primary "+(activeProductPanel===0?"is-active":"is-hidden")}>
+        <div className="pform-panel-view pform-panel-primary is-active">
         <section className="pform-section pform-product-grid">
           <div className="pform-section-heading"><div><h3>{tx.productInfo}</h3></div><span><Hash size={15}/> 01</span></div>
           <div className="pform-feature-card">
@@ -128,7 +124,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
           </div>
         </section>
         </div>
-        <div className={"pform-panel-view pform-panel-secondary "+(activeProductPanel===1?"is-active":"is-hidden")}>
+        <div className="pform-panel-view pform-panel-secondary is-active">
         <section className="pform-section">
           <div className="pform-section-heading"><div><h3>{tx.classification}</h3></div><span><Hash size={15}/> 02</span></div>
           <div className="pform-feature-card">
