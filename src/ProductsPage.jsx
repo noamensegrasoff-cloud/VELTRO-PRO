@@ -86,8 +86,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
     {modal&&<div className="pform-overlay"><section className="pform-modal" role="dialog" aria-modal="true" aria-label={tx.newTitle}>
       <header className="pform-header"><div className="pform-header-title"><span className="pform-brand-icon"><PackageCheck size={20}/></span><div><h2>{editingProductId?(ar?'تعديل المنتج':fr?'Modifier le produit':'Edit product'):tx.newTitle}</h2><p>{editingProductId?(ar?'عدّل المعلومات ثم احفظ التغييرات':fr?'Modifiez les informations puis enregistrez':'Update the information and save your changes'):tx.confirmNote}</p></div></div><button className="pform-close" type="button" onClick={()=>setModal(false)} aria-label={tx.close}><X size={19}/></button></header>
       <div className="pform-content pform-content-all">
-        <div className="pform-panel-view pform-panel-primary is-active">
-        <section className="pform-section pform-product-grid">
+        <section className="pform-section pform-product-grid pform-all-cards">
           <div className="pform-section-heading"><div><h3>{tx.productInfo}</h3></div><span><Hash size={15}/> 01</span></div>
           <div className="pform-feature-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Info size={19}/></span><div><b>{tx.productInfo}</b></div></div>
@@ -122,10 +121,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
               <div className="pform-average-cost-card"><small>{ar?'متوسط سعر الشراء المعتمد لحساب الربح':fr?'Coût moyen pondéré utilisé pour la marge':'Weighted average cost used for profit'}</small><strong>{money(weightedAverageCost)}</strong><span>{ar?`المخزون الحالي: ${existingStock} · الشراء الجديد: ${incomingUnits}`:fr?`Stock actuel : ${existingStock} · nouvel achat : ${incomingUnits}`:`Current stock: ${existingStock} · new purchase: ${incomingUnits}`}</span></div>
             </div>
           </div>
-        </section>
-        </div>
-        <div className="pform-panel-view pform-panel-secondary is-active">
-        <section className="pform-section">
+
           <div className="pform-section-heading"><div><h3>{tx.classification}</h3></div><span><Hash size={15}/> 02</span></div>
           <div className="pform-feature-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Tag size={19}/></span><div><b>{tx.classification}</b></div></div>
@@ -147,7 +143,6 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
             {form.sellByMeasure&&<div className="pform-feature-options"><label className="pform-field"><span>{tx.measureUnit}</span><select value={form.measureUnit} onChange={e=>set('measureUnit',e.target.value)}>{(ar?['كغ','غرام','لتر','ملليلتر','متر']:fr?['kg','g','L','ml','m']:['kg','gram','litre','ml','meter']).map(v=><option key={v}>{v}</option>)}</select></label>{barcodeField(ar?'كودبار الميزان':fr?'Code-barres balance':'Scale barcode','unitBarcodes')}</div>}
           </div>
         </section>
-        </div>
       </div>
       <footer className="pform-footer"><div className="pform-footer-left"><span>{tx.section} <b>02</b> {tx.of} 02</span></div><div className="pform-footer-actions"><button type="button" className="pform-back-btn" onClick={()=>setModal(false)}>{tx.cancel}</button><button type="button" className="pform-next-btn" onClick={saveProduct}><Check size={17}/>{editingProductId?(ar?'حفظ التعديلات':fr?'Enregistrer les modifications':'Save changes'):tx.save}</button></div></footer>
     </section></div>}
