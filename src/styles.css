@@ -7363,3 +7363,53 @@ html body #root .products-page .pform-modal>.pform-footer{flex:0 0 auto!importan
 @media(max-width:560px){
  html body #root .products-page .pform-content-all>.pform-all-cards{grid-template-columns:minmax(0,1fr)!important}
 }
+
+
+/* Masonry layout: compact cards sit beside one another at their natural heights. */
+html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
+  display:block!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  padding:10px!important;
+}
+html body #root .products-page .pform-content-all>.pform-all-cards{
+  display:block!important;
+  column-count:3!important;
+  column-gap:10px!important;
+  column-fill:balance!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  overflow:visible!important;
+}
+html body #root .products-page .pform-all-cards>.pform-section-heading{
+  display:block!important;
+  column-span:all!important;
+  width:100%!important;
+  margin:0 0 9px!important;
+}
+html body #root .products-page .pform-all-cards>.pform-feature-card{
+  display:inline-flex!important;
+  flex-direction:column!important;
+  vertical-align:top!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0 0 10px!important;
+  padding:10px!important;
+  break-inside:avoid!important;
+  -webkit-column-break-inside:avoid!important;
+  overflow:visible!important;
+  align-self:start!important;
+}
+html body #root .products-page .pform-all-cards>.pform-feature-card:nth-of-type(3n+1){min-height:150px!important}
+html body #root .products-page .pform-all-cards>.pform-feature-card:nth-of-type(3n+2){min-height:185px!important}
+html body #root .products-page .pform-all-cards>.pform-feature-card:nth-of-type(3n){min-height:125px!important}
+@media(max-width:900px){
+  html body #root .products-page .pform-content-all>.pform-all-cards{column-count:2!important;column-gap:9px!important}
+}
+@media(max-width:560px){
+  html body #root .products-page .pform-content-all>.pform-all-cards{column-count:1!important}
+  html body #root .products-page .pform-all-cards>.pform-feature-card{min-height:0!important}
+}
