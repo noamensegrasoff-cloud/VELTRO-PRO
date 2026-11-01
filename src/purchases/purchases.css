@@ -1721,3 +1721,61 @@
 .purchase-editor-standalone-overlay{position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;height:100dvh!important;min-height:100vh!important;z-index:2147483000!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:auto!important;isolation:isolate!important;transform:none!important;background:rgba(12,10,28,.58)!important;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;padding:clamp(12px,3vw,28px)!important;box-sizing:border-box!important}
 .purchase-editor-standalone-overlay>.purchase-product-submodal{position:relative!important;z-index:1!important;max-height:calc(100dvh - 32px)!important;overflow:auto!important;width:min(620px,100%)!important;margin:auto!important}
 @media(max-width:600px){.purchase-editor-standalone-overlay{padding:10px!important;align-items:center!important}.purchase-editor-standalone-overlay>.purchase-product-submodal{width:100%!important;max-width:100%!important;max-height:calc(100dvh - 20px)!important;border-radius:18px!important}}
+
+
+/* Import receipt control: hide the browser-native file picker UI and keep the label as the visible glass button. */
+.purchase-page .purchase-register-actions > label.purchase-secondary{
+  position:relative!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  min-width:118px!important;
+  min-height:41px!important;
+  padding:10px 15px!important;
+  overflow:hidden!important;
+  isolation:isolate;
+  cursor:pointer!important;
+  white-space:nowrap!important;
+  border:1px solid rgba(129,105,221,.30)!important;
+  border-radius:13px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(235,229,255,.76) 62%,rgba(226,220,255,.72))!important;
+  color:#594080!important;
+  box-shadow:0 5px 16px rgba(87,65,151,.08),inset 0 1px 0 rgba(255,255,255,.92)!important;
+  -webkit-backdrop-filter:blur(14px) saturate(145%)!important;
+  backdrop-filter:blur(14px) saturate(145%)!important;
+}
+.purchase-page .purchase-register-actions > label.purchase-secondary > svg,
+.purchase-page .purchase-register-actions > label.purchase-secondary > span{
+  position:relative!important;
+  z-index:1!important;
+  pointer-events:none!important;
+}
+.purchase-page .purchase-register-actions > label.purchase-secondary > input[type="file"]{
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  margin:0!important;
+  padding:0!important;
+  opacity:0!important;
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  font-size:0!important;
+  color:transparent!important;
+  cursor:pointer!important;
+}
+.purchase-page .purchase-register-actions > label.purchase-secondary:focus-within{
+  outline:3px solid rgba(121,87,232,.18)!important;
+  outline-offset:2px!important;
+}
+@media(max-width:620px){
+  .purchase-page .purchase-register-actions > label.purchase-secondary{
+    min-width:0!important;
+    min-height:39px!important;
+    padding:9px 10px!important;
+    font-size:11px!important;
+  }
+}
