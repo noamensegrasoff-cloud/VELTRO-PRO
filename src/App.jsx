@@ -22,7 +22,7 @@ import Barcode from 'react-barcode';
 
 const copy = {
   ar: {
-    workspace: 'مساحة العمل',     purchasesToday: 'مشتريات اليوم', productsCount: 'عدد المنتجات', lowStockCount: 'منتجات منخفضة المخزون', purchaseTrend: 'حركة المشتريات', last7: 'آخر 7 أيام', purchaseSummary: 'ملخص المشتريات', noPurchaseData: 'لا توجد مشتريات مسجلة في هذه الفترة', noProductData: 'لا توجد منتجات مسجلة بعد', noRecentPurchases: 'لا توجد عمليات شراء مسجلة بعد', purchase: 'شراء', itemsCount: 'عدد السلع', supplier: 'المورد', dataSource: 'البيانات المحفوظة في المتجر', salesUnavailable: 'المبيعات غير متصلة بعد', expensesUnavailable: 'المصاريف غير متصلة بعد', search: 'ابحث عن قسم أو وظيفة...', demo: 'معاينة تصميمية · بيانات تجريبية',
+    workspace: 'مساحة العمل',     purchasesToday: 'مشتريات اليوم', productsCount: 'عدد المنتجات', lowStockCount: 'منتجات تحتاج إعادة تموين', purchaseTrend: 'حركة المشتريات', purchaseSummary: 'ملخص المشتريات', noPurchaseData: 'لا توجد مشتريات مسجلة في هذه الفترة', noProductData: 'لا توجد منتجات مسجلة بعد', noRecentPurchases: 'لا توجد عمليات شراء مسجلة بعد', purchase: 'شراء', itemsCount: 'عدد السلع', supplier: 'المورد', dataSource: 'البيانات المحفوظة في المتجر', salesUnavailable: 'المبيعات غير متصلة بعد', expensesUnavailable: 'المصاريف غير متصلة بعد', search: 'ابحث عن قسم أو وظيفة...', demo: 'معاينة تصميمية · بيانات تجريبية',
     subtitle: 'نظرة شاملة على أداء المتجر وحركة العمل.', today: 'اليوم', revenue: 'مبيعات اليوم',
     invoices: 'فواتير البيع', products: 'المنتجات', lowStock: 'مخزون منخفض',
     vsYesterday: 'مقارنة بالأمس', salesTrend: 'حركة المبيعات', last7: 'آخر 7 أيام',
@@ -47,7 +47,7 @@ const copy = {
     cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد', refreshPage: 'إعادة تحميل الصفحة',
   },
   en: {
-    workspace: 'Workspace',     purchasesToday: 'Purchases today', productsCount: 'Products', lowStockCount: 'Low-stock products', purchaseTrend: 'Purchase activity', last7: 'Last 7 days', purchaseSummary: 'Purchase summary', noPurchaseData: 'No purchases recorded for this period', noProductData: 'No products recorded yet', noRecentPurchases: 'No purchase activity recorded yet', purchase: 'Purchase', itemsCount: 'Items', supplier: 'Supplier', dataSource: 'Store-saved data', salesUnavailable: 'Sales are not connected yet', expensesUnavailable: 'Expenses are not connected yet', search: 'Search sections and actions...', demo: 'Design preview · Sample data',
+    workspace: 'Workspace',     purchasesToday: 'Purchases today', productsCount: 'Products', lowStockCount: 'Products needing restock', purchaseTrend: 'Purchase activity', purchaseSummary: 'Purchase summary', noPurchaseData: 'No purchases recorded for this period', noProductData: 'No products recorded yet', noRecentPurchases: 'No purchase activity recorded yet', purchase: 'Purchase', itemsCount: 'Items', supplier: 'Supplier', dataSource: 'Store-saved data', salesUnavailable: 'Sales are not connected yet', expensesUnavailable: 'Expenses are not connected yet', search: 'Search sections and actions...', demo: 'Design preview · Sample data',
     subtitle: 'A clear overview of store performance and operations.', today: 'Today', revenue: 'Today’s sales',
     invoices: 'Sales invoices', products: 'Products', lowStock: 'Low stock',
     vsYesterday: 'vs yesterday', salesTrend: 'Sales activity', last7: 'Last 7 days',
@@ -72,7 +72,7 @@ const copy = {
     cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'UI preview — store transactions are not connected yet', refreshPage: 'Reload page',
   },
   fr: {
-    workspace: 'Espace de travail',     purchasesToday: 'Achats du jour', productsCount: 'Produits', lowStockCount: 'Produits en stock faible', purchaseTrend: 'Activité des achats', last7: '7 derniers jours', purchaseSummary: 'Résumé des achats', noPurchaseData: 'Aucun achat enregistré pour cette période', noProductData: 'Aucun produit enregistré', noRecentPurchases: 'Aucun achat récent enregistré', purchase: 'Achat', itemsCount: 'Articles', supplier: 'Fournisseur', dataSource: 'Données enregistrées du magasin', salesUnavailable: 'Les ventes ne sont pas encore connectées', expensesUnavailable: 'Les dépenses ne sont pas encore connectées', search: 'Rechercher une rubrique...', demo: 'Aperçu du design · Données fictives',
+    workspace: 'Espace de travail',     purchasesToday: 'Achats du jour', productsCount: 'Produits', lowStockCount: 'Produits à réapprovisionner', purchaseTrend: 'Activité des achats', purchaseSummary: 'Résumé des achats', noPurchaseData: 'Aucun achat enregistré pour cette période', noProductData: 'Aucun produit enregistré', noRecentPurchases: 'Aucun achat récent enregistré', purchase: 'Achat', itemsCount: 'Articles', supplier: 'Fournisseur', dataSource: 'Données enregistrées du magasin', salesUnavailable: 'Les ventes ne sont pas encore connectées', expensesUnavailable: 'Les dépenses ne sont pas encore connectées', search: 'Rechercher une rubrique...', demo: 'Aperçu du design · Données fictives',
     subtitle: 'Une vue claire des performances et des opérations du magasin.', today: 'Aujourd’hui', revenue: 'Ventes du jour',
     invoices: 'Factures de vente', products: 'Produits', lowStock: 'Stock faible',
     vsYesterday: 'vs hier', salesTrend: 'Activité des ventes', last7: '7 derniers jours',
@@ -266,36 +266,7 @@ function StockOverview({ t, dashboardData }) {
   </article>;
 }
 
-function DashboardPage({ t, lang, onNavigate, onOpenSection }) {
-  return <div className="page-content dashboard-content">
-    <div className="page-heading"><div><div className="heading-kicker"><span className="health-dot"/>{t('welcome')} <b>VELTRO</b></div><h1>{t('home')}</h1><p>{t('subtitle')}</p></div><div className="heading-actions"><span className="demo-badge">{t('demo')}</span><button className="date-button"><CalendarDays size={14}/>{t('today')} <ChevronDown size={14}/></button></div></div>
-    <section className="section-launcher" aria-label={t('allSections')}>
-      <div className="section-launcher-heading"><div><h2>{t('allSections')}</h2><p>{t('sectionsIntro')}</p></div><span className="section-launcher-mark"><LayoutDashboard size={20}/></span></div>
-      <div className="section-launcher-grid">
-        {sections.map((section,index)=>{const Icon=section.icon;return <button type="button" key={section.id} className={'section-launch-card section-tone-'+(index%6)} onClick={()=>onOpenSection(section)}>
-          <span className="section-launch-icon"><Icon size={23} strokeWidth={1.8}/></span><span className="section-launch-name">{getLabel(section,lang)}</span><span className="section-launch-meta">{section.children.length} <span>{lang==='ar'?'أقسام فرعية':lang==='fr'?'rubriques':'items'}</span></span><ChevronDown className="section-launch-arrow" size={16}/>
-        </button>})}
-      </div>
-    </section>
-    <section className="dashboard-overview" aria-label={t('home')}>
-      <div className="dashboard-overview-heading"><div><h2>{t('home')}</h2><p>{t('subtitle')}</p></div><span className="dashboard-overview-mark"><ChartNoAxesCombined size={19}/></span></div>
-      <div className="metrics-grid">
-        <MetricCard icon={Wallet} label={t('capital')} value="— DA" trend="" tone="blue" footer={t('capitalHint')}/>
-        <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value="— DA" trend="" tone="green" footer={t('profitHint')}/>
-        <MetricCard icon={ShoppingCart} label={t('revenue')} value="245,800 DA" trend="8.4%" tone="violet" footer={t('demo')}/>
-        <MetricCard icon={ReceiptText} label={t('expense')} value="— DA" trend="" tone="amber" footer={t('notLinked')}/>
-      </div>
-      <div className="charts-grid"><SalesChart t={t} lang={lang}/><MixChart t={t}/></div>
-      <div className="lower-grid"><RecentActivity t={t}/><StockOverview t={t}/></div>
-      <div className="quick-actions"><span>{t('shortcuts')}</span>
-        <button onClick={()=>onNavigate({id:'product-list',label:{ar:'قائمة المنتجات',en:'Product list',fr:'Liste des produits'}})}><Package size={14}/>{t('addProduct')}</button>
-        <button onClick={()=>onNavigate({id:'point-of-sale',label:{ar:'نقطة البيع',en:'Point of sale',fr:'Point de vente'}})}><ShoppingCart size={14}/>{t('newSale')}</button>
-        <button onClick={()=>onNavigate({id:'order-new',label:{ar:'طلب السلع',en:'Order goods',fr:'Commander des articles'}})}><ClipboardList size={14}/>{t('newOrder')}</button>
-        <button onClick={()=>onNavigate({id:'cash-summary',label:{ar:'ملخص الصندوق',en:'Cash summary',fr:'Résumé de caisse'}})}><Wallet size={14}/>{t('openCash')}</button>
-      </div>
-    </section>
-  </div>;
-}
+
 
 function SupplierListPage({ lang }) {
   const labels = {
