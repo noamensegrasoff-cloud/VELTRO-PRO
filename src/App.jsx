@@ -30,7 +30,7 @@ const copy = {
     recent: 'آخر العمليات', viewAll: 'عرض الكل', productMovement: 'حركة المنتجات',
     product: 'المنتج', operation: 'العملية', quantity: 'الكمية', status: 'الحالة',
     completed: 'مكتملة', pending: 'معلقة', received: 'مستلمة', sold: 'بيع',
-    bought: 'شراء', returned: 'مرتجع', stockOverview: 'نظرة على المخزون',
+    bought: 'شراء', adjusted: 'تسوية مخزون', returned: 'مرتجع', stockOverview: 'نظرة على المخزون',
     available: 'متوفر', low: 'منخفض', out: 'نفد', module: 'القسم',
     moduleHint: 'هذا القسم لم تُربط وظائفه وبياناته بعد.',
     shortcuts: 'وصول سريع', addProduct: 'إضافة منتج', newSale: 'فتح نقطة البيع',
@@ -55,7 +55,7 @@ const copy = {
     recent: 'Recent activity', viewAll: 'View all', productMovement: 'Product movement',
     product: 'Product', operation: 'Operation', quantity: 'Quantity', status: 'Status',
     completed: 'Completed', pending: 'Pending', received: 'Received', sold: 'Sale',
-    bought: 'Purchase', returned: 'Return', stockOverview: 'Stock overview',
+    bought: 'Purchase', adjusted: 'Stock adjustment', returned: 'Return', stockOverview: 'Stock overview',
     available: 'In stock', low: 'Low', out: 'Out', module: 'Section',
     moduleHint: 'This section is not connected to live data or actions yet.',
     shortcuts: 'Quick access', addProduct: 'Add product', newSale: 'Open point of sale',
@@ -80,7 +80,7 @@ const copy = {
     recent: 'Activité récente', viewAll: 'Tout voir', productMovement: 'Mouvement des produits',
     product: 'Produit', operation: 'Opération', quantity: 'Quantité', status: 'État',
     completed: 'Terminé', pending: 'En attente', received: 'Reçu', sold: 'Vente',
-    bought: 'Achat', returned: 'Retour', stockOverview: 'Vue du stock',
+    bought: 'Achat', adjusted: 'Ajustement du stock', returned: 'Retour', stockOverview: 'Vue du stock',
     available: 'Disponible', low: 'Faible', out: 'Épuisé', module: 'Rubrique',
     moduleHint: 'Cette rubrique n’est pas encore reliée aux données ni aux actions.',
     shortcuts: 'Accès rapide', addProduct: 'Ajouter un produit', newSale: 'Ouvrir le point de vente',
@@ -109,7 +109,7 @@ function getDashboardData(){
   const dailyProfit=salesToday.reduce((sum,invoice)=>sum+(invoice.items||[]).reduce((part,item)=>{const p=productById.get(String(item.productId));const unitCost=Number(item.unitCostAtSale??item.unitCost??p?.cost??p?.unitCost??0)||0;const cartonCost=Number(item.cartonCostAtSale??item.cartonCost??p?.cartonCost??(unitCost*(Number(p?.unitsPerCarton)||1)))||0;const cost=Number(item.costAtSale??(item.saleMode==='carton'?cartonCost:unitCost))||0;return part+(Number(item.qty)||0)*((Number(item.price)||0)-cost);},0),0);
   const inventoryValue=products.reduce((sum,p)=>sum+(Math.max(0,Number(p.stock)||0)*Math.max(0,Number(p.cost??p.unitCost??0)||0)),0);
   const stockItems=products.slice().sort((a,b)=>{const al=Number(a.stock)||0,bl=Number(b.stock)||0;const am=Number(a.min??10)||10,bm=Number(b.min??10)||10;return (al<=am?-1:0)-(bl<=bm?-1:0)||al-bl;}).slice(0,4).map(p=>{const stock=Math.max(0,Number(p.stock)||0),min=Math.max(0,Number(p.min??10)||10);return{name:p.name||p.productName||p.id,stock,tone:stock===0?'bad':stock<=min?'warn':'good',label:stock===0?'out':stock<=min?'low':'available'};});
-  const recentActivity=movements.slice().sort((a,b)=>String(b.createdAt||b.date||'').localeCompare(String(a.createdAt||a.date||''))).slice(0,5).map(m=>({id:m.source||m.id,product:m.productName||m.name||m.productId||'—',operation:m.type==='sale'?'sold':m.type==='purchase'?'bought':'returned',quantity:Math.abs(Number(m.quantityChange)||0),status:'completed',time:m.createdAt?new Date(m.createdAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):String(m.date||'').slice(0,5)}));
+  const recentActivity=movements.slice().sort((a,b)=>String(b.createdAt||b.date||'').localeCompare(String(a.createdAt||a.date||''))).slice(0,5).map(m=>({id:m.source||m.id,product:m.productName||m.name||m.productId||'—',operation:m.type==='sale'?'sold':m.type==='purchase'?'bought':m.type==='adjustment'?'adjusted':'returned',quantity:Math.abs(Number(m.quantityChange)||0),status:'completed',time:m.createdAt?new Date(m.createdAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):String(m.date||'').slice(0,5)}));
   const salesLast7=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));const key=dashboardDateKey(d);return{date:key,value:sales.filter(x=>String(x.date||x.createdAt||'').slice(0,10)===key).reduce((sum,x)=>sum+(Number(x.total??x.totalAmount??0)||0),0)};});
   const maxSales=Math.max(1,...salesLast7.map(x=>x.value)),salesShare=todaySales+todayPurchases>0?Math.round(todaySales/(todaySales+todayPurchases)*100):0;
   return{todaySales,todayPurchases,dailyProfit,inventoryValue,salesCount:salesToday.length,lowStockCount:products.filter(p=>Number(p.stock)===0||(p.stockAlertEnabled!==false&&Number(p.stock)>0&&Number(p.stock)<=Number(p.min??10))).length,stockItems,recentActivity,salesLast7,maxSales,salesShare,hasTransactions:sales.length>0||purchases.length>0};
