@@ -602,3 +602,58 @@ html body .pform-overlay.product-editor-rebuilt .product-editor-body {
     align-items: start !important;
   }
 }
+
+
+/* FINAL DESKTOP FIX: use normal block flow inside each lane.
+   Flex sizing is intentionally removed from the vertical card stacks. */
+@media screen and (min-width: 761px) {
+  html body .pform-overlay.product-editor-rebuilt .product-editor-columns {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    grid-auto-flow: column !important;
+    grid-template-rows: none !important;
+    align-items: start !important;
+    align-content: start !important;
+    justify-items: stretch !important;
+    gap: 12px !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column {
+    display: block !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    align-self: start !important;
+    justify-self: stretch !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column > * {
+    display: block !important;
+    position: relative !important;
+    float: none !important;
+    clear: both !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 0 10px !important;
+    align-self: auto !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .product-editor-card {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .pform-section-heading {
+    display: flex !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 0 7px !important;
+  }
+}
