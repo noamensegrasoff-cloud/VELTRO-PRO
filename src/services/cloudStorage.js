@@ -32,17 +32,29 @@ function requireCloud() {
 export async function getCloudRecords({ workspaceId, entityType, includeDeleted = false }) {
   if (!workspaceId || !entityType) throw new Error('workspaceId and entityType are required.');
   const client = requireCloud();
-  let query = client.from('cloud_records')
-    .select('workspace_id, entity_type, record_id, payload, updated_at, deleted_at, device_id')
-    .eq('workspace_id', workspaceId)
-    .eq('entity_type', entityType)
-    .order('updated_at', { ascending: true });
-  if (!includeDeleted) query = query.is('deleted_at', null);
-  const { data, error } = await query;
-  if (error) throw error;
-  return data ?? [];
-}
+  const pageSize = 1000;
+  const records = [];
+  let offset = 0;
 
+  while (true) {
+    let query = client.from('cloud_records')
+      .select('workspace_id, entity_type, record_id, payload, updated_at, deleted_at, device_id')
+      .eq('workspace_id', workspaceId)
+      .eq('entity_type', entityType)
+      .order('updated_at', { ascending: true })
+      .order('record_id', { ascending: true });
+    if (!includeDeleted) query = query.is('deleted_at', null);
+
+    const { data, error } = await query.range(offset, offset + pageSize - 1);
+    if (error) throw error;
+    const page = data ?? [];
+    records.push(...page);
+    if (page.length < pageSize) break;
+    offset += pageSize;
+  }
+
+  return records;
+}
 export async function saveCloudRecord({ workspaceId, entityType, recordId, payload }) {
   if (!workspaceId || !entityType || !recordId) {
     throw new Error('workspaceId, entityType and recordId are required.');
