@@ -24,11 +24,11 @@ export default function LightningRing({ size = 100, seed = 1, className = '' }) 
       <defs>
         <filter id={`electric-glow-${seed}`} x="-80%" y="-80%" width="260%" height="260%">
           <feGaussianBlur stdDeviation="1.5" result="blur" />
-          <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.12 0 0 0 0 0.88 0 0 0 0 0.78 0 0 0 1 0" result="cyanGlow" />
-          <feMerge><feMergeNode in="cyanGlow"/><feMergeNode in="SourceGraphic"/></feMerge>
+          <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.12 0 0 0 0 0.88 0 0 0 0 0.78 0 0 0 1 0" result="violetGlow" />
+          <feMerge><feMergeNode in="violetGlow"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
-      {paths.map((path, i) => <path key={i} d={path.d} className={i % 2 ? 'bolt bolt-violet' : 'bolt bolt-cyan'} style={{ animationDelay: path.delay }} filter={`url(#electric-glow-${seed})`} />)}
+      {paths.map((path, i) => <path key={i} d={path.d} className={i % 2 ? 'bolt bolt-violet' : 'bolt bolt-violet'} style={{ animationDelay: path.delay }} filter={`url(#electric-glow-${seed})`} />)}
     </svg>
   );
 }
