@@ -4340,7 +4340,7 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
 @keyframes branchModalPolish{from{opacity:0;transform:translateY(16px) scale(.975);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
 
 
-/* VELTRO-PRO — Products catalog: fully remove legacy dark-mode surfaces and apply the agreed violet/turquoise visual system. */
+/* VELTRO-PRO — Products catalog: fully remove legacy dark-mode surfaces and apply the agreed violet glass visual system. */
 .branch-content-modal-body .products-page{
   color:#263653!important;
   color-scheme:light!important;
@@ -4616,7 +4616,7 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   will-change:auto!important;
 }
 
-/* VELTRO-PRO — align product action buttons with the violet/turquoise identity. */
+/* VELTRO-PRO — align product action buttons with the violet glass identity. */
 .branch-content-modal-body .products-page .products-heading-actions .products-secondary-btn,
 .branch-content-modal-body .products-page .products-heading-actions .products-primary-btn{
   min-height:42px!important;
@@ -4891,7 +4891,7 @@ html[data-theme="light"] .glass-topbar .header-popover{background:rgba(255,255,2
   margin-bottom:0!important;
 }
 
-/* VELTRO-PRO product add/edit form refresh: compact cards, violet + turquoise accents */
+/* VELTRO-PRO product add/edit form refresh: compact cards, violet accents */
 .pform-overlay{padding:10px;background:rgba(5,8,22,.8);backdrop-filter:blur(9px)}
 .pform-modal{width:min(1480px,100%);height:min(940px,calc(100dvh - 20px));border:1px solid #37315f;border-radius:17px;background:#0d1221;color:#eef0ff;box-shadow:0 28px 90px #03051299}
 .pform-header{padding:12px 20px;background:linear-gradient(100deg,#111a2c,#17142b 58%,#1d102c);border-bottom:1px solid #292b48}
@@ -5530,7 +5530,7 @@ textarea:focus,
   border-color:#9a7add!important;
   box-shadow:0 0 0 3px rgba(137,100,203,.16)!important;
 }
-/* Product editor: replace the remaining turquoise highlights and glass tints */
+/* Product editor: replace the remaining violet highlights and glass tints */
 .products-page .pform-overlay .pform-panel-view.is-active .pform-section-heading>span,
 .products-page .pform-overlay .pform-panel-view.is-active .pform-feature-icon,
 .products-page .pform-overlay .pform-panel-view.is-active .pform-price-head>span,
