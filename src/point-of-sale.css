@@ -91,3 +91,13 @@
 .pos-scale-form footer .primary{background:linear-gradient(115deg,#7655ca,#9275dd);border-color:transparent;color:white}
 @media(max-width:850px){.pos-bottom-tools{grid-template-columns:repeat(3,minmax(0,1fr))}.pos-grand-total{min-height:100px}.pos-grand-total strong{font-size:clamp(29px,7vw,40px)}}
 @media(max-width:560px){.pos-bottom-tools{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+.pos-sale-error{margin:10px 0;padding:10px 12px;border:1px solid rgba(220,70,90,.3);border-radius:10px;background:rgba(220,70,90,.08);color:#b42345;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
+.pos-favorite-row{display:flex;align-items:stretch;gap:8px;min-width:0}
+.pos-favorite-row>button:first-child{flex:1;min-width:0}
+.pos-favorite-row>button:last-child{width:42px;min-width:42px;display:grid;place-items:center;border:1px solid var(--pos-border);border-radius:12px;background:var(--pos-glass);color:var(--pos-muted)}
+.pos-favorite-row>button:last-child.active{color:#8b70bd;border-color:rgba(139,112,189,.45);background:rgba(166,139,230,.13)}
+.pos-photo-empty img{max-width:min(100%,320px);max-height:260px;object-fit:contain;border-radius:12px}
+.pos-status-card b.muted{color:var(--pos-muted)}
+.pos-edit-receipt{display:grid;gap:12px}
+.pos-edit-receipt footer{display:flex;gap:8px}
