@@ -12,8 +12,8 @@ Never put a Supabase `service_role` key or secret key in frontend environment va
 
 - RLS is enabled on all inspected public tables.
 - Workspace membership and permission checks are scoped to the active workspace.
-- Only workspace owners can add or update non-owner members.
-- A custom role assigned to a member must belong to the same workspace.
+- `authenticated` currently has SELECT-only access to `workspace_members`; it does not have INSERT or UPDATE table grants. Team membership changes are therefore not available through the browser API yet.
+- Owner-only INSERT/UPDATE policies are defined as a future guarded path, and require both the correct owner check and a custom role from the same workspace. They do not take effect until table grants are deliberately enabled.
 - A member cannot promote another member to the `owner` role.
 - Cloud records require workspace membership and the permission corresponding to the record type and operation.
 - The workspace creator is added as owner by a database trigger.
@@ -33,8 +33,8 @@ Use two different Google accounts in separate browser profiles or incognito sess
 2. Sign in as Account B in a separate profile and let it create its workspace. Confirm B has a different workspace UUID.
 3. As B, attempt to select a row from `cloud_records` filtered to A's workspace UUID. It must return zero rows, not A's data.
 4. As B, attempt to insert a record into A's workspace UUID. PostgreSQL must reject it with an RLS policy error.
-5. As B, attempt to insert or update a `workspace_members` row in A's workspace. PostgreSQL must reject it.
-6. As A, confirm that assigning a custom role from B's workspace is rejected.
+5. As B, attempt to insert or update a `workspace_members` row in A's workspace. PostgreSQL must reject it because the client role has no INSERT/UPDATE table grant.
+6. Verify that the owner-only policies still include a same-workspace custom-role check before any future membership write grants are enabled.
 7. Repeat the read check as A against B's workspace; it must return zero rows.
 
 SQL inspection alone does not replace this runtime test. GitHub Pages build success does not prove that OAuth redirect settings are correct or that two real accounts are isolated in the deployed app.
