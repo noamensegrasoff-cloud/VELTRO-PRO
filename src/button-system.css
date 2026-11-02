@@ -1,16 +1,16 @@
 
 .app-shell{
-  --btn-accent:#0d9488;
-  --btn-accent-2:#0891b2;
-  --btn-accent-soft:#e0f7f3;
-  --btn-accent-border:#8adbd1;
-  --btn-text:#29435d;
-  --btn-surface:#ffffff;
-  --btn-border:#d7e2ec;
-  --btn-hover:#f0faf8;
-  --btn-focus:rgba(13,148,136,.28);
-  --btn-danger:#be3455;
-  --btn-danger-bg:#fff0f3;
+  --btn-accent:#;
+  --btn-accent-2:#;
+  --btn-accent-soft:#;
+  --btn-accent-border:#;
+  --btn-text:#;
+  --btn-surface:#;
+  --btn-border:#;
+  --btn-hover:#;
+  --btn-focus:r;
+  --btn-danger:#;
+  --btn-danger-bg:#;
 }
 
 .app-shell button{
@@ -43,10 +43,10 @@
 .app-shell .customer-modal-actions button.primary,
 .app-shell .button-primary[type="submit"],
 .app-shell button[data-variant="primary"]{
-  color:#fff!important;
+  color:#!important;
   background:linear-gradient(120deg,var(--btn-accent),var(--btn-accent-2))!important;
   border:1px solid var(--btn-accent)!important;
-  box-shadow:0 5px 14px rgba(13,148,136,.18)!important;
+  box-shadow:0 5px 14px r!important;
 }
 .app-shell .button-primary:hover,
 .app-shell .supplier-primary:hover,
@@ -58,11 +58,11 @@
 .app-shell .supplier-payment-buttons>button.primary:hover,
 .app-shell .supplier-invoice-preview footer>button.primary:hover,
 .app-shell button[data-variant="primary"]:hover{
-  color:#fff!important;
-  background:linear-gradient(120deg,#0f766e,#0369a1)!important;
-  border-color:#0f9488!important;
+  color:#!important;
+  background:linear-gradient(120deg,#,#)!important;
+  border-color:#!important;
   transform:translateY(-1px);
-  box-shadow:0 7px 17px rgba(13,148,136,.24)!important;
+  box-shadow:0 7px 17px r!important;
 }
 
 .app-shell .button-secondary,
@@ -136,11 +136,11 @@
 .app-shell .products-editor-steps button.active{
   color:var(--btn-accent);
   border-color:var(--btn-accent);
-  background:linear-gradient(135deg,var(--btn-accent-soft),rgba(111,83,230,.10));
-  box-shadow:inset 0 0 0 1px rgba(13,148,136,.10);
+  background:linear-gradient(135deg,var(--btn-accent-soft),r);
+  box-shadow:inset 0 0 0 1px r;
 }
 .app-shell .products-tabs button.active:after{
-  background:linear-gradient(90deg,var(--btn-accent),#8b5cf6);
+  background:linear-gradient(90deg,var(--btn-accent),#);
 }
 .app-shell .products-tabs button.active b{
   background:var(--btn-accent-soft);
@@ -202,15 +202,15 @@
 
 .theme-light .pform-panel-tabs button,
 .theme-light .products-editor-steps button:not(.active){
-  background:linear-gradient(135deg,#f8fbfd,#f5f3ff);
-  border-color:#d8e5ed;
-  color:#42566d;
+  background:linear-gradient(135deg,#,#);
+  border-color:#;
+  color:#;
 }
 .theme-light .pform-panel-tabs button.active,
 .theme-light .products-editor-steps button.active{
-  background:linear-gradient(135deg,#dff7f2,#eee9ff);
-  border-color:#35bdb4;
-  color:#087f78;
+  background:linear-gradient(135deg,#,#);
+  border-color:#;
+  color:#;
 }
 .theme-light .pform-code-input>button,
 .theme-light .pform-manage-list,
@@ -218,9 +218,9 @@
 .theme-light .pform-back-btn,
 .theme-light .products-secondary-btn,
 .theme-light .products-filter-btn{
-  background:#fff;
-  border-color:#d7e2ec;
-  color:#42566d;
+  background:#;
+  border-color:#;
+  color:#;
 }
 
 
@@ -304,8 +304,8 @@
 .app-shell .confirm-modal .button-primary{
   background:linear-gradient(120deg,var(--btn-accent),var(--btn-accent-2))!important;
   border:1px solid var(--btn-accent)!important;
-  color:#fff!important;
-  box-shadow:0 5px 14px rgba(13,148,136,.18)!important;
+  color:#!important;
+  box-shadow:0 5px 14px r!important;
 }
 .app-shell .supplier-primary:hover,
 .app-shell .customer-primary:hover,
@@ -315,9 +315,9 @@
 .app-shell .supplier-invoice-preview footer>button.primary:hover,
 .app-shell .workspace .primary:hover,
 .app-shell .confirm-modal .button-primary:hover{
-  background:linear-gradient(120deg,#0f766e,#0369a1)!important;
+  background:linear-gradient(120deg,#,#)!important;
   border-color:var(--btn-accent)!important;
-  color:#fff!important;
+  color:#!important;
 }
 .app-shell .danger,
 .app-shell .supplier-delete-confirm,
@@ -340,7 +340,7 @@
 .app-shell .confirm-modal .button-danger{
   background:var(--btn-danger)!important;
   border-color:var(--btn-danger)!important;
-  color:#fff!important;
+  color:#!important;
 }
 .app-shell .logout-link:hover{
   background:var(--btn-danger-bg);
@@ -370,9 +370,9 @@
 
 .app-shell .pform-manage-list{
   min-width:0;
-  color:#40566d;
-  background:#f7fafc;
-  border-color:#d7e4ed;
+  color:#;
+  background:#;
+  border-color:#;
 }
 .app-shell .pform-manage-list > b{
   display:inline-flex;
@@ -383,33 +383,33 @@
   height:24px;
   padding:0 7px;
   margin-inline-start:auto;
-  border:1px solid #c9e8e3;
+  border:1px solid #;
   border-radius:7px;
-  background:#def6f1!important;
-  color:#087f78!important;
+  background:#!important;
+  color:#!important;
   font:800 11px/1 Inter,'IBM Plex Sans Arabic',sans-serif;
   opacity:1;
   text-align:center;
 }
 .app-shell .pform-manage-list:hover{
-  background:#eaf8f5;
-  border-color:#75cfc3;
-  color:#087f78;
+  background:#;
+  border-color:#;
+  color:#;
 }
 .app-shell .pform-manage-list > svg:first-child{
   flex:0 0 auto;
-  color:#0b9489!important;
+  color:#!important;
 }
 
 .app-shell .pform-step-number,
 .app-shell .pform-footer-left{
-  color:#71839a;
+  color:#;
 }
 .app-shell .pform-footer-left b{
-  color:#087f78;
+  color:#;
 }
 .app-shell .pform-code-list > p{
-  color:#71839a;
+  color:#;
 }
 
 
@@ -417,113 +417,113 @@
 .app-shell .global-search,
 .app-shell .global-search input,
 .app-shell .global-search input::placeholder {
-  color:#52677e!important;
+  color:#!important;
 }
 .app-shell .global-search kbd {
-  color:#52677e!important;
-  border-color:#d5dfe9!important;
+  color:#!important;
+  border-color:#!important;
 }
 .app-shell th {
-  color:#52677e!important;
+  color:#!important;
 }
 .app-shell .workspace-footer {
-  color:#52677e!important;
+  color:#!important;
 }
 .app-shell .nav-count {
-  color:#52677e!important;
+  color:#!important;
 }
 .app-shell .health-tag,
 .app-shell .brand-version {
-  color:#076c66!important;
+  color:#!important;
 }
 .app-shell .status-pill.pending {
-  color:#89570a!important;
+  color:#!important;
 }
 .app-shell .operation-pill.returned {
-  color:#68478c!important;
+  color:#!important;
 }
 .app-shell .operation-pill.bought,
 .app-shell .status-pill.completed,
 .app-shell .status-pill.received,
 .app-shell .supplier-account-status.no-debt,
 .app-shell .supplier-ledger-type.payment {
-  color:#17664f!important;
+  color:#!important;
 }
 .app-shell .supplier-account-status.has-debt {
-  color:#a84f20!important;
+  color:#!important;
 }
 .app-shell .supplier-ledger-type.invoice {
-  color:#245b9a!important;
+  color:#!important;
 }
 .app-shell .supplier-id {
-  color:#4c637d!important;
+  color:#!important;
 }
 .app-shell .supplier-photo-button {
-  color:#08766f!important;
+  color:#!important;
 }
 .app-shell .supplier-search input::placeholder,
 .app-shell .supplier-accounts-searches input::placeholder,
 .app-shell .products-search input::placeholder {
-  color:#68798d!important;
+  color:#!important;
   opacity:1;
 }
 .app-shell .pform-manage-list > b {
-  color:#076a64!important;
+  color:#!important;
 }
 .app-shell .products-tabs button.active b {
-  color:#076a64!important;
+  color:#!important;
 }
 .app-shell .products-editor-steps button.active {
-  color:#076a64!important;
+  color:#!important;
 }
 
 
 .veltro-auth .auth-input-wrap input::placeholder {
-  color:#8998ad!important;
+  color:#!important;
   opacity:1;
 }
 .veltro-auth .auth-footer {
-  color:#8291a7;
+  color:#;
 }
 .onboard-root .onboard-field input::placeholder,
 .onboard-root .onboard-field select:invalid {
-  color:#68798d!important;
+  color:#!important;
   opacity:1;
 }
 .onboard-root .activity-copy small,
 .onboard-root .onboard-footer {
-  color:#64748b!important;
+  color:#!important;
 }
 .onboard-root .onboard-trust,
 .onboard-root .onboard-form-foot {
-  color:#64748b!important;
+  color:#!important;
 }
 
 
 
 .app-shell {
-  --muted:#52677e!important;
+  --muted:#!important;
 }
 .app-shell .supplier-field>input[readonly],
 .app-shell .supplier-field input[readonly] {
-  color:#52677e!important;
+  color:#!important;
 }
 .app-shell .supplier-accounts-table code,
 .app-shell .supplier-debt-modal-table-wrap code,
 .app-shell .supplier-ledger-table code,
 .app-shell .supplier-preview-top code {
-  color:#08766f!important;
+  color:#!important;
 }
 .app-shell .products-page .products-preview-note,
 .app-shell .products-page .products-heading p,
 .app-shell .products-page .products-toolbar-title p {
-  color:#52677e!important;
+  color:#!important;
 }
 .onboard-root .onboard-eyebrow {
-  color:#08766f!important;
+  color:#!important;
 }
 .onboard-root .onboard-field>span small,
 .onboard-root .onboard-form-heading p,
 .onboard-root .onboard-brand small {
-  color:#64748b!important;
+  color:#!important;
 }
