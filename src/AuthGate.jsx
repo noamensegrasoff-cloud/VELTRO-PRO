@@ -4,6 +4,7 @@ import { App as CapacitorApp } from '@capacitor/app';
 import { Browser } from '@capacitor/browser';
 import { ArrowRight, Eye, EyeOff, LoaderCircle, LockKeyhole, Mail, ShieldCheck, Store } from 'lucide-react';
 import { isSupabaseConfigured, supabase } from './lib/supabase.js';
+import { syncWorkspace } from './services/databaseSync.js';
 import './auth.css';
 
 const words = {
@@ -23,6 +24,9 @@ export default function AuthGate({ children }) {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [session, setSession] = useState(null);
+  const [workspaceReadyUser, setWorkspaceReadyUser] = useState(null);
+  const [workspaceSyncError, setWorkspaceSyncError] = useState('');
+  const [workspaceRetry, setWorkspaceRetry] = useState(0);
   const [recoveryMode, setRecoveryMode] = useState(false);
   const t=words[lang], dir=lang==='ar'?'rtl':'ltr';
 
@@ -100,6 +104,38 @@ export default function AuthGate({ children }) {
     return ()=>{alive=false;subscription.unsubscribe();if(appUrlListener)appUrlListener.then(listener=>listener.remove());};
   }, [lang]);
 
+  // Do not render one account's locally cached business data inside another
+  // account's session. Sync first so databaseSync can switch the local snapshot.
+  useEffect(() => {
+    const userId = session?.user?.id;
+    if (!userId || !supabase) {
+      setWorkspaceReadyUser(null);
+      setWorkspaceSyncError('');
+      return undefined;
+    }
+    let alive = true;
+    setWorkspaceReadyUser(null);
+    setWorkspaceSyncError('');
+    const ownerKey = 'veltro.cloud-sync.local-storage-owner.v1';
+    syncWorkspace().then(result => {
+      if (!alive) return;
+      const owner = localStorage.getItem(ownerKey);
+      if (!owner || owner === userId) {
+        setWorkspaceReadyUser(userId);
+      } else {
+        setWorkspaceSyncError(result?.status === 'offline'
+          ? 'offline'
+          : 'account-switch');
+      }
+    }).catch(() => {
+      if (!alive) return;
+      const owner = localStorage.getItem(ownerKey);
+      if (!owner || owner === userId) setWorkspaceReadyUser(userId);
+      else setWorkspaceSyncError('account-switch');
+    });
+    return () => { alive = false; };
+  }, [session?.user?.id, workspaceRetry]);
+
   async function signInWithGoogle() {
     setError(''); setMessage('');
     if (!isSupabaseConfigured || !supabase) { setError(t.missing); return; }
@@ -159,7 +195,22 @@ export default function AuthGate({ children }) {
     } finally { setBusy(false); }
   }
 
-  if(session && !recoveryMode && mode!=='update') return <>{children}</>;
+  if(session && !recoveryMode && mode!=='update') {
+    if (workspaceReadyUser === session.user.id) return <>{children}</>;
+    const switchError = !!workspaceSyncError;
+    return <main className="veltro-auth" dir={dir} lang={lang}>
+      <div className="auth-glow auth-glow-a"/><div className="auth-glow auth-glow-b"/>
+      <section className="auth-content"><div className="auth-card" role="status" aria-live="polite">
+        <div className="auth-card-heading"><span className="auth-card-icon">{switchError?<ShieldCheck size={21}/>:<LoaderCircle className="auth-spin" size={21}/>}</span>
+          <div><h2>{switchError?(lang==='ar'?'تعذر تبديل مساحة العمل بأمان':lang==='fr'?'Impossible de changer d’espace en toute sécurité':'Workspace switch needs attention'):(lang==='ar'?'جارٍ تجهيز مساحة العمل':lang==='fr'?'Préparation de votre espace':'Preparing your workspace')}</h2>
+          <p>{switchError?(lang==='ar'?'بيانات الحساب السابق محفوظة. اتصل بالإنترنت ثم أعد المحاولة قبل فتح هذا الحساب.':lang==='fr'?'Les données du compte précédent sont protégées. Connectez-vous à Internet puis réessayez.':'Previous account data is protected. Connect to the internet and retry before opening this account.'):(lang==='ar'?'نزامن بيانات حسابك ونعزلها عن الحسابات الأخرى.':lang==='fr'?'Synchronisation et isolation des données de votre compte.':'Syncing your data and separating it from other accounts.')}</p></div>
+        </div>
+        {switchError&&<div className="auth-alert auth-error">{workspaceSyncError==='offline'?(lang==='ar'?'لا يوجد اتصال بالإنترنت.':lang==='fr'?'Aucune connexion Internet.':'No internet connection.'):''}</div>}
+        <button className="auth-submit" type="button" onClick={()=>setWorkspaceRetry(v=>v+1)}>{lang==='ar'?'إعادة المحاولة':lang==='fr'?'Réessayer':'Retry'}</button>
+        <button className="auth-switch" type="button" onClick={async()=>{await supabase.auth.signOut();setSession(null);}}>{lang==='ar'?'تسجيل الخروج':lang==='fr'?'Se déconnecter':'Sign out'}</button>
+      </div></section>
+    </main>;
+  }
 
   const heading=mode==='login'?t.login:mode==='signup'?t.signup:mode==='update'?t.updateTitle:t.forgot;
   const submitLabel=mode==='login'?t.submitLogin:mode==='signup'?t.submitSignup:mode==='update'?t.updateSubmit:t.reset;
