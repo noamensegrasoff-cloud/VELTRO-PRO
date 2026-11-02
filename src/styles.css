@@ -7282,44 +7282,28 @@ html body #root .products-page .pform-overlay .pform-modal .pform-natural-column
 }
 
 
-/* Focused compact sizing for the Units & Quantities card only. */
+/* Reduce vertical length only: preserve card width, fields, typography and layout. */
 html body #root .products-page .pform-overlay .pform-modal .pform-feature-card.pform-units-quantities-card{
-  padding:7px!important;
-  gap:5px!important;
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+  row-gap:7px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-feature-heading{
-  min-height:21px!important;
-  padding-bottom:2px!important;
-  gap:5px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-feature-icon{
-  width:25px!important;height:25px!important;min-width:25px!important;
+  padding-top:0!important;
+  padding-bottom:0!important;
+  margin-bottom:0!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-carton-grid{
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:5px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-field{
-  gap:2px!important;font-size:9px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-field input,
-html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-field select{
-  height:28px!important;min-height:28px!important;padding:0 6px!important;font-size:10px!important;
+  row-gap:6px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-price-block{
-  padding:7px!important;margin-top:2px!important;
+  padding-top:8px!important;
+  padding-bottom:8px!important;
+  margin-top:0!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-price-head{
-  margin-bottom:4px!important;
+  margin-bottom:5px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-price-grid{
-  gap:5px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-price-input{
-  height:27px!important;min-height:27px!important;
-}
-@media(max-width:760px){
-  html body #root .products-page .pform-overlay .pform-modal .pform-units-quantities-card .pform-carton-grid{
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  }
+  row-gap:6px!important;
 }
