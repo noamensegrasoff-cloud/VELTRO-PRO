@@ -1,6 +1,6 @@
 /* Product editor: independent, content-sized cards. No legacy layout classes. */
 html body .pform-overlay.product-editor-rebuilt{
-  position:fixed!important;inset:0!important;z-index:1000!important;
+  position:fixed!important;inset:0!important;z-index:11000!important;
   display:flex!important;align-items:center!important;justify-content:center!important;
   padding:12px!important;box-sizing:border-box!important;
   background:rgba(34,27,50,.40)!important;
