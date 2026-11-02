@@ -96,7 +96,9 @@ from (
     ('local_storage','veltro.purchases.v1','insert'),
     ('local_storage','veltro-product-movements-v1','insert'),
     ('local_storage','veltro.customer.transactions.v1','insert'),
-    ('local_storage','veltro.customer.transactions.v1','read')
+    ('local_storage','veltro.customer.transactions.v1','read'),
+    ('cash','drawer-1','update'),
+    ('local_storage','veltro.expenses.v1','insert')
 ) as t(entity_type, record_id, operation);
 
 -- No duplicate permissive SELECT policies should remain on the same table.
