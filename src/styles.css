@@ -7365,7 +7365,7 @@ html body #root .products-page .pform-modal>.pform-footer{flex:0 0 auto!importan
 }
 
 
-/* Corrected product editor layout: override the earlier !important grid rules. */
+/* Product editor: two independent card columns with natural, content-based heights. */
 html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
   display:block!important;
   flex:1 1 auto!important;
@@ -7373,7 +7373,7 @@ html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-
   height:auto!important;
   overflow-x:hidden!important;
   overflow-y:auto!important;
-  padding:10px!important;
+  padding:12px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-content-all>.pform-all-cards{
   display:block!important;
@@ -7383,86 +7383,88 @@ html body #root .products-page .pform-overlay .pform-modal .pform-content-all>.p
   min-height:0!important;
   margin:0!important;
   overflow:visible!important;
-  column-count:3!important;
-  column-gap:10px!important;
-  column-fill:balance!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-all-cards>.pform-section-heading{
-  display:block!important;
+  display:flex!important;
   width:100%!important;
-  margin:0 0 9px!important;
-  break-inside:avoid!important;
-  -webkit-column-break-inside:avoid!important;
-  column-span:all!important;
+  margin:0 0 10px!important;
 }
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards>.pform-feature-card{
-  display:inline-flex!important;
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr)!important;
+  align-items:start!important;
+  gap:12px!important;
+  width:100%!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column{
+  display:flex!important;
   flex-direction:column!important;
-  vertical-align:top!important;
+  align-items:stretch!important;
+  align-self:start!important;
+  gap:10px!important;
+  min-width:0!important;
+  height:auto!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-feature-card{
+  display:flex!important;
+  flex:0 0 auto!important;
+  flex-direction:column!important;
+  align-self:stretch!important;
   width:100%!important;
   min-width:0!important;
   min-height:0!important;
   height:auto!important;
-  margin:0 0 10px!important;
-  padding:9px!important;
-  gap:7px!important;
+  margin:0!important;
+  padding:10px!important;
+  gap:8px!important;
   overflow:visible!important;
-  align-self:start!important;
-  break-inside:avoid!important;
-  -webkit-column-break-inside:avoid!important;
 }
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-basic-grid,
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-carton-grid,
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-feature-options,
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-price-grid{
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-section-heading{
+  display:flex!important;
+  width:100%!important;
+  margin:2px 0 0!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-basic-grid,
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-carton-grid,
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-options,
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-grid{
   display:grid!important;
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:6px!important;
+  gap:7px!important;
   min-width:0!important;
 }
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-field{gap:3px!important;font-size:9px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-field>span{min-height:11px!important;font-size:9px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-field input,
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-field select{height:29px!important;min-height:29px!important;padding:0 7px!important;font-size:10px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-price-block{padding:7px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-price-head{margin-bottom:5px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-price-group{gap:3px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-price-group>b{font-size:8px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-price-input{height:28px!important;min-height:28px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-price-input input{height:26px!important;font-size:9px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-average-cost-card{padding:6px!important;gap:2px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-average-cost-card small,
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-average-cost-card span{font-size:7px!important;line-height:1.2!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-average-cost-card strong{font-size:11px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-feature-heading{gap:6px!important;min-height:23px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-feature-icon{width:26px!important;height:26px!important;min-width:26px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-feature-heading>div b{font-size:9px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-photo-layout,
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-image-drop{min-height:0!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-image-drop{padding:6px!important;gap:3px!important}
-html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-upload-btn{min-height:25px!important;padding:4px 7px!important;font-size:8px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field{gap:4px!important;font-size:9px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field>span{min-height:12px!important;font-size:9px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field input,
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field select{height:31px!important;min-height:31px!important;padding:0 7px!important;font-size:10px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-block{padding:8px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-head{margin-bottom:6px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-group{gap:4px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-group>b{font-size:8px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-input{height:29px!important;min-height:29px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-input input{height:27px!important;font-size:9px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-average-cost-card{padding:7px!important;gap:3px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-average-cost-card small,
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-average-cost-card span{font-size:8px!important;line-height:1.25!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-average-cost-card strong{font-size:12px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-heading{gap:7px!important;min-height:24px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-icon{width:28px!important;height:28px!important;min-width:28px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-photo-layout,
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-image-drop{min-height:0!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-image-drop{padding:7px!important;gap:4px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-upload-btn{min-height:27px!important;padding:5px 8px!important;font-size:8px!important}
 @media(max-width:900px){
-  html body #root .products-page .pform-overlay .pform-modal .pform-content-all>.pform-all-cards{column-count:2!important;column-gap:9px!important}
+  html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{padding:9px!important}
+  html body #root .products-page .pform-overlay .pform-modal .pform-masonry-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)!important;gap:8px!important}
+  html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column{gap:8px!important}
 }
 @media(max-width:560px){
-  /* Keep two compact card columns on phones instead of forcing a long single column. */
-  html body #root .products-page .pform-overlay .pform-modal .pform-content-all>.pform-all-cards{
-    column-count:2!important;
-    column-gap:8px!important;
-  }
-  html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
-    overflow-x:hidden!important;
-    overflow-y:auto!important;
-  }
-  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards>.pform-feature-card{
-    padding:7px!important;
-    margin-bottom:8px!important;
-  }
-  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-basic-grid,
-  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-carton-grid,
-  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-feature-options,
-  html body #root .products-page .pform-overlay .pform-modal .pform-all-cards .pform-price-grid{
-    grid-template-columns:minmax(0,1fr)!important;
-    gap:5px!important;
-  }
+  html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{overflow-x:hidden!important;overflow-y:auto!important}
+  html body #root .products-page .pform-overlay .pform-modal .pform-masonry-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important;gap:7px!important}
+  html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column{gap:7px!important}
+  html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-feature-card{padding:7px!important}
+  html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-basic-grid,
+  html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-carton-grid,
+  html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-options,
+  html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-grid{grid-template-columns:minmax(0,1fr)!important;gap:5px!important}
 }
