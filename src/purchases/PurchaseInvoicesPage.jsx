@@ -89,8 +89,8 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
         const product = current.find(p => (item.productId!=null&&String(p.id)===String(item.productId)) || [p.mainBarcode,p.barcode,p.cartonBarcode,...(p.unitBarcodes||[]),...(p.cartonBarcodes||[]),...(p.secondaryUnitBarcodes||[]),...(p.secondaryCartonBarcodes||[])].some(code=>String(code||'').trim()===String(item.barcode||'').trim()&&String(item.barcode||'').trim()!=='') || String(p.name||p.productName||p.title||'').trim().toLocaleLowerCase()===String(item.name||'').trim().toLocaleLowerCase());
         if (!product) throw new Error(ar?'اربط كل سلعة بمنتج في الكتالوج قبل تأكيد البون.':fr?'Associez chaque article au catalogue avant de confirmer le bon.':'Link every item to a catalog product before confirming the receipt.');
         const entry=map.get(String(product.id))||{qty:0,value:0};
-        const lineQty=Math.max(0,Number(item.qty)||0),unitsPerCarton=Math.max(1,Number(item.unitsPerCarton??product.unitsPerCarton)||1),isCarton=!!(item.sellByCarton||item.unit==='carton'||item.purchaseUnit==='carton'),qty=lineQty*(isCarton?unitsPerCarton:1),unitPrice=Math.max(0,Number(item.price)||0),cartonPrice=Math.max(0,Number(item.purchaseCartonPrice??item.cartonPrice)||0),lineValue=lineQty*(isCarton?(cartonPrice||unitPrice*unitsPerCarton):unitPrice);
-        entry.qty+=qty;entry.value+=lineValue;map.set(String(product.id),entry);
+        const qty=Math.max(0,Number(item.qty)||0),unitPrice=Math.max(0,Number(item.price)||0);
+        entry.qty+=qty;entry.value+=qty*unitPrice;map.set(String(product.id),entry);
       }
       return map;
     };
