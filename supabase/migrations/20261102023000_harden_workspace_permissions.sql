@@ -130,7 +130,7 @@ as $$
           case operation when 'read' then 'products.view' when 'insert' then 'products.create' else 'products.edit' end
         when lower(coalesce(target_record, '')) ~ '(customer|customers)' then
           case operation when 'read' then 'customers.view' else 'customers.manage' end
-        when lower(coalesce(target_record, '')) ~ '(expense|income)' then 'cash.expense.create'
+        when lower(coalesce(target_record, '')) ~ '(expense|income)' then case operation when 'read' then 'cash.view' else 'cash.expense.create' end
         when lower(coalesce(target_record, '')) ~ '(cash|payment)' then
           case operation when 'read' then 'cash.view' else 'cash.open_close' end
         when lower(coalesce(target_record, '')) ~ '(report|reports|statistics|analytics)' then
