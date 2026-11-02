@@ -479,3 +479,64 @@ html body .pform-overlay.product-editor-rebuilt .product-editor-body {
     min-width: 0 !important;
   }
 }
+
+
+/* Desktop-site on portrait screens: retain the two-column desktop form,
+   but use the available vertical space instead of leaving the dialog tiny
+   and vertically centered with huge empty bands around it. */
+@media screen and (min-width: 761px) and (max-aspect-ratio: 3/4) {
+  html body .pform-overlay.product-editor-rebuilt {
+    align-items: stretch !important;
+    justify-content: center !important;
+    padding: 12px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-dialog {
+    width: min(100%, 1500px) !important;
+    height: calc(100dvh - 24px) !important;
+    max-height: calc(100dvh - 24px) !important;
+    min-height: 0 !important;
+    border-radius: 18px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-y: auto !important;
+    padding: 18px 20px 20px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-columns {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column {
+    flex: 1 1 0 !important;
+    width: 0 !important;
+    min-width: 0 !important;
+    gap: 12px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-card {
+    padding: 14px 15px !important;
+    gap: 10px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .pform-field {
+    font-size: 12px !important;
+    gap: 5px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .pform-field input,
+  html body .pform-overlay.product-editor-rebuilt .pform-field select {
+    height: 40px !important;
+    min-height: 40px !important;
+    font-size: 13px !important;
+    padding: 0 11px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .pform-header {
+    min-height: 72px !important;
+    padding: 14px 20px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .pform-footer {
+    min-height: 68px !important;
+    padding: 12px 20px !important;
+  }
+}
