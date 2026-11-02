@@ -9,7 +9,7 @@ const labels = {
 };
 
 const styles = {
-  panel:{background:'var(--panel, rgba(20,31,49,.72))',border:'1px solid var(--border, rgba(120,160,190,.18))',borderRadius:18},
+  panel:{background:'var(--panel, rgba(255,255,255,.84))',border:'1px solid var(--border, rgba(120,160,190,.18))',borderRadius:18},
   button:{display:'inline-flex',alignItems:'center',gap:8,border:'1px solid var(--border, rgba(120,160,190,.22))',borderRadius:10,padding:'10px 13px',background:'linear-gradient(135deg,rgba(139,92,246,.18),rgba(166,139,230,.13))',color:'var(--text, inherit)',borderColor:'rgba(139,112,189,.35)',fontWeight:650,boxShadow:'0 4px 14px rgba(139,112,189,.10)',cursor:'pointer'},
   field:{width:'100%',minWidth:0,background:'var(--input, rgba(255,255,255,.94))',color:'var(--text, inherit)',border:'1px solid var(--border, rgba(120,160,190,.22))',borderRadius:10,padding:'11px 12px',outline:'none'}
 };
