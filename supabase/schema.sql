@@ -1,5 +1,9 @@
--- VELTRO-PRO cloud foundation
--- Apply this entire script in the intended Supabase project's SQL Editor.
+-- VELTRO-PRO cloud foundation (legacy baseline, NOT a complete live-schema export).
+-- This script creates only the original workspaces, workspace_members, and cloud_records
+-- foundation. The connected project has additional employee/role/approval/branch tables
+-- and six applied migrations; five historical migration source files are not in this repo.
+-- Do not use this file alone to rebuild or replace the current production database.
+-- Recover the missing migration chain or commit a verified full schema snapshot first.
 -- All application data is workspace-scoped. Never expose a service_role key to the browser.
 
 begin;
