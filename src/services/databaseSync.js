@@ -106,9 +106,12 @@ async function syncLegacyLocalStorage(workspaceId, userId) {
   const keys = new Set([...local.keys(), ...Object.keys(baseline), ...remote.keys()]);
   let pushed = 0;
   let pulled = 0;
+  let blocked = 0;
+  let firstError = null;
 
   for (const key of keys) {
     if (!isSyncableStorageKey(key)) continue;
+    try {
     const localValue = local.has(key) ? local.get(key) : null;
     const oldValue = Object.prototype.hasOwnProperty.call(baseline, key) ? baseline[key] : undefined;
     const row = remote.get(key);
@@ -150,6 +153,14 @@ async function syncLegacyLocalStorage(workspaceId, userId) {
       baseline[key] = remoteValue;
       pulled += 1;
     }
+    } catch (error) {
+      const permissionDenied = error?.code === '42501' || /row-level security|permission denied/i.test(String(error?.message || ''));
+      if (permissionDenied) blocked += 1;
+      else firstError ||= error;
+      // A denied legacy key must not prevent unrelated sales, product, or
+      // purchase records from syncing for this member.
+      continue;
+    }
   }
 
   localStorage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline));
@@ -168,7 +179,7 @@ async function syncLegacyLocalStorage(workspaceId, userId) {
     queueForSync: false,
     payload: { values: snapshotValues, baseline },
   });
-  return { pushed, pulled };
+  return { pushed, pulled, blocked, error: firstError };
 }
 
 export async function getOrCreateWorkspace() {
@@ -253,12 +264,16 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     let pulled = 0;
     // Bridge existing sections that still persist directly to localStorage into cloud_records.
     // This keeps legacy screens working while their CRUD flows migrate to the shared repository.
+    let legacyError = null;
+    let legacyBlocked = 0;
     try {
       const legacy = await syncLegacyLocalStorage(workspace.id, workspace.userId);
       pushed += legacy.pushed;
       pulled += legacy.pulled;
+      legacyError = legacy.error || null;
+      legacyBlocked = legacy.blocked || 0;
     } catch (error) {
-      return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
+      legacyError = error;
     }
     const pendingKeys = new Set(pending.map(item => item.recordKey));
 
@@ -301,7 +316,7 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
       }
     }
 
-    return { status: 'synced', pushed, pulled, workspaceId: workspace.id };
+    return { status: legacyError ? 'partial' : 'synced', pushed, pulled, blocked: legacyBlocked, error: legacyError || undefined, workspaceId: workspace.id };
   })();
 
   try {
