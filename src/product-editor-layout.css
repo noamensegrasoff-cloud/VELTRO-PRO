@@ -281,3 +281,66 @@ html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid{
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
   }
 }
+
+
+/* Touch devices: use a real single-column editor even when the browser requests
+   a desktop-width layout. This prevents the compact two-column dialog from
+   floating in the middle of a tall phone screen with large empty bands. */
+@media (hover: none) and (pointer: coarse) {
+  html body .pform-overlay.product-editor-rebuilt {
+    align-items: flex-start !important;
+    justify-content: center !important;
+    padding: max(6px, env(safe-area-inset-top)) 6px max(6px, env(safe-area-inset-bottom)) !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-dialog {
+    width: 100% !important;
+    max-width: 680px !important;
+    max-height: calc(100dvh - 12px) !important;
+    border-radius: 15px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 10px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-columns {
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    gap: 9px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 9px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-card {
+    width: 100% !important;
+    padding: 10px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .pform-header {
+    min-height: 54px !important;
+    padding: 8px 11px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .pform-footer {
+    min-height: 52px !important;
+    padding: 7px 10px !important;
+  }
+}
+
+/* Very narrow phones: keep fields readable and avoid horizontal overflow. */
+@media (hover: none) and (pointer: coarse) and (max-width: 480px) {
+  html body .pform-overlay.product-editor-rebuilt .pform-basic-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-carton-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-feature-options,
+  html body .pform-overlay.product-editor-rebuilt .pform-price-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-expiry-options {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
