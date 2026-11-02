@@ -108,7 +108,7 @@ as $$
     when lower(target_entity) in ('suppliers','supplier','supplier_accounts','supplier-accounts')
       then 'suppliers.manage'
     when lower(target_entity) in ('cash','cash_register','cash-register','cash_transactions','cash-transactions','cash_movements','cash-movements')
-      then case operation when 'read' then 'cash.view' when 'insert' then 'cash.open_close' else 'cash.adjust' end
+      then case operation when 'read' then 'cash.view' else 'cash.open_close' end
     when lower(target_entity) in ('reports','report','statistics','analytics')
       then case operation when 'read' then 'reports.sales.view' else 'reports.export' end
     when lower(target_entity) in ('employees','employee_profiles','workspace_members')
@@ -118,7 +118,7 @@ as $$
     when lower(target_entity) = 'local_storage' then
       case
         when lower(coalesce(target_record, '')) ~ '(customer[._-]?transactions|customer-transactions)' then
-          case operation when 'read' then 'customers.view' when 'insert' then 'sales.create' else 'sales.edit' end
+          case operation when 'read' then 'customers.debts.view' when 'insert' then 'sales.create' else 'sales.edit' end
         when lower(coalesce(target_record, '')) ~ '(sales|sale|pos|held)' then
           case operation when 'read' then 'sales.view' when 'insert' then 'sales.create' else 'sales.edit' end
         when lower(coalesce(target_record, '')) ~ '(purchase|purchases|order)' then
@@ -130,8 +130,9 @@ as $$
           case operation when 'read' then 'products.view' when 'insert' then 'products.create' else 'products.edit' end
         when lower(coalesce(target_record, '')) ~ '(customer|customers)' then
           case operation when 'read' then 'customers.view' else 'customers.manage' end
-        when lower(coalesce(target_record, '')) ~ '(cash|expense|income|payment)' then
-          case operation when 'read' then 'cash.view' when 'insert' then 'cash.open_close' else 'cash.adjust' end
+        when lower(coalesce(target_record, '')) ~ '(expense|income)' then 'cash.expense.create'
+        when lower(coalesce(target_record, '')) ~ '(cash|payment)' then
+          case operation when 'read' then 'cash.view' else 'cash.open_close' end
         when lower(coalesce(target_record, '')) ~ '(report|reports|statistics|analytics)' then
           case operation when 'read' then 'reports.sales.view' else 'reports.export' end
         when lower(coalesce(target_record, '')) ~ '(dashboard)' then 'dashboard.view'
@@ -221,16 +222,16 @@ using (
   or private.is_workspace_owner(workspace_id)
 );
 drop policy if exists "Owners manage employee profiles" on public.employee_profiles;
-create policy "Owners create employee profiles"
+create policy "Authorized users create employee profiles"
 on public.employee_profiles for insert to authenticated
-with check (private.is_workspace_owner(workspace_id));
-create policy "Owners update employee profiles"
+with check (private.has_workspace_permission(workspace_id, 'employees.manage'));
+create policy "Authorized users update employee profiles"
 on public.employee_profiles for update to authenticated
-using (private.is_workspace_owner(workspace_id))
-with check (private.is_workspace_owner(workspace_id));
-create policy "Owners delete employee profiles"
+using (private.has_workspace_permission(workspace_id, 'employees.manage'))
+with check (private.has_workspace_permission(workspace_id, 'employees.manage'));
+create policy "Authorized users delete employee profiles"
 on public.employee_profiles for delete to authenticated
-using (private.is_workspace_owner(workspace_id));
+using (private.has_workspace_permission(workspace_id, 'employees.manage'));
 
 drop policy if exists "Owners manage custom roles" on public.workspace_roles;
 drop policy if exists "Workspace members can read custom roles" on public.workspace_roles;
