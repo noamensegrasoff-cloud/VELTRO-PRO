@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import './product-editor-layout.css';
 import { createPortal } from 'react-dom';
 import { Maximize2, Search, ScanBarcode, Plus, Download, Upload, SlidersHorizontal, Package, Boxes, CircleAlert, CircleX, ArrowDownUp, MoreHorizontal, Pencil, Eye, X, Barcode, Layers3, Tag, TrendingUp, Filter, Scale, CalendarClock, ImagePlus, Check, ChevronLeft, ChevronRight, Percent, Trash2, Camera, Info, PackageCheck, Hash, BellRing, ScanLine } from 'lucide-react';
 import { loadAndMergeProductCatalog, persistProduct, removeProductFromCatalog } from './services/productCatalogSync.js';
