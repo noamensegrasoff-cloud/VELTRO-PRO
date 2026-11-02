@@ -175,7 +175,7 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     if (typeof navigator !== 'undefined' && !navigator.onLine) return { status: 'offline', pushed: 0, pulled: 0 };
 
     const workspace = await getOrCreateWorkspace();
-    const pending = await listPendingSyncOperations();
+    const pending = (await listPendingSyncOperations()).filter(operation => operation.workspaceId === workspace.id);
     let pushed = 0;
     let pulled = 0;
     // Bridge existing sections that still persist directly to localStorage into cloud_records.
