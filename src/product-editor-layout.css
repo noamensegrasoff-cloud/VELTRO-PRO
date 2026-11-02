@@ -540,3 +540,65 @@ html body .pform-overlay.product-editor-rebuilt .product-editor-body {
     padding: 12px 20px !important;
   }
 }
+
+
+/* Desktop editor: cards must keep their own natural height.
+   Never stretch cards to the height of a neighboring card/column. */
+@media screen and (min-width: 1025px) {
+  html body .pform-overlay.product-editor-rebuilt .product-editor-section {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    align-items: flex-start !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-columns {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    align-content: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column {
+    display: flex !important;
+    flex: 1 1 0 !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    align-self: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column > * {
+    flex: 0 0 auto !important;
+    align-self: flex-start !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin-block: 0 !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .product-editor-card {
+    width: 100% !important;
+    max-height: none !important;
+    align-self: flex-start !important;
+    justify-content: flex-start !important;
+    flex-grow: 0 !important;
+    flex-shrink: 0 !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-card > * {
+    flex-grow: 0 !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .pform-basic-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-carton-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-feature-options,
+  html body .pform-overlay.product-editor-rebuilt .pform-price-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-expiry-options {
+    grid-auto-rows: max-content !important;
+    align-content: start !important;
+    align-items: start !important;
+  }
+}
