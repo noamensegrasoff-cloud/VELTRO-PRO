@@ -542,7 +542,7 @@ function CustomerAccountsPage({lang}) {
 function ModulePage({ page, parent, t, lang, onBack, currentUser }) {
   if (page.id === 'point-of-sale') return <PointOfSalePage lang={lang} currentUser={currentUser} />;
   if (page.id === 'purchases-list') return <PurchaseInvoicesPage lang={lang} currentUser={currentUser} />;
-  if (page.id === 'product-list') return <ProductsPage lang={lang} />;
+  if (page.id === 'product-list') return <ProductsPage lang={lang} currentUser={currentUser} />;
   if (page.id === 'product-movement') return <ProductMovementPage lang={lang} />;
   if (page.id === 'supplier-list') return <SupplierListPage lang={lang} />;
   if (page.id === 'customer-list') return <CustomerListPage lang={lang} />;
