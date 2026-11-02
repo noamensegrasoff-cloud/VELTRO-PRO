@@ -7278,3 +7278,7 @@ html body #root .products-page .pform-overlay .pform-modal .pform-price-block{
   background:transparent!important;border:0!important;border-radius:0!important;
   box-shadow:none!important;padding:7px 0!important;
 }
+
+
+/* Portal scope keeps product dialog styles active when rendered under document.body. */
+.products-page.pform-portal-root{display:contents!important}
