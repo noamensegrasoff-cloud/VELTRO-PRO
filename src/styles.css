@@ -7287,3 +7287,65 @@ html body #root .products-page .pform-overlay .pform-modal .pform-price-block{
 body > .products-page.pform-portal-root{position:relative!important;z-index:2147483000!important;display:contents!important}
 body > .products-page.pform-portal-root .pform-overlay{position:fixed!important;inset:0!important;z-index:2147483000!important;display:flex!important;align-items:center!important;justify-content:center!important;isolation:isolate!important}
 body > .products-page.pform-portal-root .pform-modal{position:relative!important;z-index:2147483001!important}
+
+
+/* VELTRO product form: size cards to their content instead of stretching them to the tallest column. */
+html body #root .products-page .pform-overlay .pform-modal .pe-body,
+html body #root .products-page .pform-overlay .pform-modal .pe-section{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  height:auto!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-unified-panel{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)!important;
+  align-items:start!important;
+  align-content:start!important;
+  gap:12px!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-unified-column{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  justify-content:flex-start!important;
+  align-self:start!important;
+  gap:10px!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-unified-column>.pform-feature-card,
+html body #root .products-page .pform-overlay .pform-modal .pform-unified-column>.pform-section-heading{
+  flex:0 0 auto!important;
+  align-self:stretch!important;
+  height:auto!important;
+  min-height:0!important;
+  margin-block:0!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-feature-card{
+  justify-content:flex-start!important;
+  align-content:start!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-price-block,
+html body #root .products-page .pform-overlay .pform-modal .pform-sales-section{
+  flex:0 0 auto!important;
+  height:auto!important;
+  min-height:0!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-sales-section{
+  margin-top:8px!important;
+}
+@media(max-width:760px){
+  html body #root .products-page .pform-overlay .pform-modal .pform-unified-panel{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:9px!important;
+  }
+  html body #root .products-page .pform-overlay .pform-modal .pform-unified-column{
+    gap:9px!important;
+  }
+}
