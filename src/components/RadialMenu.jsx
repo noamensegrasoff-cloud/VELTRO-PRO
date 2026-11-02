@@ -21,8 +21,8 @@ function EnergyLinks({ count, inner = false }) {
     <svg className={`energy-links ${inner ? 'energy-links-inner' : ''}`} viewBox="0 0 1000 700" preserveAspectRatio="none" aria-hidden="true">
       <defs>
         <linearGradient id={inner ? 'energyGradientInner' : 'energyGradient'} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#35d9c3" stopOpacity=".08" />
-          <stop offset="52%" stopColor="#54f0df" stopOpacity=".72" />
+          <stop offset="0%" stopColor="#a78bfa" stopOpacity=".08" />
+          <stop offset="52%" stopColor="#c4a9f5" stopOpacity=".72" />
           <stop offset="100%" stopColor="#9b72ff" stopOpacity=".2" />
         </linearGradient>
         <filter id={inner ? 'energyGlowInner' : 'energyGlow'} x="-50%" y="-50%" width="200%" height="200%">
@@ -49,7 +49,7 @@ function EnergyLinks({ count, inner = false }) {
 function MenuNode({ item, index, count, onClick, inner = false }) {
   const Icon = item.icon;
   return (
-    <button className={`menu-node ${inner ? 'menu-node-inner' : ''} tone-${item.color || (index % 2 ? 'violet' : 'turquoise')}`}
+    <button className={`menu-node ${inner ? 'menu-node-inner' : ''} tone-${item.color || (index % 2 ? 'violet' : 'violet')}`}
       style={{ ...point(index, count, inner), '--node-delay': `${index * 55}ms` }}
       onClick={onClick} type="button">
       <span className="node-icon"><Icon size={inner ? 20 : 23} strokeWidth={1.8}/></span>
