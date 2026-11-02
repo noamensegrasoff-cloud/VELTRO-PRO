@@ -236,7 +236,7 @@ function DashboardPage({ t, lang, onNavigate, onOpenSection, data }) {
       <div className="dashboard-overview-heading"><div><h2>{t('home')}</h2><p>{t('subtitle')}</p></div><span className="dashboard-overview-mark"><ChartNoAxesCombined size={19}/></span></div>
       <div className="metrics-grid">
         <MetricCard icon={Wallet} label={t('capital')} value="— DA" trend="" tone="blue" footer={t('capitalHint')}/>
-        <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value={dashboardMoney(dashboardData.dailyProfit)} trend="" tone="green" footer={t('profitHint')}/>
+        <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value={dashboardMoney(data.dailyProfit)} trend="" tone="green" footer={t('profitHint')}/>
         <MetricCard icon={ShoppingCart} label={t('revenue')} value={dashboardMoney(data.todaySales)} trend="" tone="violet" footer={t('notLinked')}/>
         <MetricCard icon={ReceiptText} label={t('expense')} value="— DA" trend="" tone="amber" footer={t('notLinked')}/>
       </div>
