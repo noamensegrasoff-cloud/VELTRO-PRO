@@ -164,7 +164,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
   const save = e => {
     e.preventDefault();
     const submittedStatus = e.nativeEvent?.submitter?.dataset?.receiptStatus;
-    if (submittedStatus) form.status = submittedStatus;
+    const receiptStatus = submittedStatus || form.status;
     const supplier = suppliers.find(s=>String(s.id)===String(form.supplierId)) || suppliers.find(s=>String(s.name||'')===String(form.supplierName||''));
     const supplierName = supplier?.name || String(form.supplierName||'').trim();
     const items = form.items.filter(i=>String(i.name||'').trim() && Number(i.qty)>0 && Number.isFinite(Number(i.qty))).map(i=>({...i,name:String(i.name).trim(),barcode:String(i.barcode||'').trim(),qty:Number(i.qty),price:Math.max(0,Number(i.price)||0)}));
@@ -173,7 +173,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     const sum = items.reduce((s,i)=>s+i.qty*i.price,0);
     const paid = Math.min(sum,Math.max(0,Number(form.paid)||0));
     const old = rows.find(r=>r.id===editingId);
-    const createdAt = old?.createdAt || new Date().toISOString(); const createdLocal = nowLocal(); const receipt = {...form,id:editingId||makeId(),number:String(form.number).trim(),supplierId:supplier?.id||form.supplierId||'',supplierName,supplierStandard:!!form.supplierStandard,date:old?.date||form.date||createdAt.slice(0,10)||createdLocal.date,time:old?.time||form.time||createdAt.slice(11,19)||createdLocal.time,status:form.status==='closed'?'closed':'open',paid,notes:String(form.notes||'').trim(),items,total:sum,openedBy:old?.openedBy||actor,closedBy:form.status==='closed'?(old?.closedBy||actor):'',createdAt,updatedAt:new Date().toISOString()};
+    const createdAt = old?.createdAt || new Date().toISOString(); const createdLocal = nowLocal(); const receipt = {...form,id:editingId||makeId(),number:String(form.number).trim(),supplierId:supplier?.id||form.supplierId||'',supplierName,supplierStandard:!!form.supplierStandard,date:old?.date||form.date||createdAt.slice(0,10)||createdLocal.date,time:old?.time||form.time||createdAt.slice(11,19)||createdLocal.time,status:receiptStatus==='closed'?'closed':'open',paid,notes:String(form.notes||'').trim(),items,total:sum,openedBy:old?.openedBy||actor,closedBy:receiptStatus==='closed'?(old?.closedBy||actor):'',createdAt,updatedAt:new Date().toISOString()};
     try { applyReceiptStockDelta(old,receipt); } catch(stockError) { setError(stockError.message||T.required); setNotification({type:'error',message:stockError.message||T.required}); return; }
     setRows(oldRows=>editingId?oldRows.map(r=>r.id===editingId?receipt:r):[receipt,...oldRows]);
     void getActiveWorkspaceId().then(workspaceId=>workspaceId?saveRecord({entityType:'purchase_receipts',recordId:receipt.id,payload:receipt,workspaceId}):null).catch(syncError=>console.error('Could not sync purchase receipt',syncError));
