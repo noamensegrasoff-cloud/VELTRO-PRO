@@ -7157,3 +7157,49 @@ html body #root .products-page .pform-modal>.pform-footer{
 body>.products-page.pform-portal-root{position:relative!important;z-index:2147483000!important;display:contents!important}
 body>.products-page.pform-portal-root .pform-overlay{position:fixed!important;inset:0!important;z-index:2147483000!important;display:flex!important;align-items:center!important;justify-content:center!important;isolation:isolate!important}
 body>.products-page.pform-portal-root .pform-modal{position:relative!important;z-index:2147483001!important}
+
+
+/* VELTRO product editor: one unified card, section-based content */
+.pform-portal-root .pform-modal .pe-body{overflow:auto!important;min-height:0!important}
+.pform-portal-root .pform-modal .pe-section{display:block!important;width:100%!important;max-width:none!important;margin:0!important}
+.pform-portal-root .pform-modal .pform-unified-panel{
+ display:block!important;width:100%!important;height:auto!important;min-height:0!important;
+ padding:18px!important;border:1px solid var(--border,#dce5ef)!important;border-radius:16px!important;
+ background:var(--surface-2,#fff)!important;box-shadow:0 8px 28px rgba(35,48,75,.06)!important;
+ box-sizing:border-box!important;
+}
+.pform-portal-root .pform-modal .pform-unified-column{display:contents!important}
+.pform-portal-root .pform-modal .pform-feature-card,
+.pform-portal-root .pform-modal .pform-feature-card.pe-card{
+ display:block!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+ margin:0!important;padding:14px 0!important;border:0!important;border-radius:0!important;
+ border-bottom:1px solid var(--border,#dce5ef)!important;background:transparent!important;
+ box-shadow:none!important;overflow:visible!important;box-sizing:border-box!important;
+}
+.pform-portal-root .pform-modal .pform-feature-card:last-child{border-bottom:0!important}
+.pform-portal-root .pform-modal .pform-feature-heading{
+ display:flex!important;align-items:center!important;gap:10px!important;
+ margin:0 0 12px!important;padding:0 0 9px!important;
+ border-bottom:1px solid var(--border,#dce5ef)!important;
+}
+.pform-portal-root .pform-modal .pform-feature-heading>div b{font-size:13px!important;font-weight:800!important}
+.pform-portal-root .pform-modal .pform-feature-icon{width:30px!important;height:30px!important;flex:0 0 30px!important}
+.pform-portal-root .pform-modal .pform-feature-card>.pform-feature-heading:only-child{margin-bottom:0!important}
+.pform-portal-root .pform-modal .pform-price-block,
+.pform-portal-root .pform-modal .pform-sales-section{
+ display:block!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+ margin:14px 0 0!important;padding:0!important;border:0!important;border-radius:0!important;
+ background:transparent!important;box-shadow:none!important;box-sizing:border-box!important;
+}
+.pform-portal-root .pform-modal .pform-basic-grid,
+.pform-portal-root .pform-modal .pform-feature-options,
+.pform-portal-root .pform-modal .pform-price-grid{
+ align-items:start!important;align-content:start!important;grid-auto-rows:max-content!important;
+ min-height:0!important;height:auto!important;
+}
+.pform-portal-root .pform-modal .pform-field{align-self:start!important;min-height:0!important}
+@media(max-width:760px){
+ .pform-portal-root .pform-modal .pe-body{padding:9px!important}
+ .pform-portal-root .pform-modal .pform-unified-panel{padding:12px!important;border-radius:12px!important}
+ .pform-portal-root .pform-modal .pform-feature-card{padding:11px 0!important}
+}
