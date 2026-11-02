@@ -58,21 +58,21 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-sect
 
 /* Independent columns: align at the top, never stretch to the same height. */
 html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-columns{
-  display:grid!important;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)!important;
-  align-items:start!important;align-content:start!important;justify-items:stretch!important;
-  gap:11px!important;width:100%!important;height:auto!important;min-height:0!important;
+  display:flex!important;flex-flow:row nowrap!important;align-items:flex-start!important;
+  justify-content:flex-start!important;gap:10px!important;
+  width:100%!important;height:auto!important;min-height:0!important;
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-column{
-  display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
-  align-items:stretch!important;align-self:start!important;justify-content:flex-start!important;
-  gap:9px!important;width:auto!important;min-width:0!important;max-width:none!important;
-  height:max-content!important;min-height:0!important;
+  display:flex!important;flex:1 1 0!important;flex-direction:column!important;
+  align-items:stretch!important;align-self:flex-start!important;justify-content:flex-start!important;
+  gap:7px!important;width:0!important;min-width:0!important;max-width:none!important;
+  height:auto!important;min-height:0!important;
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-card{
   display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
-  align-self:start!important;justify-content:flex-start!important;
-  width:100%!important;height:max-content!important;min-height:0!important;max-height:none!important;
-  margin:0!important;padding:10px 11px!important;gap:8px!important;overflow:visible!important;
+  align-self:flex-start!important;justify-content:flex-start!important;
+  width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;padding:8px 9px!important;gap:6px!important;overflow:visible!important;
   box-sizing:border-box!important;border:1px solid rgba(255,255,255,.96)!important;
   border-radius:13px!important;
   background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(249,246,255,.84))!important;
@@ -105,11 +105,12 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-pric
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-sales-price-grid,
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-expiry-options{
   min-width:0!important;align-content:start!important;align-items:start!important;
-  grid-auto-rows:max-content!important;gap:7px!important;
+  grid-template-rows:auto!important;grid-auto-rows:max-content!important;
+  align-self:flex-start!important;height:auto!important;gap:6px!important;
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-field{
-  display:flex!important;flex-direction:column!important;align-self:start!important;
-  height:auto!important;min-width:0!important;gap:4px!important;
+  display:flex!important;flex-direction:column!important;align-self:flex-start!important;
+  height:auto!important;min-height:0!important;min-width:0!important;gap:3px!important;
   color:#625a75!important;font-size:10px!important;
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-field>span{
@@ -117,7 +118,7 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-fiel
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-field input,
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-field select{
-  height:33px!important;min-height:33px!important;padding:0 9px!important;box-sizing:border-box!important;
+  height:30px!important;min-height:30px!important;padding:0 8px!important;box-sizing:border-box!important;
   border:1px solid rgba(132,113,170,.24)!important;border-radius:8px!important;
   background:rgba(255,255,255,.96)!important;color:#352e4b!important;font-size:11px!important;
   box-shadow:inset 0 1px 2px rgba(55,42,80,.025)!important;
@@ -135,7 +136,7 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-mana
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-price-block{
   display:block!important;width:100%!important;height:auto!important;min-height:0!important;
-  margin:0!important;padding:9px!important;border:1px solid rgba(137,113,184,.18)!important;
+  margin:0!important;padding:7px!important;border:1px solid rgba(137,113,184,.18)!important;
   border-radius:10px!important;background:rgba(241,236,250,.72)!important;box-sizing:border-box!important;
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-price-head{margin:0 0 6px!important}
@@ -160,7 +161,7 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-aver
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-average-cost-card span{color:#776b8a!important}
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-average-cost-card strong{color:#7656ad!important}
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-image-drop{
-  min-height:88px!important;max-height:118px!important;height:auto!important;padding:8px!important;gap:6px!important;
+  min-height:70px!important;max-height:100px!important;height:auto!important;padding:7px!important;gap:5px!important;
   border-color:rgba(132,101,187,.25)!important;background:rgba(246,242,252,.82)!important;
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-upload-btn,
@@ -184,10 +185,12 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-foot
     max-height:calc(100dvh - 126px)!important;padding:9px!important;
   }
   html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-columns{
-    grid-template-columns:minmax(0,1fr)!important;gap:9px!important;
+    flex-direction:column!important;gap:8px!important;
   }
-  html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-column{gap:8px!important}
-  html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-card{padding:9px!important;gap:7px!important}
+  html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-column{
+    flex:0 0 auto!important;width:100%!important;gap:7px!important;
+  }
+  html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-card{padding:8px!important;gap:6px!important}
   html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-header{min-height:56px!important;padding:8px 10px!important}
   html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-footer{padding:7px 9px!important}
 }
