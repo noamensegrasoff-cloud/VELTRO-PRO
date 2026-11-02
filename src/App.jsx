@@ -221,37 +221,6 @@ function StockOverview({ t, data }) {
   </article>;
 }
 
-function DashboardPage({ t, lang, onNavigate, onOpenSection, data }) {
-  return <div className="page-content dashboard-content">
-    <div className="page-heading"><div><div className="heading-kicker"><span className="health-dot"/>{t('welcome')} <b>VELTRO</b></div><h1>{t('home')}</h1><p>{t('subtitle')}</p></div><div className="heading-actions"><span className="date-button">{t('today')}</span><button className="date-button"><CalendarDays size={14}/>{t('today')} <ChevronDown size={14}/></button></div></div>
-    <section className="section-launcher" aria-label={t('allSections')}>
-      <div className="section-launcher-heading"><div><h2>{t('allSections')}</h2><p>{t('sectionsIntro')}</p></div><span className="section-launcher-mark"><LayoutDashboard size={20}/></span></div>
-      <div className="section-launcher-grid">
-        {sections.map((section,index)=>{const Icon=section.icon;return <button type="button" key={section.id} className={'section-launch-card section-tone-'+(index%6)} onClick={()=>onOpenSection(section)}>
-          <span className="section-launch-icon"><Icon size={23} strokeWidth={1.8}/></span><span className="section-launch-name">{getLabel(section,lang)}</span><span className="section-launch-meta">{section.children.length} <span>{lang==='ar'?'أقسام فرعية':lang==='fr'?'rubriques':'items'}</span></span><ChevronDown className="section-launch-arrow" size={16}/>
-        </button>})}
-      </div>
-    </section>
-    <section className="dashboard-overview" aria-label={t('home')}>
-      <div className="dashboard-overview-heading"><div><h2>{t('home')}</h2><p>{t('subtitle')}</p></div><span className="dashboard-overview-mark"><ChartNoAxesCombined size={19}/></span></div>
-      <div className="metrics-grid">
-        <MetricCard icon={Wallet} label={t('capital')} value="— DA" trend="" tone="blue" footer={t('capitalHint')}/>
-        <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value={dashboardMoney(data.dailyProfit)} trend="" tone="green" footer={t('profitHint')}/>
-        <MetricCard icon={ShoppingCart} label={t('revenue')} value={dashboardMoney(data.todaySales)} trend="" tone="violet" footer={t('notLinked')}/>
-        <MetricCard icon={ReceiptText} label={t('expense')} value="— DA" trend="" tone="amber" footer={t('notLinked')}/>
-      </div>
-      <div className="charts-grid"><SalesChart t={t} lang={lang} data={data}/><MixChart t={t} data={data}/></div>
-      <div className="lower-grid"><RecentActivity t={t} data={data}/><StockOverview t={t} data={data}/></div>
-      <div className="quick-actions"><span>{t('shortcuts')}</span>
-        <button onClick={()=>onNavigate({id:'product-list',label:{ar:'قائمة المنتجات',en:'Product list',fr:'Liste des produits'}})}><Package size={14}/>{t('addProduct')}</button>
-        <button onClick={()=>onNavigate({id:'point-of-sale',label:{ar:'نقطة البيع',en:'Point of sale',fr:'Point de vente'}})}><ShoppingCart size={14}/>{t('newSale')}</button>
-        <button onClick={()=>onNavigate({id:'order-new',label:{ar:'طلب السلع',en:'Order goods',fr:'Commander des articles'}})}><ClipboardList size={14}/>{t('newOrder')}</button>
-        <button onClick={()=>onNavigate({id:'cash-summary',label:{ar:'ملخص الصندوق',en:'Cash summary',fr:'Résumé de caisse'}})}><Wallet size={14}/>{t('openCash')}</button>
-      </div>
-    </section>
-  </div>;
-}
-
 function SupplierListPage({ lang }) {
   const labels = {
     ar: { title:'قائمة الموردين', subtitle:'إدارة بيانات الموردين ووسائل الاتصال بهم في مكان واحد.', add:'إضافة مورد', search:'ابحث بالاسم أو الهاتف…', searchRef:'ابحث بالمرجع أو امسح الكود…', total:'إجمالي الموردين', shown:'المعروض', empty:'لا يوجد موردون بعد', emptyHint:'ابدأ بإضافة أول مورد إلى سجل متجرك.', name:'اسم المورد', phone:'رقم الهاتف', email:'البريد الإلكتروني', balance:'الرصيد المستحق (دج)', id:'المعرف', address:'العنوان', description:'الوصف', photo:'صورة المورد', choosePhoto:'اختيار صورة', save:'حفظ المورد', update:'حفظ التعديلات', cancel:'إلغاء', edit:'تعديل', delete:'حذف', actions:'الإجراءات', view:'معاينة', qr:'رمز QR', barcode:'الباركود', print:'طباعة بطاقة المورد', created:'تاريخ التسجيل', noDescription:'لا توجد ملاحظات مضافة', noPhone:'لا يوجد رقم هاتف', noAddress:'لم يُحدد العنوان', confirmDelete:'هل تريد حذف هذا المورد؟', required:'يرجى إدخال اسم المورد.', saved:'تم حفظ بيانات المورد محليًا.', duplicate:'هذا المعرف مستخدم بالفعل.', close:'إغلاق', details:'بيانات المورد', all:'كل الموردين' },
