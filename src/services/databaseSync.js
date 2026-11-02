@@ -103,17 +103,61 @@ export async function getOrCreateWorkspace() {
   const user = authData.user;
   if (!user) throw new Error('Sign in to enable cloud synchronization.');
 
-  const { data: existing, error: lookupError } = await supabase
-    .from('workspaces')
-    .select('id,name')
-    .eq('created_by', user.id)
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
-  if (lookupError) throw lookupError;
+  // An invited employee is a member of the owner's workspace, not its creator.
+  // Resolve memberships before considering workspace creation so employees never
+  // accidentally create a separate, empty workspace after accepting an invitation.
+  const { data: memberships, error: membershipsError } = await supabase
+    .from('workspace_members')
+    .select('workspace_id,role,created_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: true });
+  if (membershipsError) throw membershipsError;
 
-  let workspace = existing;
+  let workspace = null;
+  if (memberships?.length) {
+    const workspaceIds = [...new Set(memberships.map(item => item.workspace_id).filter(Boolean))];
+    const { data: memberWorkspaces, error: workspacesError } = await supabase
+      .from('workspaces')
+      .select('id,name,created_by,created_at')
+      .in('id', workspaceIds);
+    if (workspacesError) throw workspacesError;
+
+    const byId = new Map((memberWorkspaces || []).map(item => [item.id, item]));
+    const candidates = memberships
+      .map(membership => ({ membership, workspace: byId.get(membership.workspace_id) }))
+      .filter(item => item.workspace);
+    candidates.sort((a, b) => {
+      // Keep the creator on their own workspace; otherwise prefer owner membership,
+      // then the oldest membership for a stable choice when an account has several.
+      const aOwn = a.workspace.created_by === user.id ? 1 : 0;
+      const bOwn = b.workspace.created_by === user.id ? 1 : 0;
+      if (aOwn !== bOwn) return bOwn - aOwn;
+      const aOwner = a.membership.role === 'owner' ? 1 : 0;
+      const bOwner = b.membership.role === 'owner' ? 1 : 0;
+      if (aOwner !== bOwner) return bOwner - aOwner;
+      return String(a.membership.created_at || '').localeCompare(String(b.membership.created_at || ''));
+    });
+    workspace = candidates[0]?.workspace || null;
+    if (!workspace) throw new Error('Your workspace membership exists, but its workspace could not be loaded.');
+  }
+
   if (!workspace) {
+    const { data: existing, error: lookupError } = await supabase
+      .from('workspaces')
+      .select('id,name')
+      .eq('created_by', user.id)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (lookupError) throw lookupError;
+
+    if (existing) {
+      // Do not try to grant the caller owner access from the client. The database
+      // creates the owner membership when a workspace is created; a missing row
+      // here is an inconsistent state that must be repaired by an authorized owner.
+      throw new Error('Your workspace exists but its owner membership is missing. Please contact support.');
+    }
+
     const label = user.user_metadata?.store_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'VELTRO Workspace';
     const { data, error } = await supabase
       .from('workspaces')
@@ -122,22 +166,6 @@ export async function getOrCreateWorkspace() {
       .single();
     if (error) throw error;
     workspace = data;
-  }
-
-  const { data: membership, error: membershipLookupError } = await supabase
-    .from('workspace_members')
-    .select('workspace_id')
-    .eq('workspace_id', workspace.id)
-    .eq('user_id', user.id)
-    .maybeSingle();
-  if (membershipLookupError) throw membershipLookupError;
-  if (!membership) {
-    const { error } = await supabase.from('workspace_members').insert({
-      workspace_id: workspace.id,
-      user_id: user.id,
-      role: 'owner',
-    });
-    if (error) throw error;
   }
 
   await adoptLocalRecordsIntoWorkspace(workspace.id);
