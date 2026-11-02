@@ -1767,3 +1767,6 @@
     font-size:11px!important;
   }
 }
+
+/* The product editor opens above the purchase receipt dialog. */
+.purchase-barcode-product-overlay{z-index:10000!important}
