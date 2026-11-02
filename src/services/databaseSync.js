@@ -216,12 +216,12 @@ export async function getOrCreateWorkspace() {
 const DEFAULT_ENTITY_TYPES = [
   // Catalog and inventory
   'products', 'product_variants', 'categories', 'brands', 'units', 'barcodes',
-  'stock', 'stock_levels', 'stock_movements', 'inventory_counts', 'inventory_adjustments',
+  'stock', 'stock_levels', 'stock_movements', 'product_movements', 'inventory_counts', 'inventory_adjustments',
   // Sales, invoices, returns and pending work
-  'sales', 'sales_drafts', 'invoices', 'invoice_items', 'sales_returns',
+  'sales', 'sales_invoices', 'sales_drafts', 'invoices', 'invoice_items', 'sales_returns,
   'sales_return_items', 'quotes', 'orders', 'pending_invoices', 'held_sales',
   // Purchases and supplier accounts
-  'purchases', 'purchase_drafts', 'purchase_invoices', 'purchase_items',
+  'purchases', 'purchase_receipts', 'purchase_drafts', 'purchase_invoices', 'purchase_items',
   'purchase_returns', 'suppliers', 'supplier_accounts', 'supplier_payments',
   'supplier_ledger', 'supplier_debts',
   // Customers, balances and collections
