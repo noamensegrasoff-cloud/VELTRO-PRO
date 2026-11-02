@@ -290,15 +290,15 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     }
 
     const types = [...new Set(entityTypes.filter(Boolean))];
-    for (const entityType of types) {
-      const rows = await getCloudRecords({ workspaceId: workspace.id, entityType, includeDeleted: true });
+    if (types.length) {
+      const rows = await getCloudRecords({ workspaceId: workspace.id, entityTypes: types, includeDeleted: true });
       for (const row of rows) {
         const key = [workspace.id, row.entity_type, String(row.record_id)].join('::');
         if (pendingKeys.has(key)) continue;
         await mergeCloudRecord(row, workspace.id);
         pulled += 1;
+        onProgress?.({ phase: 'download', entityType: row.entity_type, completed: pulled, total: rows.length });
       }
-      onProgress?.({ phase: 'download', entityType, completed: pulled });
     }
 
     return { status: 'synced', pushed, pulled, workspaceId: workspace.id };
