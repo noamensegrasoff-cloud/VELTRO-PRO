@@ -1,7 +1,6 @@
 -- Read-only verification checks for VELTRO-PRO workspace isolation.
--- Run after supabase/schema.sql in the Supabase SQL Editor.
--- These checks inspect configuration; the two-account test in SECURITY.md
--- is still required to prove the real deployed behavior.
+-- Run after applying the ordered migrations in supabase/migrations/.
+-- SQL inspection does not replace the two-account runtime test in SECURITY.md.
 
 select c.relname as table_name, c.relrowsecurity as rls_enabled
 from pg_class c
@@ -27,3 +26,28 @@ select tgname as trigger_name, tgenabled as enabled
 from pg_trigger
 where tgrelid = 'public.workspaces'::regclass
   and not tgisinternal;
+
+-- Confirm that no member row points to a custom role from another workspace.
+select wm.workspace_id, wm.user_id, wm.custom_role_id, wr.workspace_id as role_workspace_id
+from public.workspace_members wm
+join public.workspace_roles wr on wr.id = wm.custom_role_id
+where wr.workspace_id <> wm.workspace_id;
+
+-- Confirm that the two owner-only membership policies contain the workspace-scoped role check.
+select policyname, cmd, with_check
+from pg_policies
+where schemaname = 'public'
+  and tablename = 'workspace_members'
+  and policyname in (
+    'Owners can add non-owner workspace members',
+    'Owners can update non-owner workspace members'
+  )
+order by policyname;
+
+-- Confirm that workspace permission helpers use a fixed search_path.
+select p.proname, p.prosecdef as security_definer, p.proconfig
+from pg_proc p
+join pg_namespace n on n.oid = p.pronamespace
+where n.nspname = 'public'
+  and p.proname in ('has_workspace_permission', 'is_workspace_member', 'is_workspace_owner')
+order by p.proname;
