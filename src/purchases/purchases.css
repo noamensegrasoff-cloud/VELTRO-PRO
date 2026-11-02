@@ -181,7 +181,7 @@
 }
 
 
-/* Purple glass only: turquoise is intentionally excluded from purchase receipts. */
+/* Purple glass only: purchase receipts use violet glass accents only. */
 .purchase-page{--p-teal:#7656e8}
 .purchase-page .purchase-hero,
 .purchase-page .purchase-stat,
