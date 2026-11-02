@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, Moon, Sun, RotateCw, CloudUpload,
+  Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, RotateCw, CloudUpload,
   MoreHorizontal, CalendarDays, Package, ReceiptText,
   Wallet, CircleAlert, Clock3, ChartNoAxesCombined,
   ShoppingCart, X, Globe, ClipboardList, History, ArrowLeft, LayoutDashboard,
