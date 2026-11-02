@@ -88,8 +88,8 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
       <div className="pe-body">
         <section className="pe-section">
           <div className="pform-section-heading"><div><h3>{tx.productInfo}</h3></div><span><Hash size={15}/> 01</span></div>
-          <div className="pe-columns">
-            <div className="pe-column pe-column-main">
+          <div className="pform-unified-panel">
+            <div className="pform-unified-column pform-unified-main">
 <div className="pform-feature-card pe-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Info size={19}/></span><div><b>{tx.productInfo}</b></div></div>
             <div className="pform-basic-grid">
@@ -114,7 +114,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
             {form.expiryEnabled&&<div className="pform-feature-options pform-expiry-options"><label className="pform-field"><span>{tx.expiryDate}</span><input type="date" value={form.expiryDate} onChange={e=>set('expiryDate',e.target.value)}/></label><label className="pform-field"><span>{tx.expiryNotice} ({tx.days})</span><div className="pform-number-suffix"><input type="number" min="0" step="1" value={form.expiryNotice} onChange={e=>set('expiryNotice',e.target.value)} placeholder="3"/><b>{tx.days}</b></div></label></div>}
           </div>
             </div>
-            <div className="pe-column pe-column-side">
+            <div className="pform-unified-column pform-unified-side">
 <div className="pform-feature-card pe-card pe-units-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Boxes size={19}/></span><div><b>{tx.purchaseInfo}</b></div></div>
             <div className="pform-feature-options pform-carton-grid">
