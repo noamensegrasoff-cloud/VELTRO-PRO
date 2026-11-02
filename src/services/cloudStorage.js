@@ -29,8 +29,9 @@ function requireCloud() {
   return supabase;
 }
 
-export async function getCloudRecords({ workspaceId, entityType, includeDeleted = false }) {
-  if (!workspaceId || !entityType) throw new Error('workspaceId and entityType are required.');
+export async function getCloudRecords({ workspaceId, entityType, entityTypes, includeDeleted = false }) {
+  const types = Array.isArray(entityTypes) ? [...new Set(entityTypes.filter(Boolean))] : [];
+  if (!workspaceId || (!entityType && !types.length)) throw new Error('workspaceId and an entity type are required.');
   const client = requireCloud();
   const pageSize = 1000;
   const records = [];
@@ -40,9 +41,10 @@ export async function getCloudRecords({ workspaceId, entityType, includeDeleted 
     let query = client.from('cloud_records')
       .select('workspace_id, entity_type, record_id, payload, updated_at, deleted_at, device_id')
       .eq('workspace_id', workspaceId)
-      .eq('entity_type', entityType)
       .order('updated_at', { ascending: true })
       .order('record_id', { ascending: true });
+    if (entityType) query = query.eq('entity_type', entityType);
+    else query = query.in('entity_type', types);
     if (!includeDeleted) query = query.is('deleted_at', null);
 
     const { data, error } = await query.range(offset, offset + pageSize - 1);
