@@ -1,10 +1,10 @@
-# VELTRO-PRO workspace isolation and security status
+# VELTRO-PRO workspace isolation
 
-## Database bootstrap and migration history
+## Database setup and migration history
 
-`supabase/schema.sql` is only the original foundation script for `workspaces`, `workspace_members`, and `cloud_records`. It is not a full export of the live schema.
+`supabase/schema.sql` is only the original foundation script for `workspaces`, `workspace_members`, and `cloud_records`. It is not a complete export of the live database.
 
-The connected Supabase project currently reports nine applied migrations:
+The connected Supabase project reports nine applied migrations:
 
 - `20261023235105_remove_duplicate_workspace_owner_trigger`
 - `20261023235125_restrict_rls_auto_enable_function`
@@ -16,31 +16,43 @@ The connected Supabase project currently reports nine applied migrations:
 - `20261102022741_harden_workspace_permissions`
 - `20261102022816_index_workspace_branch_assignments`
 
-The repository contains the last four migration sources in `supabase/migrations/`. The first five source files are still missing from GitHub, so a fresh Supabase project cannot yet be reconstructed reliably from this repository. Recover those five sources or commit a verified full schema snapshot before creating another production project. Do not treat `schema.sql` alone as a production restore.
+The repository contains source files for the last four migrations. The first five historical migration sources are missing from GitHub. A fresh project therefore cannot currently be rebuilt reliably from this repository. Do not treat `schema.sql` plus the committed migrations as a complete bootstrap. Recover the missing migration sources or commit a verified full schema snapshot before creating another production project.
 
-Never put a Supabase `service_role` key or secret key in frontend environment variables. The browser must use only the publishable/anon key and rely on database RLS for authorization.
+A reconciliation migration, `20261102023000_reconcile_permission_rules.sql`, has been added to the maintenance branch. **It has not been applied to the connected Supabase project.** It resolves drift between the live database and the finalized source of `20261102022741_harden_workspace_permissions.sql`.
 
-## Verified live database state
+Never put a Supabase `service_role` key or secret key in frontend environment variables. The browser must use only a publishable/anon key and rely on database RLS for authorization.
 
-- RLS is enabled on all 11 inspected public tables.
-- `anon` has no TRUNCATE privilege on the inspected public tables; `authenticated` has no TRUNCATE privilege either.
-- Workspace permission helpers now live in the non-exposed `private` schema, use an empty search path, and check `auth.uid()` and workspace membership.
-- The public `required_workspace_permission(entity_type, operation, record_id)` mapper now recognizes the record types written by the application, including `sales_invoices`, `purchase_receipts`, `product_movements`, and legacy `local_storage` keys.
-- An assigned custom role is now an explicit permission set; it no longer silently inherits permissions from the built-in role template.
-- Workspace member insert/update/delete policies are owner-only, disallow owner-role promotion, and require custom roles to belong to the same workspace. The corresponding authenticated table grants are now present and remain constrained by RLS.
-- Branch assignments now use composite foreign keys so a branch and member must belong to the same workspace. Pre-migration checks found no existing invalid branch or custom-role workspace links.
-- Foreign-key support indexes are present, including the composite branch-assignment index.
-- Owner write policies were split from read policies to remove the previous overlapping permissive-policy warnings.
-- `workspace_audit_logs.id` was already an identity column; no identity alteration was needed.
+## Current connected Supabase findings
 
-## Remaining security and data-integrity follow-ups
+- RLS is enabled on the inspected workspace tables.
+- `authenticated` has the table privileges required by the current RLS policies. `anon` has no protected-table TRUNCATE privilege.
+- The three SECURITY DEFINER permission helpers are in the non-exposed `private` schema, use an empty search path, and are executable by authenticated users only for policy evaluation.
+- Custom role permissions replace the built-in role template rather than silently inheriting it.
+- Cloud-record permission mapping correctly recognizes `sales_invoices`, `purchase_receipts`, `product_movements`, and the legacy `local_storage` record type.
+- The live database has composite foreign keys preventing branch assignments from crossing workspace/member boundaries.
+- The audit-log ID is an identity column.
+- There is still migration-source drift: the live `required_workspace_permission` function maps cash updates to `cash.adjust` (not present in the role templates), expense updates to `cash.adjust`, and customer transaction reads to `customers.view`. The finalized migration source maps these to `cash.open_close`, `cash.expense.create`, and `customers.debts.view`, respectively.
+- The live `employee_profiles` write policies still require workspace ownership, while the finalized migration source uses the `employees.manage` permission. The reconciliation migration updates the live policy to match that source.
+- The reconciliation migration makes customer transaction history require `customers.debts.view`. The POS currently displays the old-customer-debt card without frontend permission gating. Before applying this migration, decide whether cashiers should receive `customers.debts.view` or whether that debt card should be hidden for roles without it; otherwise their debt total may be incomplete.
+- Supabase's current security advisor reports one remaining warning: leaked-password protection is disabled. Enable it in Auth security settings before public onboarding.
+- The performance advisor now reports unused indexes, not missing foreign-key indexes. These indexes were recently added to support workspace joins; do not remove them based only on the current low-volume usage statistics.
 
-- Supabase still reports leaked-password protection as disabled. Enable it in Auth security settings before public onboarding.
-- The performance advisor may report unused indexes because this workspace currently has low query volume. Do not remove the new foreign-key indexes without reviewing query plans.
-- Run the two-account isolation test below after any RLS, grant, or permission-mapping change.
-- Legacy business data still includes whole-key localStorage snapshots. If two devices modify the same legacy array/object between syncs, the current sync path is last-writer-wins. Move remaining customer, supplier, and payment records to per-record cloud entities or an atomic server-side merge before relying on simultaneous multi-device edits.
-- Employee UI pages and permission-aware navigation are not yet implemented. In particular, cashier POS stock updates need a dedicated stock-only server operation: the cashier role should be able to decrement stock as part of a sale without gaining unrestricted product-edit or manual inventory-adjust permissions.
-- The repository still has no committed `package-lock.json` and no unit-test script. The CI workflow currently verifies dependency installation and the Vite production build only.
+Run `supabase/security_verification.sql` after applying the complete migration chain and the reconciliation migration. The verification file is read-only; review its output rather than treating it as automatic proof of security.
+
+## Client-side isolation and sync fixes on the maintenance branch
+
+The maintenance branch now also:
+
+- Resolves a user's existing `workspace_members` membership before creating a workspace. This prevents employee accounts from silently receiving a separate empty workspace.
+- Keys local business-data snapshots by both authenticated user ID and workspace ID. Product catalogs and conflict archives are included in those snapshots even though they are excluded from generic legacy-storage sync.
+- Blocks the authenticated UI until the correct account/workspace snapshot has been restored. If the device is offline during an account switch, the app does not reveal the previous account's cached data.
+- Filters the IndexedDB outbox by its original workspace so pending changes cannot be uploaded into another workspace.
+- Continues syncing permitted records when an employee is denied access to an unrelated legacy-storage key.
+- Downloads all permitted entity types in paginated batches instead of issuing one request per entity type.
+- Refreshes open product, stock movement, POS, and purchase screens when cloud sync updates local data.
+- Matches customer/supplier ledgers by ID before falling back to names, and deduplicates legacy invoice copies before calculating balances.
+
+These client-side changes are in GitHub on `maintenance/full-audit-cleanup`; they have not been merged into `main`.
 
 ## Required two-account isolation test
 
@@ -50,12 +62,7 @@ Use two different Google accounts in separate browser profiles or incognito sess
 2. Sign in as Account B in a separate profile and let it create its workspace. Confirm B has a different workspace UUID.
 3. As B, attempt to select a row from `cloud_records` filtered to A's workspace UUID. It must return zero rows, not A's data.
 4. As B, attempt to insert a record into A's workspace UUID. PostgreSQL must reject it with an RLS policy error.
-5. As B, attempt to add, update, or delete a member or role in A's workspace. PostgreSQL must reject it.
-6. As A, confirm that assigning a custom role from B's workspace is rejected.
-7. Repeat the read check as A against B's workspace; it must return zero rows.
+5. After the reconciliation migration is applied, verify B can access only the employee and workspace records permitted by B's role; verify B cannot manage members or roles unless explicitly authorized.
+6. Repeat the read check as A against B's workspace; it must return zero rows.
 
-SQL inspection and CI build success do not replace this runtime test. GitHub Pages deployment and Android deep-link/OAuth flows also require separate end-to-end checks.
-
-## Branch and deployment status
-
-The code changes are on `maintenance/full-audit-cleanup`. They have not been merged into `main`, so the public GitHub Pages deployment has not been updated by this audit.
+SQL inspection alone does not replace this runtime test. GitHub Pages build success does not prove that OAuth redirects or two real accounts are isolated in the deployed app.
