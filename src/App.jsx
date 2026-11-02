@@ -557,9 +557,10 @@ export default function App() {
         else if(result?.status==='not_configured')setCloudState('not_configured');
         else if(result?.status==='error'||result?.status==='partial')setCloudState('error');
         else if(result?.status==='offline')setCloudState('configured');
+        if(result?.status==='synced'||result?.status==='partial')window.dispatchEvent(new Event('storage'));
       }
     });
-    const refresh=()=>{ if(alive && typeof navigator!=='undefined' && navigator.onLine) void syncWorkspace().catch(()=>{}); };
+    const refresh=async()=>{if(!alive||typeof navigator==='undefined'||!navigator.onLine)return;try{const result=await syncWorkspace();if(alive&&(result?.status==='synced'||result?.status==='partial'))window.dispatchEvent(new Event('storage'));}catch{}};
     refreshTimer=window.setInterval(refresh,30000);
     const channel=supabase?.channel('veltro-workspace-cloud-sync')
       .on('postgres_changes',{event:'*',schema:'public',table:'cloud_records'},()=>{
