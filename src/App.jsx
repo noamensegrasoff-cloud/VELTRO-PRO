@@ -22,7 +22,7 @@ import Barcode from 'react-barcode';
 
 const copy = {
   ar: {
-    workspace: 'مساحة العمل', search: 'ابحث عن قسم أو وظيفة...', demo: 'معاينة تصميمية · بيانات تجريبية',
+    workspace: 'مساحة العمل', search: 'ابحث عن قسم أو وظيفة...', 
     subtitle: 'نظرة شاملة على أداء المتجر وحركة العمل.', today: 'اليوم', revenue: 'مبيعات اليوم',
     invoices: 'فواتير البيع', products: 'المنتجات', lowStock: 'مخزون منخفض',
     vsYesterday: 'مقارنة بالأمس', salesTrend: 'حركة المبيعات', last7: 'آخر 7 أيام',
@@ -44,10 +44,10 @@ const copy = {
     profit: 'الربح التقديري', viewDetails: 'عرض التفاصيل', allSections: 'الأقسام',
     searchResults: 'نتائج البحث', noResults: 'لا توجد نتائج مطابقة.',
     topProducts: 'أكثر المنتجات حركة', activity: 'النشاط حسب الفترة',
-    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'واجهة تجريبية — لم تُربط معاملات المتجر بعد', refreshPage: 'إعادة تحميل الصفحة',
+    cloudTitle: 'التخزين السحابي', cloudConfigured: 'إعداد السحابة مكتمل، بانتظار تسجيل الدخول', cloudMissing: 'أضف إعدادات Supabase لربط السحابة', cloudConnected: 'اتصال الحساب السحابي نشط', cloudChecking: 'جارٍ فحص إعدادات السحابة', cloudError: 'تعذر التحقق من اتصال السحابة', cloudPrototype: 'لم تُسجل معاملات متجر بعد', refreshPage: 'إعادة تحميل الصفحة',
   },
   en: {
-    workspace: 'Workspace', search: 'Search sections and actions...', demo: 'Design preview · Sample data',
+    workspace: 'Workspace', search: 'Search sections and actions...', 
     subtitle: 'A clear overview of store performance and operations.', today: 'Today', revenue: 'Today’s sales',
     invoices: 'Sales invoices', products: 'Products', lowStock: 'Low stock',
     vsYesterday: 'vs yesterday', salesTrend: 'Sales activity', last7: 'Last 7 days',
@@ -69,10 +69,10 @@ const copy = {
     profit: 'Estimated profit', viewDetails: 'View details', allSections: 'Sections',
     searchResults: 'Search results', noResults: 'No matching results.',
     topProducts: 'Top moving products', activity: 'Activity by period',
-    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'UI preview — store transactions are not connected yet', refreshPage: 'Reload page',
+    cloudTitle: 'Cloud storage', cloudConfigured: 'Cloud configured; sign-in required', cloudMissing: 'Add Supabase settings to connect cloud storage', cloudConnected: 'Cloud account session is active', cloudChecking: 'Checking cloud configuration', cloudError: 'Could not check cloud connection', cloudPrototype: 'No store transactions have been recorded yet', refreshPage: 'Reload page',
   },
   fr: {
-    workspace: 'Espace de travail', search: 'Rechercher une rubrique...', demo: 'Aperçu du design · Données fictives',
+    workspace: 'Espace de travail', search: 'Rechercher une rubrique...', 
     subtitle: 'Une vue claire des performances et des opérations du magasin.', today: 'Aujourd’hui', revenue: 'Ventes du jour',
     invoices: 'Factures de vente', products: 'Produits', lowStock: 'Stock faible',
     vsYesterday: 'vs hier', salesTrend: 'Activité des ventes', last7: '7 derniers jours',
@@ -94,7 +94,7 @@ const copy = {
     profit: 'Bénéfice estimé', viewDetails: 'Voir les détails', allSections: 'Rubriques',
     searchResults: 'Résultats', noResults: 'Aucun résultat.',
     topProducts: 'Produits les plus actifs', activity: 'Activité par période',
-    cloudTitle: 'Stockage cloud', cloudConfigured: 'Cloud configuré ; connexion requise', cloudMissing: 'Ajoutez la configuration Supabase pour connecter le cloud', cloudConnected: 'Session du compte cloud active', cloudChecking: 'Vérification de la configuration cloud', cloudError: 'Impossible de vérifier la connexion cloud', cloudPrototype: 'Aperçu — les opérations du magasin ne sont pas encore reliées', refreshPage: 'Recharger la page',
+    cloudTitle: 'Stockage cloud', cloudConfigured: 'Cloud configuré ; connexion requise', cloudMissing: 'Ajoutez la configuration Supabase pour connecter le cloud', cloudConnected: 'Session du compte cloud active', cloudChecking: 'Vérification de la configuration cloud', cloudError: 'Impossible de vérifier la connexion cloud', cloudPrototype: 'Aucune opération du magasin n’a encore été enregistrée', refreshPage: 'Recharger la page',
   }
 };
 
@@ -172,7 +172,7 @@ function Sidebar({ lang, t, activeId, onNavigate, onLogout, onSync, syncing, sea
         {groups.length === 0 && <div className="nav-empty">{t('noResults')}</div>}
       </nav>
       <div className="sidebar-bottom">
-        <div className="sidebar-health"><span className="health-dot"/><span>{lang === 'ar' ? 'واجهة تجريبية' : lang === 'fr' ? 'Aperçu du système' : 'System preview'}</span><span className="health-tag">DEMO</span></div>
+        <div className="sidebar-health"><span className="health-dot"/><span>{lang === 'ar' ? 'النظام جاهز' : lang === 'fr' ? 'Système prêt' : 'System ready'}</span></div>
         <button className="sync-link" onClick={onSync} disabled={syncing} aria-busy={syncing}><RotateCw className={syncing ? "sync-spinning" : ""} size={15}/><span>{syncing ? t('syncing') : t('sync')}</span></button>
         <button className="logout-link" onClick={onLogout}><LogOut size={15}/><span>{t('logout')}</span></button>
       </div>
@@ -553,8 +553,8 @@ function ModulePage({ page, parent, t, lang, onBack, currentUser }) {
   const parentLabel = parent ? getLabel(parent,lang) : t('allSections');
   return <div className="page-content module-content">
     <div className="page-heading"><div><div className="heading-kicker"><span className="health-dot"/>{parentLabel}</div><h1>{title}</h1><p>{t('moduleHint')}</p></div><span className="module-icon"><Icon size={24}/></span></div>
-    <div className="module-metrics"><div className="module-metric"><span>{t('module')}</span><b>{parentLabel}</b></div><div className="module-metric"><span>{t('status')}</span><b><i className="health-dot"/>{t('notLinked')}</b></div><div className="module-metric"><span>{t('today')}</span><b>23 / 10 / 2026</b></div></div>
-    <section className="module-workspace panel"><div className="module-empty-icon"><Icon size={28}/></div><h2>{title}</h2><p>{t('moduleHint')}</p><div className="module-empty-actions"><button onClick={onBack}>{t('back')}</button><span>{t('demo')}</span></div></section>
+    <div className="module-metrics"><div className="module-metric"><span>{t('module')}</span><b>{parentLabel}</b></div><div className="module-metric"><span>{t('status')}</span><b><i className="health-dot"/>{t('notLinked')}</b></div><div className="module-metric"><span>{t('today')}</span><b>{new Date().toLocaleDateString(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB')}</b></div></div>
+    <section className="module-workspace panel"><div className="module-empty-icon"><Icon size={28}/></div><h2>{title}</h2><p>{t('moduleHint')}</p><div className="module-empty-actions"><button onClick={onBack}>{t('back')}</button><span>{t('notLinked')}</span></div></section>
   </div>;
 }
 
@@ -750,7 +750,7 @@ export default function App() {
               <MetricCard icon={PackageCheck} label={t('inventoryValue')} value={dashboardMoney(dashboardData.inventoryValue)} tone="blue" footer={t('notLinked')}/>
               <MetricCard icon={Wallet} label={t('capital')} value="— DA" tone="green" footer={t('capitalHint')}/>
               <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value="— DA" tone="violet" footer={t('profitHint')}/>
-              <MetricCard icon={ShoppingCart} label={t('revenue')} value="245,800 DA" trend="8.4%" tone="amber" footer={t('demo')}/>
+              <MetricCard icon={ShoppingCart} label={t('revenue')} value={dashboardMoney(dashboardData.todaySales)} trend="" tone="amber" footer={t('notLinked')}/>
             </div>
             <div className="home-dashboard-charts"><SalesChart t={t} lang={lang} data={dashboardData}/><MixChart t={t} data={dashboardData}/></div>
             <div className="home-dashboard-bottom"><StockOverview t={t} data={dashboardData}/><RecentActivity t={t} data={dashboardData}/></div>
