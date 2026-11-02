@@ -45,13 +45,15 @@ function archiveConflict(productId, localProduct, cloudProduct, winner) {
  * The selected records are saved through the shared IndexedDB/outbox repository.
  */
 export async function loadAndMergeProductCatalog() {
+  // Resolve the signed-in workspace before reading legacy localStorage. The sync
+  // engine may switch the active account's local catalog, so reading it first can
+  // accidentally merge the previous account's products into the new workspace.
+  try { await syncWorkspace({ entityTypes: [ENTITY_TYPE] }); } catch {}
+
   const localProducts = readJson(CATALOG_KEY, []);
   const localMap = new Map((Array.isArray(localProducts) ? localProducts : [])
     .filter(p => p && p.id != null)
     .map(p => [String(p.id), p]));
-
-  // A cloud failure must not make the locally saved catalog unavailable.
-  try { await syncWorkspace({ entityTypes: [ENTITY_TYPE] }); } catch {}
 
   let records = [];
   try { records = await listRecords({ entityType: ENTITY_TYPE, includeDeleted: true }); } catch {}
