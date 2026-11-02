@@ -1,12 +1,24 @@
 -- VELTRO-PRO cloud foundation (legacy baseline, NOT a complete live-schema export).
 -- This script creates only the original workspaces, workspace_members, and cloud_records
 -- foundation. The connected project has additional employee/role/approval/branch tables
--- and six applied migrations; five historical migration source files are not in this repo.
+-- and nine applied migrations; five historical migration source files are not in this repo.
 -- Do not use this file alone to rebuild or replace the current production database.
+-- Do not rerun it after the hardened private-schema permission migration; it intentionally
+-- stops rather than restoring the older permissive baseline policies.
 -- Recover the missing migration chain or commit a verified full schema snapshot first.
 -- All application data is workspace-scoped. Never expose a service_role key to the browser.
 
 begin;
+
+-- Prevent an accidental downgrade of a database that already has the hardened
+-- private permission helpers and workspace-scoped RLS policies.
+do $
+begin
+  if to_regprocedure('private.is_workspace_member(uuid)') is not null then
+    raise exception 'Legacy schema.sql cannot be rerun after workspace hardening. Apply ordered migrations instead.';
+  end if;
+end
+$;
 
 create extension if not exists pgcrypto;
 
@@ -108,9 +120,8 @@ create policy "Members can read workspace membership"
   on public.workspace_members for select to authenticated
   using (public.is_workspace_member(workspace_id));
 
--- Membership changes are intentionally not client-writable. The database
--- trigger creates the owner's membership. Add a separate server-verified
--- invitation flow before implementing team invitations.
+-- This is the original baseline policy only. The later hardened migration
+-- replaces it with owner-only member write policies and matching table grants.
 drop policy if exists "Workspace owners can add members" on public.workspace_members;
 drop policy if exists "Owners can add themselves to their workspace" on public.workspace_members;
 
@@ -137,7 +148,8 @@ create policy "Workspace members can update records"
   );
 
 -- Remove old broad grants before re-applying the minimum required permissions.
-revoke all on public.workspaces, public.workspace_members, public.cloud_records from anon, authenticated;
+revoke all on public.workspaces, public.workspace_members, public.cloud_records from public, anon, authenticated;
+revoke truncate, references, trigger on public.workspaces, public.workspace_members, public.cloud_records from public, anon, authenticated;
 grant select, insert on public.workspaces to authenticated;
 grant select on public.workspace_members to authenticated;
 grant select, insert, update on public.cloud_records to authenticated;
