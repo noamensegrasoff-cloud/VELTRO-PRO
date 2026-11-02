@@ -7151,359 +7151,91 @@ html body #root .products-page .pform-modal>.pform-footer{
 @media(max-width:520px){.purchase-product-purchase-compact{padding:12px}.purchase-product-carton-sales{min-height:0}}
 
 
-/* VELTRO product editor — all product cards in one adaptive workspace */
-.products-page .pform-modal{
-  width:min(1460px,calc(100vw - 24px))!important;
-  height:min(920px,calc(100dvh - 24px))!important;
-  max-height:calc(100dvh - 24px)!important;
-}
-.products-page .pform-modal .pform-content-all{
-  display:grid!important;
-  grid-template-columns:minmax(0,1.2fr) minmax(0,.95fr)!important;
-  align-items:stretch!important;
-  gap:12px!important;
-  min-height:0!important;
-  overflow:hidden!important;
-  padding:10px 12px!important;
-}
-.products-page .pform-modal .pform-panel-view,
-.products-page .pform-modal .pform-panel-view.is-active{
-  display:block!important;
-  min-width:0!important;
-  min-height:0!important;
-  height:100%!important;
-  overflow:hidden!important;
-}
-.products-page .pform-modal .pform-panel-view>.pform-section{
-  display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  align-content:start!important;
-  align-items:stretch!important;
-  gap:8px!important;
-  width:100%!important;
-  max-width:none!important;
-  min-width:0!important;
-  height:100%!important;
-  overflow:hidden!important;
-}
-.products-page .pform-modal .pform-section-heading{
-  grid-column:1/-1!important;
-  margin:0!important;
-}
-.products-page .pform-modal .pform-feature-card{
-  min-width:0!important;
-  min-height:0!important;
-  height:auto!important;
-  padding:9px!important;
-  gap:7px!important;
-  border-radius:12px!important;
-  overflow:hidden!important;
-}
-.products-page .pform-modal .pform-feature-heading{
-  gap:7px!important;
-  min-height:25px!important;
-}
-.products-page .pform-modal .pform-feature-icon{
-  width:28px!important;
-  height:28px!important;
-  min-width:28px!important;
-  border-radius:8px!important;
-}
-.products-page .pform-modal .pform-feature-heading>div b{font-size:10px!important}
-.products-page .pform-modal .pform-feature-heading>div small{font-size:9px!important}
-.products-page .pform-modal .pform-basic-grid,
-.products-page .pform-modal .pform-carton-grid,
-.products-page .pform-modal .pform-feature-options,
-.products-page .pform-modal .pform-price-grid{
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:7px!important;
-  min-width:0!important;
-}
-.products-page .pform-modal .pform-carton-grid>.pform-field:last-child{grid-column:auto!important}
-.products-page .pform-modal .pform-field{gap:4px!important;font-size:9px!important}
-.products-page .pform-modal .pform-field>span{min-height:12px!important}
-.products-page .pform-modal .pform-field input,
-.products-page .pform-modal .pform-field select{height:32px!important;padding:0 8px!important;font-size:10px!important}
-.products-page .pform-modal .pform-code-input>button[title]{flex-basis:32px!important;width:32px!important;min-width:32px!important}
-.products-page .pform-modal .pform-manage-list{height:30px!important;padding:0 7px!important;font-size:9px!important}
-.products-page .pform-modal .pform-price-block{padding:8px!important}
-.products-page .pform-modal .pform-price-head{margin-bottom:6px!important}
-.products-page .pform-modal .pform-price-head>div b{font-size:9px!important}
-.products-page .pform-modal .pform-price-group{gap:4px!important}
-.products-page .pform-modal .pform-price-group>b{font-size:9px!important}
-.products-page .pform-modal .pform-price-input{height:31px!important}
-.products-page .pform-modal .pform-price-input input{font-size:10px!important}
-.products-page .pform-modal .pform-average-cost-card{padding:7px!important;gap:3px!important}
-.products-page .pform-modal .pform-average-cost-card small,
-.products-page .pform-modal .pform-average-cost-card span{font-size:8px!important}
-.products-page .pform-modal .pform-average-cost-card strong{font-size:12px!important}
-.products-page .pform-modal .pform-photo-layout,
-.products-page .pform-modal .pform-image-drop{min-height:0!important}
-.products-page .pform-modal .pform-image-drop{padding:8px!important;gap:5px!important}
-.products-page .pform-modal .pform-image-drop>span svg{width:22px!important;height:22px!important}
-.products-page .pform-modal .pform-upload-btn{min-height:29px!important;padding:5px 8px!important;font-size:9px!important}
-.products-page .pform-modal .pform-footer{flex:0 0 auto!important;padding:8px 14px!important}
-.products-page .pform-modal .pform-footer-left{font-size:9px!important}
-.products-page .pform-modal .pform-footer-actions>button{min-height:34px!important;padding:7px 12px!important;font-size:10px!important}
 
-/* Small screens keep every field accessible without horizontal clipping. */
-@media(max-width:900px){
-  .products-page .pform-modal .pform-content-all{
-    grid-template-columns:minmax(0,1fr)!important;
-    overflow-y:auto!important;
-    overflow-x:hidden!important;
+/* Product editor layout — single source of truth.
+   Two independent columns; cards keep their natural content height. */
+.products-page .pform-overlay .pform-modal{
+  width:min(1460px,calc(100vw - 32px));
+  height:auto;
+  max-height:calc(100dvh - 24px);
+}
+.products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
+  display:block;
+  flex:0 1 auto;
+  min-height:0;
+  max-height:calc(100dvh - 150px);
+  height:auto;
+  overflow-x:hidden;
+  overflow-y:auto;
+  padding:12px 14px 16px;
+}
+.products-page .pform-overlay .pform-content-all>.pform-all-cards{
+  display:block;
+  width:100%;
+  max-width:none;
+  height:auto;
+  min-height:0;
+  margin:0;
+  overflow:visible;
+}
+.products-page .pform-overlay .pform-all-cards>.pform-section-heading{
+  display:flex;
+  width:100%;
+  margin:0 0 12px;
+}
+.products-page .pform-overlay .pform-modal .pform-masonry-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);
+  align-items:start;
+  gap:14px;
+  width:100%;
+}
+.products-page .pform-overlay .pform-modal .pform-masonry-column{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  align-self:start;
+  gap:12px;
+  min-width:0;
+  height:auto;
+}
+.products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-feature-card{
+  display:flex;
+  flex:0 0 auto;
+  flex-direction:column;
+  align-self:stretch;
+  width:100%;
+  min-width:0;
+  min-height:0;
+  height:auto;
+  margin:0;
+  overflow:visible;
+}
+.products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-section-heading{
+  display:flex;
+  width:100%;
+  margin:2px 0 0;
+}
+.products-page .pform-overlay .pform-modal .pform-masonry-column .pform-basic-grid,
+.products-page .pform-overlay .pform-modal .pform-masonry-column .pform-carton-grid,
+.products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-options,
+.products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-grid{
+  min-width:0;
+}
+@media(max-width:760px){
+  .products-page .pform-overlay .pform-modal{
+    width:calc(100vw - 16px);
+    max-height:calc(100dvh - 16px);
   }
-  .products-page .pform-modal .pform-panel-view,
-  .products-page .pform-modal .pform-panel-view.is-active{
-    height:auto!important;
-    overflow:visible!important;
+  .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
+    max-height:calc(100dvh - 130px);
+    padding:10px;
   }
-  .products-page .pform-modal .pform-panel-view>.pform-section{
-    height:auto!important;
-    overflow:visible!important;
+  .products-page .pform-overlay .pform-modal .pform-masonry-grid{
+    grid-template-columns:minmax(0,1fr);
+    gap:10px;
   }
-}
-@media(max-width:560px){
-  .products-page .pform-modal .pform-panel-view>.pform-section,
-  .products-page .pform-modal .pform-basic-grid,
-  .products-page .pform-modal .pform-carton-grid,
-  .products-page .pform-modal .pform-feature-options,
-  .products-page .pform-modal .pform-price-grid{
-    grid-template-columns:minmax(0,1fr)!important;
-  }
-}
-
-
-/* FINAL FIX: one shared grid for every product card; no nested panel columns. */
-html body #root .products-page .pform-overlay .pform-modal{
-  width:min(1500px,calc(100vw - 20px))!important;
-  height:min(940px,calc(100dvh - 20px))!important;
-  max-height:calc(100dvh - 20px)!important;
-}
-html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
-  display:block!important;
-  flex:1 1 0!important;
-  min-height:0!important;
-  height:auto!important;
-  overflow:hidden!important;
-  padding:10px!important;
-}
-html body #root .products-page .pform-overlay .pform-content-all>.pform-all-cards{
-  display:grid!important;
-  grid-template-columns:repeat(3,minmax(0,1fr))!important;
-  grid-template-rows:auto minmax(0,1fr) minmax(0,1fr)!important;
-  align-content:stretch!important;
-  align-items:stretch!important;
-  gap:9px!important;
-  width:100%!important;
-  max-width:none!important;
-  height:100%!important;
-  min-height:0!important;
-  margin:0!important;
-  overflow:hidden!important;
-}
-html body #root .products-page .pform-all-cards>.pform-section-heading{
-  grid-column:1/-1!important;
-  min-height:24px!important;
-}
-html body #root .products-page .pform-all-cards>.pform-feature-card{
-  min-width:0!important;
-  min-height:0!important;
-  height:100%!important;
-  padding:9px!important;
-  gap:7px!important;
-  overflow:hidden!important;
-}
-html body #root .products-page .pform-all-cards .pform-basic-grid,
-html body #root .products-page .pform-all-cards .pform-carton-grid,
-html body #root .products-page .pform-all-cards .pform-feature-options,
-html body #root .products-page .pform-all-cards .pform-price-grid{
-  display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:6px!important;
-  min-width:0!important;
-}
-html body #root .products-page .pform-all-cards .pform-field{gap:3px!important;font-size:9px!important}
-html body #root .products-page .pform-all-cards .pform-field>span{min-height:11px!important;font-size:9px!important}
-html body #root .products-page .pform-all-cards .pform-field input,
-html body #root .products-page .pform-all-cards .pform-field select{height:29px!important;min-height:29px!important;padding:0 7px!important;font-size:10px!important}
-html body #root .products-page .pform-all-cards .pform-code-input>button[title]{width:29px!important;min-width:29px!important;flex-basis:29px!important}
-html body #root .products-page .pform-all-cards .pform-manage-list{height:28px!important;font-size:8px!important;padding:0 6px!important}
-html body #root .products-page .pform-all-cards .pform-price-block{padding:7px!important}
-html body #root .products-page .pform-all-cards .pform-price-head{margin-bottom:5px!important}
-html body #root .products-page .pform-all-cards .pform-price-group{gap:3px!important}
-html body #root .products-page .pform-all-cards .pform-price-group>b{font-size:8px!important}
-html body #root .products-page .pform-all-cards .pform-price-input{height:28px!important;min-height:28px!important}
-html body #root .products-page .pform-all-cards .pform-price-input input{height:26px!important;font-size:9px!important}
-html body #root .products-page .pform-all-cards .pform-average-cost-card{padding:6px!important;gap:2px!important}
-html body #root .products-page .pform-all-cards .pform-average-cost-card small,
-html body #root .products-page .pform-all-cards .pform-average-cost-card span{font-size:7px!important;line-height:1.2!important}
-html body #root .products-page .pform-all-cards .pform-average-cost-card strong{font-size:11px!important}
-html body #root .products-page .pform-all-cards .pform-feature-heading{gap:6px!important}
-html body #root .products-page .pform-all-cards .pform-feature-icon{width:26px!important;height:26px!important;min-width:26px!important}
-html body #root .products-page .pform-all-cards .pform-feature-heading>div b{font-size:9px!important}
-html body #root .products-page .pform-all-cards .pform-photo-layout,
-html body #root .products-page .pform-all-cards .pform-image-drop{min-height:0!important}
-html body #root .products-page .pform-all-cards .pform-image-drop{padding:6px!important;gap:3px!important}
-html body #root .products-page .pform-all-cards .pform-upload-btn{min-height:25px!important;padding:4px 7px!important;font-size:8px!important}
-html body #root .products-page .pform-modal>.pform-footer{flex:0 0 auto!important;padding:7px 12px!important}
-
-/* Keep narrow screens usable: stack cards and allow natural scrolling only there. */
-@media(max-width:900px){
- html body #root .products-page .pform-overlay .pform-modal{height:calc(100dvh - 12px)!important;max-height:calc(100dvh - 12px)!important}
- html body #root .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{overflow-y:auto!important}
- html body #root .products-page .pform-content-all>.pform-all-cards{
-   grid-template-columns:repeat(2,minmax(0,1fr))!important;
-   grid-template-rows:auto!important;
-   height:auto!important;
-   overflow:visible!important;
- }
- html body #root .products-page .pform-all-cards>.pform-feature-card{height:auto!important;overflow:visible!important}
-}
-@media(max-width:560px){
- html body #root .products-page .pform-content-all>.pform-all-cards{grid-template-columns:minmax(0,1fr)!important}
-}
-
-
-/* Product editor: two independent card columns with natural, content-based heights. */
-html body .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
-  display:block!important;
-  flex:1 1 auto!important;
-  min-height:0!important;
-  height:auto!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-  padding:12px!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-content-all>.pform-all-cards{
-  display:block!important;
-  width:100%!important;
-  max-width:none!important;
-  height:auto!important;
-  min-height:0!important;
-  margin:0!important;
-  overflow:visible!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-all-cards>.pform-section-heading{
-  display:flex!important;
-  width:100%!important;
-  margin:0 0 10px!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-grid{
-  display:grid!important;
-  grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr)!important;
-  align-items:start!important;
-  gap:12px!important;
-  width:100%!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column{
-  display:flex!important;
-  flex-direction:column!important;
-  align-items:stretch!important;
-  align-self:start!important;
-  gap:10px!important;
-  min-width:0!important;
-  height:auto!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-feature-card{
-  display:flex!important;
-  flex:0 0 auto!important;
-  flex-direction:column!important;
-  align-self:stretch!important;
-  width:100%!important;
-  min-width:0!important;
-  min-height:0!important;
-  height:auto!important;
-  margin:0!important;
-  padding:10px!important;
-  gap:8px!important;
-  overflow:visible!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-section-heading{
-  display:flex!important;
-  width:100%!important;
-  margin:2px 0 0!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-basic-grid,
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-carton-grid,
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-options,
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-grid{
-  display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:7px!important;
-  min-width:0!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field{gap:4px!important;font-size:9px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-options{margin:0!important;padding-top:0!important;border-top:0!important}
-
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field>span{min-height:12px!important;font-size:9px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field input,
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field select{height:31px!important;min-height:31px!important;padding:0 7px!important;font-size:10px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-block{padding:8px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-head{margin-bottom:6px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-group{gap:4px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-group>b{font-size:8px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-input{height:29px!important;min-height:29px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-input input{height:27px!important;font-size:9px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-average-cost-card{padding:7px!important;gap:3px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-average-cost-card small,
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-average-cost-card span{font-size:8px!important;line-height:1.25!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-average-cost-card strong{font-size:12px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-heading{gap:7px!important;min-height:24px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-icon{width:28px!important;height:28px!important;min-width:28px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-photo-layout,
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-image-drop{min-height:0!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-image-drop{padding:7px!important;gap:4px!important}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-upload-btn{min-height:27px!important;padding:5px 8px!important;font-size:8px!important}
-@media(max-width:900px){
-  html body .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{padding:9px!important}
-  html body .products-page .pform-overlay .pform-modal .pform-masonry-grid{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)!important;gap:8px!important}
-  html body .products-page .pform-overlay .pform-modal .pform-masonry-column{gap:8px!important}
-}
-@media(max-width:560px){
-  html body .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{overflow-x:hidden!important;overflow-y:auto!important}
-  html body .products-page .pform-overlay .pform-modal .pform-masonry-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important;gap:7px!important}
-  html body .products-page .pform-overlay .pform-modal .pform-masonry-column{gap:7px!important}
-  html body .products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-feature-card{padding:7px!important}
-  html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-basic-grid,
-  html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-carton-grid,
-  html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-options,
-  html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-grid{grid-template-columns:minmax(0,1fr)!important;gap:5px!important}
-}
-
-
-/* Product editor desktop: size the dialog to its content, not an empty fixed-height canvas. */
-html body .products-page .pform-overlay .pform-modal{
-  height:auto!important;
-  max-height:calc(100dvh - 24px)!important;
-}
-html body .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
-  flex:0 1 auto!important;
-  height:auto!important;
-  max-height:calc(100dvh - 176px)!important;
-  min-height:0!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-grid{
-  align-items:start!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column{
-  align-self:start!important;
-  height:auto!important;
-}
-html body .products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-feature-card{
-  flex:0 0 auto!important;
-  height:auto!important;
-  min-height:0!important;
-  align-self:stretch!important;
-}
-@media(max-width:900px){
-  html body .products-page .pform-overlay .pform-modal{
-    height:auto!important;
-    max-height:calc(100dvh - 12px)!important;
-  }
-  html body .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
-    max-height:calc(100dvh - 150px)!important;
+  .products-page .pform-overlay .pform-modal .pform-masonry-column{
+    gap:10px;
   }
 }
