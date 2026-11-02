@@ -9,6 +9,9 @@ on:
       - 'index.html'
       - 'package.json'
       - 'capacitor.config.ts'
+      - 'vite.config.js'
+      - 'scripts/**'
+      - 'package-lock.json'
       - '.github/workflows/android-apk.yml'
     branches: [main]
 
