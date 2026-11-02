@@ -7434,6 +7434,8 @@ html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column
   min-width:0!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field{gap:4px!important;font-size:9px!important}
+html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-options{margin:0!important;padding-top:0!important;border-top:0!important}
+
 html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field>span{min-height:12px!important;font-size:9px!important}
 html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field input,
 html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-field select{height:31px!important;min-height:31px!important;padding:0 7px!important;font-size:10px!important}
