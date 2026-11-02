@@ -1,171 +1,61 @@
--- VELTRO-PRO cloud foundation (legacy baseline, NOT a complete live-schema export).
--- This script creates only the original workspaces, workspace_members, and cloud_records
--- foundation. The connected project has additional employee/role/approval/branch tables
--- and nine applied migrations; five historical migration source files are not in this repo.
--- Do not use this file alone to rebuild or replace the current production database.
--- Do not rerun it after the hardened private-schema permission migration; it intentionally
--- stops rather than restoring the older permissive baseline policies.
--- Recover the missing migration chain or commit a verified full schema snapshot first.
--- All application data is workspace-scoped. Never expose a service_role key to the browser.
+# VELTRO-PRO workspace isolation and security status
 
-begin;
+## Database bootstrap and migration history
 
--- Prevent an accidental downgrade of a database that already has the hardened
--- private permission helpers and workspace-scoped RLS policies.
-do $
-begin
-  if to_regprocedure('private.is_workspace_member(uuid)') is not null then
-    raise exception 'Legacy schema.sql cannot be rerun after workspace hardening. Apply ordered migrations instead.';
-  end if;
-end
-$;
+`supabase/schema.sql` is only the original foundation script for `workspaces`, `workspace_members`, and `cloud_records`. It is not a full export of the live schema.
 
-create extension if not exists pgcrypto;
+The connected Supabase project currently reports nine applied migrations:
 
-create table if not exists public.workspaces (
-  id uuid primary key default gen_random_uuid(),
-  name text not null,
-  created_by uuid not null references auth.users(id) on delete restrict,
-  created_at timestamptz not null default now(),
-  updated_at timestamptz not null default now()
-);
+- `20261023235105_remove_duplicate_workspace_owner_trigger`
+- `20261023235125_restrict_rls_auto_enable_function`
+- `20261024235401_employee_permissions_system`
+- `20261024235417_restrict_employee_permission_helpers`
+- `20261024235638_enforce_cloud_record_permissions`
+- `20261102021329_scope_member_roles_to_workspace`
+- `20261102022438_index_uncovered_workspace_foreign_keys`
+- `20261102022741_harden_workspace_permissions`
+- `20261102022816_index_workspace_branch_assignments`
 
-create table if not exists public.workspace_members (
-  workspace_id uuid not null references public.workspaces(id) on delete cascade,
-  user_id uuid not null references auth.users(id) on delete cascade,
-  role text not null default 'member' check (role in ('owner', 'admin', 'manager', 'cashier', 'member', 'viewer')),
-  created_at timestamptz not null default now(),
-  primary key (workspace_id, user_id)
-);
+The repository contains the last four migration sources in `supabase/migrations/`. The first five source files are still missing from GitHub, so a fresh Supabase project cannot yet be reconstructed reliably from this repository. Recover those five sources or commit a verified full schema snapshot before creating another production project. Do not treat `schema.sql` alone as a production restore.
 
-create table if not exists public.cloud_records (
-  workspace_id uuid not null references public.workspaces(id) on delete cascade,
-  entity_type text not null check (length(entity_type) between 1 and 80),
-  record_id text not null check (length(record_id) between 1 and 200),
-  payload jsonb not null default '{}'::jsonb,
-  device_id text,
-  updated_by uuid references auth.users(id) on delete set null,
-  updated_at timestamptz not null default now(),
-  deleted_at timestamptz,
-  primary key (workspace_id, entity_type, record_id)
-);
+Never put a Supabase `service_role` key or secret key in frontend environment variables. The browser must use only the publishable/anon key and rely on database RLS for authorization.
 
-create index if not exists cloud_records_workspace_updated_idx
-  on public.cloud_records (workspace_id, updated_at desc);
-create index if not exists cloud_records_live_entity_idx
-  on public.cloud_records (workspace_id, entity_type) where deleted_at is null;
+## Verified live database state
 
--- A workspace creator is always its owner. This runs inside PostgreSQL, not in
--- the browser, so a new account cannot accidentally create an unowned workspace.
-create or replace function public.add_workspace_creator_as_owner()
-returns trigger
-language plpgsql
-security definer
-set search_path = ''
-as $$
-begin
-  insert into public.workspace_members (workspace_id, user_id, role)
-  values (new.id, new.created_by, 'owner')
-  on conflict (workspace_id, user_id) do nothing;
-  return new;
-end;
-$$;
+- RLS is enabled on all 11 inspected public tables.
+- `anon` has no TRUNCATE privilege on the inspected public tables; `authenticated` has no TRUNCATE privilege either.
+- Workspace permission helpers now live in the non-exposed `private` schema, use an empty search path, and check `auth.uid()` and workspace membership.
+- The public `required_workspace_permission(entity_type, operation, record_id)` mapper now recognizes the record types written by the application, including `sales_invoices`, `purchase_receipts`, `product_movements`, and legacy `local_storage` keys.
+- An assigned custom role is now an explicit permission set; it no longer silently inherits permissions from the built-in role template.
+- Workspace member insert/update/delete policies are owner-only, disallow owner-role promotion, and require custom roles to belong to the same workspace. The corresponding authenticated table grants are now present and remain constrained by RLS.
+- Branch assignments now use composite foreign keys so a branch and member must belong to the same workspace. Pre-migration checks found no existing invalid branch or custom-role workspace links.
+- Foreign-key support indexes are present, including the composite branch-assignment index.
+- Owner write policies were split from read policies to remove the previous overlapping permissive-policy warnings.
+- `workspace_audit_logs.id` was already an identity column; no identity alteration was needed.
 
-drop trigger if exists workspaces_add_creator_owner on public.workspaces;
-create trigger workspaces_add_creator_owner
-after insert on public.workspaces
-for each row execute function public.add_workspace_creator_as_owner();
+## Remaining security and data-integrity follow-ups
 
--- Repair workspaces created before this trigger was installed.
-insert into public.workspace_members (workspace_id, user_id, role)
-select w.id, w.created_by, 'owner'
-from public.workspaces w
-on conflict (workspace_id, user_id) do nothing;
+- Supabase still reports leaked-password protection as disabled. Enable it in Auth security settings before public onboarding.
+- The performance advisor may report unused indexes because this workspace currently has low query volume. Do not remove the new foreign-key indexes without reviewing query plans.
+- Run the two-account isolation test below after any RLS, grant, or permission-mapping change.
+- Legacy business data still includes whole-key localStorage snapshots. If two devices modify the same legacy array/object between syncs, the current sync path is last-writer-wins. Move remaining customer, supplier, and payment records to per-record cloud entities or an atomic server-side merge before relying on simultaneous multi-device edits.
+- Employee UI pages and permission-aware navigation are not yet implemented. In particular, cashier POS stock updates need a dedicated stock-only server operation: the cashier role should be able to decrement stock as part of a sale without gaining unrestricted product-edit or manual inventory-adjust permissions.
+- The repository still has no committed `package-lock.json` and no unit-test script. The CI workflow currently verifies dependency installation and the Vite production build only.
 
-create or replace function public.is_workspace_member(target_workspace uuid)
-returns boolean
-language sql
-stable
-security definer
-set search_path = ''
-as $$
-  select exists (
-    select 1
-    from public.workspace_members wm
-    where wm.workspace_id = target_workspace
-      and wm.user_id = (select auth.uid())
-  );
-$$;
+## Required two-account isolation test
 
-revoke all on function public.is_workspace_member(uuid) from public;
-grant execute on function public.is_workspace_member(uuid) to authenticated;
-revoke all on function public.add_workspace_creator_as_owner() from public;
+Use two different Google accounts in separate browser profiles or incognito sessions. Do not use a service-role key.
 
-alter table public.workspaces enable row level security;
-alter table public.workspace_members enable row level security;
-alter table public.cloud_records enable row level security;
+1. Sign in as Account A and let the app create its workspace. Add a harmless test record and note A's workspace UUID.
+2. Sign in as Account B in a separate profile and let it create its workspace. Confirm B has a different workspace UUID.
+3. As B, attempt to select a row from `cloud_records` filtered to A's workspace UUID. It must return zero rows, not A's data.
+4. As B, attempt to insert a record into A's workspace UUID. PostgreSQL must reject it with an RLS policy error.
+5. As B, attempt to add, update, or delete a member or role in A's workspace. PostgreSQL must reject it.
+6. As A, confirm that assigning a custom role from B's workspace is rejected.
+7. Repeat the read check as A against B's workspace; it must return zero rows.
 
-drop policy if exists "Members can read their workspaces" on public.workspaces;
-create policy "Members can read their workspaces"
-  on public.workspaces for select to authenticated
-  using (created_by = (select auth.uid()) or public.is_workspace_member(id));
+SQL inspection and CI build success do not replace this runtime test. GitHub Pages deployment and Android deep-link/OAuth flows also require separate end-to-end checks.
 
-drop policy if exists "Owners can create a workspace" on public.workspaces;
-create policy "Owners can create a workspace"
-  on public.workspaces for insert to authenticated
-  with check (created_by = (select auth.uid()));
+## Branch and deployment status
 
-drop policy if exists "Members can read workspace membership" on public.workspace_members;
-create policy "Members can read workspace membership"
-  on public.workspace_members for select to authenticated
-  using (public.is_workspace_member(workspace_id));
-
--- This is the original baseline policy only. The later hardened migration
--- replaces it with owner-only member write policies and matching table grants.
-drop policy if exists "Workspace owners can add members" on public.workspace_members;
-drop policy if exists "Owners can add themselves to their workspace" on public.workspace_members;
-
-drop policy if exists "Workspace members can read records" on public.cloud_records;
-create policy "Workspace members can read records"
-  on public.cloud_records for select to authenticated
-  using (public.is_workspace_member(workspace_id));
-
-drop policy if exists "Workspace members can insert records" on public.cloud_records;
-create policy "Workspace members can insert records"
-  on public.cloud_records for insert to authenticated
-  with check (
-    public.is_workspace_member(workspace_id)
-    and updated_by = (select auth.uid())
-  );
-
-drop policy if exists "Workspace members can update records" on public.cloud_records;
-create policy "Workspace members can update records"
-  on public.cloud_records for update to authenticated
-  using (public.is_workspace_member(workspace_id))
-  with check (
-    public.is_workspace_member(workspace_id)
-    and updated_by = (select auth.uid())
-  );
-
--- Remove old broad grants before re-applying the minimum required permissions.
-revoke all on public.workspaces, public.workspace_members, public.cloud_records from public, anon, authenticated;
-revoke truncate, references, trigger on public.workspaces, public.workspace_members, public.cloud_records from public, anon, authenticated;
-grant select, insert on public.workspaces to authenticated;
-grant select on public.workspace_members to authenticated;
-grant select, insert, update on public.cloud_records to authenticated;
-
--- Optional: enable realtime delivery for cloud record changes.
-do $$
-begin
-  if exists (select 1 from pg_publication where pubname = 'supabase_realtime')
-     and not exists (
-       select 1 from pg_publication_tables
-       where pubname = 'supabase_realtime'
-         and schemaname = 'public'
-         and tablename = 'cloud_records'
-     ) then
-    alter publication supabase_realtime add table public.cloud_records;
-  end if;
-end $$;
-
-commit;
+The code changes are on `maintenance/full-audit-cleanup`. They have not been merged into `main`, so the public GitHub Pages deployment has not been updated by this audit.
