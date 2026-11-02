@@ -298,7 +298,6 @@
   .nav-child{gap:5px;font-size:8.3px;}
   .nav-child-label{font-size:8.3px;}
 }
-.theme-toggle{flex:0 0 auto}
 @media(prefers-reduced-motion:reduce){}
 
 
