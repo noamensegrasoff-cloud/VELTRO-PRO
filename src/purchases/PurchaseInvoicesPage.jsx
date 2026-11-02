@@ -193,7 +193,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     <div className="purchase-stats">
       <article className="purchase-stat purchase-stat-purple"><span><CircleDollarSign size={17}/>{T.amount}</span><b>{fmt(sumTotal)}</b><small>{T.period}: {from||T.all} — {to||T.all}</small></article>
       <article className="purchase-stat purchase-stat-blue"><span><ReceiptText size={17}/>{T.count}</span><b>{periodRows.length}</b><small>{T.list}</small></article>
-      <article className="purchase-stat purchase-stat-teal"><span><Wallet size={17}/>{T.paid}</span><b>{fmt(sumPaid)}</b><small>{T.paidAmount}</small></article>
+      <article className="purchase-stat purchase-stat-violet"><span><Wallet size={17}/>{T.paid}</span><b>{fmt(sumPaid)}</b><small>{T.paidAmount}</small></article>
       <article className="purchase-stat purchase-stat-orange"><span><TrendingUp size={17}/>{T.due}</span><b>{fmt(sumDue)}</b><small>{T.remaining}</small></article>
     </div>
     <section className="purchase-filter-card"><div className="purchase-search"><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder={T.search}/>{query&&<button onClick={()=>setQuery('')} aria-label="Clear search"><X size={15}/></button>}</div><div className="purchase-date-filters"><label><CalendarDays size={14}/><span>{T.from}</span><input type="date" value={from} onChange={e=>setFrom(e.target.value)}/></label><label><CalendarDays size={14}/><span>{T.to}</span><input type="date" value={to} onChange={e=>setTo(e.target.value)}/></label><button className="purchase-filter-reset" onClick={()=>{setFrom('');setTo('')}}>{T.reset}</button></div></section>
