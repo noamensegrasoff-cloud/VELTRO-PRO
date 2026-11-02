@@ -103,12 +103,15 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
       const before=Math.max(0,Number(product.stock)||0),cost=Math.max(0,Number(product.cost??product.unitCost??product.purchasePrice??0)||0);
       const after=before-old.qty+next.qty;
       if(after<0)throw new Error((ar?'لا يمكن حذف أو تعديل البون لأن المخزون الحالي أقل من الكمية التي أضافها هذا البون: ':fr?'Impossible de modifier ce bon : le stock actuel est inférieur à sa quantité d’origine : ':'Cannot change this receipt because current stock is below the quantity originally added: ')+(product.name||id));
-      const remainingValue=Math.max(0,before*cost-old.value),valueAfter=remainingValue+next.value;
-      const nextCost=after>0?Math.max(0,valueAfter/after):cost;
+      const delta=next.qty-old.qty,deltaValue=next.value-old.value;
+      // Only newly added units can safely change the weighted average. Repricing
+      // an old receipt must not subtract its full historical value from stock
+      // that may already have been sold.
+      const addedUnitCost=delta>0?Math.max(0,deltaValue/delta):cost;
+      const nextCost=after>0&&delta>0?Math.max(0,((before*cost)+(delta*addedUnitCost))/after):cost;
       const units=Math.max(0,Number(product.unitsPerCarton)||0);
       const updatedProduct={...product,stock:after,cost:nextCost,unitCost:nextCost,updatedAt:now};
       if(units>0){updatedProduct.cartonCost=nextCost*units;updatedProduct.purchaseCartonPrice=nextCost*units;}
-      const delta=next.qty-old.qty;
       movements.push({id:'MOV-'+Date.now()+'-'+id+'-'+movements.length,productId:id,productName:product.name||product.productName||id,barcode:product.barcode||product.mainBarcode||'',type:delta>0?'purchase':delta<0?'adjustment':'adjustment',quantityChange:delta,stockBefore:before,stockAfter:after,source:newReceipt?.number||oldReceipt?.number||'',user:actor,createdAt:now,details:delta===0?'Purchase cost recalculation':'Purchase receipt stock update'});
       return updatedProduct;
     });
