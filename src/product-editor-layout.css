@@ -415,3 +415,67 @@ html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid{
     grid-template-columns: minmax(0, 1fr) !important;
   }
 }
+
+/* Reliable product editor layout: size responsiveness from the dialog itself,
+   not from the browser's reported device viewport. This also works in Android
+   Chrome when "Desktop site" is enabled. */
+html body .pform-overlay.product-editor-rebuilt .product-editor-dialog {
+  container-name: product-editor;
+  container-type: inline-size;
+  width: min(1240px, calc(100vw - 24px)) !important;
+  max-width: calc(100vw - 24px) !important;
+  box-sizing: border-box !important;
+}
+html body .pform-overlay.product-editor-rebuilt .product-editor-body {
+  flex: 0 1 auto !important;
+  min-height: 0 !important;
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+}
+@container product-editor (max-width: 1024px) {
+  html body .pform-overlay.product-editor-rebuilt .product-editor-body {
+    flex: 1 1 auto !important;
+    max-height: none !important;
+    padding: 9px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-columns {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-flow: row !important;
+    align-items: start !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column {
+    display: flex !important;
+    flex: none !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 8px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 9px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .pform-section-heading {
+    margin: 0 0 6px !important;
+  }
+}
+@container product-editor (max-width: 520px) {
+  html body .pform-overlay.product-editor-rebuilt .pform-basic-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-carton-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-feature-options,
+  html body .pform-overlay.product-editor-rebuilt .pform-price-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-expiry-options {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .pform-field {
+    min-width: 0 !important;
+  }
+}
