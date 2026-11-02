@@ -749,7 +749,7 @@ export default function App() {
             <div className="home-metrics-grid">
               <MetricCard icon={PackageCheck} label={t('inventoryValue')} value={dashboardMoney(dashboardData.inventoryValue)} tone="blue" footer={t('notLinked')}/>
               <MetricCard icon={Wallet} label={t('capital')} value="— DA" tone="green" footer={t('capitalHint')}/>
-              <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value="— DA" tone="violet" footer={t('profitHint')}/>
+              <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value={dashboardMoney(dashboardData.dailyProfit)} tone="violet" footer={t('profitHint')}/>
               <MetricCard icon={ShoppingCart} label={t('revenue')} value={dashboardMoney(dashboardData.todaySales)} trend="" tone="amber" footer={t('notLinked')}/>
             </div>
             <div className="home-dashboard-charts"><SalesChart t={t} lang={lang} data={dashboardData}/><MixChart t={t} data={dashboardData}/></div>
