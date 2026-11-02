@@ -1,76 +1,28 @@
-/* Product editor layout: content-sized cards, independent columns, responsive modal. */
-html body .pe-overlay{
- position:fixed!important;inset:0!important;z-index:1000!important;display:flex!important;
- align-items:center!important;justify-content:center!important;padding:16px!important;
- box-sizing:border-box!important;background:rgba(24,20,34,.48)!important;
-}
-html body .pe-dialog{
- display:flex!important;flex-direction:column!important;flex:0 1 auto!important;
- width:min(1280px,calc(100vw - 32px))!important;height:auto!important;
- max-height:calc(100dvh - 32px)!important;min-height:0!important;margin:0!important;
- overflow:hidden!important;box-sizing:border-box!important;border-radius:18px!important;
- background:#fbfaff!important;color:#302943!important;box-shadow:0 24px 70px #21183340!important;
-}
-html body .pe-dialog>.pform-header,html body .pe-dialog>.pform-footer{
- flex:0 0 auto!important;min-height:0!important;box-sizing:border-box!important;
-}
+/* Unified product editor: one continuous panel, compact grouped sections. */
+html body .pe-overlay{position:fixed!important;inset:0!important;z-index:1000!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:14px!important;box-sizing:border-box!important;background:rgba(24,20,34,.5)!important}
+html body .pe-dialog{display:flex!important;flex-direction:column!important;width:min(1120px,calc(100vw - 28px))!important;height:auto!important;max-height:calc(100dvh - 28px)!important;min-height:0!important;margin:0!important;overflow:hidden!important;box-sizing:border-box!important;border-radius:18px!important;background:#fbfaff!important;color:#302943!important;box-shadow:0 24px 70px #21183340!important}
+html body .pe-dialog>.pform-header,html body .pe-dialog>.pform-footer{flex:0 0 auto!important;min-height:0!important;box-sizing:border-box!important}
 html body .pe-dialog>.pform-header{padding:12px 18px!important}
 html body .pe-dialog>.pform-footer{padding:10px 16px!important}
-html body .pe-body{
- display:block!important;flex:0 1 auto!important;flex-grow:0!important;
- width:100%!important;height:auto!important;min-height:0!important;
- max-height:calc(100dvh - 160px)!important;overflow:auto!important;
- padding:14px!important;box-sizing:border-box!important;overscroll-behavior:contain!important;
-}
+html body .pe-body{display:block!important;flex:1 1 auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:auto!important;padding:14px!important;box-sizing:border-box!important;overscroll-behavior:contain!important}
 html body .pe-section{display:block!important;width:100%!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important}
 html body .pe-section>.pform-section-heading{display:flex!important;align-items:center!important;justify-content:space-between!important;margin:0 0 10px!important}
-html body .pe-columns{
- display:flex!important;flex-direction:row!important;align-items:flex-start!important;
- justify-content:stretch!important;gap:14px!important;width:100%!important;
- height:auto!important;min-height:0!important;
-}
-html body .pe-column{
- display:flex!important;flex:1 1 0!important;flex-direction:column!important;
- align-items:stretch!important;justify-content:flex-start!important;align-self:flex-start!important;
- gap:10px!important;min-width:0!important;width:50%!important;height:auto!important;min-height:0!important;
-}
-html body .pe-card{
- display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
- align-self:stretch!important;justify-content:flex-start!important;
- width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
- margin:0!important;padding:12px!important;gap:9px!important;overflow:visible!important;
- box-sizing:border-box!important;border:1px solid #e8e1f1!important;border-radius:13px!important;
- background:#fff!important;box-shadow:0 3px 12px #3020440a!important;
-}
+html body .pe-columns{display:block!important;width:100%!important;height:auto!important;min-height:0!important;padding:14px 18px!important;box-sizing:border-box!important;border:1px solid #e7e0f0!important;border-radius:15px!important;background:#fff!important;box-shadow:0 4px 18px #3020440a!important}
+html body .pe-column{display:contents!important}
+html body .pe-card{display:flex!important;flex:0 0 auto!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:14px 0!important;gap:10px!important;overflow:visible!important;box-sizing:border-box!important;border:0!important;border-bottom:1px solid #eee9f4!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}
+html body .pe-card:last-child{border-bottom:0!important}
 html body .pe-card>*{flex:0 0 auto!important;min-height:0!important;height:auto!important}
+html body .pe-dialog .pform-section-heading{display:flex!important;align-items:center!important;justify-content:space-between!important;margin:16px 0 0!important;padding:10px 0 0!important;border-top:1px solid #eee9f4!important}
 html body .pe-dialog .pform-feature-heading{display:flex!important;align-items:center!important;gap:9px!important;min-height:0!important;height:auto!important;margin:0!important;padding:0!important}
-html body .pe-dialog .pform-basic-grid,
-html body .pe-dialog .pform-carton-grid,
-html body .pe-dialog .pform-feature-options,
-html body .pe-dialog .pform-price-grid,
-html body .pe-dialog .pform-sales-price-grid,
-html body .pe-dialog .pform-expiry-options{
- min-width:0!important;align-content:start!important;align-items:start!important;
- grid-template-rows:auto!important;grid-auto-rows:max-content!important;
- height:auto!important;min-height:0!important;
-}
+html body .pe-dialog .pform-basic-grid,html body .pe-dialog .pform-carton-grid,html body .pe-dialog .pform-feature-options,html body .pe-dialog .pform-price-grid,html body .pe-dialog .pform-sales-price-grid,html body .pe-dialog .pform-expiry-options{min-width:0!important;align-content:start!important;align-items:start!important;grid-template-rows:auto!important;grid-auto-rows:max-content!important;height:auto!important;min-height:0!important}
 html body .pe-dialog .pform-field{display:flex!important;flex-direction:column!important;align-self:start!important;min-width:0!important;height:auto!important;min-height:0!important;gap:4px!important}
 html body .pe-dialog .pform-field>span{min-height:0!important;line-height:1.35!important}
 html body .pe-dialog .pform-field input,html body .pe-dialog .pform-field select{box-sizing:border-box!important;min-width:0!important;max-width:100%!important}
-html body .pe-dialog .pform-price-block,html body .pe-dialog .pform-sales-section{
- display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
- width:100%!important;height:auto!important;min-height:0!important;align-self:stretch!important;
- margin:0!important;box-sizing:border-box!important;
-}
-html body .pe-dialog .pform-price-block{padding:10px!important}
-html body .pe-dialog .pform-sales-section{gap:8px!important;padding-top:10px!important;margin-top:8px!important;border-top:1px solid #e9e2f1!important}
+html body .pe-dialog .pform-price-block,html body .pe-dialog .pform-sales-section{display:flex!important;flex:0 0 auto!important;flex-direction:column!important;width:100%!important;height:auto!important;min-height:0!important;align-self:stretch!important;margin:0!important;box-sizing:border-box!important}
+html body .pe-dialog .pform-price-block{padding:12px!important;border:1px solid #eee9f4!important;border-radius:12px!important;background:#faf8ff!important}
+html body .pe-dialog .pform-sales-section{gap:8px!important;padding-top:12px!important;margin-top:4px!important;border-top:1px dashed #e5ddef!important}
 html body .pe-dialog .pform-image-drop{height:auto!important;min-height:100px!important;max-height:180px!important}
 html body .pe-dialog .pform-average-cost-card{grid-column:1/-1!important;min-width:0!important}
-@media(max-width:760px){
- html body .pe-overlay{padding:6px!important;align-items:center!important}
- html body .pe-dialog{width:calc(100vw - 12px)!important;max-height:calc(100dvh - 12px)!important;border-radius:14px!important}
- html body .pe-body{max-height:calc(100dvh - 132px)!important;padding:9px!important}
- html body .pe-columns{display:flex!important;flex-direction:column!important;gap:9px!important}
- html body .pe-column{width:100%!important;flex:0 0 auto!important;gap:9px!important}
- html body .pe-card{padding:10px!important}
-}
+@media(min-width:900px){html body .pe-dialog .pform-basic-grid,html body .pe-dialog .pform-carton-grid,html body .pe-dialog .pform-price-grid,html body .pe-dialog .pform-sales-price-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:12px!important}html body .pe-dialog .pform-carton-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+@media(max-width:760px){html body .pe-overlay{padding:5px!important}html body .pe-dialog{width:calc(100vw - 10px)!important;max-height:calc(100dvh - 10px)!important;border-radius:13px!important}html body .pe-body{padding:8px!important}html body .pe-columns{padding:10px 12px!important}html body .pe-card{padding:11px 0!important}html body .pe-dialog .pform-basic-grid,html body .pe-dialog .pform-carton-grid,html body .pe-dialog .pform-price-grid,html body .pe-dialog .pform-sales-price-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}}
+@media(max-width:420px){html body .pe-dialog .pform-basic-grid,html body .pe-dialog .pform-carton-grid,html body .pe-dialog .pform-price-grid,html body .pe-dialog .pform-sales-price-grid{grid-template-columns:minmax(0,1fr)!important}}
