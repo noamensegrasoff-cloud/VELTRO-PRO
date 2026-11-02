@@ -21,6 +21,7 @@ export default function ProductMovementPage({ lang='ar' }) {
   const [kind,setKind] = useState('all');
   const [reload,setReload] = useState(0);
   const [cloudMovements,setCloudMovements] = useState([]);
+  useEffect(()=>{const refresh=()=>setReload(value=>value+1);window.addEventListener('storage',refresh);return()=>window.removeEventListener('storage',refresh);},[]);
   useEffect(()=>{let active=true;listRecords({entityType:'product_movements'}).then(records=>{if(!active)return;setCloudMovements((records||[]).filter(record=>!record.deletedAt).map(record=>record.payload||{}));}).catch(error=>console.error('Could not load cloud product movements',error));return()=>{active=false};},[reload]);
   const movements = useMemo(() => {
     const local=[];try{const primary=JSON.parse(localStorage.getItem('veltro-product-movements-v1')||'[]');const legacy=JSON.parse(localStorage.getItem('veltro.product.movements.v1')||'[]');if(Array.isArray(primary))local.push(...primary);if(Array.isArray(legacy))local.push(...legacy);}catch(error){console.error('Could not read local product movements',error);}
