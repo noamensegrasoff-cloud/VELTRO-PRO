@@ -6,7 +6,7 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt{
   padding:14px!important;background:rgba(31,26,48,.38)!important;
   backdrop-filter:blur(12px) saturate(115%)!important;
 }
-html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-modal{
+html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-dialog{
   display:flex!important;flex-direction:column!important;
   width:min(1280px,calc(100vw - 40px))!important;
   height:auto!important;min-height:0!important;max-height:calc(100dvh - 28px)!important;
@@ -30,7 +30,7 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-bran
   background:linear-gradient(135deg,#7656b8,#a48bd4)!important;color:#fff!important;
   border:1px solid rgba(255,255,255,.85)!important;box-shadow:0 5px 16px rgba(104,76,162,.2)!important;
 }
-html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-content.pform-content-all{
+html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-body{
   display:block!important;flex:1 1 auto!important;width:100%!important;
   height:auto!important;min-height:0!important;max-height:none!important;
   overflow-x:hidden!important;overflow-y:auto!important;
@@ -40,28 +40,28 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-cont
     radial-gradient(ellipse at 95% 0,rgba(183,164,219,.13),transparent 34%),
     rgba(246,243,251,.82)!important;
 }
-html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natural-section{
+html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-section{
   display:block!important;width:100%!important;height:auto!important;min-height:0!important;
   max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important;
 }
-html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natural-section>.pform-section-heading{
+html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-section>.pform-section-heading{
   display:flex!important;align-items:center!important;justify-content:space-between!important;
   width:100%!important;margin:0 0 12px!important;padding:0 2px!important;
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-section-heading h3{color:#463965!important}
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-section-heading>span{color:#8065b5!important}
-html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natural-grid{
+html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-columns{
   display:grid!important;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)!important;
   align-items:start!important;align-content:start!important;justify-content:stretch!important;
   gap:14px!important;width:100%!important;height:auto!important;min-height:0!important;
 }
-html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natural-column{
+html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-column{
   display:flex!important;flex:initial!important;flex-direction:column!important;
   align-items:stretch!important;align-self:start!important;justify-content:flex-start!important;
   gap:12px!important;width:auto!important;min-width:0!important;max-width:none!important;
   height:auto!important;min-height:0!important;
 }
-html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natural-card{
+html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-card{
   display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
   align-self:stretch!important;justify-content:flex-start!important;
   width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
@@ -72,7 +72,7 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natu
   box-shadow:0 5px 18px rgba(61,48,91,.065),inset 0 1px rgba(255,255,255,.98)!important;
   color:#3e3557!important;backdrop-filter:blur(16px) saturate(120%)!important;
 }
-html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natural-card>*{
+html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-card>*{
   flex:0 0 auto!important;min-height:0!important;
 }
 html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-feature-heading{
@@ -159,18 +159,18 @@ html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-foot
 }
 @media(max-width:760px){
   html body #root .products-page .pform-overlay.product-editor-rebuilt{padding:8px!important}
-  html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-modal{
+  html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-dialog{
     width:calc(100vw - 16px)!important;max-height:calc(100dvh - 16px)!important;border-radius:16px!important;
   }
   html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-header{min-height:66px!important;padding:10px 12px!important}
-  html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-content.pform-content-all{
+  html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-body{
     max-height:none!important;padding:10px!important;
   }
-  html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natural-grid{
+  html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-columns{
     grid-template-columns:minmax(0,1fr)!important;gap:10px!important;
   }
-  html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natural-column{gap:10px!important}
-  html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-natural-card{padding:11px!important;gap:8px!important}
+  html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-column{gap:10px!important}
+  html body #root .products-page .pform-overlay.product-editor-rebuilt .product-editor-card{padding:11px!important;gap:8px!important}
   html body #root .products-page .pform-overlay.product-editor-rebuilt .pform-footer{padding:9px 10px!important}
 }
 @media(prefers-reduced-motion:reduce){
