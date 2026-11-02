@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { listRecords } from './services/dataRepository.js';
 import { ArrowDownLeft, ArrowUpRight, ArrowLeftRight, Search, RotateCcw, Package, SlidersHorizontal, Barcode } from 'lucide-react';
 
 const labels = {
@@ -9,7 +10,7 @@ const labels = {
 
 const styles = {
   panel:{background:'var(--panel, rgba(20,31,49,.72))',border:'1px solid var(--border, rgba(120,160,190,.18))',borderRadius:18},
-  button:{display:'inline-flex',alignItems:'center',gap:8,border:'1px solid var(--border, rgba(120,160,190,.22))',borderRadius:10,padding:'10px 13px',background:'linear-gradient(135deg,rgba(37,99,235,.22),rgba(166,139,230,.16))',color:'var(--text, inherit)',borderColor:'rgba(139,112,189,.35)',fontWeight:650,boxShadow:'0 4px 14px rgba(15,100,160,.10)',cursor:'pointer'},
+  button:{display:'inline-flex',alignItems:'center',gap:8,border:'1px solid var(--border, rgba(120,160,190,.22))',borderRadius:10,padding:'10px 13px',background:'linear-gradient(135deg,rgba(139,92,246,.18),rgba(166,139,230,.13))',color:'var(--text, inherit)',borderColor:'rgba(139,112,189,.35)',fontWeight:650,boxShadow:'0 4px 14px rgba(139,112,189,.10)',cursor:'pointer'},
   field:{width:'100%',minWidth:0,background:'var(--input, rgba(9,18,32,.55))',color:'var(--text, inherit)',border:'1px solid var(--border, rgba(120,160,190,.22))',borderRadius:10,padding:'11px 12px',outline:'none'}
 };
 
@@ -19,16 +20,12 @@ export default function ProductMovementPage({ lang='ar' }) {
   const [barcodeQuery,setBarcodeQuery] = useState('');
   const [kind,setKind] = useState('all');
   const [reload,setReload] = useState(0);
+  const [cloudMovements,setCloudMovements] = useState([]);
+  useEffect(()=>{let active=true;listRecords({entityType:'product_movements'}).then(records=>{if(!active)return;setCloudMovements((records||[]).filter(record=>!record.deletedAt).map(record=>record.payload||{}));}).catch(error=>console.error('Could not load cloud product movements',error));return()=>{active=false};},[reload]);
   const movements = useMemo(() => {
-    try {
-      const keys = ['veltro-product-movements-v1','veltro.product.movements.v1'];
-      for (const key of keys) {
-        const parsed = JSON.parse(localStorage.getItem(key) || '[]');
-        if (Array.isArray(parsed) && parsed.length) return parsed;
-      }
-    } catch {}
-    return [];
-  },[reload]);
+    const local=[];try{const primary=JSON.parse(localStorage.getItem('veltro-product-movements-v1')||'[]');const legacy=JSON.parse(localStorage.getItem('veltro.product.movements.v1')||'[]');if(Array.isArray(primary))local.push(...primary);if(Array.isArray(legacy))local.push(...legacy);}catch(error){console.error('Could not read local product movements',error);}
+    const merged=new Map();for(const movement of [...cloudMovements,...local]){const key=String(movement.id||movement.reference||`${movement.productId||movement.productName||''}-${movement.createdAt||movement.date||''}-${movement.type||''}-${movement.quantityChange??movement.quantity??''}`);merged.set(key,movement);}return [...merged.values()].sort((a,b)=>String(b.createdAt||b.date||'').localeCompare(String(a.createdAt||a.date||'')));
+  },[reload,cloudMovements]);
   const filtered = movements.filter(m => {
     const text = [m.productName,m.name,m.product?.name,m.reference,m.barcode,m.barCode,m.productBarcode,m.product?.barcode,m.product?.barCode,m.source,m.id].map(v=>String(v||'')).join(' ').toLocaleLowerCase();
     const type = String(m.type||m.kind||'').toLowerCase();
@@ -44,7 +41,7 @@ export default function ProductMovementPage({ lang='ar' }) {
   return <div className="page-content product-movement-page">
     <div className="page-heading">
       <div><div className="heading-kicker"><span className="health-dot"/>{lang==='ar'?'المنتجات':lang==='fr'?'Produits':'Products'}</div><h1>{t('title')}</h1><p>{t('sub')}</p></div>
-      <button style={{...styles.button,background:'linear-gradient(135deg,#2563eb,#7656b8)',color:'#fff',borderColor:'transparent',boxShadow:'0 6px 18px rgba(37,99,235,.22)'}} onClick={()=>setReload(v=>v+1)}><RotateCcw size={15}/>{t('refresh')}</button>
+      <button style={{...styles.button,background:'linear-gradient(135deg,#7c3aed,#8b70bd)',color:'#fff',borderColor:'transparent',boxShadow:'0 6px 18px rgba(139,92,246,.18)'}} onClick={()=>setReload(v=>v+1)}><RotateCcw size={15}/>{t('refresh')}</button>
     </div>
     <div style={{...styles.panel,padding:16,marginBottom:16,display:'flex',gap:12,flexWrap:'wrap',alignItems:'center',justifyContent:'space-between'}}>
       <div style={{display:'flex',gap:10,flexWrap:'wrap',alignItems:'center',flex:1,minWidth:220}}>
@@ -55,8 +52,8 @@ export default function ProductMovementPage({ lang='ar' }) {
       <span style={{fontSize:13,opacity:.75}}>{filtered.length} / {movements.length}</span>
     </div>
     <section style={{...styles.panel,overflow:'hidden'}}>
-      <div style={{padding:'15px 18px',display:'flex',alignItems:'center',gap:9,borderBottom:'1px solid var(--border, rgba(120,160,190,.18))'}}><span style={{display:'grid',placeItems:'center',width:36,height:36,borderRadius:11,background:'linear-gradient(135deg,rgba(38,119,224,.22),rgba(31,203,185,.18))',color:'#b69afc'}}><ArrowLeftRight size={18}/></span><div><b>{t('title')}</b><div style={{fontSize:12,opacity:.7}}>{t('note')}</div></div></div>
-      {filtered.length===0 ? <div style={{padding:'48px 20px',textAlign:'center'}}><span style={{display:'inline-grid',placeItems:'center',width:58,height:58,borderRadius:18,background:'linear-gradient(135deg,rgba(38,119,224,.2),rgba(31,203,185,.15))',color:'#b69afc'}}><Package size={26}/></span><h3 style={{margin:'16px 0 8px'}}>{query||kind!=='all'?t('noData'):t('empty')}</h3><p style={{opacity:.72,maxWidth:520,margin:'0 auto',lineHeight:1.7}}>{t('emptyHint')}</p></div>
+      <div style={{padding:'15px 18px',display:'flex',alignItems:'center',gap:9,borderBottom:'1px solid var(--border, rgba(120,160,190,.18))'}}><span style={{display:'grid',placeItems:'center',width:36,height:36,borderRadius:11,background:'linear-gradient(135deg,rgba(139,92,246,.16),rgba(166,139,230,.12))',color:'#b69afc'}}><ArrowLeftRight size={18}/></span><div><b>{t('title')}</b><div style={{fontSize:12,opacity:.7}}>{t('note')}</div></div></div>
+      {filtered.length===0 ? <div style={{padding:'48px 20px',textAlign:'center'}}><span style={{display:'inline-grid',placeItems:'center',width:58,height:58,borderRadius:18,background:'linear-gradient(135deg,rgba(139,92,246,.16),rgba(166,139,230,.12))',color:'#b69afc'}}><Package size={26}/></span><h3 style={{margin:'16px 0 8px'}}>{query||kind!=='all'?t('noData'):t('empty')}</h3><p style={{opacity:.72,maxWidth:520,margin:'0 auto',lineHeight:1.7}}>{t('emptyHint')}</p></div>
       : <div style={{overflowX:'auto'}}><table style={{width:'100%',borderCollapse:'collapse',minWidth:850}}><thead><tr>{[t('date'),t('product'),t('type'),t('before'),t('change'),t('after'),t('source')].map(h=><th key={h} style={{textAlign:lang==='ar'?'right':'left',padding:'13px 15px',fontSize:12,whiteSpace:'nowrap',opacity:.7,borderBottom:'1px solid var(--border, rgba(120,160,190,.18))'}}>{h}</th>)}</tr></thead><tbody>{filtered.map((m,i)=>{const delta=getDelta(m);const incoming=delta>0;const label=typeLabel(m);return <tr key={m.id||m.reference||i}><td style={{padding:'14px 15px',whiteSpace:'nowrap',fontSize:12,opacity:.8,borderBottom:'1px solid var(--border, rgba(120,160,190,.1))'}}>{fmtDate(m)}</td><td style={{padding:'14px 15px',borderBottom:'1px solid var(--border, rgba(120,160,190,.1))'}}><b>{getName(m)}</b><div style={{fontSize:11,opacity:.6}}>{m.reference||m.id||'—'}</div></td><td style={{padding:'14px 15px',borderBottom:'1px solid var(--border, rgba(120,160,190,.1))'}}><span style={{display:'inline-flex',alignItems:'center',gap:6,borderRadius:20,padding:'5px 9px',fontSize:12,background:incoming?'rgba(166,139,230,.13)':delta<0?'rgba(245,158,11,.13)':'rgba(139,92,246,.14)',color:incoming?'#b69afc':delta<0?'#f6b75e':'#b69afc'}}>{incoming?<ArrowDownLeft size={13}/>:delta<0?<ArrowUpRight size={13}/>:<SlidersHorizontal size={13}/>} {label}</span></td><td style={{padding:'14px 15px',borderBottom:'1px solid var(--border, rgba(120,160,190,.1))'}}>{m.stockBefore??m.before??'—'}</td><td style={{padding:'14px 15px',fontWeight:700,color:delta>0?'#b69afc':delta<0?'#f6b75e':'inherit',borderBottom:'1px solid var(--border, rgba(120,160,190,.1))'}}>{delta>0?'+':''}{fmtNum(delta)}</td><td style={{padding:'14px 15px',borderBottom:'1px solid var(--border, rgba(120,160,190,.1))'}}>{m.stockAfter??m.after??'—'}</td><td style={{padding:'14px 15px',borderBottom:'1px solid var(--border, rgba(120,160,190,.1))'}}>{m.source||m.sourceReference||'—'}</td></tr>})}</tbody></table></div>}
     </section>
   </div>;
