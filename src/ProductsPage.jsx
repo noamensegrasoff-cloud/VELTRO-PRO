@@ -83,14 +83,14 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
       <div className="products-tabs">{[['all',tx.all,products.length],['low',tx.low,low],['out',tx.out,out]].map(([key,label,count])=><button key={key} className={filter===key?'active':''} onClick={()=>setFilter(key)}>{label}<b>{count}</b></button>)}</div>
       <div className="products-table-wrap" onPointerDown={e=>{if(e.button!==0||e.target.closest("button,a,input,select,textarea,[role=button]"))return;const wrap=e.currentTarget;tableDragRef.current={active:true,startX:e.clientX,scrollLeft:wrap.scrollLeft,moved:false};wrap.classList.add("is-dragging");}} onPointerMove={e=>{const drag=tableDragRef.current;if(!drag.active)return;const delta=e.clientX-drag.startX;if(Math.abs(delta)>3)drag.moved=true;e.currentTarget.scrollLeft=drag.scrollLeft-delta;}} onPointerUp={e=>{tableDragRef.current.active=false;e.currentTarget.classList.remove("is-dragging");}} onPointerCancel={e=>{tableDragRef.current.active=false;e.currentTarget.classList.remove("is-dragging");}} onClickCapture={e=>{if(tableDragRef.current.moved){e.preventDefault();e.stopPropagation();tableDragRef.current.moved=false;}}}><table className="products-table"><thead><tr><th>{tx.name}</th><th>{tx.barcode}</th><th>{tx.category}</th><th>{tx.stock}</th><th>{tx.cost}</th><th>{tx.sell}</th><th>{tx.margin}</th><th>{tx.status}</th><th>{tx.actions}</th></tr></thead><tbody>{rows.map(p=>{const status=p.stock===0?'out':p.stock<=p.min&&p.stockAlertEnabled!==false?'low':'ok';return <tr key={p.id}><td><div className="products-name-cell"><span className="products-item-icon"><Package size={17}/></span><span><b>{p.name}</b><small>{p.id} · {p.unit}</small></span></div></td><td><code className="products-barcode">{p.barcode}</code></td><td><span className="products-category">{p.category}</span></td><td><div className="products-stock-cell"><b>{p.stock.toLocaleString()}</b><small>{p.unit}</small></div></td><td>{money(p.cost)}</td><td><b className="products-sell-price">{money(p.sell)}</b></td><td><span className="products-margin">{((p.sell-p.cost)/p.sell*100).toFixed(1)}%</span></td><td><span className={'products-status '+status}><i/>{status==='out'?tx.out:status==='low'?tx.low:tx.available}</span></td><td><div className="products-row-actions"><button type="button" title={ar?'معاينة المنتج':fr?'Aperçu du produit':'Preview product'} aria-label={ar?'معاينة المنتج':fr?'Aperçu du produit':'Preview product'} onClick={()=>{setPreviewDetailsOpen(false);setPreviewProduct(p)}}><Eye size={15}/></button><button type="button" title={ar?'تعديل المنتج':fr?'Modifier le produit':'Edit product'} aria-label={ar?'تعديل المنتج':fr?'Modifier le produit':'Edit product'} onClick={()=>openModal(p)}><Pencil size={15}/></button><button type="button" className="products-delete-action" title={ar?'حذف المنتج':fr?'Supprimer le produit':'Delete product'} aria-label={ar?'حذف المنتج':fr?'Supprimer le produit':'Delete product'} onClick={()=>setDeletingProduct(p)}><Trash2 size={15}/></button></div></td></tr>})}{!rows.length&&<tr><td colSpan="9"><div className="products-empty"><Package size={25}/><b>{tx.empty}</b><span>{tx.search}</span></div></td></tr>}</tbody></table></div>
     </section>
-    {modal&&<div className="pform-overlay"><section className="pform-modal" role="dialog" aria-modal="true" aria-label={tx.newTitle}>
+    {modal&&<div className="pform-overlay"><section className="pform-modal pform-natural-modal" role="dialog" aria-modal="true" aria-label={tx.newTitle}>
       <header className="pform-header"><div className="pform-header-title"><span className="pform-brand-icon"><PackageCheck size={20}/></span><div><h2>{editingProductId?(ar?'تعديل المنتج':fr?'Modifier le produit':'Edit product'):tx.newTitle}</h2><p>{editingProductId?(ar?'عدّل المعلومات ثم احفظ التغييرات':fr?'Modifiez les informations puis enregistrez':'Update the information and save your changes'):tx.confirmNote}</p></div></div><button className="pform-close" type="button" onClick={()=>setModal(false)} aria-label={tx.close}><X size={19}/></button></header>
-      <div className="pform-content pform-content-all">
-        <section className="pform-section pform-product-grid pform-all-cards">
+      <div className="pform-content pform-content-all pform-natural-content">
+        <section className="pform-section pform-product-grid pform-all-cards pform-natural-section">
           <div className="pform-section-heading"><div><h3>{tx.productInfo}</h3></div><span><Hash size={15}/> 01</span></div>
-          <div className="pform-masonry-grid">
-            <div className="pform-masonry-column pform-masonry-left">
-<div className="pform-feature-card">
+          <div className="pform-masonry-grid pform-natural-grid">
+            <div className="pform-masonry-column pform-masonry-left pform-natural-column">
+<div className="pform-feature-card pform-natural-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Info size={19}/></span><div><b>{tx.productInfo}</b></div></div>
             <div className="pform-basic-grid">
               {field(tx.productName,'name',ar?'اسم المنتج':fr?'Nom du produit':'Product name')}
@@ -100,7 +100,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
               {codeList(tx.cartonSecondary,'cartonBarcodes')}
             </div>
           </div>
-<div className="pform-feature-card">
+<div className="pform-feature-card pform-natural-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><TrendingUp size={19}/></span><div><b>{tx.salesInfo}</b></div></div>
             <div className="pform-price-grid pform-sales-price-grid">
               <div className="pform-price-group"><b>{tx.cartonSell}</b><div className={"pform-price-input "+(form.cartonSell!==''&&Number(form.cartonCost||((Number(form.unitCost)||0)*Math.max(1,Number(form.unitsPerCarton)||1)))>Number(form.cartonSell)?'pform-sale-below-cost':'')}><input type="number" min="0" step=".01" value={form.cartonSell} onChange={e=>updateCartonPrice('sale',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
@@ -111,20 +111,20 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
             </div>
           </div>
 <div className="pform-section-heading"><div><h3>{tx.classification}</h3></div><span><Hash size={15}/> 02</span></div>
-          <div className="pform-feature-card">
+          <div className="pform-feature-card pform-natural-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Tag size={19}/></span><div><b>{tx.classification}</b></div></div>
             <div className="pform-feature-options pform-basic-grid">
               <label className="pform-field"><span>{tx.category}</span><select value={form.category} onChange={e=>set('category',e.target.value)}><option value="">{tx.allCategories}</option>{categories.map(c=><option key={c}>{c}</option>)}</select></label>
               <label className="pform-field"><span>{tx.unitInfo}</span><select value={form.unit} onChange={e=>set('unit',e.target.value)}>{(ar?['قطعة','قارورة','علبة','كيس','كيلوغرام','لتر','متر']:fr?['Pièce','Bouteille','Boîte','Paquet','Kilogramme','Litre','Mètre']:['Piece','Bottle','Can','Pack','Kilogram','Litre','Meter']).map(c=><option key={c}>{c}</option>)}</select></label>
             </div>
           </div>
-<div className="pform-feature-card">
+<div className="pform-feature-card pform-natural-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon expiry"><CalendarClock size={19}/></span><div><b>{tx.expiry}</b></div><label className="pform-switch"><input type="checkbox" checked={form.expiryEnabled} onChange={e=>set('expiryEnabled',e.target.checked)}/><i/></label></div>
             {form.expiryEnabled&&<div className="pform-feature-options pform-expiry-options"><label className="pform-field"><span>{tx.expiryDate}</span><input type="date" value={form.expiryDate} onChange={e=>set('expiryDate',e.target.value)}/></label><label className="pform-field"><span>{tx.expiryNotice} ({tx.days})</span><div className="pform-number-suffix"><input type="number" min="0" step="1" value={form.expiryNotice} onChange={e=>set('expiryNotice',e.target.value)} placeholder="3"/><b>{tx.days}</b></div></label></div>}
           </div>
             </div>
-            <div className="pform-masonry-column pform-masonry-right">
-<div className="pform-feature-card">
+            <div className="pform-masonry-column pform-masonry-right pform-natural-column">
+<div className="pform-feature-card pform-natural-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Boxes size={19}/></span><div><b>{tx.purchaseInfo}</b></div></div>
             <div className="pform-feature-options pform-carton-grid">
               <label className="pform-field"><span>{tx.cartonsPurchased}</span><input type="number" min="0" step="1" value={form.cartonsPurchased} onChange={e=>updateCartonCount(e.target.value)} placeholder="0"/></label>
@@ -137,11 +137,11 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
               <div className="pform-price-group"><b>{tx.unitCost}</b><div className="pform-price-input"><input type="number" min="0" step=".01" value={form.unitCost} onChange={e=>updateUnitPrice('purchase',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
             </div></div>
           </div>
-<div className="pform-feature-card">
+<div className="pform-feature-card pform-natural-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><ImagePlus size={19}/></span><div><b>{tx.photo}</b><small>{tx.photoHint}</small></div></div>
             <div className="pform-photo-layout"><div className={'pform-image-drop '+(imagePreview?'has-image':'')}>{imagePreview?<img src={imagePreview} alt={tx.photo}/>:<><span><ImagePlus size={36}/></span><b>{tx.noImage}</b><small>{ar?'PNG أو JPG أو WEBP':fr?'PNG, JPG ou WEBP':'PNG, JPG or WEBP'}</small></>}<label className="pform-upload-btn"><Camera size={16}/>{tx.choosePhoto}<input type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(f){set('imageName',f.name);const reader=new FileReader();reader.onload=()=>setImagePreview(String(reader.result));reader.readAsDataURL(f)}}}/></label>{imagePreview&&<button className="pform-remove-photo" type="button" onClick={()=>{setImagePreview('');set('imageName','')}}><Trash2 size={14}/>{tx.removePhoto}</button>}</div></div>
           </div>
-<div className="pform-feature-card">
+<div className="pform-feature-card pform-natural-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Scale size={19}/></span><div><b>{tx.measure}</b></div><label className="pform-switch"><input type="checkbox" checked={form.sellByMeasure} onChange={e=>set('sellByMeasure',e.target.checked)}/><i/></label></div>
             {form.sellByMeasure&&<div className="pform-feature-options"><label className="pform-field"><span>{tx.measureUnit}</span><select value={form.measureUnit} onChange={e=>set('measureUnit',e.target.value)}>{(ar?['كغ','غرام','لتر','ملليلتر','متر']:fr?['kg','g','L','ml','m']:['kg','gram','litre','ml','meter']).map(v=><option key={v}>{v}</option>)}</select></label>{barcodeField(ar?'كودبار الميزان':fr?'Code-barres balance':'Scale barcode','unitBarcodes')}</div>}
           </div>
