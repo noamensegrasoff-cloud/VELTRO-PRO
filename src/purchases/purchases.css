@@ -1,5 +1,5 @@
 /* Purchases page — rebuilt as an independent, responsive module. */
-.purchase-page{--p-purple:#7656e8;--p-purple-dark:#5437c5;--p-teal:#7957e8;--p-ink:#202b43;--p-muted:#7f8ba0;display:flex;flex-direction:column;gap:16px;min-width:0;color:var(--p-ink)}
+.purchase-page{--p-purple:#7656e8;--p-purple-dark:#5437c5;--p-accent:#7957e8;--p-ink:#202b43;--p-muted:#7f8ba0;display:flex;flex-direction:column;gap:16px;min-width:0;color:var(--p-ink)}
 .purchase-page *{box-sizing:border-box}
 .purchase-hero{display:flex;align-items:center;gap:15px;padding:20px 22px;border:1px solid #e2defa;border-radius:22px;background:linear-gradient(115deg,#fff 0%,#f8f5ff 58%,#f4f0ff 100%);box-shadow:0 10px 30px #4637910b;min-width:0}
 .purchase-hero-mark{display:grid;place-items:center;flex:0 0 54px;width:54px;height:54px;border-radius:17px;background:linear-gradient(145deg,#7957e8,#5b43c9 58%,#7957e8);color:white;box-shadow:0 8px 18px #7052db30}
@@ -16,7 +16,7 @@
 .purchase-stat>span{display:flex;align-items:center;gap:8px;color:#768298;font-size:11px;font-weight:750}.purchase-stat>span svg{color:var(--stat-tone,#7957e8)}
 .purchase-stat>b{font-size:clamp(17px,1.65vw,23px);font-weight:850;line-height:1.3;color:var(--stat-tone,#7957e8);overflow-wrap:anywhere}
 .purchase-stat>small{font-size:10px;line-height:1.45;color:#9aa4b5}
-.purchase-stat-purple{--stat-tone:#7656e8;background:linear-gradient(135deg,#fff,#f8f5ff)}.purchase-stat-blue{--stat-tone:#8442d5;background:linear-gradient(135deg,#fff,#f2f8ff)}.purchase-stat-teal{--stat-tone:#7656e8;background:linear-gradient(135deg,#fff,#f4f0ff)}.purchase-stat-orange{--stat-tone:#d27a48;background:linear-gradient(135deg,#fff,#fff7f0)}
+.purchase-stat-purple{--stat-tone:#7656e8;background:linear-gradient(135deg,#fff,#f8f5ff)}.purchase-stat-blue{--stat-tone:#8442d5;background:linear-gradient(135deg,#fff,#f2f8ff)}.purchase-stat-violet{--stat-tone:#7656e8;background:linear-gradient(135deg,#fff,#f4f0ff)}.purchase-stat-orange{--stat-tone:#d27a48;background:linear-gradient(135deg,#fff,#fff7f0)}
 .purchase-filter-card{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px;border:1px solid #e5e8f1;border-radius:18px;background:#fff;box-shadow:0 6px 20px #25345507}
 .purchase-search{display:flex;align-items:center;gap:9px;min-width:180px;flex:1;padding:0 13px;height:43px;border:1px solid #e3e7f0;border-radius:13px;background:#f9faff;color:#8c96a8}.purchase-search input{min-width:0;width:100%;border:0;outline:0;background:transparent;color:#27324a;font:inherit;font-size:12px}.purchase-search button,.purchase-product-picker button{display:grid;place-items:center;border:0;background:transparent;color:#8490a4;cursor:pointer}
 .purchase-date-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.purchase-date-filters label{display:grid;grid-template-columns:auto auto;align-items:center;gap:3px 6px;padding:5px 9px;border:1px solid #e7e9f1;border-radius:11px;background:#fcfcff;color:#8994a7}.purchase-date-filters label svg{grid-row:span 2;color:#8167df}.purchase-date-filters label span{font-size:9px;font-weight:800}.purchase-date-filters input{width:130px;max-width:100%;border:0;outline:0;background:transparent;color:#39455c;font:inherit;font-size:11px}.purchase-filter-reset{border:1px solid #e5defb;border-radius:11px;background:#f4f0ff;color:#6c52d4;padding:10px 12px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
@@ -84,7 +84,7 @@
 .purchase-page .purchase-stat{border-color:rgba(255,255,255,.9)}
 .purchase-page .purchase-stat-purple{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(235,228,255,.72))}
 .purchase-page .purchase-stat-blue{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(239,226,255,.72))}
-.purchase-page .purchase-stat-teal{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(235,228,255,.76))}
+.purchase-page .purchase-stat-violet{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(235,228,255,.76))}
 .purchase-page .purchase-stat-orange{background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(255,239,224,.75))}
 .purchase-page .purchase-primary{
   border:1px solid rgba(255,255,255,.56);
@@ -182,7 +182,7 @@
 
 
 /* Purple glass only: purchase receipts use violet glass accents only. */
-.purchase-page{--p-teal:#7656e8}
+.purchase-page{--p-accent:#7656e8}
 .purchase-page .purchase-hero,
 .purchase-page .purchase-stat,
 .purchase-page .purchase-filter-card,
