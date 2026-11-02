@@ -36,16 +36,17 @@ function isAccountScopedStorageKey(key) {
   return isSyncableStorageKey(key) || key === 'veltro-products-catalog-v1' || key === 'veltro-products-conflicts-v1';
 }
 
-async function switchLegacyStorageOwner(userId) {
-  if (!userId || typeof localStorage === 'undefined') return;
+async function switchLegacyStorageOwner(workspaceId, userId) {
+  if (!userId || !workspaceId || typeof localStorage === 'undefined') return;
+  const ownerToken = `${userId}:${workspaceId}`;
   const currentOwner = localStorage.getItem(LEGACY_STORAGE_OWNER_KEY);
   if (!currentOwner) {
     // Existing installations have one shared local catalog. Claim it for the
     // account already signed in rather than discarding data during migration.
-    localStorage.setItem(LEGACY_STORAGE_OWNER_KEY, userId);
+    localStorage.setItem(LEGACY_STORAGE_OWNER_KEY, ownerToken);
     return;
   }
-  if (currentOwner === userId) return;
+  if (currentOwner === ownerToken) return;
 
   const values = {};
   for (let i = 0; i < localStorage.length; i += 1) {
@@ -69,7 +70,7 @@ async function switchLegacyStorageOwner(userId) {
   const snapshot = await getLocalRecord({
     entityType: LEGACY_STORAGE_SNAPSHOT_ENTITY,
     recordId: 'active',
-    workspaceId: userId,
+    workspaceId: ownerToken,
   });
   const nextValues = snapshot?.payload?.values;
   if (nextValues && typeof nextValues === 'object' && !Array.isArray(nextValues)) {
@@ -82,11 +83,12 @@ async function switchLegacyStorageOwner(userId) {
     LEGACY_STORAGE_BASELINE_KEY,
     JSON.stringify(nextBaseline && typeof nextBaseline === 'object' && !Array.isArray(nextBaseline) ? nextBaseline : {}),
   );
-  localStorage.setItem(LEGACY_STORAGE_OWNER_KEY, userId);
+  localStorage.setItem(LEGACY_STORAGE_OWNER_KEY, ownerToken);
 }
 
 async function syncLegacyLocalStorage(workspaceId, userId) {
-  await switchLegacyStorageOwner(userId);
+  const ownerToken = `${userId}:${workspaceId}`;
+  await switchLegacyStorageOwner(workspaceId, userId);
   if (typeof localStorage === 'undefined') return { pushed: 0, pulled: 0 };
   const baseline = readStorageBaseline();
   const local = new Map();
@@ -162,7 +164,7 @@ async function syncLegacyLocalStorage(workspaceId, userId) {
   await saveLocalRecord({
     entityType: LEGACY_STORAGE_SNAPSHOT_ENTITY,
     recordId: 'active',
-    workspaceId: userId,
+    workspaceId: ownerToken,
     queueForSync: false,
     payload: { values: snapshotValues, baseline },
   });
