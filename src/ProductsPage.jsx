@@ -69,7 +69,7 @@ export default function ProductsPage({lang='ar'}) {
 .pform-code-modal .pform-next-btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;border-radius:12px;background:linear-gradient(110deg,#7c3aed,#8b70bd);color:white;font-weight:750;padding:10px 14px}
 .pform-code-list{grid-column:1/-1;display:grid;gap:9px;max-height:38dvh;overflow:auto;padding:2px}
 .pform-code-list>div{display:grid;grid-template-columns:20px minmax(0,1fr) 36px;align-items:center;gap:9px;padding:9px;border:1px solid #e7e3f4;border-radius:13px;background:linear-gradient(120deg,rgba(139,92,246,.07),rgba(166,139,230,.06))}
-.pform-code-list>div>svg{color:#67e8f9}.pform-code-list>div button{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(248,113,113,.22);border-radius:10px;background:rgba(239,68,68,.09);color:#fca5a5}
+.pform-code-list>div>svg{color:#b69afc}.pform-code-list>div button{display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(248,113,113,.22);border-radius:10px;background:rgba(239,68,68,.09);color:#fca5a5}
 .pform-code-list>p{grid-column:1/-1;margin:0;padding:18px;border:1px dashed #d8d2eb;border-radius:13px;color:#7c879b;text-align:center;font-size:13px}
 .pform-code-modal>footer{display:flex;justify-content:flex-end;padding:13px 20px;border-top:1px solid #e8e5f2;background:rgba(246,248,252,.9)}
 .pform-code-modal .pform-back-btn{min-height:40px;padding:9px 17px;border:1px solid #e2dcef;border-radius:11px;background:#ffffff;color:#4d5a70}
