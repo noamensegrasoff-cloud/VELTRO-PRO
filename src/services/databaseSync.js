@@ -32,6 +32,10 @@ function isSyncableStorageKey(key) {
   return /^(?:veltro[._-]|products$|categories$|sales$|purchases$|customers$|suppliers$|orders$|invoices$|expenses$|stock$)/i.test(key);
 }
 
+function isAccountScopedStorageKey(key) {
+  return isSyncableStorageKey(key) || key === 'veltro-products-catalog-v1' || key === 'veltro-products-conflicts-v1';
+}
+
 async function switchLegacyStorageOwner(userId) {
   if (!userId || typeof localStorage === 'undefined') return;
   const currentOwner = localStorage.getItem(LEGACY_STORAGE_OWNER_KEY);
@@ -46,7 +50,7 @@ async function switchLegacyStorageOwner(userId) {
   const values = {};
   for (let i = 0; i < localStorage.length; i += 1) {
     const key = localStorage.key(i);
-    if (isSyncableStorageKey(key)) {
+    if (isAccountScopedStorageKey(key)) {
       const value = localStorage.getItem(key);
       if (value !== null) values[key] = value;
     }
@@ -70,7 +74,7 @@ async function switchLegacyStorageOwner(userId) {
   const nextValues = snapshot?.payload?.values;
   if (nextValues && typeof nextValues === 'object' && !Array.isArray(nextValues)) {
     for (const [key, value] of Object.entries(nextValues)) {
-      if (isSyncableStorageKey(key) && typeof value === 'string') localStorage.setItem(key, value);
+      if (isAccountScopedStorageKey(key) && typeof value === 'string') localStorage.setItem(key, value);
     }
   }
   const nextBaseline = snapshot?.payload?.baseline;
@@ -150,7 +154,7 @@ async function syncLegacyLocalStorage(workspaceId, userId) {
   const snapshotValues = {};
   for (let i = 0; i < localStorage.length; i += 1) {
     const key = localStorage.key(i);
-    if (isSyncableStorageKey(key)) {
+    if (isAccountScopedStorageKey(key)) {
       const value = localStorage.getItem(key);
       if (value !== null) snapshotValues[key] = value;
     }
