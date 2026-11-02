@@ -44,6 +44,10 @@ Deno.serve(async (req) => {
     .select("role").eq("workspace_id", workspaceId).eq("user_id", callerId).maybeSingle();
   if (ownerError) return respond({ error: "Could not verify workspace permissions." }, 500);
   if (owner?.role !== "owner") return respond({ error: "Only the workspace owner can manage employee access." }, 403);
+  const { data: ownerProfile, error: ownerProfileError } = await admin.from("employee_profiles")
+    .select("status").eq("workspace_id", workspaceId).eq("user_id", callerId).maybeSingle();
+  if (ownerProfileError) return respond({ error: "Could not verify owner account status." }, 500);
+  if (ownerProfile?.status === "suspended") return respond({ error: "Suspended workspace members cannot manage employees." }, 403);
 
   const { data: target, error: targetError } = await admin.from("workspace_members")
     .select("role,custom_role_id").eq("workspace_id", workspaceId).eq("user_id", targetId).maybeSingle();
