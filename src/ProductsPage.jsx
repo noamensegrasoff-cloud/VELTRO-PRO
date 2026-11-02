@@ -92,7 +92,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
           <div className="pform-section-heading"><div><h3>{tx.productInfo}</h3></div><span><Hash size={15}/> 01</span></div>
           <div className="pform-unified-panel">
             <div className="pform-unified-column pform-unified-main">
-<div className="pform-feature-card pe-card">
+<div className="pform-editor-section">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Info size={19}/></span><div><b>{tx.productInfo}</b></div></div>
             <div className="pform-basic-grid">
               {field(tx.productName,'name',ar?'اسم المنتج':fr?'Nom du produit':'Product name')}
@@ -104,14 +104,14 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
           </div>
 
 <div className="pform-section-heading"><div><h3>{tx.classification}</h3></div><span><Hash size={15}/> 02</span></div>
-          <div className="pform-feature-card pe-card">
+          <div className="pform-editor-section">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Tag size={19}/></span><div><b>{tx.classification}</b></div></div>
             <div className="pform-feature-options pform-basic-grid">
               <label className="pform-field"><span>{tx.category}</span><select value={form.category} onChange={e=>set('category',e.target.value)}><option value="">{tx.allCategories}</option>{categories.map(c=><option key={c}>{c}</option>)}</select></label>
               <label className="pform-field"><span>{tx.unitInfo}</span><select value={form.unit} onChange={e=>set('unit',e.target.value)}>{(ar?['قطعة','قارورة','علبة','كيس','كيلوغرام','لتر','متر']:fr?['Pièce','Bouteille','Boîte','Paquet','Kilogramme','Litre','Mètre']:['Piece','Bottle','Can','Pack','Kilogram','Litre','Meter']).map(c=><option key={c}>{c}</option>)}</select></label>
             </div>
           </div>
-<div className="pform-feature-card pe-card">
+<div className="pform-editor-section">
             <div className="pform-feature-heading"><span className="pform-feature-icon expiry"><CalendarClock size={19}/></span><div><b>{tx.expiry}</b></div><label className="pform-switch"><input type="checkbox" checked={form.expiryEnabled} onChange={e=>set('expiryEnabled',e.target.checked)}/><i/></label></div>
             {form.expiryEnabled&&<div className="pform-feature-options pform-expiry-options"><label className="pform-field"><span>{tx.expiryDate}</span><input type="date" value={form.expiryDate} onChange={e=>set('expiryDate',e.target.value)}/></label><label className="pform-field"><span>{tx.expiryNotice} ({tx.days})</span><div className="pform-number-suffix"><input type="number" min="0" step="1" value={form.expiryNotice} onChange={e=>set('expiryNotice',e.target.value)} placeholder="3"/><b>{tx.days}</b></div></label></div>}
           </div>
@@ -139,11 +139,11 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
             </div>
           </div>
           </div>
-          <div className="pform-feature-card pe-card">
+          <div className="pform-editor-section">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><ImagePlus size={19}/></span><div><b>{tx.photo}</b><small>{tx.photoHint}</small></div></div>
             <div className="pform-photo-layout"><div className={'pform-image-drop '+(imagePreview?'has-image':'')}>{imagePreview?<img src={imagePreview} alt={tx.photo}/>:<><span><ImagePlus size={36}/></span><b>{tx.noImage}</b><small>{ar?'PNG أو JPG أو WEBP':fr?'PNG, JPG ou WEBP':'PNG, JPG or WEBP'}</small></>}<label className="pform-upload-btn"><Camera size={16}/>{tx.choosePhoto}<input type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(f){set('imageName',f.name);const reader=new FileReader();reader.onload=()=>setImagePreview(String(reader.result));reader.readAsDataURL(f)}}}/></label>{imagePreview&&<button className="pform-remove-photo" type="button" onClick={()=>{setImagePreview('');set('imageName','')}}><Trash2 size={14}/>{tx.removePhoto}</button>}</div></div>
           </div>
-<div className="pform-feature-card pe-card">
+<div className="pform-editor-section">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Scale size={19}/></span><div><b>{tx.measure}</b></div><label className="pform-switch"><input type="checkbox" checked={form.sellByMeasure} onChange={e=>set('sellByMeasure',e.target.checked)}/><i/></label></div>
             {form.sellByMeasure&&<div className="pform-feature-options"><label className="pform-field"><span>{tx.measureUnit}</span><select value={form.measureUnit} onChange={e=>set('measureUnit',e.target.value)}>{(ar?['كغ','غرام','لتر','ملليلتر','متر']:fr?['kg','g','L','ml','m']:['kg','gram','litre','ml','meter']).map(v=><option key={v}>{v}</option>)}</select></label>{barcodeField(ar?'كودبار الميزان':fr?'Code-barres balance':'Scale barcode','unitBarcodes')}</div>}
           </div>
