@@ -126,8 +126,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
             <div className="pform-price-block"><div className="pform-price-head"><div><b>{tx.purchaseInfo}</b></div><span><TrendingUp size={15}/>{tx.auto}</span></div><div className="pform-price-grid">
               <div className="pform-price-group"><b>{tx.cartonCost}</b><div className="pform-price-input"><input type="number" min="0" step=".01" value={form.cartonCost} onChange={e=>updateCartonPrice('purchase',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
               <div className="pform-price-group"><b>{tx.unitCost}</b><div className="pform-price-input"><input type="number" min="0" step=".01" value={form.unitCost} onChange={e=>updateUnitPrice('purchase',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
-            </div></div>
-<div className="pform-feature-card product-editor-card">
+            </div><div className="pform-feature-card product-editor-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><TrendingUp size={19}/></span><div><b>{tx.salesInfo}</b></div></div>
             <div className="pform-price-grid pform-sales-price-grid">
               <div className="pform-price-group"><b>{tx.cartonSell}</b><div className={"pform-price-input "+(form.cartonSell!==''&&Number(form.cartonCost||((Number(form.unitCost)||0)*Math.max(1,Number(form.unitsPerCarton)||1)))>Number(form.cartonSell)?'pform-sale-below-cost':'')}><input type="number" min="0" step=".01" value={form.cartonSell} onChange={e=>updateCartonPrice('sale',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
@@ -137,8 +136,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
               <div className="pform-average-cost-card"><small>{ar?'متوسط سعر الشراء المعتمد لحساب الربح':fr?'Coût moyen pondéré utilisé pour la marge':'Weighted average cost used for profit'}</small><strong>{money(weightedAverageCost)}</strong><span>{ar?`المخزون الحالي: ${existingStock} · الشراء الجديد: ${incomingUnits}`:fr?`Stock actuel : ${existingStock} · nouvel achat : ${incomingUnits}`:`Current stock: ${existingStock} · new purchase: ${incomingUnits}`}</span></div>
             </div>
           </div>
-          </div>
-<div className="pform-feature-card product-editor-card">
+          <div className="pform-feature-card product-editor-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><ImagePlus size={19}/></span><div><b>{tx.photo}</b><small>{tx.photoHint}</small></div></div>
             <div className="pform-photo-layout"><div className={'pform-image-drop '+(imagePreview?'has-image':'')}>{imagePreview?<img src={imagePreview} alt={tx.photo}/>:<><span><ImagePlus size={36}/></span><b>{tx.noImage}</b><small>{ar?'PNG أو JPG أو WEBP':fr?'PNG, JPG ou WEBP':'PNG, JPG or WEBP'}</small></>}<label className="pform-upload-btn"><Camera size={16}/>{tx.choosePhoto}<input type="file" accept="image/*" onChange={e=>{const f=e.target.files?.[0];if(f){set('imageName',f.name);const reader=new FileReader();reader.onload=()=>setImagePreview(String(reader.result));reader.readAsDataURL(f)}}}/></label>{imagePreview&&<button className="pform-remove-photo" type="button" onClick={()=>{setImagePreview('');set('imageName','')}}><Trash2 size={14}/>{tx.removePhoto}</button>}</div></div>
           </div>
