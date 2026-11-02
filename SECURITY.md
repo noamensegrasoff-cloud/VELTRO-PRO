@@ -1,15 +1,29 @@
 # VELTRO-PRO workspace isolation
 
-## Database migration
+## Database setup and migration history
 
-Run the complete `supabase/schema.sql` script in the SQL Editor of the Supabase project used by the deployed app. The script enables row-level security (RLS), restricts cloud records to authenticated workspace members, prevents browser clients from writing membership rows, and adds the creator as owner through a database trigger. Never put a Supabase `service_role` key in frontend environment variables.
+`supabase/schema.sql` is the original foundation script for the three core tables (`workspaces`, `workspace_members`, and `cloud_records`). It is not a complete export of the current production schema. The connected Supabase project also contains later migrations for employee permissions, role helpers, cloud-record permissions, and workspace-scoped custom roles.
 
-Then run `supabase/security_verification.sql` and inspect the results:
-- RLS must be enabled for `workspaces`, `workspace_members`, and `cloud_records`.
-- `anon` must have no table privileges for these tables.
-- `authenticated` must have SELECT/INSERT on workspaces, SELECT on memberships, and SELECT/INSERT/UPDATE on cloud records.
-- The `workspaces_add_creator_owner` trigger must be enabled.
-- There must be no client INSERT policy for `workspace_members`.
+Do not treat `schema.sql` alone as a fresh-project restore or rerun it as a replacement for the later migrations. Apply the ordered SQL migrations in `supabase/migrations/` to a fresh project and compare the result with the live project before production use. The repository still needs the earlier migration SQL sources to become a fully reproducible fresh-project bootstrap.
+
+Never put a Supabase `service_role` key or secret key in frontend environment variables. The browser must use only a publishable/anon key and rely on database RLS for authorization.
+
+## Current access model
+
+- RLS is enabled on all inspected public tables.
+- Workspace membership and permission checks are scoped to the active workspace.
+- Only workspace owners can add or update non-owner members.
+- A custom role assigned to a member must belong to the same workspace.
+- A member cannot promote another member to the `owner` role.
+- Cloud records require workspace membership and the permission corresponding to the record type and operation.
+- The workspace creator is added as owner by a database trigger.
+
+Run `supabase/security_verification.sql` and inspect the results:
+- RLS must remain enabled on the core tables.
+- `anon` must have no table privileges on the core tables.
+- `authenticated` must have only the expected table privileges.
+- The workspace creator trigger must be enabled.
+- The member INSERT/UPDATE policies must require owner status, disallow assigning the owner role, and require any custom role to belong to the same workspace.
 
 ## Required two-account isolation test
 
@@ -19,11 +33,14 @@ Use two different Google accounts in separate browser profiles or incognito sess
 2. Sign in as Account B in a separate profile and let it create its workspace. Confirm B has a different workspace UUID.
 3. As B, attempt to select a row from `cloud_records` filtered to A's workspace UUID. It must return zero rows, not A's data.
 4. As B, attempt to insert a record into A's workspace UUID. PostgreSQL must reject it with an RLS policy error.
-5. As B, attempt to insert a `workspace_members` row naming B as a member of A's workspace. PostgreSQL must reject it (no client INSERT grant/policy).
-6. Repeat the read check as A against B's workspace; it must return zero rows.
+5. As B, attempt to insert or update a `workspace_members` row in A's workspace. PostgreSQL must reject it.
+6. As A, confirm that assigning a custom role from B's workspace is rejected.
+7. Repeat the read check as A against B's workspace; it must return zero rows.
 
-The SQL inspection query alone does not replace this runtime test. GitHub Pages build success does not prove that the production Supabase project has run the migration or that OAuth redirect settings are correct.
+SQL inspection alone does not replace this runtime test. GitHub Pages build success does not prove that OAuth redirect settings are correct or that two real accounts are isolated in the deployed app.
 
-## Scope
+## Known follow-up checks
 
-This schema currently supports isolated workspaces and their owner. Client-side team invitations are intentionally not granted by this migration; implement invitations through a separately authorized server-side flow before allowing additional members. App sections still marked as design/sample data are not made production-ready by this security migration.
+- Supabase currently reports leaked-password protection as disabled. Enable it in the Auth security settings before production onboarding.
+- Supabase reports the workspace permission helper functions as callable SECURITY DEFINER functions. Their current definitions use an empty search path and check `auth.uid()` plus workspace membership; retain these safeguards and review the functions before changing grants.
+- Performance advisors report unindexed foreign keys and overlapping permissive SELECT policies. Review these before increasing workspace or employee counts; do not remove policies or indexes solely because the current low-volume project has not used them yet.
