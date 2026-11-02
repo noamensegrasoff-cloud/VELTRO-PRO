@@ -32,12 +32,12 @@ const copy = {
     completed: 'مكتملة', pending: 'معلقة', received: 'مستلمة', sold: 'بيع',
     bought: 'شراء', returned: 'مرتجع', stockOverview: 'نظرة على المخزون',
     available: 'متوفر', low: 'منخفض', out: 'نفد', module: 'القسم',
-    moduleHint: 'هذه معاينة لواجهة القسم. سيتم ربط الجداول والإجراءات ببيانات النظام عند تنفيذ الوظائف.',
+    moduleHint: 'هذا القسم لم تُربط وظائفه وبياناته بعد.',
     shortcuts: 'وصول سريع', addProduct: 'إضافة منتج', newSale: 'فتح نقطة البيع',
     newOrder: 'طلب سلع', openCash: 'فتح الصندوق', notifications: 'الإشعارات',
     noNotifications: 'لا توجد إشعارات جديدة.', logout: 'تسجيل الخروج', sync: 'مزامنة البيانات', syncing: 'جارٍ المزامنة…', syncDone: 'اكتملت المزامنة', syncError: 'تعذرت المزامنة',
     logoutConfirm: 'هل تريد تسجيل الخروج من VELTRO-PRO؟', cancel: 'إلغاء', confirm: 'تسجيل الخروج',
-    signedOut: 'تم تسجيل الخروج من المعاينة', signIn: 'العودة إلى المعاينة',
+    signedOut: 'تم تسجيل الخروج', signIn: 'العودة إلى تسجيل الدخول',
     back: 'العودة', home: 'لوحة التحكم', selected: 'القسم المحدد',
     welcome: 'مرحبًا بك في', title: 'VELTRO BUSINESS SUITE',
     daily: 'الحالة اليومية', cashBalance: 'رصيد الصندوق', inventoryValue: 'قيمة المخزون', expense: 'المصاريف', capital: 'رأس مال المحل', dailyProfit: 'الربح اليومي', capitalHint: 'يظهر بعد ربط بيانات المحل', profitHint: 'حسب المبيعات والتكاليف المسجلة', notLinked: 'بانتظار البيانات الفعلية', sectionsIntro: 'اختر القسم الذي تريد العمل فيه', backToSections: 'العودة إلى الأقسام',
@@ -57,12 +57,12 @@ const copy = {
     completed: 'Completed', pending: 'Pending', received: 'Received', sold: 'Sale',
     bought: 'Purchase', returned: 'Return', stockOverview: 'Stock overview',
     available: 'In stock', low: 'Low', out: 'Out', module: 'Section',
-    moduleHint: 'This is a preview of the section. Tables and actions will connect to system data when the functionality is implemented.',
+    moduleHint: 'This section is not connected to live data or actions yet.',
     shortcuts: 'Quick access', addProduct: 'Add product', newSale: 'Open point of sale',
     newOrder: 'Order goods', openCash: 'Open cash register', notifications: 'Notifications',
     noNotifications: 'No new notifications.', logout: 'Log out', sync: 'Sync data', syncing: 'Syncing…', syncDone: 'Sync completed', syncError: 'Sync failed',
-    logoutConfirm: 'Log out of VELTRO-PRO preview?', cancel: 'Cancel', confirm: 'Log out',
-    signedOut: 'You have left the preview', signIn: 'Return to preview',
+    logoutConfirm: 'Log out of VELTRO-PRO?', cancel: 'Cancel', confirm: 'Log out',
+    signedOut: 'You have signed out', signIn: 'Return to sign in',
     back: 'Back', home: 'Dashboard', selected: 'Selected section',
     welcome: 'Welcome to', title: 'VELTRO BUSINESS SUITE',
     daily: 'Daily status', cashBalance: 'Cash balance', inventoryValue: 'Inventory value', expense: 'Expenses', capital: 'Store capital', dailyProfit: 'Daily profit', capitalHint: 'Shown after store data is connected', profitHint: 'Based on recorded sales and costs', notLinked: 'Awaiting live data', sectionsIntro: 'Choose a section to get started', backToSections: 'Back to sections',
@@ -82,12 +82,12 @@ const copy = {
     completed: 'Terminé', pending: 'En attente', received: 'Reçu', sold: 'Vente',
     bought: 'Achat', returned: 'Retour', stockOverview: 'Vue du stock',
     available: 'Disponible', low: 'Faible', out: 'Épuisé', module: 'Rubrique',
-    moduleHint: 'Ceci est un aperçu de la rubrique. Les tableaux et actions seront reliés aux données lors de l’implémentation.',
+    moduleHint: 'Cette rubrique n’est pas encore reliée aux données ni aux actions.',
     shortcuts: 'Accès rapide', addProduct: 'Ajouter un produit', newSale: 'Ouvrir le point de vente',
     newOrder: 'Commander', openCash: 'Ouvrir la caisse', notifications: 'Notifications',
     noNotifications: 'Aucune nouvelle notification.', logout: 'Déconnexion', sync: 'Synchroniser les données', syncing: 'Synchronisation…', syncDone: 'Synchronisation terminée', syncError: 'Échec de la synchronisation',
-    logoutConfirm: 'Voulez-vous quitter l’aperçu VELTRO-PRO ?', cancel: 'Annuler', confirm: 'Déconnexion',
-    signedOut: 'Vous avez quitté l’aperçu', signIn: 'Revenir à l’aperçu',
+    logoutConfirm: 'Voulez-vous vous déconnecter de VELTRO-PRO ?', cancel: 'Annuler', confirm: 'Déconnexion',
+    signedOut: 'Vous êtes déconnecté', signIn: 'Retour à la connexion',
     back: 'Retour', home: 'Tableau de bord', selected: 'Rubrique sélectionnée',
     welcome: 'Bienvenue dans', title: 'VELTRO BUSINESS SUITE',
     daily: 'Situation journalière', cashBalance: 'Solde de caisse', inventoryValue: 'Valeur du stock', expense: 'Dépenses', capital: 'Capital du magasin', dailyProfit: 'Bénéfice du jour', capitalHint: 'Disponible après connexion des données', profitHint: 'Selon les ventes et coûts enregistrés', notLinked: 'En attente des données réelles', sectionsIntro: 'Choisissez une rubrique pour commencer', backToSections: 'Retour aux rubriques',
@@ -98,12 +98,22 @@ const copy = {
   }
 };
 
-const activityRows = [
-  { id: 'INV-1048', product: 'Youkous 1.5L', operation: 'sold', quantity: '24', status: 'completed', time: '10:42' },
-  { id: 'PUR-0217', product: 'Ifri 0.5L', operation: 'bought', quantity: '120', status: 'received', time: '10:18' },
-  { id: 'INV-1047', product: 'Jus d’orange', operation: 'sold', quantity: '12', status: 'completed', time: '09:56' },
-  { id: 'STK-0081', product: 'Sucre 1 kg', operation: 'returned', quantity: '3', status: 'pending', time: '09:31' },
-];
+const readDashboardArray = key => { try { const value=JSON.parse(localStorage.getItem(key)||'[]'); return Array.isArray(value)?value:[]; } catch { return []; } };
+const dashboardDateKey = date => [date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-');
+const dashboardMoney = value => (Number(value)||0).toLocaleString('fr-DZ',{maximumFractionDigits:0})+' DA';
+function getDashboardData(){
+  const today=dashboardDateKey(new Date()),products=readDashboardArray('veltro-products-catalog-v1'),sales=readDashboardArray('veltro_sales_invoices'),purchases=readDashboardArray('veltro.purchases.v1').filter(p=>p.status==='closed'),movements=readDashboardArray('veltro-product-movements-v1');
+  const salesToday=sales.filter(x=>String(x.date||x.createdAt||'').slice(0,10)===today),purchasesToday=purchases.filter(x=>String(x.date||x.createdAt||'').slice(0,10)===today);
+  const todaySales=salesToday.reduce((sum,x)=>sum+(Number(x.total??x.totalAmount??0)||0),0),todayPurchases=purchasesToday.reduce((sum,x)=>sum+(Number(x.total??x.totalAmount??0)||0),0);
+  const productById=new Map(products.map(p=>[String(p.id),p]));
+  const dailyProfit=salesToday.reduce((sum,invoice)=>sum+(invoice.items||[]).reduce((part,item)=>{const p=productById.get(String(item.productId));const unitCost=Number(p?.cost??p?.unitCost??0)||0;const cartonCost=Number(p?.cartonCost??(unitCost*(Number(p?.unitsPerCarton)||1)))||0;const cost=item.saleMode==='carton'?cartonCost:unitCost;return part+(Number(item.qty)||0)*((Number(item.price)||0)-cost);},0),0);
+  const inventoryValue=products.reduce((sum,p)=>sum+(Math.max(0,Number(p.stock)||0)*Math.max(0,Number(p.cost??p.unitCost??0)||0)),0);
+  const stockItems=products.slice().sort((a,b)=>{const al=Number(a.stock)||0,bl=Number(b.stock)||0;const am=Number(a.min??10)||10,bm=Number(b.min??10)||10;return (al<=am?-1:0)-(bl<=bm?-1:0)||al-bl;}).slice(0,4).map(p=>{const stock=Math.max(0,Number(p.stock)||0),min=Math.max(0,Number(p.min??10)||10);return{name:p.name||p.productName||p.id,stock,tone:stock===0?'bad':stock<=min?'warn':'good',label:stock===0?'out':stock<=min?'low':'available'};});
+  const recentActivity=movements.slice().sort((a,b)=>String(b.createdAt||b.date||'').localeCompare(String(a.createdAt||a.date||''))).slice(0,5).map(m=>({id:m.source||m.id,product:m.productName||m.name||m.productId||'—',operation:m.type==='sale'?'sold':m.type==='purchase'?'bought':'returned',quantity:Math.abs(Number(m.quantityChange)||0),status:'completed',time:m.createdAt?new Date(m.createdAt).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):String(m.date||'').slice(0,5)}));
+  const salesLast7=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));const key=dashboardDateKey(d);return{date:key,value:sales.filter(x=>String(x.date||x.createdAt||'').slice(0,10)===key).reduce((sum,x)=>sum+(Number(x.total??x.totalAmount??0)||0),0)};});
+  const maxSales=Math.max(1,...salesLast7.map(x=>x.value)),salesShare=todaySales+todayPurchases>0?Math.round(todaySales/(todaySales+todayPurchases)*100):0;
+  return{todaySales,todayPurchases,dailyProfit,inventoryValue,salesCount:salesToday.length,lowStockCount:products.filter(p=>Number(p.stock)===0||(p.stockAlertEnabled!==false&&Number(p.stock)>0&&Number(p.stock)<=Number(p.min??10))).length,stockItems,recentActivity,salesLast7,maxSales,salesShare,hasTransactions:sales.length>0||purchases.length>0};
+}
 
 function getLabel(item, lang) { return item?.label?.[lang] || item?.label?.ar || ''; }
 
@@ -176,50 +186,44 @@ function MetricCard({ icon: Icon, label, value, trend, tone = 'blue', footer }) 
   </article>;
 }
 
-function SalesChart({ t, lang }) {
-  const labels = lang === 'ar' ? ['س','أ','إ','ث','أ','خ','ج'] : lang === 'fr' ? ['S','D','L','M','M','J','V'] : ['S','S','M','T','W','T','F'];
-  const heights = [35,53,43,65,50,76,61,91,68,83,57,95,72,88];
+function SalesChart({ t, lang, data }) {
+  const labels=data.salesLast7.map(item=>new Intl.DateTimeFormat(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{weekday:'short'}).format(new Date(item.date+'T12:00:00')));
   return <article className="panel chart-panel">
     <div className="panel-head"><div><span className="eyebrow">{t('last7')}</span><h2>{t('salesTrend')}</h2></div><button className="more-button" aria-label="More"><MoreHorizontal size={18}/></button></div>
-    <div className="chart-total"><strong>245,800 <small>DA</small></strong><span className="positive"><ArrowUpRight size={13}/> 8.4%</span></div>
-    <div className="bar-chart" role="img" aria-label={t('salesTrend')}>{heights.map((height,i)=><div className="bar-slot" key={i}><i style={{height:height+'%'}} className={i===11?'bar-highlight':''}/></div>)}</div>
+    <div className="chart-total"><strong>{dashboardMoney(data.todaySales)}</strong><span className="chart-count">{data.salesCount} {t('invoices')}</span></div>
+    <div className="bar-chart" role="img" aria-label={t('salesTrend')}>{data.salesLast7.map((item,i)=><div className="bar-slot" key={item.date}><i style={{height:Math.max(4,(item.value/data.maxSales)*100)+'%'}} className={i===6?'bar-highlight':''}/></div>)}</div>
     <div className="chart-axis">{labels.map((label,i)=><span key={i}>{label}</span>)}</div>
   </article>;
 }
 
-function MixChart({ t }) {
+function MixChart({ t, data }) {
   return <article className="panel mix-panel">
     <div className="panel-head"><div><span className="eyebrow">{t('today')}</span><h2>{t('salesVsPurchases')}</h2></div><button className="more-button" aria-label="More"><MoreHorizontal size={18}/></button></div>
-    <div className="mix-content"><div className="mix-donut"><div><strong>68<small>%</small></strong><span>{t('sales')}</span></div></div>
-      <div className="mix-legend"><div><i className="legend-blue"/><span>{t('sales')}</span><b>245,800 DA</b></div><div><i className="legend-green"/><span>{t('purchases')}</span><b>92,400 DA</b></div><div><i className="legend-violet"/><span>{t('expense')}</span><b>18,200 DA</b></div></div>
-    </div><div className="mix-note"><span className="health-dot"/>{t('demo')}</div>
+    <div className="mix-content"><div className="mix-donut" style={{background:'conic-gradient(#7239b8 0 '+data.salesShare+'%,#9986d9 '+data.salesShare+'% 100%)'}}><div><strong>{data.salesShare}<small>%</small></strong><span>{t('sales')}</span></div></div>
+      <div className="mix-legend"><div><i className="legend-blue"/><span>{t('sales')}</span><b>{dashboardMoney(data.todaySales)}</b></div><div><i className="legend-violet"/><span>{t('purchases')}</span><b>{dashboardMoney(data.todayPurchases)}</b></div></div>
+    </div><div className="mix-note"><span className="health-dot"/>{data.hasTransactions?t('recent'):t('notLinked')}</div>
   </article>;
 }
 
-function RecentActivity({ t }) {
+function RecentActivity({ t, data }) {
   return <article className="panel recent-panel">
     <div className="panel-head"><div><span className="eyebrow">{t('today')}</span><h2>{t('recent')}</h2></div><button className="text-action">{t('viewAll')} <ArrowUpRight size={13}/></button></div>
     <div className="table-wrap"><table><thead><tr><th>{t('product')}</th><th>{t('operation')}</th><th>{t('quantity')}</th><th>{t('status')}</th><th/></tr></thead><tbody>
-      {activityRows.map(row=><tr key={row.id}><td><span className="product-cell"><span className="product-mini"><Package size={14}/></span><span><b>{row.product}</b><small>{row.id} · {row.time}</small></span></span></td><td><span className={'operation-pill '+row.operation}>{t(row.operation)}</span></td><td className="quantity-cell">{row.quantity}</td><td><span className={'status-pill '+row.status}><i/>{t(row.status)}</span></td><td><button className="row-more" aria-label="More"><MoreHorizontal size={15}/></button></td></tr>)}
+      {data.recentActivity.map(row=><tr key={row.id}><td><span className="product-cell"><span className="product-mini"><Package size={14}/></span><span><b>{row.product}</b><small>{row.id} · {row.time}</small></span></span></td><td><span className={'operation-pill '+row.operation}>{t(row.operation)}</span></td><td className="quantity-cell">{row.quantity}</td><td><span className={'status-pill '+row.status}><i/>{t(row.status)}</span></td><td><button className="row-more" aria-label="More"><MoreHorizontal size={15}/></button></td></tr>)}
+      {!data.recentActivity.length&&<tr><td colSpan="5" className="dashboard-empty">—</td></tr>}
     </tbody></table></div>
   </article>;
 }
 
-function StockOverview({ t }) {
-  const items = [
-    {name:'Youkous 1.5L',stock:76,label:t('available'),tone:'good'},
-    {name:'Ifri 0.5L',stock:48,label:t('available'),tone:'good'},
-    {name:'Jus d’orange',stock:18,label:t('low'),tone:'warn'},
-    {name:'Sucre 1 kg',stock:0,label:t('out'),tone:'bad'},
-  ];
+function StockOverview({ t, data }) {
   return <article className="panel stock-panel"><div className="panel-head"><div><span className="eyebrow">{t('products')}</span><h2>{t('stockOverview')}</h2></div><PackageCheck size={18} className="panel-muted"/></div>
-    <div className="stock-list">{items.map(item=><div className="stock-item" key={item.name}><span className="stock-avatar"><Package size={15}/></span><span className="stock-name"><b>{item.name}</b><small>{item.label}</small></span><span className="stock-amount">{item.stock}<small>pcs</small></span><span className={'stock-indicator '+item.tone}/></div>)}</div>
+    <div className="stock-list">{data.stockItems.map(item=><div className="stock-item" key={item.name}><span className="stock-avatar"><Package size={15}/></span><span className="stock-name"><b>{item.name}</b><small>{t(item.label)}</small></span><span className="stock-amount">{item.stock}<small>pcs</small></span><span className={'stock-indicator '+item.tone}/></div>)}{!data.stockItems.length&&<div className="dashboard-empty">{t('notLinked')}</div>}</div>
   </article>;
 }
 
-function DashboardPage({ t, lang, onNavigate, onOpenSection }) {
+function DashboardPage({ t, lang, onNavigate, onOpenSection, data }) {
   return <div className="page-content dashboard-content">
-    <div className="page-heading"><div><div className="heading-kicker"><span className="health-dot"/>{t('welcome')} <b>VELTRO</b></div><h1>{t('home')}</h1><p>{t('subtitle')}</p></div><div className="heading-actions"><span className="demo-badge">{t('demo')}</span><button className="date-button"><CalendarDays size={14}/>{t('today')} <ChevronDown size={14}/></button></div></div>
+    <div className="page-heading"><div><div className="heading-kicker"><span className="health-dot"/>{t('welcome')} <b>VELTRO</b></div><h1>{t('home')}</h1><p>{t('subtitle')}</p></div><div className="heading-actions"><span className="date-button">{t('today')}</span><button className="date-button"><CalendarDays size={14}/>{t('today')} <ChevronDown size={14}/></button></div></div>
     <section className="section-launcher" aria-label={t('allSections')}>
       <div className="section-launcher-heading"><div><h2>{t('allSections')}</h2><p>{t('sectionsIntro')}</p></div><span className="section-launcher-mark"><LayoutDashboard size={20}/></span></div>
       <div className="section-launcher-grid">
@@ -232,12 +236,12 @@ function DashboardPage({ t, lang, onNavigate, onOpenSection }) {
       <div className="dashboard-overview-heading"><div><h2>{t('home')}</h2><p>{t('subtitle')}</p></div><span className="dashboard-overview-mark"><ChartNoAxesCombined size={19}/></span></div>
       <div className="metrics-grid">
         <MetricCard icon={Wallet} label={t('capital')} value="— DA" trend="" tone="blue" footer={t('capitalHint')}/>
-        <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value="— DA" trend="" tone="green" footer={t('profitHint')}/>
-        <MetricCard icon={ShoppingCart} label={t('revenue')} value="245,800 DA" trend="8.4%" tone="violet" footer={t('demo')}/>
+        <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value={dashboardMoney(dashboardData.dailyProfit)} trend="" tone="green" footer={t('profitHint')}/>
+        <MetricCard icon={ShoppingCart} label={t('revenue')} value={dashboardMoney(data.todaySales)} trend="" tone="violet" footer={t('notLinked')}/>
         <MetricCard icon={ReceiptText} label={t('expense')} value="— DA" trend="" tone="amber" footer={t('notLinked')}/>
       </div>
-      <div className="charts-grid"><SalesChart t={t} lang={lang}/><MixChart t={t}/></div>
-      <div className="lower-grid"><RecentActivity t={t}/><StockOverview t={t}/></div>
+      <div className="charts-grid"><SalesChart t={t} lang={lang} data={data}/><MixChart t={t} data={data}/></div>
+      <div className="lower-grid"><RecentActivity t={t} data={data}/><StockOverview t={t} data={data}/></div>
       <div className="quick-actions"><span>{t('shortcuts')}</span>
         <button onClick={()=>onNavigate({id:'product-list',label:{ar:'قائمة المنتجات',en:'Product list',fr:'Liste des produits'}})}><Package size={14}/>{t('addProduct')}</button>
         <button onClick={()=>onNavigate({id:'point-of-sale',label:{ar:'نقطة البيع',en:'Point of sale',fr:'Point de vente'}})}><ShoppingCart size={14}/>{t('newSale')}</button>
@@ -549,7 +553,7 @@ function ModulePage({ page, parent, t, lang, onBack, currentUser }) {
   const parentLabel = parent ? getLabel(parent,lang) : t('allSections');
   return <div className="page-content module-content">
     <div className="page-heading"><div><div className="heading-kicker"><span className="health-dot"/>{parentLabel}</div><h1>{title}</h1><p>{t('moduleHint')}</p></div><span className="module-icon"><Icon size={24}/></span></div>
-    <div className="module-metrics"><div className="module-metric"><span>{t('module')}</span><b>{parentLabel}</b></div><div className="module-metric"><span>{t('status')}</span><b><i className="health-dot"/>{t('demo')}</b></div><div className="module-metric"><span>{t('today')}</span><b>23 / 10 / 2026</b></div></div>
+    <div className="module-metrics"><div className="module-metric"><span>{t('module')}</span><b>{parentLabel}</b></div><div className="module-metric"><span>{t('status')}</span><b><i className="health-dot"/>{t('notLinked')}</b></div><div className="module-metric"><span>{t('today')}</span><b>23 / 10 / 2026</b></div></div>
     <section className="module-workspace panel"><div className="module-empty-icon"><Icon size={28}/></div><h2>{title}</h2><p>{t('moduleHint')}</p><div className="module-empty-actions"><button onClick={onBack}>{t('back')}</button><span>{t('demo')}</span></div></section>
   </div>;
 }
@@ -657,6 +661,7 @@ export default function App() {
   const [logoutOpen,setLogoutOpen]=useState(false);
   const [signedOut,setSignedOut]=useState(false);
   const t=(key)=>copy[lang][key]||copy.ar[key]||key;
+  const dashboardData=getDashboardData();
   const handleManualSync=async()=>{if(manualSyncing)return;setManualSyncing(true);try{const result=await syncWorkspace();if(result?.status!=='synced')throw new Error('sync_failed');setCloudState('connected');window.alert(t('syncDone'));}catch{setCloudState('error');window.alert(t('syncError'));}finally{setManualSyncing(false);}};
   const dir=lang==='ar'?'rtl':'ltr';
   const NavigationSectionIcon=openNavSection?.icon;
@@ -742,13 +747,13 @@ export default function App() {
               <span className="home-dashboard-mark"><ChartNoAxesCombined size={18}/></span>
             </div>
             <div className="home-metrics-grid">
-              <MetricCard icon={PackageCheck} label={t('inventoryValue')} value="— DA" tone="blue" footer={t('notLinked')}/>
+              <MetricCard icon={PackageCheck} label={t('inventoryValue')} value={dashboardMoney(dashboardData.inventoryValue)} tone="blue" footer={t('notLinked')}/>
               <MetricCard icon={Wallet} label={t('capital')} value="— DA" tone="green" footer={t('capitalHint')}/>
               <MetricCard icon={ChartNoAxesCombined} label={t('dailyProfit')} value="— DA" tone="violet" footer={t('profitHint')}/>
               <MetricCard icon={ShoppingCart} label={t('revenue')} value="245,800 DA" trend="8.4%" tone="amber" footer={t('demo')}/>
             </div>
-            <div className="home-dashboard-charts"><SalesChart t={t} lang={lang}/><MixChart t={t}/></div>
-            <div className="home-dashboard-bottom"><StockOverview t={t}/><RecentActivity t={t}/></div>
+            <div className="home-dashboard-charts"><SalesChart t={t} lang={lang} data={dashboardData}/><MixChart t={t} data={dashboardData}/></div>
+            <div className="home-dashboard-bottom"><StockOverview t={t} data={dashboardData}/><RecentActivity t={t} data={dashboardData}/></div>
           </div>
         </section>
       </main>
