@@ -186,7 +186,7 @@ export async function getOrCreateWorkspace() {
   if (membershipError) throw membershipError;
 
   let membership = Array.isArray(memberships) && memberships.length
-    ? memberships.find(item => item.role === 'owner') || memberships[0]
+    ? memberships.find(item => item.role !== 'owner') || memberships.find(item => item.role === 'owner') || memberships[0]
     : null;
   let workspace = null;
 
