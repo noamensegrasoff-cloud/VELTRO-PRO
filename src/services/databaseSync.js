@@ -17,7 +17,7 @@ const LEGACY_STORAGE_ENTITY = 'local_storage';
 const LEGACY_STORAGE_BASELINE_KEY = 'veltro.cloud-sync.local-storage-baseline.v1';
 const LEGACY_STORAGE_OWNER_KEY = 'veltro.cloud-sync.local-storage-owner.v1';
 const LEGACY_STORAGE_SNAPSHOT_ENTITY = 'legacy_storage_snapshot';
-const LEGACY_STORAGE_EXCLUDED = /^(?:veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|veltro-products-catalog-v1|veltro-products-conflicts-v1|sb-[^-]+-auth-token)$/i;
+const LEGACY_STORAGE_EXCLUDED = /^(?:veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|veltro-products-catalog-v1|veltro\.cloud-sync\.local-storage-owner\.v1|veltro-products-conflicts-v1|sb-[^-]+-auth-token)$/i;
 
 function readStorageBaseline() {
   try {
