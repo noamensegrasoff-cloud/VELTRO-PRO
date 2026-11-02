@@ -7152,235 +7152,112 @@ html body #root .products-page .pform-modal>.pform-footer{
 
 
 
-/* Product editor — content-sized cards, compact vertical rhythm. */
+/* Product editor: independent columns and cards sized only by their content. */
 html body #root .products-page .pform-overlay .pform-modal.pform-natural-modal{
-  display:flex!important;
-  flex-direction:column!important;
+  display:flex!important;flex-direction:column!important;
   width:min(1320px,calc(100vw - 40px))!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:calc(100dvh - 28px)!important;
-  overflow:hidden!important;
+  height:auto!important;min-height:0!important;
+  max-height:calc(100dvh - 28px)!important;overflow:hidden!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-content.pform-content-all.pform-natural-content{
-  display:block!important;
-  flex:0 1 auto!important;
-  width:100%!important;
-  height:auto!important;
-  min-height:0!important;
-  max-height:calc(100dvh - 142px)!important;
-  overflow-x:hidden!important;
-  overflow-y:auto!important;
-  padding:7px 10px 9px!important;
-  box-sizing:border-box!important;
+  display:block!important;flex:0 1 auto!important;width:100%!important;
+  height:auto!important;min-height:0!important;max-height:calc(100dvh - 142px)!important;
+  overflow-x:hidden!important;overflow-y:auto!important;
+  padding:8px 12px!important;box-sizing:border-box!important;
 }
-html body #root .products-page .pform-overlay .pform-modal .pform-section.pform-product-grid.pform-all-cards.pform-natural-section{
-  display:block!important;
-  width:100%!important;
-  max-width:none!important;
-  height:auto!important;
-  min-height:0!important;
-  margin:0!important;
-  overflow:visible!important;
+html body #root .products-page .pform-overlay .pform-modal .pform-natural-section{
+  display:block!important;width:100%!important;height:auto!important;min-height:0!important;
+  max-width:none!important;margin:0!important;overflow:visible!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-natural-section>.pform-section-heading{
-  display:flex!important;
-  width:100%!important;
-  margin:0 0 6px!important;
+  display:flex!important;width:100%!important;margin:0 0 8px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-masonry-grid.pform-natural-grid{
-  display:flex!important;
-  flex-direction:row!important;
-  flex-wrap:nowrap!important;
-  align-items:flex-start!important;
-  justify-content:flex-start!important;
-  gap:8px!important;
-  width:100%!important;
-  height:auto!important;
-  min-height:0!important;
+  display:flex!important;flex-flow:row nowrap!important;align-items:flex-start!important;
+  justify-content:flex-start!important;gap:10px!important;width:100%!important;
+  height:auto!important;min-height:0!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column.pform-natural-column{
-  display:flex!important;
-  flex:1.1 1 0!important;
-  flex-direction:column!important;
-  align-items:stretch!important;
-  align-self:flex-start!important;
-  justify-content:flex-start!important;
-  width:0!important;
-  min-width:0!important;
-  max-width:none!important;
-  height:auto!important;
-  min-height:0!important;
-  gap:7px!important;
+  display:flex!important;flex:1.1 1 0!important;flex-direction:column!important;
+  align-items:flex-start!important;align-self:flex-start!important;justify-content:flex-start!important;
+  width:0!important;min-width:0!important;max-width:none!important;
+  height:auto!important;min-height:0!important;gap:9px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column.pform-natural-column.pform-masonry-right{
   flex:0.9 1 0!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-feature-card.pform-natural-card{
-  display:flex!important;
-  flex:0 0 auto!important;
-  flex-direction:column!important;
-  align-self:flex-start!important;
-  justify-content:flex-start!important;
-  width:100%!important;
-  min-width:0!important;
-  min-height:0!important;
-  height:auto!important;
-  max-height:none!important;
-  margin:0!important;
-  padding:7px 9px!important;
-  gap:5px!important;
-  overflow:visible!important;
+  display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
+  align-self:flex-start!important;justify-content:flex-start!important;
+  width:100%!important;min-width:0!important;min-height:0!important;
+  height:auto!important;max-height:none!important;margin:0!important;
+  padding:10px!important;gap:7px!important;overflow:visible!important;
   box-sizing:border-box!important;
 }
+html body #root .products-page .pform-overlay .pform-modal .pform-natural-card>*{
+  flex:0 0 auto!important;min-height:0!important;
+}
 html body #root .products-page .pform-overlay .pform-modal .pform-feature-heading{
-  display:flex!important;
-  flex:0 0 auto!important;
-  align-items:center!important;
-  gap:6px!important;
-  min-height:0!important;
-  padding:0 0 2px!important;
-  margin:0!important;
+  display:flex!important;align-items:center!important;gap:8px!important;
+  min-height:0!important;margin:0!important;padding:0!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-feature-icon{
-  width:26px!important;
-  height:26px!important;
-  min-width:26px!important;
-  border-radius:7px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-feature-heading>div>b{
-  font-size:11px!important;
-  line-height:1.2!important;
+  width:30px!important;height:30px!important;min-width:30px!important;flex:0 0 30px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-basic-grid,
 html body #root .products-page .pform-overlay .pform-modal .pform-carton-grid,
 html body #root .products-page .pform-overlay .pform-modal .pform-feature-options,
 html body #root .products-page .pform-overlay .pform-modal .pform-price-grid{
-  min-width:0!important;
-  align-content:start!important;
-  grid-auto-rows:max-content!important;
-  gap:5px!important;
+  min-width:0!important;align-content:start!important;grid-auto-rows:max-content!important;
+  gap:8px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-field{
-  display:flex!important;
-  flex-direction:column!important;
-  align-self:start!important;
-  height:auto!important;
-  min-width:0!important;
-  gap:2px!important;
-  font-size:10px!important;
+  display:flex!important;flex-direction:column!important;align-self:start!important;
+  height:auto!important;min-width:0!important;gap:4px!important;font-size:11px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-field>span{
-  min-height:0!important;
-  line-height:1.2!important;
+  min-height:0!important;line-height:1.3!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-field input,
 html body #root .products-page .pform-overlay .pform-modal .pform-field select{
-  height:29px!important;
-  min-height:29px!important;
-  padding:0 7px!important;
-  border-radius:7px!important;
-  font-size:11px!important;
-  box-sizing:border-box!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-code-input>button[title]{
-  flex-basis:29px!important;
-  width:29px!important;
-  min-width:29px!important;
-  height:29px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-manage-list{
-  height:29px!important;
-  min-height:29px!important;
-  padding:0 7px!important;
-  font-size:10px!important;
+  height:35px!important;min-height:35px!important;padding:0 9px!important;
+  border-radius:8px!important;font-size:12px!important;box-sizing:border-box!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-price-block{
-  flex:0 0 auto!important;
-  align-self:flex-start!important;
-  height:auto!important;
-  min-height:0!important;
-  margin:0!important;
-  padding:7px!important;
-  border-radius:8px!important;
+  display:block!important;flex:0 0 auto!important;align-self:flex-start!important;
+  width:100%!important;height:auto!important;min-height:0!important;
+  margin:0!important;padding:9px!important;box-sizing:border-box!important;
 }
-html body #root .products-page .pform-overlay .pform-modal .pform-price-head{
-  margin:0 0 4px!important;
-}
+html body #root .products-page .pform-overlay .pform-modal .pform-price-head{margin:0 0 7px!important}
 html body #root .products-page .pform-overlay .pform-modal .pform-price-input{
-  height:29px!important;
-  min-height:29px!important;
-  padding:0 6px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-price-group{
-  display:flex!important;
-  flex-direction:column!important;
-  align-self:start!important;
-  height:auto!important;
-  min-width:0!important;
-  gap:2px!important;
+  height:35px!important;min-height:35px!important;padding:0 8px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-feature-options{
-  margin:4px 0 0!important;
-  padding:5px 0 0!important;
+  margin:6px 0 0!important;padding:7px 0 0!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-photo-layout{
-  display:block!important;
-  min-height:0!important;
-  height:auto!important;
+  display:block!important;width:100%!important;height:auto!important;min-height:0!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-image-drop{
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  min-height:108px!important;
-  max-height:150px!important;
-  height:auto!important;
-  padding:8px!important;
-  gap:5px!important;
-  border-radius:9px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-image-drop>span{
-  width:32px!important;
-  height:32px!important;
-  border-radius:8px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-image-drop>span svg{
-  width:19px!important;
-  height:19px!important;
-}
-html body #root .products-page .pform-overlay .pform-modal .pform-upload-btn{
-  padding:6px 9px!important;
-  font-size:10px!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  min-height:104px!important;max-height:145px!important;height:auto!important;
+  padding:9px!important;gap:6px!important;
 }
 html body #root .products-page .pform-overlay .pform-modal .pform-natural-column>.pform-section-heading{
-  display:flex!important;
-  width:100%!important;
-  margin:1px 0 0!important;
+  display:flex!important;width:100%!important;margin:2px 0 0!important;
 }
 @media(max-width:760px){
   html body #root .products-page .pform-overlay .pform-modal.pform-natural-modal{
-    width:calc(100vw - 16px)!important;
-    max-height:calc(100dvh - 16px)!important;
+    width:calc(100vw - 16px)!important;max-height:calc(100dvh - 16px)!important;
   }
   html body #root .products-page .pform-overlay .pform-modal .pform-content.pform-content-all.pform-natural-content{
-    max-height:calc(100dvh - 130px)!important;
-    padding:7px!important;
+    max-height:calc(100dvh - 130px)!important;padding:8px!important;
   }
   html body #root .products-page .pform-overlay .pform-modal .pform-masonry-grid.pform-natural-grid{
-    flex-direction:column!important;
-    flex-wrap:nowrap!important;
-    gap:7px!important;
+    flex-direction:column!important;flex-wrap:nowrap!important;gap:8px!important;
   }
   html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column.pform-natural-column,
   html body #root .products-page .pform-overlay .pform-modal .pform-masonry-column.pform-natural-column.pform-masonry-right{
-    flex:0 0 auto!important;
-    width:100%!important;
-    height:auto!important;
-    gap:7px!important;
-  }
-  html body #root .products-page .pform-overlay .pform-modal .pform-image-drop{
-    min-height:104px!important;
-    max-height:140px!important;
+    flex:0 0 auto!important;width:100%!important;height:auto!important;gap:8px!important;
   }
 }
