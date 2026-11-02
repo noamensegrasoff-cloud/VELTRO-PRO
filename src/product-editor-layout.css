@@ -202,41 +202,76 @@ html body .pform-overlay.product-editor-rebuilt .pform-footer{
   }
 }
 
-/* Final desktop layout reset: prevent legacy product-form rules from sizing editor cards. */
-html body .pform-overlay.product-editor-rebuilt .product-editor-section .pform-feature-card{
-  display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
-  align-self:flex-start!important;justify-content:flex-start!important;
-  width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
-  margin:0!important;overflow:visible!important;box-sizing:border-box!important;
-}
+/* Clean product-editor layout: two independent vertical lanes.
+   Each card is measured by its own content; no shared grid rows,
+   balanced multicolumn flow, equal-height stretching, or reserved row gaps. */
 html body .pform-overlay.product-editor-rebuilt .product-editor-columns{
+  display:flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
   align-items:flex-start!important;
+  justify-content:flex-start!important;
+  gap:12px!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
 }
 html body .pform-overlay.product-editor-rebuilt .product-editor-column{
-  align-self:flex-start!important;height:auto!important;min-height:0!important;
+  display:flex!important;
+  flex:1 1 0!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  align-self:flex-start!important;
+  justify-content:flex-start!important;
+  gap:10px!important;
+  width:0!important;
+  min-width:0!important;
+  max-width:none!important;
+  height:auto!important;
+  min-height:0!important;
+}
+html body .pform-overlay.product-editor-rebuilt .product-editor-card{
+  flex:0 0 auto!important;
+  align-self:stretch!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
 }
 html body .pform-overlay.product-editor-rebuilt .pform-basic-grid,
 html body .pform-overlay.product-editor-rebuilt .pform-carton-grid,
 html body .pform-overlay.product-editor-rebuilt .pform-feature-options,
-html body .pform-overlay.product-editor-rebuilt .pform-price-grid,
-html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid,
 html body .pform-overlay.product-editor-rebuilt .pform-expiry-options{
-  display:grid!important;grid-auto-rows:max-content!important;
-  align-content:start!important;align-items:start!important;
-  height:auto!important;min-height:0!important;
-}
-html body .pform-overlay.product-editor-rebuilt .pform-basic-grid,
-html body .pform-overlay.product-editor-rebuilt .pform-carton-grid,
-html body .pform-overlay.product-editor-rebuilt .pform-feature-options,
-html body .pform-overlay.product-editor-rebuilt .pform-expiry-options{
+  display:grid!important;
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  margin:0!important;padding:0!important;border:0!important;
+  grid-auto-rows:max-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
 }
 html body .pform-overlay.product-editor-rebuilt .pform-price-grid,
 html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid{
+  display:grid!important;
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-auto-rows:max-content!important;
+  align-content:start!important;
+  align-items:start!important;
+  height:auto!important;
+  min-height:0!important;
 }
 @media(max-width:760px){
+  html body .pform-overlay.product-editor-rebuilt .product-editor-columns{
+    flex-direction:column!important;
+    flex-wrap:nowrap!important;
+    gap:8px!important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column{
+    flex:0 0 auto!important;
+    width:100%!important;
+    gap:8px!important;
+  }
   html body .pform-overlay.product-editor-rebuilt .pform-basic-grid,
   html body .pform-overlay.product-editor-rebuilt .pform-carton-grid,
   html body .pform-overlay.product-editor-rebuilt .pform-feature-options,
@@ -244,50 +279,5 @@ html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid{
   html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid,
   html body .pform-overlay.product-editor-rebuilt .pform-expiry-options{
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  }
-}
-
-
-/* Desktop Masonry: cards flow independently in two balanced columns.
-   The column wrappers are transparent so a short card does not reserve
-   the height of a neighboring card or create an empty row beneath it. */
-@media (min-width: 761px) {
-  html body .pform-overlay.product-editor-rebuilt .product-editor-columns {
-    display: block !important;
-    column-count: 2 !important;
-    column-gap: 12px !important;
-    column-fill: balance !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-  }
-  html body .pform-overlay.product-editor-rebuilt .product-editor-column {
-    display: contents !important;
-  }
-  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .product-editor-card,
-  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .pform-section-heading {
-    break-inside: avoid-column !important;
-    -webkit-column-break-inside: avoid !important;
-    page-break-inside: avoid !important;
-  }
-  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .product-editor-card {
-    display: inline-flex !important;
-    vertical-align: top !important;
-    width: 100% !important;
-    margin: 0 0 10px !important;
-  }
-  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .pform-section-heading {
-    display: flex !important;
-    width: 100% !important;
-    margin: 2px 0 9px !important;
-  }
-}
-@media (max-width: 760px) {
-  html body .pform-overlay.product-editor-rebuilt .product-editor-columns {
-    display: flex !important;
-    flex-direction: column !important;
-  }
-  html body .pform-overlay.product-editor-rebuilt .product-editor-column {
-    display: flex !important;
   }
 }
