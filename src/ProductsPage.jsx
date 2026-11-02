@@ -126,7 +126,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
             <div className="pform-price-block"><div className="pform-price-head"><div><b>{tx.purchaseInfo}</b></div><span><TrendingUp size={15}/>{tx.auto}</span></div><div className="pform-price-grid">
               <div className="pform-price-group"><b>{tx.cartonCost}</b><div className="pform-price-input"><input type="number" min="0" step=".01" value={form.cartonCost} onChange={e=>updateCartonPrice('purchase',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
               <div className="pform-price-group"><b>{tx.unitCost}</b><div className="pform-price-input"><input type="number" min="0" step=".01" value={form.unitCost} onChange={e=>updateUnitPrice('purchase',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
-            </div></div><div className="pform-feature-card product-editor-card">
+            </div></div><div className="pform-sales-section">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><TrendingUp size={19}/></span><div><b>{tx.salesInfo}</b></div></div>
             <div className="pform-price-grid pform-sales-price-grid">
               <div className="pform-price-group"><b>{tx.cartonSell}</b><div className={"pform-price-input "+(form.cartonSell!==''&&Number(form.cartonCost||((Number(form.unitCost)||0)*Math.max(1,Number(form.unitsPerCarton)||1)))>Number(form.cartonSell)?'pform-sale-below-cost':'')}><input type="number" min="0" step=".01" value={form.cartonSell} onChange={e=>updateCartonPrice('sale',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
