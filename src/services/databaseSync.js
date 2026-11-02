@@ -48,6 +48,29 @@ async function switchLegacyStorageOwner(workspaceId, userId) {
   }
   if (currentOwner === ownerToken) return;
 
+  // Older releases stored the owner marker as userId only. Migrate the
+  // current account's live local data in place so its first upgrade loses
+  // nothing when the workspace ID is added to the snapshot key.
+  if (currentOwner === userId) {
+    const values = {};
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const key = localStorage.key(i);
+      if (isAccountScopedStorageKey(key)) {
+        const value = localStorage.getItem(key);
+        if (value !== null) values[key] = value;
+      }
+    }
+    await saveLocalRecord({
+      entityType: LEGACY_STORAGE_SNAPSHOT_ENTITY,
+      recordId: 'active',
+      workspaceId: ownerToken,
+      queueForSync: false,
+      payload: { values, baseline: readStorageBaseline() },
+    });
+    localStorage.setItem(LEGACY_STORAGE_OWNER_KEY, ownerToken);
+    return;
+  }
+
   const values = {};
   for (let i = 0; i < localStorage.length; i += 1) {
     const key = localStorage.key(i);
@@ -67,11 +90,19 @@ async function switchLegacyStorageOwner(workspaceId, userId) {
   });
 
   Object.keys(values).forEach(key => localStorage.removeItem(key));
-  const snapshot = await getLocalRecord({
+  let snapshot = await getLocalRecord({
     entityType: LEGACY_STORAGE_SNAPSHOT_ENTITY,
     recordId: 'active',
     workspaceId: ownerToken,
   });
+  if (!snapshot) {
+    // Older account snapshots were keyed by userId before workspace scoping.
+    snapshot = await getLocalRecord({
+      entityType: LEGACY_STORAGE_SNAPSHOT_ENTITY,
+      recordId: 'active',
+      workspaceId: userId,
+    });
+  }
   const nextValues = snapshot?.payload?.values;
   if (nextValues && typeof nextValues === 'object' && !Array.isArray(nextValues)) {
     for (const [key, value] of Object.entries(nextValues)) {
