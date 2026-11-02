@@ -35,6 +35,20 @@ Never put a Supabase `service_role` key or secret key in frontend environment va
 
 Run `supabase/security_verification.sql` after applying the full migration chain and the pending repair migration. The verification file is read-only; its results must be reviewed rather than treated as automatic proof of security.
 
+## Client-side isolation and sync fixes on the maintenance branch
+
+The maintenance branch now also:
+
+- Resolves a user's existing `workspace_members` membership before creating a workspace. This prevents employee accounts from silently receiving a separate empty workspace.
+- Keys local business-data snapshots by both authenticated user ID and workspace ID. Product catalogs and conflict archives are included in those snapshots even though they are excluded from the generic legacy-storage sync.
+- Blocks the authenticated UI until the correct account/workspace snapshot has been restored. If the device is offline during an account switch, the app does not reveal the previous account's cached data.
+- Filters the IndexedDB outbox by its original workspace so pending changes cannot be uploaded into another workspace.
+- Continues syncing permitted records when an employee is denied access to an unrelated legacy-storage key.
+- Downloads all permitted entity types in paginated batches instead of issuing one request per entity type.
+- Reads the local product catalog only after the active workspace has been resolved.
+
+These changes are in GitHub on `maintenance/full-audit-cleanup`; they have not been merged into `main`.
+
 ## Required two-account isolation test
 
 Use two different Google accounts in separate browser profiles or incognito sessions. Do not use a service-role key.
