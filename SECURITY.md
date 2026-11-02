@@ -4,7 +4,7 @@
 
 `supabase/schema.sql` is only the original foundation script for `workspaces`, `workspace_members`, and `cloud_records`. It is not a complete export of the live database.
 
-The connected Supabase project reports nine applied migrations:
+The connected Supabase project reports ten applied migrations:
 
 - `20261023235105_remove_duplicate_workspace_owner_trigger`
 - `20261023235125_restrict_rls_auto_enable_function`
@@ -15,10 +15,11 @@ The connected Supabase project reports nine applied migrations:
 - `20261102022438_index_uncovered_workspace_foreign_keys`
 - `20261102022741_harden_workspace_permissions`
 - `20261102022816_index_workspace_branch_assignments`
+- `20261102113103_reconcile_permission_rules`
 
 The repository contains source files for the last four migrations. The first five historical migration sources are missing from GitHub. A fresh project therefore cannot currently be rebuilt reliably from this repository. Do not treat `schema.sql` plus the committed migrations as a complete bootstrap. Recover the missing migration sources or commit a verified full schema snapshot before creating another production project.
 
-A reconciliation migration, `20261102023000_reconcile_permission_rules.sql`, has been added to the maintenance branch. **It has not been applied to the connected Supabase project.** It resolves drift between the live database and the finalized source of `20261102022741_harden_workspace_permissions.sql`.
+The reconciliation migration `20261102113103_reconcile_permission_rules.sql` has been applied to the connected Supabase project and is recorded in migration history. It reconciles the live permission mapper and employee-profile policies with the finalized source. The live verification confirms customer transaction reads map to `customers.debts.view`, expense writes map to `cash.expense.create`, and employee-profile writes use `employees.manage`.
 
 Never put a Supabase `service_role` key or secret key in frontend environment variables. The browser must use only a publishable/anon key and rely on database RLS for authorization.
 
@@ -31,15 +32,14 @@ Never put a Supabase `service_role` key or secret key in frontend environment va
 - Cloud-record permission mapping correctly recognizes `sales_invoices`, `purchase_receipts`, `product_movements`, and the legacy `local_storage` record type.
 - The live database has composite foreign keys preventing branch assignments from crossing workspace/member boundaries.
 - The audit-log ID is an identity column.
-- There is still migration-source drift: the live `required_workspace_permission` function maps cash updates to `cash.adjust` (not present in the role templates), expense updates to `cash.adjust`, and customer transaction reads to `customers.view`. The finalized migration source maps these to `cash.open_close`, `cash.expense.create`, and `customers.debts.view`, respectively.
-- The live `employee_profiles` write policies still require workspace ownership, while the finalized migration source uses the `employees.manage` permission. The reconciliation migration updates the live policy to match that source.
+- The reconciliation migration has removed the previously observed permission-mapping drift: customer transaction reads map to `customers.debts.view`, expense writes map to `cash.expense.create`, and employee-profile writes use `employees.manage`.
 - The database has employee, custom-role, branch, session, and approval tables, but the frontend has no implemented employee/role/permission screens or role-based navigation/feature gating. The `users-roles`, `permissions`, `devices-branches`, and most other unfinished navigation items currently fall through to a generic “not linked” module page.
 - Business onboarding is stored in each authenticated user's `user_metadata.business_profile`, not on the workspace. An employee account without that metadata is still sent through store onboarding, so the multi-user workspace flow is not ready for production employees.
 - The reconciliation migration makes customer transaction history require `customers.debts.view`. The POS currently displays the old-customer-debt card without frontend permission gating. Before applying this migration, decide whether cashiers should receive `customers.debts.view` or whether that debt card should be hidden for roles without it; otherwise their debt total may be incomplete.
 - Supabase's current security advisor reports one remaining warning: leaked-password protection is disabled. Enable it in Auth security settings before public onboarding.
 - The performance advisor now reports unused indexes, not missing foreign-key indexes. These indexes were recently added to support workspace joins; do not remove them based only on the current low-volume usage statistics.
 
-Run `supabase/security_verification.sql` after applying the complete migration chain and the reconciliation migration. The verification file is read-only; review its output rather than treating it as automatic proof of security.
+Run `supabase/security_verification.sql` against the connected project to independently verify the current migration chain and policies. The verification file is read-only; review its output rather than treating it as automatic proof of security.
 
 ## Client-side isolation and sync fixes on the maintenance branch
 
