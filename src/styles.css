@@ -7261,3 +7261,20 @@ html body #root .products-page .pform-overlay .pform-modal .pform-natural-column
     flex:0 0 auto!important;width:100%!important;height:auto!important;gap:8px!important;
   }
 }
+
+
+/* Purchase and sales now share one unified product-editor card. */
+html body #root .products-page .pform-overlay .pform-modal .pform-sales-section{
+  display:flex!important;flex-direction:column!important;gap:7px!important;
+  width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;
+  margin:8px 0 0!important;padding:10px 0 0!important;box-sizing:border-box!important;
+  border-top:1px solid rgba(137,100,203,.24)!important;background:transparent!important;
+  border-radius:0!important;box-shadow:none!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-sales-section>.pform-feature-heading{
+  margin:0!important;padding:0!important;min-height:26px!important;
+}
+html body #root .products-page .pform-overlay .pform-modal .pform-price-block{
+  background:transparent!important;border:0!important;border-radius:0!important;
+  box-shadow:none!important;padding:7px 0!important;
+}
