@@ -837,7 +837,6 @@
 .purchase-supplier-modal .purchase-primary,.purchase-supplier-confirm .purchase-primary{background:linear-gradient(110deg,#6d4acb,#4d6bdc)!important;color:#fff!important;border-color:transparent!important}
 .purchase-supplier-modal .purchase-secondary,.purchase-supplier-confirm .purchase-secondary{background:rgba(255,255,255,.88)!important;color:#594778!important;border-color:rgba(125,105,181,.22)!important}
 .purchase-supplier-modal .purchase-primary:hover,.purchase-supplier-confirm .purchase-primary:hover{filter:brightness(1.05)}
-@media(prefers-color-scheme:dark){.purchase-supplier-modal,.purchase-supplier-confirm{background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(248,246,255,.97) 58%,rgba(241,244,255,.97))!important;color:#30264f!important}.purchase-supplier-form-grid input:not([type=file]),.purchase-supplier-form-grid textarea{background:rgba(255,255,255,.88)!important;color:#30264f!important}.purchase-supplier-search input{color:#30264f!important}}
 
 
 /* Refined supplier image picker */
