@@ -66,7 +66,7 @@ select wmb.workspace_id, wmb.user_id, wmb.branch_id,
        wm.workspace_id as member_workspace_id
 from public.workspace_member_branches wmb
 left join public.workspace_branches wb on wb.id = wmb.branch_id
-left join public.workspace_members wm on wm.user_id = wmb.user_id
+left join public.workspace_members wm on wm.workspace_id = wmb.workspace_id and wm.user_id = wmb.user_id
 where wb.workspace_id is distinct from wmb.workspace_id
    or not exists (
      select 1 from public.workspace_members m
