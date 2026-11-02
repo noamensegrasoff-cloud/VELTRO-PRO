@@ -294,7 +294,7 @@ function SupplierListPage({ lang }) {
     event.preventDefault();
     const name = form.name.trim();
     if (!name) { setError(t('required')); return; }
-    const nextId = editingId || ('SUP-' + String(Math.max(0,...suppliers.map(s => Number(String(s.id||'').replace(/\D/g,''))||0))+1).padStart(4,'0'));
+    const nextId = editingId || ('SUP-' + (globalThis.crypto?.randomUUID?.() || (Date.now()+'-'+Math.random().toString(36).slice(2,10))));
     if (suppliers.some(s => s.id === nextId && s.id !== editingId)) { setError(t('duplicate')); return; }
     const record = { ...form, name, phone:form.phone.trim(), email:form.email.trim(), balance:Math.max(0,Number(form.balance)||0), address:form.address.trim(), description:form.description.trim(), id:nextId, updatedAt:new Date().toISOString() };
     setSuppliers(current => editingId ? current.map(s => s.id===editingId ? record : s) : [record,...current]);
@@ -392,7 +392,7 @@ function CustomerListPage({ lang }) {
     event.preventDefault();
     const name = form.name.trim();
     if (!name) { setError(t('required')); return; }
-    const nextId = editingId || ('CUS-' + String(Math.max(0,...customers.map(s => Number(String(s.id||'').replace(/\D/g,''))||0))+1).padStart(4,'0'));
+    const nextId = editingId || ('CUS-' + (globalThis.crypto?.randomUUID?.() || (Date.now()+'-'+Math.random().toString(36).slice(2,10))));
     if (customers.some(s => s.id === nextId && s.id !== editingId)) { setError(t('duplicate')); return; }
     const record = { ...form, name, phone:form.phone.trim(), email:form.email.trim(), balance:Number(form.balance)||0, address:form.address.trim(), description:form.description.trim(), id:nextId, updatedAt:new Date().toISOString() };
     setCustomers(current => editingId ? current.map(s => s.id===editingId ? record : s) : [record,...current]);
