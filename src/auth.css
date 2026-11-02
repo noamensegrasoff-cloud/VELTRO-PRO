@@ -16,7 +16,7 @@
 @media(prefers-reduced-motion:reduce){.veltro-auth *,.veltro-auth *::before,.veltro-auth *::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
 
-/* VELTRO-PRO refreshed identity — glass cards, violet/turquoise highlights */
+/* VELTRO-PRO refreshed identity — glass cards, violet highlights */
 .veltro-auth{
   background:
     radial-gradient(ellipse at 78% 18%,rgba(125,53,214,.095),transparent 34%),
