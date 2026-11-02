@@ -7282,3 +7282,8 @@ html body #root .products-page .pform-overlay .pform-modal .pform-price-block{
 
 /* Portal scope keeps product dialog styles active when rendered under document.body. */
 .products-page.pform-portal-root{display:contents!important}
+
+/* Product-entry modal: escape app stacking contexts and stay above the interface. */
+body > .products-page.pform-portal-root{position:relative!important;z-index:2147483000!important;display:contents!important}
+body > .products-page.pform-portal-root .pform-overlay{position:fixed!important;inset:0!important;z-index:2147483000!important;display:flex!important;align-items:center!important;justify-content:center!important;isolation:isolate!important}
+body > .products-page.pform-portal-root .pform-modal{position:relative!important;z-index:2147483001!important}
