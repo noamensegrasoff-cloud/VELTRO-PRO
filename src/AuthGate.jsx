@@ -120,17 +120,16 @@ export default function AuthGate({ children }) {
     syncWorkspace().then(result => {
       if (!alive) return;
       const owner = localStorage.getItem(ownerKey);
-      if (!owner || owner === userId) {
+      const expectedOwner = result?.workspaceId ? userId + ':' + result.workspaceId : null;
+      if ((expectedOwner && owner === expectedOwner) || (!expectedOwner && owner?.startsWith(userId + ':'))) {
         setWorkspaceReadyUser(userId);
       } else {
-        setWorkspaceSyncError(result?.status === 'offline'
-          ? 'offline'
-          : 'account-switch');
+        setWorkspaceSyncError(result?.status === 'offline' ? 'offline' : 'account-switch');
       }
     }).catch(() => {
       if (!alive) return;
       const owner = localStorage.getItem(ownerKey);
-      if (!owner || owner === userId) setWorkspaceReadyUser(userId);
+      if (owner?.startsWith(userId + ':')) setWorkspaceReadyUser(userId);
       else setWorkspaceSyncError('account-switch');
     });
     return () => { alive = false; };
