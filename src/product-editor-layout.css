@@ -246,3 +246,48 @@ html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid{
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
   }
 }
+
+
+/* Desktop Masonry: cards flow independently in two balanced columns.
+   The column wrappers are transparent so a short card does not reserve
+   the height of a neighboring card or create an empty row beneath it. */
+@media (min-width: 761px) {
+  html body .pform-overlay.product-editor-rebuilt .product-editor-columns {
+    display: block !important;
+    column-count: 2 !important;
+    column-gap: 12px !important;
+    column-fill: balance !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column {
+    display: contents !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .product-editor-card,
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .pform-section-heading {
+    break-inside: avoid-column !important;
+    -webkit-column-break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .product-editor-card {
+    display: inline-flex !important;
+    vertical-align: top !important;
+    width: 100% !important;
+    margin: 0 0 10px !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column > .pform-section-heading {
+    display: flex !important;
+    width: 100% !important;
+    margin: 2px 0 9px !important;
+  }
+}
+@media (max-width: 760px) {
+  html body .pform-overlay.product-editor-rebuilt .product-editor-columns {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  html body .pform-overlay.product-editor-rebuilt .product-editor-column {
+    display: flex !important;
+  }
+}
