@@ -7203,3 +7203,11 @@ body>.products-page.pform-portal-root .pform-modal{position:relative!important;z
  .pform-portal-root .pform-modal .pform-unified-panel{padding:12px!important;border-radius:12px!important}
  .pform-portal-root .pform-modal .pform-feature-card{padding:11px 0!important}
 }
+
+/* Semantic section wrappers: no nested cards in the product editor */
+.pform-portal-root .pform-modal .pform-editor-section{
+ display:block!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+ margin:0!important;padding:14px 0!important;border:0!important;border-bottom:1px solid var(--border,#dce5ef)!important;
+ border-radius:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important;box-sizing:border-box!important;
+}
+.pform-portal-root .pform-modal .pform-editor-section:last-child{border-bottom:0!important}
