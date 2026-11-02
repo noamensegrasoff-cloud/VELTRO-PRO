@@ -166,12 +166,13 @@ export default function AuthGate({ children }) {
         const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password});
         if(error) throw error;
       } else if(mode==='signup') {
-        const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{emailRedirectTo:window.location.origin+window.location.pathname}});
+        const emailRedirectTo=Capacitor.isNativePlatform()?'com.veltro.pro://auth/callback':window.location.origin+window.location.pathname;
+        const {data,error}=await supabase.auth.signUp({email:email.trim(),password,options:{emailRedirectTo}});
         if(error) throw error;
         if(data.session) setSession(data.session);
         else setMessage(t.registered);
       } else if(mode==='reset') {
-        const redirectTo=window.location.origin+window.location.pathname;
+        const redirectTo=Capacitor.isNativePlatform()?'com.veltro.pro://auth/callback':window.location.origin+window.location.pathname;
         const {error}=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo});
         if(error) throw error;
         setMessage(t.resetSent);
