@@ -124,7 +124,7 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
           </div>
             </div>
             <div className="pform-masonry-column pform-masonry-right pform-natural-column">
-<div className="pform-feature-card pform-natural-card">
+<div className="pform-feature-card pform-natural-card pform-units-quantities-card">
             <div className="pform-feature-heading"><span className="pform-feature-icon"><Boxes size={19}/></span><div><b>{tx.purchaseInfo}</b></div></div>
             <div className="pform-feature-options pform-carton-grid">
               <label className="pform-field"><span>{tx.cartonsPurchased}</span><input type="number" min="0" step="1" value={form.cartonsPurchased} onChange={e=>updateCartonCount(e.target.value)} placeholder="0"/></label>
