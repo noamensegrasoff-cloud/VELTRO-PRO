@@ -176,47 +176,45 @@ export async function getOrCreateWorkspace() {
   const user = authData.user;
   if (!user) throw new Error('Sign in to enable cloud synchronization.');
 
-  const { data: existing, error: lookupError } = await supabase
-    .from('workspaces')
-    .select('id,name')
-    .eq('created_by', user.id)
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
-  if (lookupError) throw lookupError;
+  // Employees must join the creator's workspace. Looking up workspaces only by
+  // created_by silently created a second, empty workspace for every employee.
+  const { data: memberships, error: membershipError } = await supabase
+    .from('workspace_members')
+    .select('workspace_id, role, created_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: true });
+  if (membershipError) throw membershipError;
 
-  let workspace = existing;
-  if (!workspace) {
+  let membership = Array.isArray(memberships) && memberships.length
+    ? memberships.find(item => item.role === 'owner') || memberships[0]
+    : null;
+  let workspace = null;
+
+  if (membership?.workspace_id) {
+    const { data, error } = await supabase
+      .from('workspaces')
+      .select('id, name')
+      .eq('id', membership.workspace_id)
+      .maybeSingle();
+    if (error) throw error;
+    if (!data) throw new Error('Your workspace membership exists, but its workspace could not be loaded.');
+    workspace = data;
+  } else {
     const label = user.user_metadata?.store_name || user.user_metadata?.full_name || user.email?.split('@')[0] || 'VELTRO Workspace';
     const { data, error } = await supabase
       .from('workspaces')
       .insert({ name: label, created_by: user.id })
-      .select('id,name')
+      .select('id, name')
       .single();
     if (error) throw error;
     workspace = data;
-  }
-
-  const { data: membership, error: membershipLookupError } = await supabase
-    .from('workspace_members')
-    .select('workspace_id')
-    .eq('workspace_id', workspace.id)
-    .eq('user_id', user.id)
-    .maybeSingle();
-  if (membershipLookupError) throw membershipLookupError;
-  if (!membership) {
-    const { error } = await supabase.from('workspace_members').insert({
-      workspace_id: workspace.id,
-      user_id: user.id,
-      role: 'owner',
-    });
-    if (error) throw error;
+    // The database trigger creates the owner membership atomically.
+    membership = { workspace_id: workspace.id, role: 'owner' };
   }
 
   await adoptLocalRecordsIntoWorkspace(workspace.id);
-  return { ...workspace, userId: user.id };
+  return { ...workspace, userId: user.id, memberRole: membership?.role || 'member' };
 }
-
 const DEFAULT_ENTITY_TYPES = [
   // Catalog and inventory
   'products', 'product_variants', 'categories', 'brands', 'units', 'barcodes',
