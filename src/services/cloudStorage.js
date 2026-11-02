@@ -42,6 +42,7 @@ export async function getCloudRecords({ workspaceId, entityType, entityTypes, in
       .select('workspace_id, entity_type, record_id, payload, updated_at, deleted_at, device_id')
       .eq('workspace_id', workspaceId)
       .order('updated_at', { ascending: true })
+      .order('entity_type', { ascending: true })
       .order('record_id', { ascending: true });
     if (entityType) query = query.eq('entity_type', entityType);
     else query = query.in('entity_type', types);
