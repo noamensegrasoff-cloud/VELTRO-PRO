@@ -72,7 +72,7 @@ jobs:
                       <data android:scheme="com.veltro.pro" android:host="auth" android:path="/callback" />
                   </intent-filter>'''
           if 'android:scheme="com.veltro.pro"' not in s:
-              s = s.replace('</activity>', intent + '\\n        </activity>', 1)
+              s = s.replace('</activity>', intent + '\n        </activity>', 1)
               p.write_text(s)
           PY
           python3 - <<'PY'
