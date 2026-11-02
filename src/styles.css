@@ -7470,3 +7470,40 @@ html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pfor
   html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-feature-options,
   html body .products-page .pform-overlay .pform-modal .pform-masonry-column .pform-price-grid{grid-template-columns:minmax(0,1fr)!important;gap:5px!important}
 }
+
+
+/* Product editor desktop: size the dialog to its content, not an empty fixed-height canvas. */
+html body .products-page .pform-overlay .pform-modal{
+  height:auto!important;
+  max-height:calc(100dvh - 24px)!important;
+}
+html body .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
+  flex:0 1 auto!important;
+  height:auto!important;
+  max-height:calc(100dvh - 176px)!important;
+  min-height:0!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+}
+html body .products-page .pform-overlay .pform-modal .pform-masonry-grid{
+  align-items:start!important;
+}
+html body .products-page .pform-overlay .pform-modal .pform-masonry-column{
+  align-self:start!important;
+  height:auto!important;
+}
+html body .products-page .pform-overlay .pform-modal .pform-masonry-column>.pform-feature-card{
+  flex:0 0 auto!important;
+  height:auto!important;
+  min-height:0!important;
+  align-self:stretch!important;
+}
+@media(max-width:900px){
+  html body .products-page .pform-overlay .pform-modal{
+    height:auto!important;
+    max-height:calc(100dvh - 12px)!important;
+  }
+  html body .products-page .pform-overlay .pform-modal>.pform-content.pform-content-all{
+    max-height:calc(100dvh - 150px)!important;
+  }
+}
