@@ -84,22 +84,23 @@ where (n.nspname = 'private' and p.proname in ('has_workspace_permission','is_wo
 order by schema_name, p.proname;
 
 -- The record permission mapper must match the real entity types and legacy keys.
-select entity_type, record_id,
-       public.required_workspace_permission(entity_type, operation, record_id) as required_permission
+select entity_type, record_id, operation, expected_permission,
+       public.required_workspace_permission(entity_type, operation, record_id) as actual_permission,
+       public.required_workspace_permission(entity_type, operation, record_id) = expected_permission as matches_expected
 from (
   values
-    ('products','product-1','insert'),
-    ('sales_invoices','invoice-1','insert'),
-    ('purchase_receipts','receipt-1','insert'),
-    ('product_movements','movement-1','insert'),
-    ('local_storage','veltro_sales_invoices','insert'),
-    ('local_storage','veltro.purchases.v1','insert'),
-    ('local_storage','veltro-product-movements-v1','insert'),
-    ('local_storage','veltro.customer.transactions.v1','insert'),
-    ('local_storage','veltro.customer.transactions.v1','read'),
-    ('cash','drawer-1','update'),
-    ('local_storage','veltro.expenses.v1','insert')
-) as t(entity_type, record_id, operation);
+    ('products','product-1','insert','products.create'),
+    ('sales_invoices','invoice-1','insert','sales.create'),
+    ('purchase_receipts','receipt-1','insert','purchases.create'),
+    ('product_movements','movement-1','insert','inventory.adjust'),
+    ('local_storage','veltro_sales_invoices','insert','sales.create'),
+    ('local_storage','veltro.purchases.v1','insert','purchases.create'),
+    ('local_storage','veltro-product-movements-v1','insert','inventory.adjust'),
+    ('local_storage','veltro.customer.transactions.v1','insert','sales.create'),
+    ('local_storage','veltro.customer.transactions.v1','read','customers.debts.view'),
+    ('cash','drawer-1','update','cash.open_close'),
+    ('local_storage','veltro.expenses.v1','insert','cash.expense.create')
+) as t(entity_type, record_id, operation, expected_permission);
 
 -- No duplicate permissive SELECT policies should remain on the same table.
 select tablename, count(*) as select_policy_count, array_agg(policyname order by policyname) as policies
