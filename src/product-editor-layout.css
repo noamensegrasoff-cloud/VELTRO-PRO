@@ -201,3 +201,48 @@ html body .pform-overlay.product-editor-rebuilt .pform-footer{
     animation:none!important;transition:none!important;scroll-behavior:auto!important;
   }
 }
+
+/* Final desktop layout reset: prevent legacy product-form rules from sizing editor cards. */
+html body .pform-overlay.product-editor-rebuilt .product-editor-section .pform-feature-card{
+  display:flex!important;flex:0 0 auto!important;flex-direction:column!important;
+  align-self:flex-start!important;justify-content:flex-start!important;
+  width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;
+  margin:0!important;overflow:visible!important;box-sizing:border-box!important;
+}
+html body .pform-overlay.product-editor-rebuilt .product-editor-columns{
+  align-items:flex-start!important;
+}
+html body .pform-overlay.product-editor-rebuilt .product-editor-column{
+  align-self:flex-start!important;height:auto!important;min-height:0!important;
+}
+html body .pform-overlay.product-editor-rebuilt .pform-basic-grid,
+html body .pform-overlay.product-editor-rebuilt .pform-carton-grid,
+html body .pform-overlay.product-editor-rebuilt .pform-feature-options,
+html body .pform-overlay.product-editor-rebuilt .pform-price-grid,
+html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid,
+html body .pform-overlay.product-editor-rebuilt .pform-expiry-options{
+  display:grid!important;grid-auto-rows:max-content!important;
+  align-content:start!important;align-items:start!important;
+  height:auto!important;min-height:0!important;
+}
+html body .pform-overlay.product-editor-rebuilt .pform-basic-grid,
+html body .pform-overlay.product-editor-rebuilt .pform-carton-grid,
+html body .pform-overlay.product-editor-rebuilt .pform-feature-options,
+html body .pform-overlay.product-editor-rebuilt .pform-expiry-options{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  margin:0!important;padding:0!important;border:0!important;
+}
+html body .pform-overlay.product-editor-rebuilt .pform-price-grid,
+html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+@media(max-width:760px){
+  html body .pform-overlay.product-editor-rebuilt .pform-basic-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-carton-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-feature-options,
+  html body .pform-overlay.product-editor-rebuilt .pform-price-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-sales-price-grid,
+  html body .pform-overlay.product-editor-rebuilt .pform-expiry-options{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
