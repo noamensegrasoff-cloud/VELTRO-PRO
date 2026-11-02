@@ -123,7 +123,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
 
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rows)); } catch {} }, [rows]);
   useEffect(() => {
-    const refresh = () => { setSuppliers(read(SUPPLIERS_KEY, [])); setCatalog(read(CATALOG_KEY, [])); };
+    const refresh = () => { setRows(read(STORAGE_KEY, []).map(r=>({...r,items:Array.isArray(r.items)?r.items:[]}))); setSuppliers(read(SUPPLIERS_KEY, [])); setCatalog(read(CATALOG_KEY, [])); };
     window.addEventListener('focus', refresh);
     window.addEventListener('storage', refresh);
     return () => { window.removeEventListener('focus', refresh); window.removeEventListener('storage', refresh); };
