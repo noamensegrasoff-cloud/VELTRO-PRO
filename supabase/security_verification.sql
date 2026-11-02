@@ -124,6 +124,7 @@ where schemaname = 'public'
     'workspace_audit_logs_actor_user_id_idx','workspace_member_branches_branch_id_idx',
     'workspace_member_branches_user_id_idx','workspace_members_custom_role_id_idx',
     'workspace_members_user_id_idx','workspace_roles_created_by_idx',
-    'workspace_sessions_workspace_id_idx','workspaces_created_by_idx'
+    'workspace_sessions_workspace_id_idx','workspaces_created_by_idx',
+    'workspace_member_branches_workspace_branch_idx'
   )
 order by tablename, indexname;
