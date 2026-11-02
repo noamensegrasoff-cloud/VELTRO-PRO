@@ -4,6 +4,7 @@ import App from './App.jsx';
 import AuthGate from './AuthGate.jsx';
 import './styles.css';
 import './button-system.css';
+import './product-editor-layout.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode><AuthGate><App /></AuthGate></React.StrictMode>
