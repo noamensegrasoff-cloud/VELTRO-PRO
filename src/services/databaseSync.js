@@ -6,6 +6,8 @@ import {
   markLocalRecordSynced,
   mergeCloudRecord,
   removePendingSyncOperation,
+  getLocalRecord,
+  saveLocalRecord,
 } from './localDatabase.js';
 import { deleteCloudRecord, getCloudRecords, saveCloudRecord } from './cloudStorage.js';
 
@@ -13,6 +15,8 @@ let syncInFlight = null;
 
 const LEGACY_STORAGE_ENTITY = 'local_storage';
 const LEGACY_STORAGE_BASELINE_KEY = 'veltro.cloud-sync.local-storage-baseline.v1';
+const LEGACY_STORAGE_OWNER_KEY = 'veltro.cloud-sync.local-storage-owner.v1';
+const LEGACY_STORAGE_SNAPSHOT_ENTITY = 'legacy_storage_snapshot';
 const LEGACY_STORAGE_EXCLUDED = /^(?:veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|veltro-products-catalog-v1|veltro-products-conflicts-v1|sb-[^-]+-auth-token)$/i;
 
 function readStorageBaseline() {
@@ -28,7 +32,57 @@ function isSyncableStorageKey(key) {
   return /^(?:veltro[._-]|products$|categories$|sales$|purchases$|customers$|suppliers$|orders$|invoices$|expenses$|stock$)/i.test(key);
 }
 
-async function syncLegacyLocalStorage(workspaceId) {
+async function switchLegacyStorageOwner(userId) {
+  if (!userId || typeof localStorage === 'undefined') return;
+  const currentOwner = localStorage.getItem(LEGACY_STORAGE_OWNER_KEY);
+  if (!currentOwner) {
+    // Existing installations have one shared local catalog. Claim it for the
+    // account already signed in rather than discarding data during migration.
+    localStorage.setItem(LEGACY_STORAGE_OWNER_KEY, userId);
+    return;
+  }
+  if (currentOwner === userId) return;
+
+  const values = {};
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const key = localStorage.key(i);
+    if (isSyncableStorageKey(key)) {
+      const value = localStorage.getItem(key);
+      if (value !== null) values[key] = value;
+    }
+  }
+
+  // Preserve unsynced local edits in IndexedDB under their original account.
+  await saveLocalRecord({
+    entityType: LEGACY_STORAGE_SNAPSHOT_ENTITY,
+    recordId: 'active',
+    workspaceId: currentOwner,
+    queueForSync: false,
+    payload: { values, baseline: readStorageBaseline() },
+  });
+
+  Object.keys(values).forEach(key => localStorage.removeItem(key));
+  const snapshot = await getLocalRecord({
+    entityType: LEGACY_STORAGE_SNAPSHOT_ENTITY,
+    recordId: 'active',
+    workspaceId: userId,
+  });
+  const nextValues = snapshot?.payload?.values;
+  if (nextValues && typeof nextValues === 'object' && !Array.isArray(nextValues)) {
+    for (const [key, value] of Object.entries(nextValues)) {
+      if (isSyncableStorageKey(key) && typeof value === 'string') localStorage.setItem(key, value);
+    }
+  }
+  const nextBaseline = snapshot?.payload?.baseline;
+  localStorage.setItem(
+    LEGACY_STORAGE_BASELINE_KEY,
+    JSON.stringify(nextBaseline && typeof nextBaseline === 'object' && !Array.isArray(nextBaseline) ? nextBaseline : {}),
+  );
+  localStorage.setItem(LEGACY_STORAGE_OWNER_KEY, userId);
+}
+
+async function syncLegacyLocalStorage(workspaceId, userId) {
+  await switchLegacyStorageOwner(userId);
   if (typeof localStorage === 'undefined') return { pushed: 0, pulled: 0 };
   const baseline = readStorageBaseline();
   const local = new Map();
@@ -92,7 +146,22 @@ async function syncLegacyLocalStorage(workspaceId) {
     }
   }
 
-  try { localStorage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline)); } catch {}
+  localStorage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline));
+  const snapshotValues = {};
+  for (let i = 0; i < localStorage.length; i += 1) {
+    const key = localStorage.key(i);
+    if (isSyncableStorageKey(key)) {
+      const value = localStorage.getItem(key);
+      if (value !== null) snapshotValues[key] = value;
+    }
+  }
+  await saveLocalRecord({
+    entityType: LEGACY_STORAGE_SNAPSHOT_ENTITY,
+    recordId: 'active',
+    workspaceId: userId,
+    queueForSync: false,
+    payload: { values: snapshotValues, baseline },
+  });
   return { pushed, pulled };
 }
 
@@ -141,7 +210,7 @@ export async function getOrCreateWorkspace() {
   }
 
   await adoptLocalRecordsIntoWorkspace(workspace.id);
-  return workspace;
+  return { ...workspace, userId: user.id };
 }
 
 const DEFAULT_ENTITY_TYPES = [
@@ -181,7 +250,7 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     // Bridge existing sections that still persist directly to localStorage into cloud_records.
     // This keeps legacy screens working while their CRUD flows migrate to the shared repository.
     try {
-      const legacy = await syncLegacyLocalStorage(workspace.id);
+      const legacy = await syncLegacyLocalStorage(workspace.id, workspace.userId);
       pushed += legacy.pushed;
       pulled += legacy.pulled;
     } catch (error) {
