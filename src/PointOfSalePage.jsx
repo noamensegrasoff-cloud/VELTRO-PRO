@@ -41,7 +41,7 @@ export default function PointOfSalePage({ lang='ar', currentUser }) {
  const total=rows.reduce((a,r)=>a+r.qty*r.price,0),paidValue=Math.min(total,Math.max(0,Number(paid)||0));
  const selectedCustomer=customers.find(c=>String(c.id)===String(customerId))||null;
  const customerLedger=readObject('veltro.customer.transactions.v1');
- const customerInvoices=readArray('veltro_sales_invoices').filter(x=>customerId&&(String(x.customerId??x.customer_id??'')===String(customerId)||String(x.customerName??x.customer_name??'').toLowerCase()===String(customer||'').toLowerCase()));
+ const customerInvoices=readArray('veltro_sales_invoices').filter(x=>{if(!customerId)return false;const invoiceCustomerId=String(x.customerId??x.customer_id??'');if(invoiceCustomerId)return invoiceCustomerId===String(customerId);const invoiceCustomerName=String(x.customerName??x.customer_name??'').normalize('NFKC').trim().toLocaleLowerCase();const selectedCustomerName=String(customer||'').normalize('NFKC').trim().toLocaleLowerCase();return !!selectedCustomerName&&invoiceCustomerName===selectedCustomerName;});
  const customerPayments=Array.isArray(customerLedger[customerId])?customerLedger[customerId].filter(x=>x.type==='payment'&&!x.deleted):[];
  const openingDebt=Number(selectedCustomer?.balance??selectedCustomer?.debt??selectedCustomer?.outstanding??selectedCustomer?.currentBalance??0)||0;
  const oldDebt=customerId?Math.max(0,openingDebt+customerInvoices.reduce((sum,x)=>sum+(Number(x.total??x.totalAmount??x.amount)||0),0)-customerPayments.reduce((sum,x)=>sum+(Number(x.amount)||0),0)):0;
