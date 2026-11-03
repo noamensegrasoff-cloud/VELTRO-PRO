@@ -80,9 +80,16 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
   const remaining = r => Math.max(0, receiptTotal(r) - Math.min(receiptTotal(r), Math.max(0, Number(r?.paid)||0)));
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rows)); } catch {} }, [rows]);
   useEffect(() => {
-    if (dialog === 'form' && !productEditorOpen && !barcodeProductOpen && !productSearchOpen && !supplierPickerOpen && !supplierAddOpen && !otherPicker && !productSubModal) {
-      barcodeSearchRef.current?.focus();
-    }
+    if (dialog !== 'form' || productEditorOpen || barcodeProductOpen || productSearchOpen || supplierPickerOpen || supplierAddOpen || otherPicker || productSubModal) return;
+    // Wait until the receipt dialog and its barcode field are fully mounted/visible.
+    const focusTimer = window.setTimeout(() => {
+      const field = barcodeSearchRef.current;
+      if (field && field.isConnected && !field.disabled) {
+        field.focus({ preventScroll: true });
+        field.select?.();
+      }
+    }, 140);
+    return () => window.clearTimeout(focusTimer);
   }, [dialog, productEditorOpen, barcodeProductOpen, productSearchOpen, supplierPickerOpen, supplierAddOpen, otherPicker, productSubModal, form.items.length]);
   useEffect(() => {
     const refresh = () => { setSuppliers(read(SUPPLIERS_KEY, [])); setCatalog(read(CATALOG_KEY, [])); };
