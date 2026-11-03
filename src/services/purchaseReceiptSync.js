@@ -31,11 +31,21 @@ export async function loadPurchaseReceipts() {
     const oldRow = legacyCloud.find(row => row.record_id === LEGACY_KEY && !row.deleted_at);
     if (typeof oldRow?.payload?.value === 'string') {
       const parsed = JSON.parse(oldRow.payload.value);
-      if (Array.isArray(parsed)) legacyRows = [...new Map([...parsed, ...legacyRows].filter(row => row?.id).map(row => [String(row.id), row])).values()];
+      if (Array.isArray(parsed)) {
+        const migrated = new Map();
+        for (const row of [...parsed, ...legacyRows]) {
+          if (!row?.id) continue;
+          const id = String(row.id);
+          const previous = migrated.get(id);
+          if (!previous || timeOf(row) >= timeOf(previous)) migrated.set(id, row);
+        }
+        legacyRows = [...migrated.values()];
+      }
     }
   } catch {}
   let stored = [];
   try { stored = await listRecords({ entityType: ENTITY_TYPE, workspaceId, includeDeleted: true }); } catch {}
+  const storedById = new Map(stored.map(row => [String(row.recordId), row]));
   const tombstones = new Map(stored.filter(row => row.deletedAt).map(row => [String(row.recordId), row]));
   const merged = new Map(stored.filter(row => !row.deletedAt && row.payload).map(row => [String(row.recordId), row.payload]));
   for (const legacy of legacyRows) {
@@ -46,8 +56,9 @@ export async function loadPurchaseReceipts() {
     if (!current || timeOf(legacy) > timeOf(current)) merged.set(id, legacy);
   }
   for (const [id, receipt] of merged) {
-    const cloudRow = stored.find(row => String(row.recordId) === id && !row.deletedAt);
-    if (!cloudRow || timeOf(receipt) > timeOf(cloudRow.payload)) {
+    const cloudRow = storedById.get(id);
+    const activeCloudRow = cloudRow && !cloudRow.deletedAt ? cloudRow : null;
+    if (!activeCloudRow || timeOf(receipt) > timeOf(activeCloudRow.payload)) {
       await saveRecord({ entityType: ENTITY_TYPE, recordId: id, payload: receipt, workspaceId }).catch(() => {});
     }
   }
