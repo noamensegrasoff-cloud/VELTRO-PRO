@@ -99,7 +99,6 @@ export async function loadAndMergeProductCatalog() {
 
 export async function persistProduct(product) {
   if (!product?.id) throw new Error('A stable product ID is required.');
-  try { await syncWorkspace({ entityTypes: [ENTITY_TYPE] }); } catch {}
   const workspaceId = await getActiveWorkspaceId();
   return saveRecord({
     entityType: ENTITY_TYPE,
