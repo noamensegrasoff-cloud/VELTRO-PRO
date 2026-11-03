@@ -76,9 +76,13 @@
   box-sizing:border-box!important;
 }
 .product-editor-rebuilt .pform-price-head{
+  display:flex!important;justify-content:flex-end!important;align-items:center!important;
   margin:0 0 10px!important;padding:0 0 8px!important;
   border-bottom:1px solid var(--border,#2a3c50)!important;
 }
+.product-editor-rebuilt .pform-price-head>div{display:none!important}
+.product-editor-rebuilt .pform-footer-left{display:none!important}
+.product-editor-rebuilt .pform-footer-actions{margin-inline-start:auto!important}
 .product-editor-rebuilt .pform-average-cost-card{
   min-width:0!important;padding:10px 0!important;border:0!important;
   border-radius:0!important;background:transparent!important;box-shadow:none!important;
