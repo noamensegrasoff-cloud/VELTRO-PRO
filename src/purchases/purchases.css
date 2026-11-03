@@ -1687,8 +1687,11 @@
 .purchase-toggle-switch.is-on{background:linear-gradient(120deg,#7960d7,#4f8ee8)}
 .purchase-toggle-switch.is-on span{transform:translateX(18px)}
 .purchase-other-picker-field{display:flex;gap:7px;min-width:0}
-.purchase-other-picker-field input{flex:1}
-.purchase-other-picker-field button{display:flex;align-items:center;justify-content:center;flex:0 0 39px;min-width:39px;border:1px solid rgba(125,105,181,.25);border-radius:10px;background:linear-gradient(135deg,#eee7ff,#e9f0ff);color:#594080;cursor:pointer}
+.purchase-other-picker-field .purchase-other-choice{display:flex;align-items:center;justify-content:space-between;gap:9px;flex:1;min-width:0;min-height:40px;padding:8px 11px;border:1px solid rgba(125,105,181,.22);border-radius:10px;background:rgba(255,255,255,.9);color:#30264f;text-align:start;cursor:pointer}
+.purchase-other-picker-field .purchase-other-choice span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.purchase-other-picker-field .purchase-other-choice svg{flex:0 0 auto;color:#7960b2}
+.purchase-other-picker-field .purchase-other-search-button{display:flex;align-items:center;justify-content:center;flex:0 0 42px;min-width:42px;min-height:40px;border:1px solid rgba(125,105,181,.25);border-radius:10px;background:linear-gradient(135deg,#eee7ff,#e9f0ff);color:#594080;cursor:pointer}
+.purchase-other-picker-field button:focus-visible{outline:2px solid #7960d7;outline-offset:2px}
 .purchase-other-information input:disabled{opacity:.52;background:rgba(228,225,237,.7);color:#8c849e;cursor:not-allowed}
 .purchase-other-picker-overlay{z-index:10060}
 .purchase-other-picker-modal{display:flex;flex-direction:column;max-height:min(82dvh,720px)}
