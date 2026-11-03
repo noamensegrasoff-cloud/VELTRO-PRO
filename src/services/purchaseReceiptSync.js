@@ -1,6 +1,7 @@
 import { deleteRecord, listRecords, saveRecord } from './dataRepository.js';
 import { getActiveWorkspaceId } from './localDatabase.js';
 import { syncWorkspace } from './databaseSync.js';
+import { getCloudRecords } from './cloudStorage.js';
 
 const LEGACY_KEY = 'veltro.purchases.v1';
 const ENTITY_TYPE = 'purchases';
@@ -20,9 +21,19 @@ function timeOf(row) {
 }
 
 export async function loadPurchaseReceipts() {
-  const legacyRows = readLegacyReceipts();
+  let legacyRows = readLegacyReceipts();
   try { await syncWorkspace({ entityTypes: [ENTITY_TYPE] }); } catch {}
   const workspaceId = await getActiveWorkspaceId().catch(() => 'local-device');
+  // Migrate the old single-JSON cloud record as well, so a clean/new device
+  // can recover receipts that were synced before the per-receipt outbox existed.
+  try {
+    const legacyCloud = await getCloudRecords({ workspaceId, entityType: 'local_storage', includeDeleted: true });
+    const oldRow = legacyCloud.find(row => row.record_id === LEGACY_KEY && !row.deleted_at);
+    if (typeof oldRow?.payload?.value === 'string') {
+      const parsed = JSON.parse(oldRow.payload.value);
+      if (Array.isArray(parsed)) legacyRows = [...new Map([...parsed, ...legacyRows].filter(row => row?.id).map(row => [String(row.id), row])).values()];
+    }
+  } catch {}
   let stored = [];
   try { stored = await listRecords({ entityType: ENTITY_TYPE, workspaceId, includeDeleted: true }); } catch {}
   const tombstones = new Map(stored.filter(row => row.deletedAt).map(row => [String(row.recordId), row]));
