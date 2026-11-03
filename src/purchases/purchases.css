@@ -1903,3 +1903,55 @@
   .purchase-product-one-card .purchase-product-fields input,
   .purchase-product-one-card .purchase-product-fields select { font-size: 14px !important; }
 }
+
+
+/* VELTRO glass identity — purchase product section headers */
+.purchase-product-one-card > .purchase-product-card h3 {
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-height:42px;
+  margin:0 0 12px !important;
+  padding:7px 12px !important;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.82) !important;
+  border-bottom:1px solid rgba(255,255,255,.82) !important;
+  border-radius:13px;
+  color:#513477;
+  font-size:15px !important;
+  font-weight:850;
+  letter-spacing:.1px;
+  background:linear-gradient(112deg,rgba(255,255,255,.88) 0%,rgba(244,237,255,.78) 48%,rgba(226,215,255,.62) 100%);
+  box-shadow:0 5px 16px rgba(91,59,150,.09),inset 0 1px 0 rgba(255,255,255,.96);
+  -webkit-backdrop-filter:blur(15px) saturate(155%);
+  backdrop-filter:blur(15px) saturate(155%);
+}
+.purchase-product-one-card > .purchase-product-card h3::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(105deg,transparent 18%,rgba(255,255,255,.42) 48%,transparent 72%);
+}
+.purchase-product-section-icon {
+  position:relative;
+  z-index:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 30px;
+  width:30px;
+  height:30px;
+  border:1px solid rgba(255,255,255,.9);
+  border-radius:10px;
+  color:#fff;
+  background:linear-gradient(145deg,#a78bfa 0%,#8056d9 52%,#6543b5 100%);
+  box-shadow:0 3px 9px rgba(105,70,181,.25),inset 0 1px 0 rgba(255,255,255,.45);
+}
+.purchase-product-section-icon svg { filter:drop-shadow(0 1px 1px rgba(49,25,91,.18)); }
+.purchase-product-one-card > .purchase-product-card h3:not(:has(.purchase-product-section-icon)) { padding-inline-start:14px !important; }
+@media(max-width:760px) {
+  .purchase-product-one-card > .purchase-product-card h3 { min-height:39px; gap:8px; padding:6px 9px !important; font-size:14px !important; }
+  .purchase-product-section-icon { flex-basis:28px; width:28px; height:28px; }
+}
