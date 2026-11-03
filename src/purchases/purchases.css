@@ -2226,28 +2226,28 @@
 
 
 /* Isolated expanded products workspace — New Purchase Receipt only */
-.purchase-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded){
+.purchase-overlay.purchase-form-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded){
   position:fixed!important;inset:0!important;z-index:120000!important;
   display:block!important;width:100vw!important;height:100vh!important;height:100dvh!important;
   padding:0!important;margin:0!important;overflow:hidden!important;
   background:rgba(25,18,45,.58)!important;
   backdrop-filter:blur(8px)!important;-webkit-backdrop-filter:blur(8px)!important;
 }
-.purchase-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-dialog{
+.purchase-overlay.purchase-form-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-dialog{
   position:fixed!important;inset:0!important;display:block!important;
   width:100vw!important;height:100vh!important;height:100dvh!important;
   max-width:none!important;max-height:none!important;margin:0!important;padding:0!important;
   overflow:hidden!important;transform:none!important;border:0!important;border-radius:0!important;
   background:transparent!important;box-shadow:none!important;pointer-events:none!important;
 }
-.purchase-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-dialog-head,
-.purchase-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-form-tabs{display:none!important}
-.purchase-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-form-body{display:contents!important}
-.purchase-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-form-body> :not(#purchase-form-items){display:none!important}
-.purchase-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) #purchase-form-items{
+.purchase-overlay.purchase-form-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-dialog-head,
+.purchase-overlay.purchase-form-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-form-tabs{display:none!important}
+.purchase-overlay.purchase-form-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-form-body{display:contents!important}
+.purchase-overlay.purchase-form-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) .purchase-form-body> :not(#purchase-form-items){display:none!important}
+.purchase-overlay.purchase-form-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) #purchase-form-items{
   display:contents!important;margin:0!important;padding:0!important;border:0!important;background:transparent!important;
 }
-.purchase-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) #purchase-form-items> :not(.purchase-items-toolbar):not(.purchase-items-wrap){display:none!important}
+.purchase-overlay.purchase-form-overlay:has(#purchase-form-items .purchase-items-wrap.purchase-items-expanded) #purchase-form-items> :not(.purchase-items-toolbar):not(.purchase-items-wrap){display:none!important}
 .purchase-page #purchase-form-items .purchase-items-toolbar:has(+.purchase-items-wrap.purchase-items-expanded){
   position:fixed!important;top:max(12px,env(safe-area-inset-top))!important;
   left:max(12px,2vw)!important;right:max(12px,2vw)!important;width:auto!important;
