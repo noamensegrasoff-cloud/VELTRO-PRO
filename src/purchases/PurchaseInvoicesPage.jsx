@@ -84,14 +84,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     let active = true;
     loadPurchaseReceipts().then(remoteRows => {
       if (!active || !Array.isArray(remoteRows)) return;
-      setRows(current => {
-        const merged = new Map(current.map(row => [String(row.id), row]));
-        for (const row of remoteRows) {
-          const local = merged.get(String(row.id));
-          if (!local || Date.parse(row.updatedAt || 0) >= Date.parse(local.updatedAt || 0)) merged.set(String(row.id), row);
-        }
-        return [...merged.values()].sort((a,b) => Date.parse(b.updatedAt || b.createdAt || 0) - Date.parse(a.updatedAt || a.createdAt || 0));
-      });
+      setRows(remoteRows);
     }).catch(() => {});
     return () => { active = false; };
   }, []);
