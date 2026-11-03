@@ -7308,3 +7308,27 @@ body>.products-page.pform-portal-root .pform-modal{position:relative!important;z
   max-height:calc(100dvh - 24px)!important;overflow:auto!important;
   margin:auto!important;pointer-events:auto!important;
 }
+
+
+/* Product preview portal: escape app transforms/overflow and stay above every page layer. */
+.app-shell.product-preview-portal-root{display:contents!important}
+.app-shell.product-preview-portal-root .product-action-overlay{
+  position:fixed!important;inset:0!important;z-index:2147483000!important;
+  width:100vw!important;height:100vh!important;height:100dvh!important;
+  display:grid!important;place-items:center!important;
+  padding:12px!important;box-sizing:border-box!important;
+}
+.app-shell.product-preview-portal-root .product-action-dialog{
+  position:relative!important;z-index:1!important;
+  width:min(650px,100%)!important;max-width:100%!important;
+  max-height:calc(100dvh - 24px)!important;min-height:0!important;
+  display:flex!important;flex-direction:column!important;
+  overflow:hidden!important;margin:auto!important;pointer-events:auto!important;
+}
+.app-shell.product-preview-portal-root .product-preview-content{
+  min-height:0!important;overflow:auto!important;overscroll-behavior:contain!important;
+}
+@media(max-width:760px){
+ .app-shell.product-preview-portal-root .product-action-overlay{padding:8px!important}
+ .app-shell.product-preview-portal-root .product-action-dialog{max-height:calc(100dvh - 16px)!important;border-radius:17px!important}
+}
