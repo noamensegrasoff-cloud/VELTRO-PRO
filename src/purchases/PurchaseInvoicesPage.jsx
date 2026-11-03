@@ -90,7 +90,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
       }
     }, 140);
     return () => window.clearTimeout(focusTimer);
-  }, [dialog, formTableExpanded, productEditorOpen, barcodeProductOpen, productSearchOpen, supplierPickerOpen, supplierAddOpen, otherPicker, productSubModal, form.items.length]);
+  }, [dialog, formTableExpanded, productEditorOpen, barcodeProductOpen, productSearchOpen, supplierPickerOpen, supplierAddOpen, otherPicker, productSubModal]);
   useEffect(() => {
     const refresh = () => { const storedSuppliers=read(SUPPLIERS_KEY, []); const storedCatalog=read(CATALOG_KEY, []); setSuppliers((Array.isArray(storedSuppliers)?storedSuppliers:[]).filter(s=>s&&typeof s==='object')); setCatalog((Array.isArray(storedCatalog)?storedCatalog:[]).filter(p=>p&&typeof p==='object')); };
     window.addEventListener('focus', refresh);
@@ -162,7 +162,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
        const createdAt = new Date().toISOString();
        const createdLocal = nowLocal();
        const draftId = makeId();
-       const draft = {...form,id:draftId,number:String(form.number||'').trim(),supplierId:form.supplierId||'',supplierName:String(form.supplierName||'').trim(),date:form.date||createdLocal.date,time:form.time||createdLocal.time,status:'open',paid:0,notes:String(form.notes||''),items:[],total:0,openedBy:actor,closedBy:'',createdAt,updatedAt:createdAt,isDraft:true};
+       const draft = {...form,id:draftId,number:String(form.number||'').trim(),supplierId:form.supplierId||'',supplierName:String(form.supplierName||'').trim(),date:form.date||createdLocal.date,time:form.time||createdLocal.time,status:'open',paid:0,notes:String(form.notes||''),items:(form.items||[]).map(i=>({...i,qty:Number(i.qty)||0,price:Number(i.price)||0})),total:(form.items||[]).reduce((sum,i)=>sum+(Math.max(0,Number(i.qty)||0)*Math.max(0,Number(i.price)||0)),0),openedBy:actor,closedBy:'',createdAt,updatedAt:createdAt,isDraft:true};
        setRows(oldRows => [draft,...oldRows.filter(r=>String(r.number||'').trim().toLowerCase()!==draft.number.toLowerCase())]);
        setSelectedId(draftId);
      }
