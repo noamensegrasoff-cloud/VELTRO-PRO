@@ -7211,3 +7211,84 @@ body>.products-page.pform-portal-root .pform-modal{position:relative!important;z
  border-radius:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important;box-sizing:border-box!important;
 }
 .pform-portal-root .pform-modal .pform-editor-section:last-child{border-bottom:0!important}
+
+
+/* VELTRO PRO — branded product deletion confirmation */
+.app-shell .product-delete-dialog{
+  width:min(470px,100%);
+  border:1px solid rgba(139,94,246,.22);
+  border-radius:22px;
+  background:linear-gradient(180deg,#fff 0%,#fbfcff 100%);
+  box-shadow:0 30px 100px rgba(10,18,38,.38),0 0 0 1px rgba(255,255,255,.35) inset;
+}
+.app-shell .product-delete-dialog>header{
+  position:relative;
+  padding:19px 21px 16px;
+  border-bottom:1px solid #edf0f7;
+  background:linear-gradient(115deg,rgba(124,91,232,.075),rgba(15,167,160,.045));
+}
+.app-shell .product-delete-dialog>header:after{
+  content:"";position:absolute;inset:0 0 auto;height:3px;
+  background:linear-gradient(90deg,#7657df,#16aaa1);
+}
+.app-shell .product-delete-dialog .product-action-title-icon.danger{
+  width:46px;height:46px;flex-basis:46px;border-radius:15px;
+  border:1px solid #f5cbd3;background:linear-gradient(145deg,#fff0f2,#ffe5ea);
+  box-shadow:0 5px 16px rgba(190,48,76,.10);
+}
+.app-shell .product-delete-dialog>header h2{font-size:18px;font-weight:850;letter-spacing:-.25px}
+.app-shell .product-delete-dialog>header p{font-size:11px;color:#8a6170}
+.app-shell .product-delete-message{gap:15px;padding:17px 21px 19px}
+.app-shell .product-delete-brandline{
+  display:flex;align-items:center;gap:8px;width:100%;color:#263b59;
+  font-size:11px;font-weight:900;letter-spacing:1.1px
+}
+.app-shell .product-delete-brand-mark{
+  width:29px;height:29px;display:grid;place-items:center;border-radius:9px;
+  color:#fff;background:linear-gradient(135deg,#7657df,#12a69f);
+  box-shadow:0 4px 12px rgba(104,86,213,.2)
+}
+.app-shell .product-delete-brandline>span:nth-child(2) b{color:#7960d9}
+.app-shell .product-delete-brandline>small{
+  margin-inline-start:auto;color:#8a91a6;font-size:8px;font-weight:800;letter-spacing:.8px
+}
+.app-shell .product-delete-product{
+  display:flex;align-items:center;gap:13px;width:100%;min-width:0;
+  padding:15px;border:1px solid #e7e9f3;border-radius:15px;
+  background:linear-gradient(135deg,#fff,#f7f8ff);
+}
+.app-shell .product-delete-product-icon{
+  flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;
+  border-radius:13px;background:#efedff;color:#7657df
+}
+.app-shell .product-delete-product>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.app-shell .product-delete-product small{color:#8a91a6;font-size:9px;font-weight:800;letter-spacing:.6px}
+.app-shell .product-delete-product b{color:#243650;font-size:16px;font-weight:850;overflow-wrap:anywhere}
+.app-shell .product-delete-product code{color:#8b94a8;font-size:10px;overflow-wrap:anywhere}
+.app-shell .product-delete-warning{
+  display:flex;align-items:flex-start;gap:10px;width:100%;padding:12px 13px;
+  border:1px solid #f4d7dc;border-radius:12px;background:#fff5f6;color:#a43e52
+}
+.app-shell .product-delete-warning svg{flex:0 0 18px;margin-top:1px}
+.app-shell .product-delete-warning span{font-size:11px;line-height:1.75;font-weight:650}
+.app-shell .product-delete-dialog>footer{
+  gap:10px;padding:14px 20px 18px;border-top:1px solid #edf0f7;background:#fff
+}
+.app-shell .product-delete-dialog>footer>button{
+  min-height:43px;border-radius:12px;font-size:12px;font-weight:800
+}
+.app-shell .product-delete-dialog>footer .product-action-danger{
+  background:linear-gradient(135deg,#d94b62,#b92e49)!important;
+  border:1px solid #b92e49!important;
+  box-shadow:0 7px 16px rgba(185,46,73,.19)
+}
+.app-shell .product-delete-dialog>footer .product-action-secondary{
+  background:#f5f7fb;border-color:#e2e7f0;color:#52627a
+}
+@media(max-width:560px){
+  .app-shell .product-delete-dialog{width:min(100%,430px);border-radius:19px}
+  .app-shell .product-delete-message{padding:14px}
+  .app-shell .product-delete-dialog>header{padding:17px 15px 14px}
+  .app-shell .product-delete-dialog>footer{padding:12px 14px 15px}
+  .app-shell .product-delete-brandline>small{font-size:7px}
+}
