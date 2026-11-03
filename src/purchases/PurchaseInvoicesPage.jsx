@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, Search, CalendarDays, ReceiptText, Wallet, TrendingUp, Package, Pencil, Trash2, Printer, Eye, Download, Upload, X, Check, ChevronLeft, ChevronRight, Maximize2, Minimize2, WandSparkles, ScanBarcode, CircleDollarSign, Boxes, FileText, SearchX } from 'lucide-react';
 import './purchases.css';
+import { loadPurchaseReceipts, savePurchaseReceipt, deletePurchaseReceipt } from '../services/purchaseReceiptSync.js';
 
 const STORAGE_KEY = 'veltro.purchases.v1';
 const CATALOG_KEY = 'veltro-products-catalog-v1';
@@ -80,6 +81,21 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
   const remaining = r => Math.max(0, receiptTotal(r) - Math.min(receiptTotal(r), Math.max(0, Number(r?.paid)||0)));
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rows)); } catch {} }, [rows]);
   useEffect(() => {
+    let active = true;
+    loadPurchaseReceipts().then(remoteRows => {
+      if (!active || !Array.isArray(remoteRows)) return;
+      setRows(current => {
+        const merged = new Map(current.map(row => [String(row.id), row]));
+        for (const row of remoteRows) {
+          const local = merged.get(String(row.id));
+          if (!local || Date.parse(row.updatedAt || 0) >= Date.parse(local.updatedAt || 0)) merged.set(String(row.id), row);
+        }
+        return [...merged.values()].sort((a,b) => Date.parse(b.updatedAt || b.createdAt || 0) - Date.parse(a.updatedAt || a.createdAt || 0));
+      });
+    }).catch(() => {});
+    return () => { active = false; };
+  }, []);
+  useEffect(() => {
     if (dialog !== 'form' || formTableExpanded || productEditorOpen || barcodeProductOpen || productSearchOpen || supplierPickerOpen || supplierAddOpen || otherPicker || productSubModal) return;
     // Wait until the receipt dialog and its barcode field are fully mounted/visible.
     const focusTimer = window.setTimeout(() => {
@@ -155,6 +171,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     const old = rows.find(r=>r.id===editingId);
     const createdAt = old?.createdAt || new Date().toISOString(); const createdLocal = nowLocal(); const receipt = {...form,id:editingId||makeId(),number:String(form.number).trim(),supplierId:supplier?.id||form.supplierId||'',supplierName,supplierStandard:!!form.supplierStandard,date:old?.date||form.date||createdAt.slice(0,10)||createdLocal.date,time:old?.time||form.time||createdAt.slice(11,19)||createdLocal.time,status:form.status==='closed'?'closed':'open',paid,notes:String(form.notes||'').trim(),items,total:sum,openedBy:old?.openedBy||actor,closedBy:form.status==='closed'?(old?.closedBy||actor):'',createdAt,updatedAt:new Date().toISOString()};
     setRows(oldRows=>editingId?oldRows.map(r=>r.id===editingId?receipt:r):[receipt,...oldRows]);
+    void savePurchaseReceipt(receipt).catch(() => {});
     setSelectedId(receipt.id); setDialog(''); setEditingId(null); setError(''); setNotification({type:'success', message:T.saved});
   };
   const closeFormAndKeepDraft = () => {
@@ -164,15 +181,16 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
        const draftId = makeId();
        const draft = {...form,id:draftId,number:String(form.number||'').trim(),supplierId:form.supplierId||'',supplierName:String(form.supplierName||'').trim(),date:form.date||createdLocal.date,time:form.time||createdLocal.time,status:'open',paid:0,notes:String(form.notes||''),items:(form.items||[]).map(i=>({...i,qty:Number(i.qty)||0,price:Number(i.price)||0})),total:(form.items||[]).reduce((sum,i)=>sum+(Math.max(0,Number(i.qty)||0)*Math.max(0,Number(i.price)||0)),0),openedBy:actor,closedBy:'',createdAt,updatedAt:createdAt,isDraft:true};
        setRows(oldRows => [draft,...oldRows.filter(r=>String(r.number||'').trim().toLowerCase()!==draft.number.toLowerCase())]);
+       void savePurchaseReceipt(draft).catch(() => {});
        setSelectedId(draftId);
      }
      setDialog('');
      setEditingId(null);
      setError('');
    };
-   const remove = r => { if (!r || !window.confirm(T.confirmDelete)) return; setRows(old=>old.filter(x=>x.id!==r.id)); if(selectedId===r.id)setSelectedId(null); setPreview(null); };
+   const remove = r => { if (!r || !window.confirm(T.confirmDelete)) return; setRows(old=>old.filter(x=>x.id!==r.id)); void deletePurchaseReceipt(r.id).catch(() => {}); if(selectedId===r.id)setSelectedId(null); setPreview(null); };
   const exportOne = r => { if(!r)return; const blob=new Blob([JSON.stringify({format:'VELTRO-PRO-purchase-v2',receipt:r},null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=(r.number||'purchase')+'.json'; a.click(); URL.revokeObjectURL(url); };
-  const importOne = e => { const file=e.target.files?.[0]; e.target.value=''; if(!file)return; const reader=new FileReader(); reader.onload=()=>{ try { const x=JSON.parse(String(reader.result||'')), r=x.receipt||x; if(!r.number||!r.supplierName||!Array.isArray(r.items))throw Error(); const receipt={...r,id:makeId(),items:r.items.map(i=>({...i,id:makeId()})),total:r.items.reduce((s,i)=>s+(Number(i.qty)||0)*(Number(i.price)||0),0),paid:Number(r.paid)||0,createdAt:new Date().toISOString()}; setRows(old=>[receipt,...old]); setSelectedId(receipt.id); alert(T.imported); } catch { alert(T.invalid); } }; reader.readAsText(file); };
+  const importOne = e => { const file=e.target.files?.[0]; e.target.value=''; if(!file)return; const reader=new FileReader(); reader.onload=()=>{ try { const x=JSON.parse(String(reader.result||'')), r=x.receipt||x; if(!r.number||!r.supplierName||!Array.isArray(r.items))throw Error(); const receipt={...r,id:makeId(),items:r.items.map(i=>({...i,id:makeId()})),total:r.items.reduce((s,i)=>s+(Number(i.qty)||0)*(Number(i.price)||0),0),paid:Number(r.paid)||0,createdAt:new Date().toISOString()}; setRows(old=>[receipt,...old]); void savePurchaseReceipt(receipt).catch(() => {}); setSelectedId(receipt.id); alert(T.imported); } catch { alert(T.invalid); } }; reader.readAsText(file); };
   const print = r => { if(!r)return; const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); const lines=(r.items||[]).map(i=>'<tr><td>'+esc(i.name)+'</td><td>'+esc(i.barcode||'—')+'</td><td>'+esc(i.qty)+'</td><td>'+esc(fmt(i.price))+'</td><td>'+esc(fmt(lineTotal(i)))+'</td></tr>').join(''); const w=window.open('','_blank','width=900,height=750'); if(!w)return; w.document.write('<!doctype html><html lang="'+lang+'" dir="'+(ar?'rtl':'ltr')+'"><head><meta charset="utf-8"><title>'+esc(r.number)+'</title><style>body{font-family:Arial,sans-serif;padding:28px;color:#202b43}header{border-bottom:2px solid #7256dc;padding-bottom:15px}small{color:#718097}table{width:100%;border-collapse:collapse;margin-top:24px}th,td{padding:10px;border:1px solid #dfe5ef;text-align:start;font-size:12px}th{background:#f0edff}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}.summary div{padding:12px;background:#f5f7fb;border-radius:9px}.summary b{display:block;margin-top:6px}</style></head><body><header><small>VELTRO-PRO · '+esc(T.title)+'</small><h1>'+esc(r.number)+'</h1><p>'+esc(T.supplier)+': '+esc(r.supplierName)+' · '+esc(T.date)+': '+esc(r.date)+'</p></header><table><thead><tr><th>'+esc(T.product)+'</th><th>'+esc(T.barcode)+'</th><th>'+esc(T.qty)+'</th><th>'+esc(T.price)+'</th><th>'+esc(T.lineTotal)+'</th></tr></thead><tbody>'+lines+'</tbody></table><div class="summary"><div>'+esc(T.total)+'<b>'+esc(fmt(receiptTotal(r)))+'</b></div><div>'+esc(T.paid)+'<b>'+esc(fmt(r.paid))+'</b></div><div>'+esc(T.due)+'<b>'+esc(fmt(remaining(r)))+'</b></div></div><p>'+esc(T.notes)+': '+esc(r.notes||'—')+'</p><script>window.onload=()=>window.print()<\/script></body></html>'); w.document.close(); };
   const move = delta => { const index=filtered.findIndex(r=>r.id===selected?.id); const next=filtered[Math.max(0,Math.min(filtered.length-1,index+delta))]; if(next)setSelectedId(next.id); };
   const itemMatches = catalog.filter(p=>(!itemQuery.trim()||[p.name,p.productName,p.title].some(v=>String(v||'').toLowerCase().includes(itemQuery.trim().toLowerCase())))&&(!barcodeQuery.trim()||[p.mainBarcode,p.barcode,p.cartonBarcode].some(v=>String(v||'').toLowerCase().includes(barcodeQuery.trim().toLowerCase())))).slice(0,8);
