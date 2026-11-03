@@ -9,7 +9,7 @@ import './product-editor-layout.css';
 class AppErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { failed: false };
+    this.state = { failed: false, errorMessage: '', componentStack: '' };
   }
 
   static getDerivedStateFromError() {
@@ -17,6 +17,7 @@ class AppErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
+    this.setState({ errorMessage: String(error?.message || error), componentStack: String(info?.componentStack || '') });
     try {
       localStorage.setItem('veltro.last-ui-error', JSON.stringify({
         message: String(error?.message || error),
@@ -50,8 +51,13 @@ class AppErrorBoundary extends React.Component {
             {ar ? 'حدث خطأ في عرض الصفحة' : fr ? "Une erreur d’affichage est survenue" : 'The page encountered an error'}
           </h1>
           <p style={{lineHeight:1.8,color:'#61758a'}}>
-            {ar ? 'تم إيقاف الجزء المتعطل بدلاً من ترك شاشة بيضاء. أعد تحميل التطبيق للمتابعة.' : fr ? "La partie défaillante a été isolée. Rechargez l’application pour continuer." : 'The failing view was isolated instead of leaving a blank screen. Reload the app to continue.'}
+            {ar ? 'تم إيقاف الجزء المتعطل بدلاً من ترك شاشة بيضاء. تفاصيل الخطأ أدناه لتحديد سبب العطل.' : fr ? "La partie défaillante a été isolée. Les détails de l’erreur sont affichés ci-dessous." : 'The failing view was isolated. Error details are shown below to identify the cause.'}
           </p>
+          <div style={{marginTop:14,padding:12,borderRadius:12,background:'#f3f6f9',textAlign:'left',direction:'ltr',maxHeight:220,overflow:'auto',border:'1px solid #dce7f0'}}>
+            <strong style={{display:'block',fontSize:12,marginBottom:6,color:'#9b3030'}}>ERROR</strong>
+            <pre style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere',fontSize:12,margin:0,color:'#26384a'}}>{this.state.errorMessage || 'No error message captured'}</pre>
+            {this.state.componentStack && <><strong style={{display:'block',fontSize:12,margin:'12px 0 6px',color:'#9b3030'}}>FAILING COMPONENT</strong><pre style={{whiteSpace:'pre-wrap',overflowWrap:'anywhere',fontSize:11,margin:0,color:'#526477'}}>{this.state.componentStack}</pre></>}
+          </div>
           <button type="button" onClick={() => window.location.reload()} style={{
             marginTop:12, border:0, borderRadius:14, padding:'12px 24px',
             background:'#167f88', color:'#fff', fontSize:15, fontWeight:700,
