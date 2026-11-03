@@ -7292,3 +7292,19 @@ body>.products-page.pform-portal-root .pform-modal{position:relative!important;z
   .app-shell .product-delete-dialog>footer{padding:12px 14px 15px}
   .app-shell .product-delete-brandline>small{font-size:7px}
 }
+
+
+/* The delete confirmation is portalled to body to escape transformed/overflowing app ancestors. */
+.app-shell.product-delete-portal-root{display:contents!important}
+.app-shell.product-delete-portal-root .product-action-overlay{
+  position:fixed!important;inset:0!important;z-index:2147483000!important;
+  width:100vw!important;height:100vh!important;height:100dvh!important;
+  display:grid!important;place-items:center!important;
+  padding:12px!important;box-sizing:border-box!important;
+}
+.app-shell.product-delete-portal-root .product-delete-dialog{
+  position:relative!important;z-index:1!important;
+  width:min(470px,100%)!important;max-width:100%!important;
+  max-height:calc(100dvh - 24px)!important;overflow:auto!important;
+  margin:auto!important;pointer-events:auto!important;
+}
