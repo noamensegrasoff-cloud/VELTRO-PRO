@@ -104,3 +104,42 @@
  .pform-portal-root .pform-field input,
  .pform-portal-root .pform-field select{height:38px!important;min-height:38px!important}
 }
+
+
+/* One unified product editor card: flatten all former sub-cards into one surface. */
+.product-editor-rebuilt .product-editor-body{padding:16px 18px!important;overflow:auto!important;min-height:0!important}
+.product-editor-rebuilt .product-editor-section{
+  display:block!important;width:100%!important;max-width:none!important;
+  margin:0!important;padding:18px!important;box-sizing:border-box!important;
+  border:1px solid var(--border,#dce5ef)!important;border-radius:16px!important;
+  background:var(--surface-2,#fff)!important;box-shadow:0 8px 28px rgba(35,48,75,.06)!important;
+}
+.product-editor-rebuilt .pform-section-heading{display:none!important}
+.product-editor-rebuilt .product-editor-columns{display:block!important;width:100%!important}
+.product-editor-rebuilt .product-editor-column{display:contents!important}
+.product-editor-rebuilt .pform-feature-card{
+  display:block!important;width:100%!important;height:auto!important;min-height:0!important;
+  margin:0!important;padding:15px 0!important;overflow:visible!important;
+  border:0!important;border-radius:0!important;background:transparent!important;
+  box-shadow:none!important;box-sizing:border-box!important;
+}
+.product-editor-rebuilt .pform-feature-card+.pform-feature-card{border-top:1px solid var(--border,#dce5ef)!important}
+.product-editor-rebuilt .pform-feature-heading{
+  display:flex!important;align-items:center!important;gap:10px!important;
+  margin:0 0 12px!important;padding:0 0 9px!important;
+  border-bottom:1px solid var(--border,#dce5ef)!important;
+}
+.product-editor-rebuilt .pform-basic-grid,
+.product-editor-rebuilt .pform-carton-grid,
+.product-editor-rebuilt .pform-feature-options,
+.product-editor-rebuilt .pform-price-grid{
+  align-items:start!important;align-content:start!important;grid-auto-rows:max-content!important;
+  min-width:0!important;height:auto!important;min-height:0!important;
+}
+.product-editor-rebuilt .pform-field,
+.product-editor-rebuilt .pform-price-group{align-self:start!important;min-width:0!important;height:auto!important}
+@media(max-width:760px){
+ .product-editor-rebuilt .product-editor-body{padding:9px!important}
+ .product-editor-rebuilt .product-editor-section{padding:12px!important;border-radius:12px!important}
+ .product-editor-rebuilt .pform-feature-card{padding:11px 0!important}
+}
