@@ -15,8 +15,13 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: veltro-apk-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-apk:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
