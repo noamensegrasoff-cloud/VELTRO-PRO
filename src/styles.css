@@ -7332,3 +7332,212 @@ body>.products-page.pform-portal-root .pform-modal{position:relative!important;z
  .app-shell.product-preview-portal-root .product-action-overlay{padding:8px!important}
  .app-shell.product-preview-portal-root .product-action-dialog{max-height:calc(100dvh - 16px)!important;border-radius:17px!important}
 }
+
+
+/* Mobile-only workspace recovery: preserve desktop layout unchanged. */
+@media (max-width: 760px) {
+  html, body, #root {
+    min-width: 0 !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    height: auto !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+  .app-shell {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 100dvh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .app-shell .app-layout {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 100dvh !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  .app-shell .workspace {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 100dvh !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .app-shell .workspace > .topbar.glass-topbar {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 9px !important;
+    width: calc(100% - 16px) !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 8px 8px 0 !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+  .app-shell .topbar-identity {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .app-shell .topbar-user {
+    width: fit-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+  }
+  .app-shell .connection-card {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+  }
+  .app-shell .connection-state {
+    min-width: 0 !important;
+    gap: 5px !important;
+  }
+  .app-shell .connection-state b,
+  .app-shell .connection-state small {
+    overflow-wrap: anywhere !important;
+    font-size: 10px !important;
+  }
+  .app-shell .topbar-tools {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    gap: 7px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .app-shell .search-wrap,
+  .app-shell .search-tool {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .app-shell .topbar-tool-group {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 5px !important;
+    min-width: 0 !important;
+    padding: 4px !important;
+  }
+  .app-shell .topbar-tool.compact-tool {
+    width: 38px !important;
+    min-width: 38px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 !important;
+  }
+  .app-shell .topbar-datetime,
+  .app-shell .topbar-brand-mark {
+    display: none !important;
+  }
+  .app-shell .workspace-canvas.home-dashboard-layout {
+    display: flex !important;
+    flex: 1 0 auto !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 12px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 12px 9px 24px !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+  }
+  .app-shell .welcome-sections-card.welcome-side-card {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+  }
+  .app-shell .welcome-side-card .welcome-copy {
+    display: block !important;
+    min-width: 0 !important;
+  }
+  .app-shell .welcome-side-card .welcome-copy h1 {
+    font-size: 22px !important;
+  }
+  .app-shell .welcome-side-card .welcome-sections-side {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+  .app-shell .welcome-side-card .welcome-sections-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+  .app-shell .home-dashboard-column {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  .app-shell .home-metrics-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .app-shell .home-dashboard-charts,
+  .app-shell .home-dashboard-bottom {
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
+@media (max-width: 420px) {
+  .app-shell .workspace > .topbar.glass-topbar {
+    gap: 7px !important;
+    padding: 8px !important;
+  }
+  .app-shell .topbar-tool-group {
+    gap: 3px !important;
+  }
+  .app-shell .topbar-tool.compact-tool {
+    width: 34px !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+  }
+  .app-shell .connection-card {
+    padding: 6px !important;
+  }
+  .app-shell .connection-state b,
+  .app-shell .connection-state small {
+    font-size: 9px !important;
+  }
+  .app-shell .workspace-canvas.home-dashboard-layout {
+    padding-inline: 7px !important;
+  }
+}
