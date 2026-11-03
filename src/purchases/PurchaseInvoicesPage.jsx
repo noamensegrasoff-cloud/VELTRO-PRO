@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, Search, CalendarDays, ReceiptText, Wallet, TrendingUp, Package, Pencil, Trash2, Printer, Eye, Download, Upload, X, Check, ChevronLeft, ChevronRight, Maximize2, Minimize2, WandSparkles, ScanBarcode, CircleDollarSign, Boxes, FileText, SearchX } from 'lucide-react';
 import './purchases.css';
-import { persistProduct } from '../services/productCatalogSync.js';
 
 const STORAGE_KEY = 'veltro.purchases.v1';
 const CATALOG_KEY = 'veltro-products-catalog-v1';
@@ -142,35 +141,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
   const saveNewSupplier = event => { event.preventDefault(); const name=String(supplierDraft.name||'').trim(); if(!name){setSupplierDraftError(ar?'يرجى إدخال اسم المورد.':fr?'Veuillez saisir le nom du fournisseur.':'Please enter a supplier name.');return;} const serial=Math.max(0,...suppliers.map(s=>Number(String(s.id||'').replace(/[^0-9]/g,''))||0))+1; const id='SUP-'+String(serial).padStart(4,'0'); const record={...supplierDraft,name,phone:String(supplierDraft.phone||'').trim(),email:String(supplierDraft.email||'').trim(),balance:Math.max(0,Number(supplierDraft.balance)||0),address:String(supplierDraft.address||'').trim(),description:String(supplierDraft.description||'').trim(),id,updatedAt:new Date().toISOString()}; const next=[record,...suppliers]; try{localStorage.setItem(SUPPLIERS_KEY,JSON.stringify(next));}catch{setSupplierDraftError(ar?'تعذر حفظ المورد. تحقق من حجم الصورة.':fr?'Impossible d’enregistrer le fournisseur. Vérifiez la taille de la photo.':'Could not save supplier. Check the photo size.');return;} setSuppliers(next); chooseSupplier(record); setSupplierDraft({name:'',phone:'',email:'',balance:'0',address:'',description:'',photo:''});setSupplierAddOpen(false);setSupplierDraftError('');setNotification({type:'success',message:T.supplierSaved}); };
   const selectedSupplier = suppliers.find(s=>String(s.id)===String(form.supplierId)) || suppliers.find(s=>String(s.name||'')===String(form.supplierName||''));
   const supplierOldDebt = Math.max(0,Number(selectedSupplier?.debt ?? selectedSupplier?.balance ?? selectedSupplier?.remaining ?? selectedSupplier?.amountDue ?? 0)||0);
-  const applyReceiptStock = async (nextReceipt, previousReceipt = null) => {
-    const quantityByProduct = new Map();
-    const collect = (receipt, multiplier) => {
-      (receipt?.items || []).forEach(item => {
-        const product = catalog.find(p =>
-          (String(item.barcode || '').trim() && [p.mainBarcode, p.barcode, p.cartonBarcode, ...(p.secondaryUnitBarcodes || []), ...(p.secondaryCartonBarcodes || [])].some(code => String(code || '').trim() === String(item.barcode || '').trim())) ||
-          String(p.name || p.productName || p.title || '').trim().toLocaleLowerCase() === String(item.name || '').trim().toLocaleLowerCase()
-        );
-        if (!product) return;
-        const id = String(product.id);
-        quantityByProduct.set(id, (quantityByProduct.get(id) || 0) + multiplier * Math.max(0, Number(item.qty) || 0));
-      });
-    };
-    collect(nextReceipt, 1);
-    collect(previousReceipt, -1);
-    const changed = catalog.map(product => {
-      const delta = quantityByProduct.get(String(product.id)) || 0;
-      if (!delta) return product;
-      const currentStock = Number(product.stock ?? product.quantity ?? 0) || 0;
-      return { ...product, stock: Math.max(0, currentStock + delta), updatedAt: new Date().toISOString() };
-    });
-    if ([...quantityByProduct.values()].some(Boolean)) {
-      try { localStorage.setItem(CATALOG_KEY, JSON.stringify(changed)); }
-      catch { throw new Error(ar ? 'تعذر تحديث المخزون المحلي.' : fr ? 'Impossible de mettre à jour le stock local.' : 'Could not update local stock.'); }
-      setCatalog(changed);
-      await Promise.all(changed.filter(product => quantityByProduct.has(String(product.id))).map(product => persistProduct(product)));
-    }
-  };
-  const save = async e => {
+  const save = e => {
     e.preventDefault();
     const submittedStatus = e.nativeEvent?.submitter?.dataset?.receiptStatus;
     if (submittedStatus) form.status = submittedStatus;
@@ -183,13 +154,6 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     const paid = Math.min(sum,Math.max(0,Number(form.paid)||0));
     const old = rows.find(r=>r.id===editingId);
     const createdAt = old?.createdAt || new Date().toISOString(); const createdLocal = nowLocal(); const receipt = {...form,id:editingId||makeId(),number:String(form.number).trim(),supplierId:supplier?.id||form.supplierId||'',supplierName,supplierStandard:!!form.supplierStandard,date:old?.date||form.date||createdAt.slice(0,10)||createdLocal.date,time:old?.time||form.time||createdAt.slice(11,19)||createdLocal.time,status:form.status==='closed'?'closed':'open',paid,notes:String(form.notes||'').trim(),items,total:sum,openedBy:old?.openedBy||actor,closedBy:form.status==='closed'?(old?.closedBy||actor):'',createdAt,updatedAt:new Date().toISOString()};
-    try {
-      await applyReceiptStock(receipt, old);
-    } catch (stockError) {
-      setError(stockError?.message || (ar ? 'تعذر تحديث المخزون.' : fr ? 'Impossible de mettre à jour le stock.' : 'Could not update stock.'));
-      setNotification({type:'error', message:stockError?.message || (ar ? 'تعذر تحديث المخزون.' : fr ? 'Impossible de mettre à jour le stock.' : 'Could not update stock.')});
-      return;
-    }
     setRows(oldRows=>editingId?oldRows.map(r=>r.id===editingId?receipt:r):[receipt,...oldRows]);
     setSelectedId(receipt.id); setDialog(''); setEditingId(null); setError(''); setNotification({type:'success', message:T.saved});
   };
