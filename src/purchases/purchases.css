@@ -2816,3 +2816,80 @@
   .purchase-page #purchase-form-items .purchase-items-table th,
   .purchase-page #purchase-form-items .purchase-items-table td{padding:11px 13px!important}
 }
+
+
+/* Rebuilt purchase receipt ledger — isolated classes, no legacy card/box styling */
+.purchase-page #purchase-form-items .purchase-ledger-scroll{
+  display:block;width:100%;max-width:100%;min-width:0;max-height:min(44vh,420px);
+  overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  touch-action:pan-x pan-y;background:#fff;border:1px solid #e1e8f0;border-radius:2px;
+  scrollbar-width:thin;scrollbar-color:#b9c4d3 #f3f6f9;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table{
+  width:100%;min-width:980px;table-layout:fixed;border-collapse:collapse;border-spacing:0;
+  margin:0;background:#fff;color:#3c455c;font-size:13px;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table thead th{
+  height:48px;padding:12px 15px;background:#373b50;color:#fff;
+  border:0;border-inline-end:1px solid rgba(255,255,255,.22);
+  text-align:center;vertical-align:middle;white-space:nowrap;
+  font-size:13px;font-weight:800;line-height:1.4;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table thead th:last-child{border-inline-end:0}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody td{
+  height:49px;padding:12px 15px;background:#fff;color:#3c455c;
+  border:0;border-inline-end:1px solid #e3eaf2;border-bottom:1px dashed #dce5ef;
+  text-align:center;vertical-align:middle;white-space:nowrap;
+  font-size:13px;line-height:1.5;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody td:last-child{border-inline-end:0}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody tr:last-child td{border-bottom:0}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody tr:hover td{background:#f8fafd}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody td:first-child{text-align:start}
+.purchase-page #purchase-form-items .purchase-ledger-value{
+  display:inline;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;
+  color:#3c455c;font-size:13px;font-weight:600;line-height:1.5;
+}
+.purchase-page #purchase-form-items .purchase-ledger-name{color:#343c53;font-weight:800}
+.purchase-page #purchase-form-items .purchase-ledger-code{direction:ltr;font-variant-numeric:tabular-nums}
+.purchase-page #purchase-form-items .purchase-ledger-money,
+.purchase-page #purchase-form-items .purchase-ledger-total{font-variant-numeric:tabular-nums}
+.purchase-page #purchase-form-items .purchase-ledger-total{color:#343c53;font-weight:850}
+.purchase-page #purchase-form-items .purchase-ledger-qty{
+  display:inline-block;width:78px;height:31px;min-height:31px;margin:0;padding:3px 5px;
+  border:0;border-bottom:1px solid #aebbd0;border-radius:0;background:transparent;
+  box-shadow:none;color:#343c53;font:inherit;font-size:13px;font-weight:750;text-align:center;
+}
+.purchase-page #purchase-form-items .purchase-ledger-qty:focus{
+  border-bottom:2px solid #66738d;outline:0;box-shadow:none;
+}
+.purchase-page #purchase-form-items .purchase-ledger-actions{
+  display:table-cell;text-align:center;white-space:nowrap;
+}
+.purchase-page #purchase-form-items .purchase-ledger-actions button{
+  display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  min-width:0;min-height:29px;height:29px;margin:0 7px;padding:2px 0;
+  border:0;border-radius:0;background:transparent;box-shadow:none;
+  font:inherit;font-size:11px;font-weight:750;white-space:nowrap;cursor:pointer;
+}
+.purchase-page #purchase-form-items .purchase-ledger-preview{color:#426b9d}
+.purchase-page #purchase-form-items .purchase-ledger-edit{color:#6653a0}
+.purchase-page #purchase-form-items .purchase-ledger-remove{color:#b94c60}
+.purchase-page #purchase-form-items .purchase-ledger-actions button:hover{
+  background:transparent;text-decoration:underline;
+}
+.purchase-page #purchase-form-items .purchase-ledger-empty-row td{
+  height:120px;text-align:center!important;background:#fff;
+  border:0!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-empty-state{
+  display:flex;align-items:center;justify-content:center;gap:10px;color:#7b879a;
+}
+.purchase-page #purchase-form-items .purchase-ledger-empty-icon{display:none}
+@media(max-width:760px){
+  .purchase-page #purchase-form-items .purchase-ledger-scroll{max-height:42vh}
+  .purchase-page #purchase-form-items .purchase-ledger-table{min-width:1050px;table-layout:auto}
+  .purchase-page #purchase-form-items .purchase-ledger-table th,
+  .purchase-page #purchase-form-items .purchase-ledger-table td{padding:11px 13px}
+  .purchase-page #purchase-form-items .purchase-ledger-actions button{margin:0 5px}
+}
