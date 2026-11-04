@@ -3021,3 +3021,33 @@
   .purchase-page #purchase-form-items .purchase-ledger-table tbody td{padding:7px 9px!important}
   .purchase-page .purchase-ledger-direct-actions button{padding:4px 7px!important}
 }
+
+
+/* Proportional ledger columns: wider for descriptive values, compact for counts */
+.purchase-page #purchase-form-items .purchase-ledger-table{
+  table-layout:fixed!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-col-name{width:22%}
+.purchase-page #purchase-form-items .purchase-ledger-col-code{width:18%}
+.purchase-page #purchase-form-items .purchase-ledger-col-cartons{width:9%}
+.purchase-page #purchase-form-items .purchase-ledger-col-per-carton{width:12%}
+.purchase-page #purchase-form-items .purchase-ledger-col-units{width:11%}
+.purchase-page #purchase-form-items .purchase-ledger-col-price{width:14%}
+.purchase-page #purchase-form-items .purchase-ledger-col-total{width:14%}
+.purchase-page #purchase-form-items .purchase-ledger-table th,
+.purchase-page #purchase-form-items .purchase-ledger-table td{
+  overflow:hidden;text-overflow:ellipsis;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table th:nth-child(3),
+.purchase-page #purchase-form-items .purchase-ledger-table td:nth-child(3),
+.purchase-page #purchase-form-items .purchase-ledger-table th:nth-child(4),
+.purchase-page #purchase-form-items .purchase-ledger-table td:nth-child(4),
+.purchase-page #purchase-form-items .purchase-ledger-table th:nth-child(5),
+.purchase-page #purchase-form-items .purchase-ledger-table td:nth-child(5){
+  padding-inline:5px!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table th:nth-child(1),
+.purchase-page #purchase-form-items .purchase-ledger-table td:nth-child(1){text-align:start!important}
+@media(max-width:760px){
+  .purchase-page #purchase-form-items .purchase-ledger-table{min-width:900px!important;table-layout:fixed!important}
+}
