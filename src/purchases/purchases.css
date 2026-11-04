@@ -2473,3 +2473,20 @@
 .purchase-item-preview-grid b{color:#26334d;font-size:14px;overflow-wrap:anywhere}
 .purchase-item-preview-dialog>footer{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
 @media(max-width:640px){.purchase-item-actions{gap:4px}.purchase-item-actions .purchase-item-preview,.purchase-item-actions .purchase-item-edit,.purchase-item-actions .purchase-item-remove{min-width:34px;padding:6px}.purchase-item-actions span{font-size:11px}.purchase-item-preview-dialog{padding:16px}}
+
+
+/* Receipt note dialog */
+.purchase-notes-open-button{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:11px 14px;border:1px solid #dfe5ef;border-radius:12px;background:#f8f9fc;color:#34425e;font:inherit;font-weight:700;text-align:start;cursor:pointer}
+.purchase-notes-open-button:hover{border-color:#b8c7e2;background:#f2f5fb}
+.purchase-notes-open-button small{margin-inline-start:auto;color:#71809a;font-size:11px;font-weight:600}
+.purchase-notes-open-button>svg:last-child{margin-inline-start:auto}
+.purchase-notes-open-button:has(small)>svg:last-child{margin-inline-start:0}
+.purchase-note-dialog{width:min(540px,calc(100vw - 32px));padding:22px;border:1px solid rgba(130,145,170,.25);border-radius:18px;background:var(--purchase-card,#fff);box-shadow:0 24px 80px rgba(20,30,55,.22)}
+.purchase-note-dialog>header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
+.purchase-note-dialog>header span{display:block;margin-bottom:5px;color:#77839a;font-size:12px;font-weight:700}
+.purchase-note-dialog>header h2{margin:0;color:#26334d;font-size:20px}
+.purchase-note-dialog>header button{display:grid;place-items:center;width:34px;height:34px;border:1px solid #e0e5ef;border-radius:9px;background:#fff;color:#53617a;cursor:pointer}
+.purchase-note-dialog>textarea{display:block;width:100%;min-height:145px;resize:vertical;padding:13px;border:1px solid #dfe5ef;border-radius:11px;background:#fbfcfe;color:#26334d;font:inherit;line-height:1.6;outline:none}
+.purchase-note-dialog>textarea:focus{border-color:#8c78dc;box-shadow:0 0 0 3px rgba(124,100,210,.12)}
+.purchase-note-dialog>footer{display:flex;justify-content:flex-end;gap:9px;margin-top:18px}
+@media(max-width:640px){.purchase-note-dialog{padding:16px}.purchase-notes-open-button{min-height:44px}}
