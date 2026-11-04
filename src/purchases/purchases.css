@@ -2555,3 +2555,67 @@
   .purchase-page #purchase-form-items .purchase-item-actions{flex-direction:row!important}
   .purchase-page .purchase-notes-under-details{margin-top:9px!important}
 }
+
+
+/* Final table treatment: horizontal drag, open cells, no boxed values */
+.purchase-page #purchase-form-items{min-width:0!important;max-width:100%!important;overflow:hidden!important}
+.purchase-page #purchase-form-items .purchase-items-wrap{
+  display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;
+  overflow-x:auto!important;overflow-y:auto!important;overscroll-behavior-x:contain!important;
+  -webkit-overflow-scrolling:touch!important;touch-action:pan-x pan-y!important;
+  scrollbar-width:thin!important;scrollbar-color:#b9addd #f1eff7!important;
+  cursor:grab!important
+}
+.purchase-page #purchase-form-items .purchase-items-wrap:active{cursor:grabbing!important}
+.purchase-page #purchase-form-items .purchase-items-table{
+  display:table!important;width:max-content!important;min-width:100%!important;table-layout:auto!important;
+  border-collapse:separate!important;border-spacing:0!important
+}
+.purchase-page #purchase-form-items .purchase-items-table th,
+.purchase-page #purchase-form-items .purchase-items-table td{white-space:nowrap!important}
+.purchase-page #purchase-form-items .purchase-items-table th{padding:13px 16px!important}
+.purchase-page #purchase-form-items .purchase-items-table td{
+  padding:15px 16px!important;background:transparent!important;border:0!important;
+  border-bottom:1px solid #e9e7f0!important;box-shadow:none!important
+}
+.purchase-page #purchase-form-items .purchase-items-table tbody tr{background:transparent!important;box-shadow:none!important}
+.purchase-page #purchase-form-items .purchase-items-table tbody tr:hover{background:rgba(121,87,232,.035)!important}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-readonly,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-product-name,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-barcode,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-money,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-count,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-total{
+  display:inline!important;min-height:0!important;height:auto!important;padding:0!important;margin:0!important;
+  border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;
+  color:#34415a!important;font-size:12px!important;font-weight:650!important
+}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-product-name{color:#443477!important;font-weight:850!important}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-total{
+  display:inline-block!important;padding:0 0 3px!important;border-bottom:2px solid #a99ad8!important;
+  color:#4e3d89!important;font-weight:900!important
+}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-qty-input{
+  width:74px!important;min-height:28px!important;height:28px!important;padding:2px 4px!important;
+  border:0!important;border-bottom:1px solid #aaa0c5!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;color:#303b52!important;
+  font-size:13px!important;font-weight:800!important;text-align:center!important
+}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-qty-input:focus{
+  border-bottom:2px solid #785bd0!important;box-shadow:none!important;outline:0!important
+}
+.purchase-page #purchase-form-items .purchase-item-actions{display:flex!important;flex-direction:row!important;gap:13px!important}
+.purchase-page #purchase-form-items .purchase-item-actions button{
+  display:inline-flex!important;align-items:center!important;gap:5px!important;width:auto!important;min-width:0!important;
+  min-height:28px!important;padding:3px 0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;font-size:11px!important;font-weight:750!important
+}
+.purchase-page #purchase-form-items .purchase-item-actions .purchase-item-preview{color:#426b9d!important}
+.purchase-page #purchase-form-items .purchase-item-actions .purchase-item-edit{color:#7155b6!important}
+.purchase-page #purchase-form-items .purchase-item-actions .purchase-item-remove{color:#bd5369!important}
+.purchase-page #purchase-form-items .purchase-item-actions button:hover{text-decoration:underline!important;filter:none!important}
+@media(max-width:760px){
+  .purchase-page #purchase-form-items .purchase-items-wrap{max-height:42vh!important;overflow-x:auto!important}
+  .purchase-page #purchase-form-items .purchase-items-table{min-width:900px!important}
+  .purchase-page #purchase-form-items .purchase-items-table td{padding:12px 13px!important}
+}
