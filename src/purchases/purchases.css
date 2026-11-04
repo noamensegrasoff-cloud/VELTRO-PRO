@@ -2453,3 +2453,23 @@
     font-size: 11px !important;
   }
 }
+
+
+/* Product row preview and edit actions */
+.purchase-item-actions{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.purchase-item-actions .purchase-item-preview,.purchase-item-actions .purchase-item-edit{display:inline-flex;align-items:center;justify-content:center;gap:5px;min-height:34px;padding:6px 9px;border:1px solid #d9e0ed;border-radius:9px;background:#f7f9fd;color:#34425e;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.purchase-item-actions .purchase-item-preview:hover{background:#edf4ff;border-color:#a9c7f5;color:#245da8}
+.purchase-item-actions .purchase-item-edit{background:#f2efff;border-color:#d9d0ff;color:#6246b5}
+.purchase-item-actions .purchase-item-edit:hover{background:#e9e2ff;border-color:#b9a9f5}
+.purchase-item-actions .purchase-item-remove{min-height:34px}
+.purchase-item-preview-dialog{width:min(520px,calc(100vw - 32px));padding:22px;border:1px solid rgba(130,145,170,.25);border-radius:18px;background:var(--purchase-card,#fff);box-shadow:0 24px 80px rgba(20,30,55,.22)}
+.purchase-item-preview-dialog>header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.purchase-item-preview-dialog>header span{display:block;margin-bottom:5px;color:#77839a;font-size:12px;font-weight:700}
+.purchase-item-preview-dialog>header h2{margin:0;color:#26334d;font-size:20px}
+.purchase-item-preview-dialog>header button{display:grid;place-items:center;width:34px;height:34px;border:1px solid #e0e5ef;border-radius:9px;background:#fff;color:#53617a;cursor:pointer}
+.purchase-item-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.purchase-item-preview-grid>div{display:flex;flex-direction:column;gap:7px;padding:13px;border:1px solid #e6eaf1;border-radius:11px;background:#f8f9fc;min-width:0}
+.purchase-item-preview-grid small{color:#77839a;font-size:11px}
+.purchase-item-preview-grid b{color:#26334d;font-size:14px;overflow-wrap:anywhere}
+.purchase-item-preview-dialog>footer{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
+@media(max-width:640px){.purchase-item-actions{gap:4px}.purchase-item-actions .purchase-item-preview,.purchase-item-actions .purchase-item-edit,.purchase-item-actions .purchase-item-remove{min-width:34px;padding:6px}.purchase-item-actions span{font-size:11px}.purchase-item-preview-dialog{padding:16px}}
