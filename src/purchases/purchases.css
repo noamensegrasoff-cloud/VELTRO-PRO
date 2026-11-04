@@ -3159,3 +3159,45 @@
 @media(max-width:760px){
   .purchase-page #purchase-form-items .purchase-ledger-scroll{border-radius:13px!important}
 }
+
+/* Purchase product tables — consistent royal-purple glass finish */
+.purchase-page .purchase-preview-dialog .purchase-ledger-scroll{
+  width:100%;max-width:100%;min-width:0;overflow:auto;
+  border:1px solid rgba(132,105,197,.22);border-radius:14px;
+  background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(247,243,255,.74));
+  box-shadow:0 7px 22px rgba(82,58,137,.07),inset 0 1px rgba(255,255,255,.9);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  -webkit-overflow-scrolling:touch;
+}
+.purchase-page .purchase-preview-dialog .purchase-items-table{
+  width:100%;min-width:680px;margin:0;
+  border:0;border-collapse:separate;border-spacing:0;
+  border-radius:13px;overflow:hidden;background:transparent;
+  color:#5d5272;font-size:11px;
+}
+.purchase-page .purchase-preview-dialog .purchase-items-table thead th{
+  padding:11px 13px;
+  background:linear-gradient(115deg,rgba(118,85,202,.96),rgba(146,117,221,.88) 58%,rgba(146,117,221,.42));
+  color:#fff;border:0;border-bottom:1px solid rgba(255,255,255,.32);
+  border-inline-end:1px solid rgba(255,255,255,.18);
+  text-align:start;white-space:nowrap;font-size:11px;font-weight:800;
+}
+.purchase-page .purchase-preview-dialog .purchase-items-table thead th:last-child{border-inline-end:0}
+.purchase-page .purchase-preview-dialog .purchase-items-table tbody td{
+  padding:10px 13px;background:rgba(255,255,255,.72);
+  color:#5d5272;border:0;border-inline-end:1px solid rgba(126,98,179,.10);
+  border-bottom:1px solid rgba(126,98,179,.12);
+  white-space:nowrap;vertical-align:middle;
+}
+.purchase-page .purchase-preview-dialog .purchase-items-table tbody td:last-child{border-inline-end:0}
+.purchase-page .purchase-preview-dialog .purchase-items-table tbody tr:nth-child(even) td{
+  background:linear-gradient(135deg,rgba(238,230,255,.58),rgba(255,255,255,.66));
+}
+.purchase-page .purchase-preview-dialog .purchase-items-table tbody tr:hover td{
+  background:linear-gradient(90deg,rgba(146,112,211,.16),rgba(210,194,241,.10));
+}
+.purchase-page .purchase-preview-dialog .purchase-items-table tbody tr:last-child td{border-bottom:0}
+@media(max-width:760px){
+  .purchase-page .purchase-preview-dialog .purchase-ledger-scroll{border-radius:12px}
+  .purchase-page .purchase-preview-dialog .purchase-items-table{min-width:650px}
+}
