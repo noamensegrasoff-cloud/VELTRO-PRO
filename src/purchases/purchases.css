@@ -3201,3 +3201,75 @@
   .purchase-page .purchase-preview-dialog .purchase-ledger-scroll{border-radius:12px}
   .purchase-page .purchase-preview-dialog .purchase-items-table{min-width:650px}
 }
+
+/* Reference finish: soft mint-to-royal glass, rounded and restrained */
+.purchase-page #purchase-form-items .purchase-ledger-scroll{
+  border:1px solid rgba(126,105,177,.20)!important;
+  border-radius:19px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(249,247,255,.68) 58%,rgba(239,233,255,.60))!important;
+  box-shadow:0 10px 28px rgba(70,54,116,.08),inset 0 1px 0 rgba(255,255,255,.9)!important;
+  -webkit-backdrop-filter:blur(20px) saturate(135%)!important;
+  backdrop-filter:blur(20px) saturate(135%)!important;
+  scrollbar-color:rgba(132,105,197,.35) rgba(255,255,255,.35)!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table{
+  background:transparent!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table thead th{
+  background:linear-gradient(110deg,rgba(224,239,229,.92),rgba(239,235,250,.90) 48%,rgba(213,199,246,.88))!important;
+  color:#493b69!important;
+  border-bottom:1px solid rgba(132,105,197,.16)!important;
+  border-inline-end:1px solid rgba(132,105,197,.10)!important;
+  text-shadow:none!important;
+  font-weight:850!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table thead th:first-child{
+  border-start-start-radius:16px!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table thead th:last-child{
+  border-start-end-radius:16px!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody td{
+  background:rgba(255,255,255,.48)!important;
+  color:#655b78!important;
+  border-inline-end:1px solid rgba(132,105,197,.08)!important;
+  border-bottom:1px solid rgba(132,105,197,.10)!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody tr:nth-child(even) td{
+  background:rgba(245,241,252,.55)!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody tr:hover td{
+  background:linear-gradient(100deg,rgba(228,240,231,.54),rgba(235,226,250,.58))!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody tr:last-child td{
+  border-bottom:0!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-name{color:#493b69!important}
+.purchase-page #purchase-form-items .purchase-ledger-code,
+.purchase-page #purchase-form-items .purchase-ledger-money{color:#817895!important}
+.purchase-page #purchase-form-items .purchase-ledger-total{color:#7454c8!important}
+.purchase-page #purchase-form-items .purchase-ledger-selected-row td{
+  background:linear-gradient(100deg,rgba(224,239,229,.58),rgba(228,216,250,.62))!important;
+  outline:1px solid rgba(132,105,197,.15)!important;
+}
+.purchase-page .purchase-ledger-navigation,
+.purchase-page .purchase-ledger-navigation button,
+.purchase-page .purchase-ledger-direct-actions button{
+  border-color:rgba(132,105,197,.20)!important;
+  border-radius:12px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.86),rgba(241,237,250,.72))!important;
+  color:#5c4a7e!important;
+  box-shadow:0 5px 14px rgba(70,54,116,.06),inset 0 1px rgba(255,255,255,.88)!important;
+}
+.purchase-page .purchase-ledger-direct-actions .purchase-ledger-remove{
+  color:#9d627b!important;
+  border-color:rgba(157,98,123,.18)!important;
+}
+.purchase-page .purchase-ledger-navigation button:hover:not(:disabled),
+.purchase-page .purchase-ledger-direct-actions button:hover:not(:disabled){
+  border-color:rgba(132,105,197,.38)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.96),rgba(231,222,249,.82))!important;
+}
+@media(max-width:760px){
+  .purchase-page #purchase-form-items .purchase-ledger-scroll{border-radius:15px!important}
+}
