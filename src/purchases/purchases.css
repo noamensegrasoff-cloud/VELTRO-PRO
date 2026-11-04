@@ -3190,3 +3190,90 @@
 .purchase-page #purchase-form-items .purchase-ledger-selected-row td{
   background:rgba(218,204,255,.78)!important;
 }
+
+
+/* VELTRO glassmorphism — cohesive royal purple fading into transparency */
+.purchase-page #purchase-form-items .purchase-ledger-scroll{
+  border:1px solid rgba(119,82,190,.30)!important;
+  border-radius:16px!important;
+  background:linear-gradient(145deg,rgba(246,240,255,.58),rgba(255,255,255,.34))!important;
+  box-shadow:0 12px 30px rgba(64,35,117,.10),inset 0 1px 0 rgba(255,255,255,.82)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(155%)!important;
+  backdrop-filter:blur(22px) saturate(155%)!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table{
+  background:transparent!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table thead th{
+  background:linear-gradient(112deg,rgba(65,31,125,.97) 0%,rgba(91,55,157,.91) 38%,rgba(126,91,190,.76) 72%,rgba(166,143,215,.48) 100%)!important;
+  color:rgba(255,255,255,.98)!important;
+  border:0!important;
+  border-inline-end:1px solid rgba(255,255,255,.17)!important;
+  border-bottom:1px solid rgba(255,255,255,.28)!important;
+  text-shadow:0 1px 8px rgba(37,18,75,.20)!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody td{
+  background:linear-gradient(105deg,rgba(255,255,255,.72),rgba(248,244,255,.48))!important;
+  color:#493760!important;
+  border-inline-end:1px solid rgba(126,91,190,.10)!important;
+  border-bottom:1px solid rgba(126,91,190,.13)!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody tr:nth-child(even) td{
+  background:linear-gradient(105deg,rgba(239,230,255,.62),rgba(255,255,255,.42))!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-table tbody tr:hover td{
+  background:linear-gradient(105deg,rgba(218,199,255,.72),rgba(244,237,255,.58))!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-name{color:#382052!important}
+.purchase-page #purchase-form-items .purchase-ledger-code,
+.purchase-page #purchase-form-items .purchase-ledger-money{color:#715b8c!important}
+.purchase-page #purchase-form-items .purchase-ledger-total{color:#6335ad!important}
+.purchase-page #purchase-form-items .purchase-ledger-selected-row td{
+  background:linear-gradient(105deg,rgba(202,177,255,.72),rgba(238,228,255,.58))!important;
+}
+.purchase-page .purchase-ledger-navigation{
+  border:1px solid rgba(125,87,190,.28)!important;
+  border-radius:11px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.68),rgba(232,219,255,.48))!important;
+  color:#59358e!important;
+  box-shadow:0 4px 14px rgba(65,35,115,.07),inset 0 1px 0 rgba(255,255,255,.85)!important;
+  -webkit-backdrop-filter:blur(16px)!important;backdrop-filter:blur(16px)!important;
+}
+.purchase-page .purchase-ledger-navigation button{
+  border:1px solid rgba(126,91,190,.16)!important;
+  border-radius:8px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.72),rgba(218,201,250,.58))!important;
+  color:#6039a0!important;
+}
+.purchase-page .purchase-ledger-navigation button:hover:not(:disabled){
+  background:linear-gradient(145deg,rgba(255,255,255,.88),rgba(198,174,244,.72))!important;
+}
+.purchase-page .purchase-ledger-direct-actions button{
+  border:1px solid rgba(125,87,190,.22)!important;
+  border-radius:9px!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.70),rgba(231,219,250,.48))!important;
+  box-shadow:0 3px 10px rgba(65,35,115,.06),inset 0 1px 0 rgba(255,255,255,.85)!important;
+  -webkit-backdrop-filter:blur(14px)!important;backdrop-filter:blur(14px)!important;
+}
+.purchase-page .purchase-ledger-direct-actions .purchase-ledger-preview,
+.purchase-page .purchase-ledger-direct-actions .purchase-ledger-edit{
+  color:#6239a2!important;border-color:rgba(125,87,190,.24)!important;
+}
+.purchase-page .purchase-ledger-direct-actions .purchase-ledger-remove{
+  color:#a34b68!important;border-color:rgba(190,100,130,.22)!important;
+}
+.purchase-page .purchase-ledger-direct-actions button:hover:not(:disabled){
+  background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(211,192,247,.68))!important;
+  box-shadow:0 5px 14px rgba(65,35,115,.11)!important;
+}
+.purchase-page .purchase-ledger-direct-actions button:disabled{opacity:.35!important}
+.purchase-page .purchase-table th{
+  background:linear-gradient(110deg,rgba(75,39,137,.94),rgba(117,79,177,.78),rgba(177,155,218,.48))!important;
+  color:#fff!important;
+  border-bottom-color:rgba(255,255,255,.25)!important;
+}
+.purchase-page .purchase-table tbody tr:hover{background:rgba(221,205,250,.42)!important}
+.purchase-page .purchase-table tbody tr.is-selected{background:rgba(207,186,247,.55)!important}
+@media(max-width:760px){
+  .purchase-page #purchase-form-items .purchase-ledger-scroll{border-radius:13px!important}
+}
