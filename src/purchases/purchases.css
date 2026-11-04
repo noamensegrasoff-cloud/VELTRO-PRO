@@ -2619,3 +2619,102 @@
   .purchase-page #purchase-form-items .purchase-items-table{min-width:900px!important}
   .purchase-page #purchase-form-items .purchase-items-table td{padding:12px 13px!important}
 }
+
+
+/* Reference-inspired purchase items table: clean ledger, open cells, horizontal scrolling */
+.purchase-page #purchase-form-items{
+  display:block!important;min-width:0!important;max-width:100%!important;overflow:hidden!important;
+}
+.purchase-page #purchase-form-items .purchase-items-wrap{
+  display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;
+  max-height: min(44vh, 420px)!important;overflow-x:auto!important;overflow-y:auto!important;
+  border:1px solid #dfe7f0!important;border-radius:3px!important;background:#fff!important;
+  -webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;
+  touch-action:pan-x pan-y!important;scrollbar-width:thin!important;scrollbar-color:#aeb9ca #f3f6fa!important;
+  cursor:grab!important;
+}
+.purchase-page #purchase-form-items .purchase-items-wrap:active{cursor:grabbing!important}
+.purchase-page #purchase-form-items .purchase-items-table{
+  display:table!important;width:max-content!important;min-width:100%!important;min-width:1080px!important;
+  table-layout:auto!important;border-collapse:collapse!important;border-spacing:0!important;background:#fff!important;
+}
+.purchase-page #purchase-form-items .purchase-items-table thead{display:table-header-group!important}
+.purchase-page #purchase-form-items .purchase-items-table thead tr{display:table-row!important}
+.purchase-page #purchase-form-items .purchase-items-table tbody{display:table-row-group!important}
+.purchase-page #purchase-form-items .purchase-items-table tbody tr{
+  display:table-row!important;height:auto!important;min-height:0!important;background:#fff!important;
+  box-shadow:none!important;transform:none!important;
+}
+.purchase-page #purchase-form-items .purchase-items-table th{
+  display:table-cell!important;padding:14px 17px!important;
+  background:#373b50!important;color:#fff!important;border:1px solid #e2e8f0!important;
+  font-size:12px!important;font-weight:800!important;text-align:center!important;
+  white-space:nowrap!important;line-height:1.5!important;
+}
+.purchase-page #purchase-form-items .purchase-items-table td{
+  display:table-cell!important;min-width:0!important;padding:14px 16px!important;
+  border:0!important;border-inline-start:1px solid #e3eaf2!important;
+  border-bottom:1px dashed #dce5ef!important;border-radius:0!important;
+  background:#fff!important;box-shadow:none!important;vertical-align:middle!important;
+  color:#3c465d!important;font-size:13px!important;white-space:nowrap!important;
+}
+.purchase-page #purchase-form-items .purchase-items-table tbody tr:last-child td{border-bottom:0!important}
+.purchase-page #purchase-form-items .purchase-items-table tbody tr:hover td{background:#f8fafd!important}
+.purchase-page #purchase-form-items .purchase-items-table tbody td::before{display:none!important;content:none!important}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-readonly,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-product-name,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-barcode,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-money,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-count,
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-total{
+  display:inline!important;min-width:0!important;min-height:0!important;width:auto!important;height:auto!important;
+  margin:0!important;padding:0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;color:#39445b!important;
+  font-size:13px!important;font-weight:600!important;line-height:1.5!important;
+}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-product-name{
+  color:#30384f!important;font-weight:800!important;
+}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-total{
+  color:#30384f!important;font-weight:850!important;
+}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-qty-input{
+  display:inline-block!important;width:78px!important;min-width:60px!important;height:32px!important;min-height:32px!important;
+  margin:0!important;padding:3px 5px!important;border:0!important;border-bottom:1px solid #aebbd0!important;
+  border-radius:0!important;background:transparent!important;box-shadow:none!important;
+  color:#30384f!important;font-size:13px!important;font-weight:750!important;text-align:center!important;
+}
+.purchase-page #purchase-form-items .purchase-items-table .purchase-table-qty-input:focus{
+  border-bottom:2px solid #596b8c!important;outline:0!important;box-shadow:none!important;
+}
+.purchase-page #purchase-form-items .purchase-items-table td.purchase-item-actions{
+  display:table-cell!important;text-align:center!important;white-space:nowrap!important;
+}
+.purchase-page #purchase-form-items .purchase-item-actions{
+  display:flex!important;flex-direction:row!important;align-items:center!important;
+  justify-content:center!important;gap:14px!important;white-space:nowrap!important;
+}
+.purchase-page #purchase-form-items .purchase-item-actions button{
+  display:inline-flex!important;flex-direction:row!important;align-items:center!important;justify-content:center!important;
+  gap:5px!important;width:auto!important;min-width:0!important;height:auto!important;min-height:30px!important;
+  margin:0!important;padding:3px 0!important;border:0!important;border-radius:0!important;
+  background:transparent!important;box-shadow:none!important;font:inherit!important;font-size:11px!important;
+  font-weight:750!important;white-space:nowrap!important;cursor:pointer!important;
+}
+.purchase-page #purchase-form-items .purchase-item-actions .purchase-item-preview{color:#426b9d!important}
+.purchase-page #purchase-form-items .purchase-item-actions .purchase-item-edit{color:#6653a0!important}
+.purchase-page #purchase-form-items .purchase-item-actions .purchase-item-remove{color:#b94c60!important}
+.purchase-page #purchase-form-items .purchase-item-actions button:hover{text-decoration:underline!important;background:transparent!important}
+.purchase-page #purchase-form-items .purchase-items-empty-row td{
+  height:118px!important;text-align:center!important;vertical-align:middle!important;
+  border-bottom:0!important;background:#fff!important;
+}
+.purchase-page #purchase-form-items .purchase-items-empty-state{display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important}
+.purchase-page #purchase-form-items .purchase-items-empty-icon{display:none!important}
+@media(max-width:760px){
+  .purchase-page #purchase-form-items .purchase-items-wrap{max-height:42vh!important;border-radius:2px!important}
+  .purchase-page #purchase-form-items .purchase-items-table{min-width:1080px!important}
+  .purchase-page #purchase-form-items .purchase-items-table th{padding:12px 14px!important}
+  .purchase-page #purchase-form-items .purchase-items-table td{padding:12px 14px!important}
+  .purchase-page #purchase-form-items .purchase-item-actions{gap:11px!important}
+}
