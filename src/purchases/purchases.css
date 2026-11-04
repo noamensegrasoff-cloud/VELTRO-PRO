@@ -2577,3 +2577,5 @@
   .purchase-page #purchase-form-items .purchase-items-table tbody td{vertical-align:middle!important}
   .purchase-page .purchase-notes-under-details{margin-top:10px!important}
 }
+
+@media(min-width:761px){.purchase-page #purchase-form-items .purchase-items-empty-row td::before{display:none!important}}
