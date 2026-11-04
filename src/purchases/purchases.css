@@ -2530,13 +2530,13 @@
   .purchase-page #purchase-form-items .purchase-items-table tbody td::before{
     display:block!important;margin-bottom:9px!important;color:#8490a3!important;font-size:10px!important;font-weight:800!important;letter-spacing:.015em!important
   }
-  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(1)::before{content:"Product / Item"}
-  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(2)::before{content:"Main barcode"}
-  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(3)::before{content:"Unit purchase price"}
-  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(4)::before{content:"Carton count"}
-  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(5)::before{content:"Unit count"}
-  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(6)::before{content:"Total"}
-  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(7)::before{content:"Actions"}
+  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(1)::before{content:attr(data-label)}
+  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(2)::before{content:attr(data-label)}
+  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(3)::before{content:attr(data-label)}
+  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(4)::before{content:attr(data-label)}
+  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(5)::before{content:attr(data-label)}
+  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(6)::before{content:attr(data-label)}
+  .purchase-page #purchase-form-items .purchase-items-table tbody td:nth-child(7)::before{content:attr(data-label)}
   .purchase-page #purchase-form-items .purchase-items-table .purchase-table-product-name{
     max-width:100%!important;min-height:42px!important;padding:10px 13px!important;font-size:14px!important
   }
