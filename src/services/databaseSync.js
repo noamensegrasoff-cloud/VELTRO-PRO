@@ -233,7 +233,7 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
             payload: operation.payload,
           });
         }
-        await markLocalRecordSynced(operation.recordKey, operation.updatedAt);
+        await markLocalRecordSynced(operation.recordKey, operation.updatedAt || operation.createdAt);
         await removePendingSyncOperation(operation.id);
         pendingKeys.delete(operation.recordKey);
         pushed += 1;
