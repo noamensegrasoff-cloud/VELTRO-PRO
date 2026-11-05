@@ -198,9 +198,10 @@ export async function mergeCloudRecord(row, workspaceId) {
   const pending = (await listPendingSyncOperations()).some(item => item.recordKey === key);
   if (pending) return { skipped: true, reason: 'pending_local_change' };
   const existing = await withStore(RECORDS, 'readonly', store => store.get(key));
-  const remoteTime = Date.parse(row.updated_at || 0);
-  const localTime = Date.parse(existing?.updatedAt || 0);
-  if (existing && localTime > remoteTime) return { skipped: true, reason: 'local_is_newer' };
+  const { resolveSnapshotConflict } = await import('./syncConflict.js');
+  if (existing && resolveSnapshotConflict(existing, row) === 'local') {
+    return { skipped: true, reason: 'local_wins_conflict_policy' };
+  }
   const record = {
     key, workspaceId, entityType: row.entity_type, recordId: String(row.record_id),
     payload: row.payload || {}, updatedAt: row.updated_at || new Date().toISOString(),
