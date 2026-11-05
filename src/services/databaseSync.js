@@ -233,7 +233,7 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
             payload: operation.payload,
           });
         }
-        await markLocalRecordSynced(operation.recordKey);
+        await markLocalRecordSynced(operation.recordKey, operation.updatedAt);
         await removePendingSyncOperation(operation.id);
         pendingKeys.delete(operation.recordKey);
         pushed += 1;
@@ -286,7 +286,13 @@ export function startAutoSync({ entityTypes = DEFAULT_ENTITY_TYPES, onStatus } =
     }
   };
   const onOnline = () => { void run(); };
-  if (typeof window !== 'undefined') window.addEventListener('online', onOnline);
+  const onFocus = () => { if (typeof document === 'undefined' || document.visibilityState === 'visible') void run(); };
+  const onVisibility = () => { if (document.visibilityState === 'visible') void run(); };
+  if (typeof window !== 'undefined') {
+    window.addEventListener('online', onOnline);
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibility);
+  }
   const unsubscribeAuth = subscribeToAuthChanges(({ event, session }) => {
     if (session?.user && ['INITIAL_SESSION', 'SIGNED_IN', 'TOKEN_REFRESHED', 'USER_UPDATED'].includes(event)) {
       void run();
@@ -295,7 +301,11 @@ export function startAutoSync({ entityTypes = DEFAULT_ENTITY_TYPES, onStatus } =
   if (typeof navigator === 'undefined' || navigator.onLine) void run();
   return () => {
     stopped = true;
-    if (typeof window !== 'undefined') window.removeEventListener('online', onOnline);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibility);
+    }
     unsubscribeAuth();
   };
 }
