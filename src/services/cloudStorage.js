@@ -43,7 +43,7 @@ export async function getCloudRecords({ workspaceId, entityType, includeDeleted 
   return data ?? [];
 }
 
-export async function saveCloudRecord({ workspaceId, entityType, recordId, payload, expectedUpdatedAt = null }) {
+export async function saveCloudRecord({ workspaceId, entityType, recordId, payload, expectedUpdatedAt = null, operationId = null }) {
   return syncCloudRecord({
     workspaceId, entityType, recordId, payload, expectedUpdatedAt, deleted: false,
   });
@@ -51,11 +51,11 @@ export async function saveCloudRecord({ workspaceId, entityType, recordId, paylo
 
 export async function deleteCloudRecord({ workspaceId, entityType, recordId, expectedUpdatedAt = null }) {
   return syncCloudRecord({
-    workspaceId, entityType, recordId, payload: {}, expectedUpdatedAt, deleted: true,
+    workspaceId, entityType, recordId, payload: {}, expectedUpdatedAt, operationId, deleted: true,
   });
 }
 
-async function syncCloudRecord({ workspaceId, entityType, recordId, payload, expectedUpdatedAt, deleted }) {
+async function syncCloudRecord({ workspaceId, entityType, recordId, payload, expectedUpdatedAt, operationId, deleted }) {
   if (!workspaceId || !entityType || !recordId) {
     throw new Error('workspaceId, entityType and recordId are required.');
   }
@@ -71,6 +71,7 @@ async function syncCloudRecord({ workspaceId, entityType, recordId, payload, exp
     p_record_id: String(recordId),
     p_payload: payload,
     p_device_id: getDeviceId(),
+    p_operation_id: operationId,
     p_expected_updated_at: expectedUpdatedAt,
     p_deleted: deleted,
   });
