@@ -3620,3 +3620,55 @@
 .purchase-product-editor-overlay .purchase-product-sub-overlay{
   z-index:140010!important;
 }
+
+
+/* Account summary is visually integrated into the Receipt Details card */
+.purchase-page .purchase-receipt-details-section .purchase-payment-section{
+  margin:14px 0 0!important;
+  padding:13px 0 0!important;
+  border:0!important;
+  border-top:1px solid rgba(132,112,231,.18)!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+}
+.purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-section-heading{
+  margin-bottom:9px!important;
+}
+.purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-section-heading h3{
+  font-size:12px!important;
+}
+.purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-section-heading p{
+  font-size:10px!important;
+}
+.purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-total{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:8px!important;
+  margin-top:8px!important;
+}
+.purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-total>div{
+  min-width:0!important;padding:9px 11px!important;gap:4px!important;
+  border-color:rgba(132,112,231,.16)!important;
+  border-radius:11px!important;
+  background:linear-gradient(130deg,rgba(255,255,255,.72),rgba(239,233,255,.56))!important;
+}
+.purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-total span{
+  font-size:9px!important;
+}
+.purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-total b{
+  font-size:13px!important;
+}
+@media(max-width:620px){
+  .purchase-page .purchase-receipt-details-section .purchase-payment-section{
+    margin-top:11px!important;padding-top:10px!important;
+  }
+  .purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-total{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    gap:7px!important;
+  }
+  .purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-total>div{
+    padding:8px!important;
+  }
+}
