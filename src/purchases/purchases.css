@@ -4255,12 +4255,11 @@ button .purchase-product-shortcut-key{
 .purchase-other-information .purchase-other-inline-input:disabled{
   opacity:.48!important;background:rgba(231,226,240,.78)!important;color:#8c849e!important;
 }
-.purchase-other-option-control .purchase-toggle-switch{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:0!important;width:auto!important;min-width:42px!important;flex:0 0 auto!important;padding:0 2px!important;background:transparent!important;border-radius:8px!important}
-.purchase-other-option-control .purchase-toggle-switch .purchase-product-shortcut-key{margin:0 5px 0 0!important}
-.purchase-other-option-control .purchase-toggle-switch>span{display:block;flex:0 0 18px!important;width:18px!important;height:18px!important;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(45,31,75,.16)}
-.purchase-other-option-control .purchase-toggle-switch.is-on>span{background:#fff}
-.purchase-other-option-control .purchase-toggle-switch.is-on{background:transparent!important}
-.purchase-other-option-control .purchase-toggle-switch.is-on>span{transform:translateX(0)!important}
+.purchase-other-option-control .purchase-toggle-switch{width:42px!important;height:24px!important;min-width:42px!important;flex:0 0 42px!important;padding:3px!important;border:0!important;border-radius:999px!important;background:#d9d4e5!important;cursor:pointer!important}
+.purchase-other-option-control .purchase-toggle-switch>span{display:block!important;width:18px!important;height:18px!important;flex:0 0 18px!important;border-radius:50%!important;background:#fff!important;box-shadow:0 1px 4px rgba(48,38,79,.2)!important;transition:transform .15s!important}
+.purchase-other-option-control .purchase-toggle-switch.is-on{background:linear-gradient(120deg,#7960d7,#6749b3)!important}
+.purchase-other-option-control .purchase-toggle-switch.is-on>span{transform:translateX(18px)!important}
+.purchase-other-option-control .purchase-product-shortcut-key{margin:0 5px 0 0!important}
 .purchase-other-option-control .purchase-toggle-switch:focus-visible{outline:2px solid #8b6bd1;outline-offset:3px}
 @media(max-width:560px){
   .purchase-other-option-inline{align-items:stretch!important;flex-direction:column!important}
