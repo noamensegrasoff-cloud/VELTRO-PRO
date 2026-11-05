@@ -234,7 +234,7 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
           });
         }
         await markLocalRecordSynced(operation.recordKey, operation.updatedAt || operation.createdAt);
-        await removePendingSyncOperation(operation.id);
+        await removePendingSyncOperation(operation.id, operation.updatedAt || operation.createdAt);
         pendingKeys.delete(operation.recordKey);
         pushed += 1;
         onProgress?.({ phase: 'upload', completed: pushed, total: pending.length });
