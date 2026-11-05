@@ -4113,3 +4113,23 @@
 .purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded{
   box-shadow:0 8px 22px rgba(93,60,158,.09)!important;
 }
+
+
+/* Compact purchase ledger: stretch the scroll panel, never stretch product rows.
+   The panel still fills the Receipt Details card; populated rows keep their natural height. */
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table{
+  height:auto!important;
+  min-height:0!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table tbody{
+  height:auto!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table tbody tr:not(.purchase-ledger-empty-row){
+  height:auto!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table tbody tr:not(.purchase-ledger-empty-row) td{
+  height:49px!important;
+  padding-top:12px!important;
+  padding-bottom:12px!important;
+  vertical-align:middle!important;
+}
