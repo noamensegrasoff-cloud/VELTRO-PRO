@@ -170,35 +170,47 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
       if (event.repeat) return;
       const key = event.key;
       const inOtherInfo = productSubModal === 'other';
-      const stop = () => { event.preventDefault(); event.stopPropagation(); };
+      const stop = () => {
+        event.preventDefault();
+        event.stopPropagation();
+        // Other window-level handlers must not process the same shortcut and
+        // close an ancestor dialog in the same key press.
+        if (typeof event.stopImmediatePropagation === 'function') event.stopImmediatePropagation();
+      };
       if (key === 'F12' && !productSubModal) {
         stop();
         setProductSubModal('other');
         return;
       }
       if (key === 'Escape') {
+        // Escape always dismisses exactly one layer, from the topmost dialog down.
+        stop();
+        if (otherPickerDeleteTarget) {
+          setOtherPickerDeleteTarget(null);
+          return;
+        }
         if (otherPicker) {
-          stop();
-          if (otherPickerDeleteTarget) {
-            setOtherPickerDeleteTarget(null);
-          } else if (otherPickerManage) {
+          if (otherPickerManage) {
             setOtherPickerManage(false);
             setOtherPickerEditId(null);
             setOtherPickerNew('');
-            window.setTimeout(() => otherPickerSearchRef.current?.focus({preventScroll:true}), 0);
+            window.setTimeout(() => otherPickerSearchRef.current?.focus({preventScroll:true}), 60);
           } else {
             setOtherPicker('');
             setOtherPickerManage(false);
             setOtherPickerDeleteTarget(null);
+            setOtherPickerEditId(null);
+            setOtherPickerNew('');
+            setOtherPickerSearch('');
+            otherPickerDrag.current = null;
           }
           return;
         }
         if (productSubModal) {
-          stop();
           setProductSubModal('');
+          setProductError('');
           return;
         }
-        stop();
         setProductEditorOpen(false);
         setEditingReceiptItem(null);
         return;
