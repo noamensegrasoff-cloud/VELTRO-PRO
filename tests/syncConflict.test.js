@@ -24,7 +24,7 @@ test('device id breaks equal-timestamp ties deterministically', () => {
   const local = { updatedAt: '2026-01-01T00:00:00Z', deviceId: 'device-b' };
   const remote = { updated_at: '2026-01-01T00:00:00Z', device_id: 'device-a' };
   assert.equal(resolveSnapshotConflict(local, remote), 'local');
-  assert.equal(resolveSnapshotConflict(remote, local), 'local');
+  assert.equal(resolveSnapshotConflict(remote, local), 'remote');
 });
 
 test('invalid or absent timestamps fall back to the stable device id', () => {
