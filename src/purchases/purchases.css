@@ -3644,7 +3644,7 @@
   font-size:10px!important;
 }
 .purchase-page .purchase-receipt-details-section .purchase-payment-section .purchase-form-total{
-  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-template-columns:minmax(0,1fr)!important;
   gap:8px!important;
   margin-top:8px!important;
 }
