@@ -7549,7 +7549,6 @@ html.veltro-low-performance *::before,
 html.veltro-low-performance *::after{
   -webkit-backdrop-filter:none!important;
   backdrop-filter:none!important;
-  filter:none;
   box-shadow:0 1px 4px rgba(35,24,58,.07)!important;
   transition-duration:.12s!important;
   animation-duration:.12s!important;
