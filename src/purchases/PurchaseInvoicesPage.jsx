@@ -64,6 +64,9 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
   const [barcodeQuery, setBarcodeQuery] = useState('');
   const barcodeSearchRef = useRef(null);
   const cartonCountInputRef = useRef(null);
+  const productImageInputRef = useRef(null);
+  const expiryDateInputRef = useRef(null);
+  const stockAlertInputRef = useRef(null);
   const focusCartonCountAfterScanRef = useRef(false);
   const lastProductEditorFieldRef = useRef(null);
   const previousProductSubModalRef = useRef('');
@@ -162,14 +165,69 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
   useEffect(() => {
     if (!productEditorOpen) return;
     const handleProductEditorShortcut = event => {
-      if (event.key !== 'F12' || event.repeat) return;
-      event.preventDefault();
-      event.stopPropagation();
-      if (!productSubModal) setProductSubModal('other');
+      if (event.repeat) return;
+      const key = event.key;
+      const inOtherInfo = productSubModal === 'other';
+      const stop = () => { event.preventDefault(); event.stopPropagation(); };
+      if (key === 'F12' && !productSubModal) {
+        stop();
+        setProductSubModal('other');
+        return;
+      }
+      if (key === 'Escape') {
+        if (otherPicker) {
+          stop();
+          setOtherPicker('');
+          setOtherPickerManage(false);
+          setOtherPickerDeleteTarget(null);
+          return;
+        }
+        if (productSubModal) {
+          stop();
+          setProductSubModal('');
+          return;
+        }
+        stop();
+        setProductEditorOpen(false);
+        setEditingReceiptItem(null);
+        return;
+      }
+      if (!inOtherInfo) return;
+      if (key === 'F1') {
+        stop();
+        productImageInputRef.current?.click();
+      } else if (key === 'F2') {
+        stop();
+        setOtherDraft(old => ({...old, expiryEnabled:!old.expiryEnabled, expiryDate:old.expiryEnabled ? '' : old.expiryDate}));
+        if (!otherDraft.expiryEnabled) window.setTimeout(() => expiryDateInputRef.current?.focus({preventScroll:true}), 0);
+      } else if (key === 'F3') {
+        stop();
+        setOtherDraft(old => ({...old, stockAlertEnabled:!old.stockAlertEnabled}));
+        if (!otherDraft.stockAlertEnabled) window.setTimeout(() => stockAlertInputRef.current?.focus({preventScroll:true}), 0);
+      } else if (key === 'F4' && !otherPicker) {
+        stop();
+        setOtherPicker('catalog');
+        setOtherPickerSearch('');
+        setOtherPickerNew('');
+      } else if (key === 'F5' && !otherPicker) {
+        stop();
+        setOtherPicker('unit');
+        setOtherPickerSearch('');
+        setOtherPickerNew('');
+      } else if (key === 'F6') {
+        stop();
+        setOtherDraft(old => ({...old, sellByMeasure:!old.sellByMeasure}));
+      } else if (key === 'Enter' && !event.target.closest('form') && !event.target.matches('textarea,button,[contenteditable="true"]')) {
+        const saveButton = document.querySelector('.purchase-other-information-modal footer .purchase-primary');
+        if (saveButton) { stop(); saveButton.click(); }
+      } else if (key === 'Enter' && otherPicker && !otherPickerManage && event.target.matches('.purchase-other-picker-modal input')) {
+        const firstChoice = document.querySelector('.purchase-other-picker-modal .purchase-other-picker-choice');
+        if (firstChoice) { stop(); firstChoice.click(); }
+      }
     };
     window.addEventListener('keydown', handleProductEditorShortcut, true);
     return () => window.removeEventListener('keydown', handleProductEditorShortcut, true);
-  }, [productEditorOpen, productSubModal]);
+  }, [productEditorOpen, productSubModal, otherPicker, otherPickerManage, otherDraft.expiryEnabled, otherDraft.stockAlertEnabled, otherDraft.sellByMeasure]);
   useEffect(() => {
     const previous = previousProductSubModalRef.current;
     previousProductSubModalRef.current = productSubModal;
@@ -462,15 +520,15 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
 {(productSubModal==='name'||productSubModal==='barcode'||productSubModal==='cartonBarcode'||productSubModal==='reference')&&<form onSubmit={e=>{e.preventDefault();const val=secondaryInput.trim();if(productSubModal==='name'){setProductDraft(old=>({...old,name:val}));setProductSubModal('');return;}if(productSubModal==='reference'){setProductDraft(old=>({...old,reference:val}));setProductError('');setProductSubModal('');return;}const duplicate=val&&catalog.find(p=>String(p.id)!==String(editingProduct?.id)&&[p.mainBarcode,p.barcode,p.cartonBarcode,...(p.secondaryUnitBarcodes||[]),...(p.secondaryCartonBarcodes||[])].some(v=>String(v||'').trim()===val));if(duplicate){setProductError((ar?'الكود مستخدم في المنتج: ':fr?'Code déjà utilisé par : ':'Barcode already used by: ')+(duplicate.name||duplicate.productName||duplicate.title||''));return;}setProductDraft(old=>({...old,[productSubModal==='cartonBarcode'?'cartonBarcode':'mainBarcode']:val}));setProductError('');setProductSubModal('');}}><label><span>{productSubModal==='name'?(ar?'اسم المنتج':fr?'Nom du produit':'Product name'):productSubModal==='reference'?(ar?'المرجع':fr?'Référence':'Reference'):(productSubModal==='cartonBarcode'?(ar?'كودبار الكرتونة الأساسي':fr?'Code-barres principal carton':'Main carton barcode'):(ar?'كودبار الوحدة الأساسي':fr?'Code-barres principal unité':'Main unit barcode'))}</span><input autoFocus required value={secondaryInput} onChange={e=>setSecondaryInput(e.target.value)} dir={(productSubModal==='barcode'||productSubModal==='cartonBarcode'||productSubModal==='reference')?'ltr':undefined}/></label>{(productSubModal==='barcode'||productSubModal==='cartonBarcode')&&<button type="button" className="purchase-secondary" onClick={()=>setSecondaryInput('200'+String(Date.now()).slice(-10))}><WandSparkles size={14}/>{ar?'توليد كود تلقائيًا':fr?'Générer un code':'Generate barcode'}</button>}<footer><button type="button" className="purchase-secondary" onClick={()=>setProductSubModal('')}>{ar?'إلغاء':fr?'Annuler':'Cancel'}</button><button type="submit" className="purchase-primary"><Check size={14}/>{ar?'حفظ':fr?'Enregistrer':'Save'}</button></footer></form>}
 {(productSubModal==='unitCodes'||productSubModal==='cartonCodes')&&<div className="purchase-secondary-manager"><label><span>{ar?'إضافة كودبار':fr?'Ajouter un code-barres':'Add barcode'}</span><div><input value={secondaryInput} dir="ltr" onChange={e=>setSecondaryInput(e.target.value)}/><button type="button" onClick={()=>setSecondaryInput('200'+String(Date.now()).slice(-10))}><WandSparkles size={14}/></button><button type="button" onClick={()=>{const val=secondaryInput.trim();if(!val)return;const dupe=catalog.find(p=>String(p.id)!==String(editingProduct?.id)&&[p.mainBarcode,p.barcode,p.cartonBarcode,...(p.secondaryUnitBarcodes||[]),...(p.secondaryCartonBarcodes||[])].some(v=>String(v||'').trim()===val))||([...secondaryDraft.unit,...secondaryDraft.carton].includes(val)?{name:ar?'هذا المنتج':fr?'ce produit':'this product'}:null);if(dupe){setProductError((ar?'الكود مستخدم بالفعل في: ':fr?'Code déjà utilisé dans : ':'Barcode already used in: ')+(dupe.name||dupe.productName||dupe.title||''));return;}const key=productSubModal==='unitCodes'?'unit':'carton';setSecondaryDraft(old=>({...old,[key]:[...old[key],val]}));setSecondaryInput('');setProductError('')}}><Plus size={14}/></button></div></label><ul>{(secondaryDraft[productSubModal==='unitCodes'?'unit':'carton']||[]).map(code=><li key={code}><code>{code}</code><button type="button" onClick={()=>setSecondaryDraft(old=>({...old,[productSubModal==='unitCodes'?'unit':'carton']:old[productSubModal==='unitCodes'?'unit':'carton'].filter(v=>v!==code)}))}><Trash2 size={14}/></button></li>)}</ul>{productError&&<p className="purchase-error">{productError}</p>}<footer><button type="button" className="purchase-secondary" onClick={()=>setProductSubModal('')}>{ar?'خروج':fr?'Quitter':'Exit'}</button><button type="button" className="purchase-primary" onClick={()=>setProductSubModal('')}><Check size={14}/>{ar?'تأكيد':fr?'Confirmer':'Confirm'}</button></footer></div>}
 {productSubModal==='other'&&<div className="purchase-overlay purchase-product-sub-overlay purchase-other-info-overlay" role="dialog" aria-modal="true"><section className="purchase-product-submodal purchase-other-information-modal" dir={ar?'rtl':'ltr'}><header><h3>{ar?'معلومات أخرى للمنتج':fr?'Autres informations du produit':'Other product information'}</h3><button type="button" onClick={()=>setProductSubModal('')} aria-label={ar?'إغلاق':fr?'Fermer':'Close'}><X size={17}/></button></header><div className="purchase-product-fields purchase-other-information">
-<div className="purchase-product-image-field"><span className="purchase-product-image-label">{ar?'صورة المنتج':fr?'Image du produit':'Product image'}</span><div className="purchase-product-image-control">{otherDraft.image?<img src={otherDraft.image} alt={ar?'معاينة صورة المنتج':'Product preview'}/>:<span className="purchase-product-image-placeholder"><Upload size={21}/><b>{ar?'اختر صورة المنتج':fr?'Choisir une image':'Choose product image'}</b><small>{ar?'اضغط لاختيار صورة من جهازك':fr?'Sélectionnez une image depuis votre appareil':'Select an image from your device'}</small></span>}<label className="purchase-product-image-pick"><Upload size={15}/>{otherDraft.image?(ar?'تغيير الصورة':fr?'Changer l’image':'Change image'):(ar?'إضافة صورة':fr?'Ajouter une image':'Add image')}<input type="file" accept="image/*" onChange={e=>{const file=e.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/'))return;const reader=new FileReader();reader.onload=()=>setOtherDraft(old=>({...old,image:String(reader.result||'')}));reader.readAsDataURL(file)}}/></label>{otherDraft.image&&<button type="button" className="purchase-product-image-remove" onClick={()=>setOtherDraft(old=>({...old,image:''}))}><X size={14}/>{ar?'إزالة الصورة':fr?'Retirer l’image':'Remove image'}</button>}</div></div>
-<div className="purchase-other-option"><div><b>{ar?'تاريخ نهاية الصلاحية':fr?'Date d’expiration':'Expiry date'}</b><small>{ar?'فعّل الخيار لإدخال تاريخ الصلاحية والتنبيهات':fr?'Activez pour saisir la date et les alertes':'Enable to enter expiry date and alerts'}</small></div><button type="button" role="switch" aria-checked={!!otherDraft.expiryEnabled} className={'purchase-toggle-switch'+(otherDraft.expiryEnabled?' is-on':'')} onClick={()=>setOtherDraft(old=>({...old,expiryEnabled:!old.expiryEnabled,expiryDate:old.expiryEnabled?'':old.expiryDate}))}><span/></button></div>
-<label><span>{ar?'تاريخ نهاية الصلاحية':fr?'Date d’expiration':'Expiry date'}</span><input type="date" disabled={!otherDraft.expiryEnabled} value={otherDraft.expiryDate} onChange={e=>setOtherDraft(old=>({...old,expiryDate:e.target.value}))}/></label>
+<div className="purchase-product-image-field"><span className="purchase-product-image-label">{ar?'صورة المنتج':fr?'Image du produit':'Product image'}</span><div className="purchase-product-image-control">{otherDraft.image?<img src={otherDraft.image} alt={ar?'معاينة صورة المنتج':'Product preview'}/>:<span className="purchase-product-image-placeholder"><Upload size={21}/><b>{ar?'اختر صورة المنتج':fr?'Choisir une image':'Choose product image'}</b><small>{ar?'اضغط لاختيار صورة من جهازك':fr?'Sélectionnez une image depuis votre appareil':'Select an image from your device'}</small></span>}<label className="purchase-product-image-pick"><Upload size={15}/>{otherDraft.image?(ar?'تغيير الصورة':fr?'Changer l’image':'Change image'):(ar?'إضافة صورة':fr?'Ajouter une image':'Add image')} <kbd className="purchase-product-shortcut-key">F1</kbd><input ref={productImageInputRef} type="file" accept="image/*" onChange={e=>{const file=e.target.files?.[0];if(!file)return;if(!file.type.startsWith('image/'))return;const reader=new FileReader();reader.onload=()=>setOtherDraft(old=>({...old,image:String(reader.result||'')}));reader.readAsDataURL(file)}}/></label>{otherDraft.image&&<button type="button" className="purchase-product-image-remove" onClick={()=>setOtherDraft(old=>({...old,image:''}))}><X size={14}/>{ar?'إزالة الصورة':fr?'Retirer l’image':'Remove image'}</button>}</div></div>
+<div className="purchase-other-option"><div><b>{ar?'تاريخ نهاية الصلاحية':fr?'Date d’expiration':'Expiry date'}</b><small>{ar?'فعّل الخيار لإدخال تاريخ الصلاحية والتنبيهات':fr?'Activez pour saisir la date et les alertes':'Enable to enter expiry date and alerts'}</small></div><button type="button" role="switch" aria-checked={!!otherDraft.expiryEnabled} className={'purchase-toggle-switch'+(otherDraft.expiryEnabled?' is-on':'')} onClick={()=>{const enabling=!otherDraft.expiryEnabled;setOtherDraft(old=>({...old,expiryEnabled:enabling,expiryDate:enabling?old.expiryDate:''}));if(enabling)window.setTimeout(()=>expiryDateInputRef.current?.focus({preventScroll:true}),0)}}><kbd className="purchase-product-shortcut-key">F2</kbd><span/></button></div>
+<label><span>{ar?'تاريخ نهاية الصلاحية':fr?'Date d’expiration':'Expiry date'}</span><input ref={expiryDateInputRef} type="date" disabled={!otherDraft.expiryEnabled} value={otherDraft.expiryDate} onChange={e=>setOtherDraft(old=>({...old,expiryDate:e.target.value}))}/></label>
 <label><span>{ar?'التنبيه قبل الصلاحية (أيام)':fr?'Alerte avant expiration (jours)':'Expiry alert (days)'}</span><input type="number" min="0" disabled={!otherDraft.expiryEnabled} value={otherDraft.expiryAlertDays} onChange={e=>setOtherDraft(old=>({...old,expiryAlertDays:e.target.value}))}/></label>
-<div className="purchase-other-option"><div><b>{ar?'تنبيه قرب نفاد المخزون':fr?'Alerte de stock faible':'Low-stock alert'}</b><small>{ar?'فعّل لمراقبة حد تنبيه المخزون':fr?'Activez pour définir le seuil d’alerte':'Enable to set the stock threshold'}</small></div><button type="button" role="switch" aria-checked={!!otherDraft.stockAlertEnabled} className={'purchase-toggle-switch'+(otherDraft.stockAlertEnabled?' is-on':'')} onClick={()=>setOtherDraft(old=>({...old,stockAlertEnabled:!old.stockAlertEnabled}))}><span/></button></div>
-<label><span>{ar?'حد تنبيه نفاد المخزون':fr?'Seuil d’alerte stock':'Low-stock alert threshold'}</span><input type="number" min="0" disabled={!otherDraft.stockAlertEnabled} value={otherDraft.stockAlertQty} onChange={e=>setOtherDraft(old=>({...old,stockAlertQty:e.target.value}))}/></label>
-<label><span>{ar?'الكتالوغ':fr?'Catalogue':'Catalog'}</span><div className="purchase-other-picker-field"><button type="button" className="purchase-other-choice" onClick={()=>{setOtherPicker('catalog');setOtherPickerSearch('');setOtherPickerNew('')}}><span>{otherDraft.category|| (ar?'اختر كتالوغًا':fr?'Choisir un catalogue':'Choose a catalog')}</span><Boxes size={15}/></button><button type="button" className="purchase-other-search-button" onClick={()=>{setOtherPicker('catalog');setOtherPickerSearch('');setOtherPickerNew('')}} aria-label={ar?'فتح نافذة البحث عن كتالوغ':fr?'Ouvrir la recherche de catalogue':'Open catalog search'}><Search size={15}/></button></div></label>
-<label><span>{ar?'وحدة القياس':fr?'Unité de mesure':'Unit of measure'}</span><div className="purchase-other-picker-field"><button type="button" className="purchase-other-choice" onClick={()=>{setOtherPicker('unit');setOtherPickerSearch('');setOtherPickerNew('')}}><span>{otherDraft.unitOfMeasure|| (ar?'اختر وحدة قياس':fr?'Choisir une unité':'Choose a unit')}</span><Boxes size={15}/></button><button type="button" className="purchase-other-search-button" onClick={()=>{setOtherPicker('unit');setOtherPickerSearch('');setOtherPickerNew('')}} aria-label={ar?'فتح نافذة البحث عن وحدة القياس':fr?'Ouvrir la recherche d’unité':'Open unit search'}><Search size={15}/></button></div></label>
-<label className="purchase-other-toggle"><span>{ar?'تفعيل البيع بوحدة القياس':fr?'Activer la vente par unité de mesure':'Enable sale by unit of measure'}</span><input type="checkbox" checked={otherDraft.sellByMeasure} onChange={e=>setOtherDraft(old=>({...old,sellByMeasure:e.target.checked}))}/></label>
+<div className="purchase-other-option"><div><b>{ar?'تنبيه قرب نفاد المخزون':fr?'Alerte de stock faible':'Low-stock alert'}</b><small>{ar?'فعّل لمراقبة حد تنبيه المخزون':fr?'Activez pour définir le seuil d’alerte':'Enable to set the stock threshold'}</small></div><button type="button" role="switch" aria-checked={!!otherDraft.stockAlertEnabled} className={'purchase-toggle-switch'+(otherDraft.stockAlertEnabled?' is-on':'')} onClick={()=>{const enabling=!otherDraft.stockAlertEnabled;setOtherDraft(old=>({...old,stockAlertEnabled:enabling}));if(enabling)window.setTimeout(()=>stockAlertInputRef.current?.focus({preventScroll:true}),0)}}><kbd className="purchase-product-shortcut-key">F3</kbd><span/></button></div>
+<label><span>{ar?'حد تنبيه نفاد المخزون':fr?'Seuil d’alerte stock':'Low-stock alert threshold'}</span><input ref={stockAlertInputRef} type="number" min="0" disabled={!otherDraft.stockAlertEnabled} value={otherDraft.stockAlertQty} onChange={e=>setOtherDraft(old=>({...old,stockAlertQty:e.target.value}))}/></label>
+<label><span>{ar?'الكتالوغ':fr?'Catalogue':'Catalog'}</span><div className="purchase-other-picker-field"><button type="button" className="purchase-other-choice" onClick={()=>{setOtherPicker('catalog');setOtherPickerSearch('');setOtherPickerNew('')}}><span>{otherDraft.category|| (ar?'اختر كتالوغًا':fr?'Choisir un catalogue':'Choose a catalog')}</span><kbd className="purchase-product-shortcut-key">F4</kbd><Boxes size={15}/></button><button type="button" className="purchase-other-search-button" onClick={()=>{setOtherPicker('catalog');setOtherPickerSearch('');setOtherPickerNew('')}} aria-label={ar?'فتح نافذة البحث عن كتالوغ':fr?'Ouvrir la recherche de catalogue':'Open catalog search'}><Search size={15}/></button></div></label>
+<label><span>{ar?'وحدة القياس':fr?'Unité de mesure':'Unit of measure'}</span><div className="purchase-other-picker-field"><button type="button" className="purchase-other-choice" onClick={()=>{setOtherPicker('unit');setOtherPickerSearch('');setOtherPickerNew('')}}><span>{otherDraft.unitOfMeasure|| (ar?'اختر وحدة قياس':fr?'Choisir une unité':'Choose a unit')}</span><kbd className="purchase-product-shortcut-key">F5</kbd><Boxes size={15}/></button><button type="button" className="purchase-other-search-button" onClick={()=>{setOtherPicker('unit');setOtherPickerSearch('');setOtherPickerNew('')}} aria-label={ar?'فتح نافذة البحث عن وحدة القياس':fr?'Ouvrir la recherche d’unité':'Open unit search'}><Search size={15}/></button></div></label>
+<label className="purchase-other-toggle"><span>{ar?'تفعيل البيع بوحدة القياس':fr?'Activer la vente par unité de mesure':'Enable sale by unit of measure'}</span><kbd className="purchase-product-shortcut-key">F6</kbd><input type="checkbox" checked={otherDraft.sellByMeasure} onChange={e=>setOtherDraft(old=>({...old,sellByMeasure:e.target.checked}))}/></label>
 <footer><button type="button" className="purchase-secondary" onClick={()=>setProductSubModal('')}>{ar?'إلغاء':fr?'Annuler':'Cancel'}</button><button type="button" className="purchase-primary" onClick={()=>setProductSubModal('')}><Check size={14}/>{ar?'حفظ':fr?'Enregistrer':'Save'}</button></footer></div></section></div>}</section></div>,document.body)}
 {otherPicker&&createPortal(<div className="purchase-overlay purchase-other-picker-overlay" role="dialog" aria-modal="true"><section className={"purchase-supplier-modal purchase-other-picker-modal"+(otherPickerDeleteTarget?" is-delete-confirm-open":"")} dir={ar?'rtl':'ltr'} style={{transform:'translate3d('+otherPickerPosition.x+'px,'+otherPickerPosition.y+'px,0)'}}><header className="purchase-supplier-modal-head purchase-other-picker-drag-handle" onPointerDown={startOtherPickerDrag} onPointerMove={moveOtherPickerDrag} onPointerUp={stopOtherPickerDrag} onPointerCancel={stopOtherPickerDrag} style={{touchAction:'none',cursor:'grab'}}><div><span className="purchase-eyebrow">VELTRO · {otherPicker==='catalog'?(ar?'الكتالوغات':fr?'CATALOGUES':'CATALOGS'):(ar?'وحدات القياس':fr?'UNITÉS DE MESURE':'UNITS OF MEASURE')}</span><h2>{otherPickerManage?(otherPicker==='catalog'?(ar?'إدارة الكتالوغات':fr?'Gestion des catalogues':'Manage catalogs'):(ar?'إدارة وحدات القياس':fr?'Gestion des unités':'Manage units')):(otherPicker==='catalog'?(ar?'اختيار الكتالوغ':fr?'Choisir un catalogue':'Choose a catalog'):(ar?'اختيار وحدة القياس':fr?'Choisir une unité de mesure':'Choose a unit of measure'))}</h2></div><button type="button" onPointerDown={e=>e.stopPropagation()} onClick={e=>{e.stopPropagation();otherPickerDrag.current=null;setOtherPickerDeleteTarget(null);setOtherPicker('');setOtherPickerManage(false);setOtherPickerEditId(null);setOtherPickerNew('');setOtherPickerSearch('');setOtherPickerPosition({x:0,y:0})}} aria-label={T.close}><X size={17}/></button></header>
 {!otherPickerManage ? <>
