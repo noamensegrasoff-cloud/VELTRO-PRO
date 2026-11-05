@@ -43,7 +43,19 @@ export async function getCloudRecords({ workspaceId, entityType, includeDeleted 
   return data ?? [];
 }
 
-export async function saveCloudRecord({ workspaceId, entityType, recordId, payload }) {
+export async function saveCloudRecord({ workspaceId, entityType, recordId, payload, expectedUpdatedAt = null }) {
+  return syncCloudRecord({
+    workspaceId, entityType, recordId, payload, expectedUpdatedAt, deleted: false,
+  });
+}
+
+export async function deleteCloudRecord({ workspaceId, entityType, recordId, expectedUpdatedAt = null }) {
+  return syncCloudRecord({
+    workspaceId, entityType, recordId, payload: {}, expectedUpdatedAt, deleted: true,
+  });
+}
+
+async function syncCloudRecord({ workspaceId, entityType, recordId, payload, expectedUpdatedAt, deleted }) {
   if (!workspaceId || !entityType || !recordId) {
     throw new Error('workspaceId, entityType and recordId are required.');
   }
@@ -51,42 +63,24 @@ export async function saveCloudRecord({ workspaceId, entityType, recordId, paylo
   const client = requireCloud();
   const { data: authData, error: authError } = await client.auth.getUser();
   if (authError) throw authError;
-  if (!authData.user) throw new Error('Sign in before saving cloud records.');
-  const { data, error } = await client.from('cloud_records').upsert({
-    workspace_id: workspaceId,
-    entity_type: entityType,
-    record_id: String(recordId),
-    payload,
-    device_id: getDeviceId(),
-    updated_by: authData.user.id,
-    updated_at: new Date().toISOString(),
-    deleted_at: null,
-  }, { onConflict: 'workspace_id,entity_type,record_id' }).select().single();
-  if (error) throw error;
-  return data;
-}
+  if (!authData.user) throw new Error('Sign in before synchronizing cloud records.');
 
-export async function deleteCloudRecord({ workspaceId, entityType, recordId }) {
-  if (!workspaceId || !entityType || !recordId) {
-    throw new Error('workspaceId, entityType and recordId are required.');
-  }
-  const client = requireCloud();
-  const { data: authData, error: authError } = await client.auth.getUser();
-  if (authError) throw authError;
-  if (!authData.user) throw new Error('Sign in before deleting cloud records.');
-  const now = new Date().toISOString();
-  // Upsert a tombstone so deleting a record that never reached the cloud
-  // still syncs successfully and can propagate to other devices.
-  const { data, error } = await client.from('cloud_records').upsert({
-    workspace_id: workspaceId,
-    entity_type: entityType,
-    record_id: String(recordId),
-    payload: {},
-    deleted_at: now,
-    updated_at: now,
-    updated_by: authData.user.id,
-    device_id: getDeviceId(),
-  }, { onConflict: 'workspace_id,entity_type,record_id' }).select().single();
+  const { data, error } = await client.rpc('sync_cloud_record_cas', {
+    p_workspace_id: workspaceId,
+    p_entity_type: entityType,
+    p_record_id: String(recordId),
+    p_payload: payload,
+    p_device_id: getDeviceId(),
+    p_expected_updated_at: expectedUpdatedAt,
+    p_deleted: deleted,
+  });
   if (error) throw error;
-  return data;
+
+  const result = Array.isArray(data) ? data[0] : data;
+  if (!result || result.sync_status !== 'synced' || !result.record_data) {
+    const conflict = new Error('SYNC_CONFLICT: The cloud record changed on another device. The pending local change was kept.');
+    conflict.code = 'SYNC_CONFLICT';
+    throw conflict;
+  }
+  return result.record_data;
 }
