@@ -3725,3 +3725,46 @@
     min-height:calc(100dvh - 180px)!important;
   }
 }
+
+
+/* Compact purchase ledger: keep a full visible body even before any products are added.
+   This deliberately excludes the expanded/fixed table view. */
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded){
+  min-height:300px!important;
+  height:auto!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table{
+  height:300px!important;
+  min-height:300px!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-row td{
+  height:252px!important;
+  min-height:252px!important;
+  padding:12px!important;
+  vertical-align:middle!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-state{
+  min-height:228px!important;
+  height:100%!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex-wrap:wrap!important;
+}
+@media(max-width:760px){
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded){
+    min-height:270px!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table{
+    height:270px!important;
+    min-height:270px!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-row td{
+    height:222px!important;
+    min-height:222px!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-state{
+    min-height:198px!important;
+  }
+}
