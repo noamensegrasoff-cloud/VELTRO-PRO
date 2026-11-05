@@ -157,8 +157,23 @@ export async function listPendingSyncOperations() {
   });
 }
 
-export async function removePendingSyncOperation(id) {
-  return withStore(OUTBOX, 'readwrite', store => store.delete(id));
+export async function removePendingSyncOperation(id, expectedUpdatedAt) {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(OUTBOX, 'readwrite');
+    const store = tx.objectStore(OUTBOX);
+    const request = store.get(id);
+    request.onsuccess = () => {
+      const current = request.result;
+      // A newer edit may have replaced this queue row while its previous snapshot was uploading.
+      if (current && (!expectedUpdatedAt || (current.updatedAt || current.createdAt) === expectedUpdatedAt)) {
+        store.delete(id);
+      }
+    };
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => { const error = tx.error || new Error('Could not acknowledge sync operation.'); db.close(); reject(error); };
+    tx.onabort = () => { const error = tx.error || new Error('Sync acknowledgement was aborted.'); db.close(); reject(error); };
+  });
 }
 
 export async function markLocalRecordSynced(key, expectedUpdatedAt, cloudUpdatedAt) {
