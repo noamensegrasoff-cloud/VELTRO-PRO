@@ -4154,45 +4154,50 @@
 }
 
 
-/* Unified royal-purple shortcut keycaps across every purchase dialog and portal. */
+/* Consistent, flat shortcut keycaps — one size, no shadows. */
 .purchase-page .purchase-product-shortcut-key,
-.purchase-product-shortcut-key{
+.purchase-product-shortcut-key,
+button .purchase-product-shortcut-key{
   display:inline-flex!important;
   align-items:center!important;
   justify-content:center!important;
-  flex:0 0 auto!important;
-  min-width:27px!important;
-  width:auto!important;
-  min-height:24px!important;
+  flex:0 0 42px!important;
+  width:42px!important;
+  min-width:42px!important;
+  max-width:42px!important;
   height:24px!important;
+  min-height:24px!important;
+  max-height:24px!important;
   margin-inline:6px 0!important;
-  padding:0 8px!important;
+  padding:0!important;
   box-sizing:border-box!important;
-  border:1px solid rgba(126,86,190,.34)!important;
-  border-radius:8px!important;
-  background:linear-gradient(145deg,rgba(255,255,255,.96),rgba(229,216,255,.88))!important;
+  border:1px solid rgba(126,86,190,.28)!important;
+  border-radius:6px!important;
+  background:rgba(126,86,190,.09)!important;
   color:#6943a8!important;
-  font:800 10px/1.1 inherit!important;
-  letter-spacing:.45px!important;
+  font-family:inherit!important;
+  font-size:9px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.15px!important;
   white-space:nowrap!important;
-  box-shadow:0 2px 6px rgba(75,48,125,.10),inset 0 1px 0 rgba(255,255,255,.95)!important;
+  box-shadow:none!important;
+  text-shadow:none!important;
   vertical-align:middle!important;
 }
-button .purchase-product-shortcut-key{
-  min-height:22px!important;
-  height:22px!important;
-  padding-inline:7px!important;
-  border-color:rgba(126,86,190,.25)!important;
-  background:rgba(255,255,255,.72)!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.9)!important;
-}
 @media(max-width:560px){
-  .purchase-product-shortcut-key{
-    min-width:25px!important;
-    min-height:22px!important;
-    height:22px!important;
-    padding-inline:6px!important;
-    border-radius:7px!important;
+  .purchase-page .purchase-product-shortcut-key,
+  .purchase-product-shortcut-key,
+  button .purchase-product-shortcut-key{
+    flex-basis:42px!important;
+    width:42px!important;
+    min-width:42px!important;
+    max-width:42px!important;
+    height:24px!important;
+    min-height:24px!important;
+    max-height:24px!important;
+    padding:0!important;
     font-size:9px!important;
+    box-shadow:none!important;
   }
 }
