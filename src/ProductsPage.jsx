@@ -125,7 +125,18 @@ return <div className="page-content products-page" onFocusCapture={e=>{const inp
               <div className="pform-price-group"><b>{tx.unitSell}</b><div className={'pform-price-input '+(Number(form.unitSell||calculatedUnitSell)<effectiveUnitCost?'pform-sale-below-cost':'')}><input type="number" min="0" step=".01" value={editingProduct?form.unitSell:(form.unitSell!==''?form.unitSell:calculatedUnitSell)} onChange={e=>updateUnitPrice('sale',e.target.value)} placeholder="0.00"/><span>DA</span></div></div>
               <label className="pform-field pform-margin-nearby"><span>{ar?'نسبة ربح الكرتونة %':fr?'Marge carton %':'Carton margin %'}</span><div className="pform-margin-input"><input type="number" min="0" step="0.1" value={form.cartonMargin} onChange={e=>setCartonMargin(e.target.value)}/><b>%</b></div></label>
               <label className="pform-field pform-margin-nearby"><span>{tx.percent}</span><div className="pform-margin-input"><input type="number" min="0" step="1" value={displayedProfitMargin.toFixed(2)} onChange={e=>setMargin(e.target.value)}/><b>%</b></div></label>
-              <div className="pform-average-cost-card pform-live-preview" aria-live="polite"><small>{ar?'معاينة قبل الحفظ':fr?'Aperçu avant enregistrement':'Preview before saving'}</small><strong>{money(effectiveUnitCost)}</strong><span>{ar?'متوسط تكلفة الوحدة بعد الإضافة':fr?'Coût moyen unitaire après ajout':'Average unit cost after addition'}</span><span>{ar?`المخزون: ${existingStock} + ${incomingUnits} = ${existingStock+incomingUnits} وحدة`:fr?`Stock : ${existingStock} + ${incomingUnits} = ${existingStock+incomingUnits} unités`:`Stock: ${existingStock} + ${incomingUnits} = ${existingStock+incomingUnits} units`}</span><small>{ar?'نسبة الربح المتوقعة على متوسط التكلفة':fr?'Bénéfice prévu sur le coût moyen':'Projected profit on average cost'}</small><b>{appliedProfitMargin.toFixed(2)}%</b><small>{ar?'هذه معاينة فقط؛ لن تتغير بيانات المنتج إلا بعد الضغط على حفظ':fr?'Aperçu uniquement ; le produit ne change qu’après enregistrement':'Preview only; product data changes only after you save'}</small></div>
+              <div className="pform-live-preview" aria-live="polite">
+                <div className="pform-preview-stock-flow">
+                  <div className="pform-preview-stock-box"><small>{ar?'المخزون قبل الإضافة':fr?'Stock avant ajout':'Stock before addition'}</small><strong>{existingStock} <em>{ar?'وحدة':fr?'unités':'units'}</em></strong></div>
+                  <span className="pform-preview-arrow">→</span>
+                  <div className="pform-preview-stock-box is-after"><small>{ar?'المخزون بعد الإضافة':fr?'Stock après ajout':'Stock after addition'}</small><strong>{existingStock+incomingUnits} <em>{ar?'وحدة':fr?'unités':'units'}</em></strong><b>+{incomingUnits} {ar?'وحدة مضافة':fr?'unités ajoutées':'units added'}</b></div>
+                </div>
+                <div className="pform-preview-metrics">
+                  <div className="pform-preview-metric"><small>{ar?'التكلفة المعتمدة لحساب الربح':fr?'Coût utilisé pour calculer le bénéfice':'Cost used to calculate profit'}</small><strong>{money(effectiveUnitCost)}</strong></div>
+                  <div className="pform-preview-metric is-margin"><small>{ar?'نسبة الربح المطبقة':fr?'Marge bénéficiaire appliquée':'Applied profit margin'}</small><strong>{appliedProfitMargin.toFixed(2)}%</strong></div>
+                </div>
+                <small className="pform-preview-disclaimer">{ar?'معاينة فقط — لن تتغير بيانات المنتج إلا بعد الضغط على تأكيد':fr?'Aperçu uniquement — le produit ne sera modifié qu’après confirmation':'Preview only — product data changes only after confirmation'}</small>
+              </div>
             </div>
           </div>
 <div className="pform-section-heading"><div><h3>{tx.classification}</h3></div><span><Hash size={15}/> 02</span></div>
