@@ -102,21 +102,25 @@
 }
 
 
-/* When deleting a catalog/unit, show only the confirmation dialog.
-   Hide the manager panel behind it so a second framed box is not visible. */
-.purchase-other-picker-modal:has(.purchase-picker-delete-confirm){
-  background:transparent!important;
-  border-color:transparent!important;
-  box-shadow:none!important;
-  -webkit-backdrop-filter:none!important;
-  backdrop-filter:none!important;
+/* The catalog manager must disappear completely while its
+   confirmation is rendered in a separate body portal. */
+.purchase-other-picker-modal.is-delete-confirm-open{
+  display:none!important;
 }
-.purchase-other-picker-modal:has(.purchase-picker-delete-confirm) > :not(.purchase-delete-confirm-overlay){
-  visibility:hidden!important;
-  pointer-events:none!important;
+.purchase-delete-confirm-overlay{
+  position:fixed!important;
+  inset:0!important;
+  z-index:2147483000!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:20px!important;
+  background:rgba(35,24,58,.46)!important;
+  -webkit-backdrop-filter:blur(10px) saturate(120%)!important;
+  backdrop-filter:blur(10px) saturate(120%)!important;
 }
-.purchase-other-picker-modal:has(.purchase-picker-delete-confirm) > .purchase-delete-confirm-overlay{
-  visibility:visible!important;
-  pointer-events:auto!important;
-  background:rgba(35,24,58,.48)!important;
+.purchase-delete-confirm{
+  flex:0 1 460px!important;
+  max-height:calc(100dvh - 40px)!important;
+  overflow-y:auto!important;
 }
