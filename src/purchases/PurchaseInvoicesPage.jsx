@@ -221,9 +221,9 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
           }
           return;
         }
-        if (!otherPickerManage && !otherPickerDeleteTarget && key === 'Enter' && document.activeElement?.classList?.contains('purchase-other-picker-choice')) {
-          stop();
-          document.activeElement.click();
+        if (!otherPickerManage && !otherPickerDeleteTarget && key === 'Enter') {
+          const activeChoice = document.activeElement?.classList?.contains('purchase-other-picker-choice') ? document.activeElement : document.querySelector('.purchase-other-picker-modal .purchase-other-picker-choice');
+          if (activeChoice) { stop(); activeChoice.click(); }
           return;
         }
         if (otherPickerManage && key === 'Enter' && document.activeElement === otherPickerNewRef.current) {
@@ -234,6 +234,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
         return;
       }
       if (!inOtherInfo) {
+        if (productSubModal) return;
         if (key === 'Enter' && !event.target.matches('textarea,button,[contenteditable="true"]')) {
           stop();
           saveProductDraft();
