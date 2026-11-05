@@ -4097,3 +4097,19 @@
   border-radius:0!important;
   background:transparent!important;
 }
+
+
+/* Root cause fix: the earlier :has() toolbar selector had higher specificity,
+   so its heavy shadow survived the later visual refinements. Keep one subtle
+   shadow on the unified card body and remove the toolbar's separate shadow. */
+.purchase-page #purchase-form-items .purchase-items-toolbar:has(+.purchase-ledger-scroll.purchase-items-expanded){
+  box-shadow:none!important;
+  filter:none!important;
+}
+.purchase-page #purchase-form-items .purchase-items-toolbar.purchase-items-toolbar-expanded:has(+.purchase-ledger-scroll.purchase-items-expanded){
+  box-shadow:none!important;
+  filter:none!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded{
+  box-shadow:0 8px 22px rgba(93,60,158,.09)!important;
+}
