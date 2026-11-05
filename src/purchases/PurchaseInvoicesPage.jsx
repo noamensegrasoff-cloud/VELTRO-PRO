@@ -10,6 +10,7 @@ const CATALOG_KEY = 'veltro-products-catalog-v1';
 const SUPPLIERS_KEY = 'veltro.suppliers.v1';
 const PRODUCT_CATALOGS_KEY = 'veltro.product-catalogs.v1';
 const UNIT_MEASURES_KEY = 'veltro.unit-measures.v1';
+const PURCHASE_FORM_DRAFT_KEY = 'veltro.purchase-form-draft.v1';
 const nowLocal = () => { const d = new Date(); const pad = n => String(n).padStart(2, '0'); return { date: `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`, time: `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}` }; };
 const today = () => nowLocal().date;
 const read = (key, fallback = []) => { try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return v == null ? fallback : v; } catch { return fallback; } };
@@ -100,6 +101,25 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
   const totalQty = r => (r?.items||[]).reduce((sum,i)=>sum+Math.max(0,Number(i.qty)||0),0);
   const remaining = r => Math.max(0, receiptTotal(r) - Math.min(receiptTotal(r), Math.max(0, parseNumeric(r?.paid))));
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rows)); } catch {} }, [rows]);
+  // Keep the active, not-yet-confirmed purchase form durable across refreshes.
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(PURCHASE_FORM_DRAFT_KEY) || 'null');
+      if (saved?.form && Array.isArray(saved.form.items)) {
+        setForm(saved.form);
+        setEditingId(null);
+        setFormTab('items');
+        setDialog('form');
+      }
+    } catch {}
+  }, []);
+  useEffect(() => {
+    try {
+      if (dialog === 'form' && !editingId) {
+        localStorage.setItem(PURCHASE_FORM_DRAFT_KEY, JSON.stringify({ form, savedAt: new Date().toISOString() }));
+      }
+    } catch {}
+  }, [dialog, editingId, form]);
   useEffect(() => {
     let active = true;
     loadPurchaseReceipts().then(remoteRows => {
@@ -251,6 +271,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     const createdAt = old?.createdAt || new Date().toISOString(); const createdLocal = nowLocal(); const receipt = {...form,id:editingId||makeId(),number:String(form.number).trim(),supplierId:supplier?.id||form.supplierId||'',supplierName,supplierStandard:!!form.supplierStandard,date:old?.date||form.date||createdAt.slice(0,10)||createdLocal.date,time:old?.time||form.time||createdAt.slice(11,19)||createdLocal.time,status:form.status==='closed'?'closed':'open',paid,notes:String(form.notes||'').trim(),items,total:sum,openedBy:old?.openedBy||actor,closedBy:form.status==='closed'?(old?.closedBy||actor):'',createdAt,updatedAt:new Date().toISOString()};
     setRows(oldRows=>editingId?oldRows.map(r=>r.id===editingId?receipt:r):[receipt,...oldRows]);
     void savePurchaseReceipt(receipt).catch(() => {});
+    try { localStorage.removeItem(PURCHASE_FORM_DRAFT_KEY); } catch {}
     setSelectedId(receipt.id); setDialog(''); setEditingId(null); setError(''); setNotification({type:'success', message:T.saved});
   };
   const closeFormAndKeepDraft = () => {
@@ -263,6 +284,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
        void savePurchaseReceipt(draft).catch(() => {});
        setSelectedId(draftId);
      }
+     try { localStorage.removeItem(PURCHASE_FORM_DRAFT_KEY); } catch {}
      setDialog('');
      setEditingId(null);
      setError('');
