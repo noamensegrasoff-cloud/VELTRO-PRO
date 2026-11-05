@@ -227,6 +227,7 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
             entityType: operation.entityType,
             recordId: operation.recordId,
             expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
+            operationId: operation.operationId || null,
           });
         } else {
           result = await saveCloudRecord({
@@ -235,6 +236,7 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
             recordId: operation.recordId,
             payload: operation.payload,
             expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
+            operationId: operation.operationId || null,
           });
         }
         await markLocalRecordSynced(operation.recordKey, operation.updatedAt || operation.createdAt, result?.updated_at || result?.updatedAt);
