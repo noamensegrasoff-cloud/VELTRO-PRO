@@ -1,24 +1,23 @@
 const number = value => Number.isFinite(Number(value)) ? Math.max(0, Number(value)) : 0;
+const hasValue = value => String(value ?? '').trim() !== '';
 
 /**
- * Single source of truth for the product editor's live pricing/stock preview.
- * In edit mode, totalUnits means units being added (not the final stock target).
+ * Preview-only calculator. Existing values remain visible until the user
+ * enters new purchase quantity/cost or changes the sale price.
  */
 export function calculateProductPreview(form, product = null) {
   const existingStock = product ? number(product.stock) : 0;
   const existingCost = product ? number(product.cost) : 0;
+  const existingSell = product ? number(product.sell) : 0;
   const unitsPerCarton = number(form.unitsPerCarton);
-  const typedUnits = String(form.totalUnits ?? '').trim();
-  const cartonsUnits = number(form.cartonsPurchased) * unitsPerCarton;
-  const incomingUnits = product
-    ? (typedUnits !== '' ? number(typedUnits) : cartonsUnits)
-    : (typedUnits !== '' ? number(typedUnits) : cartonsUnits);
+  const typedUnits = hasValue(form.totalUnits) ? number(form.totalUnits) : null;
+  const incomingUnits = typedUnits !== null
+    ? typedUnits
+    : number(form.cartonsPurchased) * unitsPerCarton;
 
-  const typedUnitCost = String(form.unitCost ?? '').trim();
-  const cartonCost = number(form.cartonCost);
-  const incomingUnitCost = typedUnitCost !== ''
-    ? number(typedUnitCost)
-    : (unitsPerCarton > 0 ? cartonCost / unitsPerCarton : 0);
+  const incomingUnitCost = hasValue(form.unitCost)
+    ? number(form.unitCost)
+    : (unitsPerCarton > 0 ? number(form.cartonCost) / unitsPerCarton : existingCost);
 
   const resultingStock = existingStock + incomingUnits;
   const unitCost = product
@@ -27,11 +26,15 @@ export function calculateProductPreview(form, product = null) {
       : existingCost)
     : incomingUnitCost;
 
-  const typedSale = String(form.unitSell ?? '').trim();
-  const unitSell = typedSale !== ''
-    ? number(typedSale)
-    : unitCost * (1 + number(form.margin) / 100);
-  const profitPercent = unitCost > 0 ? ((unitSell - unitCost) / unitCost) * 100 : 0;
+  const unitSell = hasValue(form.unitSell)
+    ? number(form.unitSell)
+    : (product ? existingSell : unitCost * (1 + number(form.margin) / 100));
+
+  const salePriceChanged = !!product && unitSell !== existingSell;
+  const purchaseChanged = incomingUnits > 0;
+  const profitPercent = product && !purchaseChanged && !salePriceChanged
+    ? number(product.margin)
+    : (unitCost > 0 ? ((unitSell - unitCost) / unitCost) * 100 : 0);
 
   return {
     existingStock,
