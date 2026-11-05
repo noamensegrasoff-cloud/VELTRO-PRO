@@ -81,16 +81,27 @@ export async function saveLocalRecord({ entityType, recordId, payload, workspace
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
-    tx.objectStore(RECORDS).put(record);
-    if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
-      // One latest pending operation per record: rapid edits replace stale queued snapshots.
-      const outbox = tx.objectStore(OUTBOX);
-      const queued = outbox.index('by_record_key').getAll(key);
-      queued.onsuccess = () => {
-        for (const item of queued.result || []) outbox.delete(item.id);
-        outbox.put({ id: key, recordKey: key, workspaceId: activeWorkspace, entityType, recordId: String(recordId), operation: 'upsert', payload, updatedAt: now, createdAt: now });
-      };
-    }
+    const records = tx.objectStore(RECORDS);
+    const previousRequest = records.get(key);
+    previousRequest.onsuccess = () => {
+      const previous = previousRequest.result;
+      const nextRecord = { ...record, cloudUpdatedAt: previous?.cloudUpdatedAt || null };
+      records.put(nextRecord);
+      if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
+        // Keep the last server version observed before this edit for atomic CAS on upload.
+        const outbox = tx.objectStore(OUTBOX);
+        const queued = outbox.index('by_record_key').getAll(key);
+        queued.onsuccess = () => {
+          for (const item of queued.result || []) outbox.delete(item.id);
+          outbox.put({
+            id: key, recordKey: key, workspaceId: activeWorkspace, entityType,
+            recordId: String(recordId), operation: 'upsert', payload,
+            expectedCloudUpdatedAt: previous?.cloudUpdatedAt || null,
+            updatedAt: now, createdAt: now,
+          });
+        };
+      }
+    };
     tx.oncomplete = () => { db.close(); resolve(record); };
     tx.onerror = () => { const error = tx.error || new Error('Could not save record locally.'); db.close(); reject(error); };
     tx.onabort = () => { const error = tx.error || new Error('Local save was aborted.'); db.close(); reject(error); };
@@ -130,16 +141,26 @@ export async function deleteLocalRecord({ entityType, recordId, workspaceId, que
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
-    tx.objectStore(RECORDS).put(record);
-    if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
-      // A delete supersedes any queued create/update for this same record.
-      const outbox = tx.objectStore(OUTBOX);
-      const queued = outbox.index('by_record_key').getAll(key);
-      queued.onsuccess = () => {
-        for (const item of queued.result || []) outbox.delete(item.id);
-        outbox.put({ id: key, recordKey: key, workspaceId: activeWorkspace, entityType, recordId: String(recordId), operation: 'delete', updatedAt: now, createdAt: now });
-      };
-    }
+    const records = tx.objectStore(RECORDS);
+    const previousRequest = records.get(key);
+    previousRequest.onsuccess = () => {
+      const previous = previousRequest.result;
+      records.put({ ...record, cloudUpdatedAt: previous?.cloudUpdatedAt || null });
+      if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
+        // A delete supersedes queued writes but retains the last known cloud version.
+        const outbox = tx.objectStore(OUTBOX);
+        const queued = outbox.index('by_record_key').getAll(key);
+        queued.onsuccess = () => {
+          for (const item of queued.result || []) outbox.delete(item.id);
+          outbox.put({
+            id: key, recordKey: key, workspaceId: activeWorkspace, entityType,
+            recordId: String(recordId), operation: 'delete',
+            expectedCloudUpdatedAt: previous?.cloudUpdatedAt || null,
+            updatedAt: now, createdAt: now,
+          });
+        };
+      }
+    };
     tx.oncomplete = () => { db.close(); resolve(record); };
     tx.onerror = () => { const error = tx.error || new Error('Could not delete record locally.'); db.close(); reject(error); };
     tx.onabort = () => { const error = tx.error || new Error('Local delete was aborted.'); db.close(); reject(error); };
@@ -186,7 +207,7 @@ export async function markLocalRecordSynced(key, expectedUpdatedAt, cloudUpdated
     request.onsuccess = () => {
       // Do not mark a newer local edit as synced when an older queued snapshot finishes uploading.
       if (request.result && (!expectedUpdatedAt || request.result.updatedAt === expectedUpdatedAt)) {
-        store.put({ ...request.result, syncState: 'synced', cloudUpdatedAt: cloudUpdatedAt || new Date().toISOString() });
+        store.put({ ...request.result, syncState: 'synced', cloudUpdatedAt: cloudUpdatedAt || request.result.cloudUpdatedAt || new Date().toISOString() });
       }
     };
     tx.oncomplete = () => { db.close(); resolve(); };
@@ -205,6 +226,7 @@ export async function mergeCloudRecord(row, workspaceId) {
   const record = {
     key, workspaceId, entityType: row.entity_type, recordId: String(row.record_id),
     payload: row.payload || {}, updatedAt: row.updated_at || new Date().toISOString(),
+    cloudUpdatedAt: row.updated_at || null,
     deletedAt: row.deleted_at, deviceId: row.device_id || null, syncState: 'synced',
   };
   await withStore(RECORDS, 'readwrite', store => store.put(record));
@@ -225,8 +247,8 @@ export async function adoptLocalRecordsIntoWorkspace(workspaceId) {
         const nextKey = makeRecordKey(workspaceId, row.entityType, row.recordId);
         const adopted = { ...row, key: nextKey, workspaceId, syncState: 'pending' };
         recordsStore.put(adopted);
-        if (!row.deletedAt) outboxStore.put({ id: nextKey, recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'upsert', payload: row.payload, updatedAt: row.updatedAt, createdAt: row.updatedAt });
-        else outboxStore.put({ id: nextKey, recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'delete', updatedAt: row.updatedAt, createdAt: row.updatedAt });
+        if (!row.deletedAt) outboxStore.put({ id: nextKey, recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'upsert', payload: row.payload, expectedCloudUpdatedAt: row.cloudUpdatedAt || null, updatedAt: row.updatedAt, createdAt: row.updatedAt });
+        else outboxStore.put({ id: nextKey, recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'delete', expectedCloudUpdatedAt: row.cloudUpdatedAt || null, updatedAt: row.updatedAt, createdAt: row.updatedAt });
         recordsStore.delete(row.key);
       }
       tx.objectStore(META).put({ key: 'activeWorkspaceId', value: workspaceId });
