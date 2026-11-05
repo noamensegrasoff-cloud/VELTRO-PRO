@@ -103,7 +103,26 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     let active = true;
     loadPurchaseReceipts().then(remoteRows => {
       if (!active || !Array.isArray(remoteRows)) return;
-      setRows(remoteRows);
+      // Merge instead of replacing: users may add/edit receipts while the
+      // initial cloud load is still in flight. Keep local-only and newer rows.
+      setRows(localRows => {
+        const merged = new Map();
+        const timestamp = row => {
+          const value = Date.parse(row?.updatedAt || row?.createdAt || 0);
+          return Number.isFinite(value) ? value : 0;
+        };
+        [...remoteRows, ...localRows].forEach(row => {
+          if (!row?.id) return;
+          const id = String(row.id);
+          const previous = merged.get(id);
+          if (!previous || timestamp(row) >= timestamp(previous)) {
+            merged.set(id, {...row, items:Array.isArray(row.items)?row.items:[]});
+          }
+        });
+        const result = [...merged.values()];
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(result)); } catch {}
+        return result;
+      });
     }).catch(() => {});
     return () => { active = false; };
   }, []);
