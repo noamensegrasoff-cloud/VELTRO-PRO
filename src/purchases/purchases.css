@@ -4224,3 +4224,48 @@ button .purchase-product-shortcut-key{
   z-index:1!important;
   margin:auto!important;
 }
+
+
+/* VELTRO-PRO shortcut keycaps: proportional widths, compact height, no shadows. */
+.purchase-page .purchase-product-shortcut-key,
+.purchase-product-shortcut-key,
+button .purchase-product-shortcut-key{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:none!important;
+  height:25px!important;min-height:25px!important;max-height:25px!important;
+  padding:0 9px!important;margin-inline:6px 0!important;box-sizing:border-box!important;
+  border:1px solid rgba(126,93,190,.28)!important;border-radius:7px!important;
+  background:linear-gradient(145deg,rgba(246,241,255,.98),rgba(232,222,251,.92))!important;
+  color:#62439d!important;font:750 10px/1 inherit!important;letter-spacing:.15px!important;
+  box-shadow:none!important;text-shadow:none!important;white-space:nowrap!important;
+}
+.purchase-page .purchase-shortcut-function{min-width:34px!important;padding-inline:8px!important;font-size:10px!important}
+.purchase-page .purchase-shortcut-function-long{min-width:40px!important;padding-inline:9px!important;font-size:10px!important}
+.purchase-page .purchase-shortcut-enter{min-width:52px!important;padding-inline:10px!important;font-size:9px!important}
+.purchase-page .purchase-shortcut-escape{min-width:38px!important;padding-inline:8px!important;font-size:9px!important}
+.purchase-other-option-inline{align-items:center!important}
+.purchase-other-option-copy{flex:1 1 auto;min-width:0}
+.purchase-other-option-control{display:flex;align-items:center;gap:9px;flex:0 0 auto;min-width:0}
+.purchase-other-information .purchase-other-inline-input{
+  width:174px!important;min-width:120px!important;max-width:min(38vw,190px)!important;
+  min-height:38px!important;padding:7px 9px!important;border:1px solid rgba(126,93,190,.24)!important;
+  border-radius:9px!important;background:rgba(255,255,255,.94)!important;color:#39295d!important;
+  font-size:11px!important;font-weight:650!important;
+}
+.purchase-other-information .purchase-other-inline-input:disabled{
+  opacity:.48!important;background:rgba(231,226,240,.78)!important;color:#8c849e!important;
+}
+.purchase-other-option-control .purchase-toggle-switch{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:0!important;width:auto!important;min-width:42px!important;flex:0 0 auto!important;padding:0 2px!important;background:transparent!important;border-radius:8px!important}
+.purchase-other-option-control .purchase-toggle-switch .purchase-product-shortcut-key{margin:0 5px 0 0!important}
+.purchase-other-option-control .purchase-toggle-switch>span{display:block;flex:0 0 18px!important;width:18px!important;height:18px!important;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(45,31,75,.16)}
+.purchase-other-option-control .purchase-toggle-switch.is-on>span{background:#fff}
+.purchase-other-option-control .purchase-toggle-switch.is-on{background:transparent!important}
+.purchase-other-option-control .purchase-toggle-switch.is-on>span{transform:translateX(0)!important}
+.purchase-other-option-control .purchase-toggle-switch:focus-visible{outline:2px solid #8b6bd1;outline-offset:3px}
+@media(max-width:560px){
+  .purchase-other-option-inline{align-items:stretch!important;flex-direction:column!important}
+  .purchase-other-option-control{width:100%;justify-content:space-between}
+  .purchase-other-information .purchase-other-inline-input{flex:1 1 auto;width:auto!important;max-width:none!important;min-width:0!important}
+  .purchase-other-option-control .purchase-toggle-switch{flex:0 0 auto!important}
+  .purchase-page .purchase-product-shortcut-key,.purchase-product-shortcut-key,button .purchase-product-shortcut-key{height:24px!important;min-height:24px!important;max-height:24px!important;padding-inline:8px!important;font-size:9px!important}
+}
