@@ -4155,6 +4155,7 @@
 
 
 /* Unified royal-purple shortcut keycaps across every purchase dialog and portal. */
+.purchase-page .purchase-product-shortcut-key,
 .purchase-product-shortcut-key{
   display:inline-flex!important;
   align-items:center!important;
