@@ -3805,3 +3805,55 @@
     min-height:calc(min(52vh,460px) - 72px)!important;
   }
 }
+
+/* Compact purchase ledger: match the Receipt Details card bottom (Account Summary),
+   instead of using viewport-based heights that can overflow the card. */
+@media(min-width:901px){
+  .purchase-page .purchase-form-body{
+    align-items:stretch!important;
+  }
+  .purchase-page .purchase-form-section#purchase-form-info,
+  .purchase-page .purchase-form-section#purchase-form-items{
+    grid-row:1 / span 2!important;
+    align-self:stretch!important;
+    min-height:0!important;
+  }
+  .purchase-page #purchase-form-items{
+    display:flex!important;
+    flex-direction:column!important;
+    height:100%!important;
+    min-height:0!important;
+    overflow:hidden!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded){
+    flex:1 1 0%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    overflow:auto!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table{
+    height:100%!important;
+    min-height:100%!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-row td{
+    height:100%!important;
+    min-height:0!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-state{
+    min-height:100%!important;
+    height:100%!important;
+  }
+}
+@media(max-width:900px){
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded){
+    flex:0 0 auto!important;
+    height: min(38vh,340px)!important;
+    min-height:240px!important;
+    max-height:340px!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table{
+    height:100%!important;
+    min-height:100%!important;
+  }
+}
