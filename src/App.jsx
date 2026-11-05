@@ -214,6 +214,16 @@ function Sidebar({ lang, t, activeId, onNavigate, onLogout, onSync, syncing, sea
     </aside>
   </>;
 }
+function LiveDateTime({lang}) {
+  const [now,setNow]=useState(()=>new Date());
+  useEffect(()=>{
+    const timer=window.setInterval(()=>setNow(new Date()),1000);
+    return()=>window.clearInterval(timer);
+  },[]);
+  const locale=lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB';
+  return <div className="topbar-datetime glass-time-card"><CalendarDays size={15}/><span><b>{new Intl.DateTimeFormat(locale,{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(now)}</b><strong>{now.toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</strong></span></div>;
+}
+
 function MetricCard({ icon: Icon, label, value, trend, tone = 'blue', footer }) {
   return <article className="metric-card">
     <div className="metric-top"><span className={'metric-icon tone-' + tone}><Icon size={17} strokeWidth={1.9}/></span>{trend&&<span className="metric-trend"><ArrowUpRight size={12}/> {trend}</span>}</div>
@@ -577,13 +587,18 @@ function ModulePage({ page, parent, t, lang, onBack, currentUser }) {
 export default function App() {
 
   const [lang,setLang]=useState(()=>{try{return ['ar','fr','en'].includes(localStorage.getItem('veltro.language'))?localStorage.getItem('veltro.language'):'ar';}catch{return 'ar';}});
+  useEffect(()=>{
+    const memory=Number(navigator.deviceMemory||0);
+    const cores=Number(navigator.hardwareConcurrency||0);
+    const lowPerformance=(memory>0&&memory<=4)||(cores>0&&cores<=4);
+    document.documentElement.classList.toggle('veltro-low-performance',lowPerformance);
+    return()=>document.documentElement.classList.remove('veltro-low-performance');
+  },[]);
   const [cloudState,setCloudState]=useState('checking');
   const [currentUser,setCurrentUser]=useState(null);
   const [profileOpen,setProfileOpen]=useState(false);
   const [sessionPaused,setSessionPaused]=useState(false);
-  const [clockNow,setClockNow]=useState(()=>new Date());
   useEffect(()=>{let alive=true;supabase.auth.getUser().then(({data})=>{if(alive)setCurrentUser(data?.user||null)}).catch(()=>{if(alive)setCurrentUser(null)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>setCurrentUser(session?.user||null));return()=>{alive=false;subscription?.unsubscribe()}},[]);
-  useEffect(()=>{const timer=window.setInterval(()=>setClockNow(new Date()),1000);return()=>window.clearInterval(timer)},[]);
   const [manualSyncing,setManualSyncing]=useState(false);
   const [setupState,setSetupState]=useState('checking');
   const [setupProfile,setSetupProfile]=useState({});
@@ -742,7 +757,7 @@ export default function App() {
               <div className="header-popover-wrap language-wrap"><button className="topbar-tool compact-tool" onClick={()=>{setLanguageOpen(v=>!v);setSearchOpen(false);setNotificationsOpen(false);setProfileOpen(false)}} aria-label="Language"><Globe size={17}/><span>{lang.toUpperCase()}</span></button>{languageOpen&&<div className="header-popover language-popover"><b className="popover-heading">{lang==='ar'?'لغة التطبيق':lang==='fr'?'Langue':'Language'}</b>{[['ar','العربية'],['fr','Français'],['en','English']].map(([value,label])=><button key={value} className={'language-option '+(lang===value?'selected':'')} onClick={()=>{setLang(value);setLanguageOpen(false)}}><span>{label}</span>{lang===value&&<Check size={15}/>}</button>)}</div>}</div>
               <button className="topbar-tool compact-tool sync-tool" onClick={handleManualSync} disabled={manualSyncing} aria-label={t('sync')} title={t('sync')}><CloudUpload className={manualSyncing?'sync-spinning':''} size={16}/></button>
             </div>
-            <div className="topbar-datetime glass-time-card"><CalendarDays size={15}/><span><b>{new Intl.DateTimeFormat(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(clockNow)}</b><strong>{clockNow.toLocaleTimeString(lang==='ar'?'ar-DZ':lang==='fr'?'fr-FR':'en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</strong></span></div><span className="topbar-brand-mark" aria-label="VELTRO-PRO">V</span>
+            <LiveDateTime lang={lang}/><span className="topbar-brand-mark" aria-label="VELTRO-PRO">V</span>
           </div>
         </header>
         <section className="workspace-canvas welcome-sections-layout home-dashboard-layout" aria-label={lang==='ar'?'لوحة التحكم والأقسام':lang==='fr'?'Tableau de bord et rubriques':'Dashboard and sections'}>
