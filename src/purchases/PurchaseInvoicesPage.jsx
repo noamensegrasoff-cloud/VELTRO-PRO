@@ -206,11 +206,15 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     const added=Math.max(0,parseNumeric(n.unitCount));
     const enteredCost=Math.max(0,parseNumeric(n.purchaseUnitPrice));
     const averageCost=editingProduct?(added>0&&oldStock+added>0?((oldStock*oldCost)+(added*enteredCost))/(oldStock+added):oldCost):enteredCost;
+    const savedMargin=editingProduct?parseNumeric(editingProduct.unitProfitPercent??(oldCost>0?((parseNumeric(editingProduct.saleUnitPrice)-oldCost)/oldCost)*100:0)):0;
     if(key==='unitProfitPercent'){
       n.saleUnitPrice=averageCost>0?(averageCost*(1+parseNumeric(value)/100)).toFixed(2):'';
-    } else if(key==='saleUnitPrice'||key==='purchaseUnitPrice'||key==='purchaseCartonPrice'||key==='unitCount'||key==='cartonCount'||key==='unitsPerCarton'){
+    } else if(key==='saleUnitPrice'){
       const sale=Math.max(0,parseNumeric(n.saleUnitPrice));
       n.unitProfitPercent=averageCost>0&&sale>0?(((sale-averageCost)/averageCost)*100).toFixed(2):'';
+    } else if(key==='purchaseUnitPrice'||key==='purchaseCartonPrice'||key==='unitCount'||key==='cartonCount'||key==='unitsPerCarton'){
+      if(editingProduct&&added===0)n.unitProfitPercent=savedMargin.toFixed(2);
+      else {const sale=Math.max(0,parseNumeric(n.saleUnitPrice));n.unitProfitPercent=averageCost>0&&sale>0?(((sale-averageCost)/averageCost)*100).toFixed(2):'';}
     }
     return n;
   });
