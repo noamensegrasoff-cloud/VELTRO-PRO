@@ -101,20 +101,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
   const totalQty = r => (r?.items||[]).reduce((sum,i)=>sum+Math.max(0,Number(i.qty)||0),0);
   const remaining = r => Math.max(0, receiptTotal(r) - Math.min(receiptTotal(r), Math.max(0, parseNumeric(r?.paid))));
   useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(rows)); } catch {} }, [rows]);
-  // Keep the active, not-yet-confirmed purchase form durable across refreshes.
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(PURCHASE_FORM_DRAFT_KEY) || 'null');
-      if (saved?.form && Array.isArray(saved.form.items)) {
-        const deletedIds = new Set((Array.isArray(saved.deletedItemIds) ? saved.deletedItemIds : []).map(String));
-        const restoredForm = {...saved.form, items:saved.form.items.filter(item => !deletedIds.has(String(item.id)))};
-        setForm(restoredForm);
-        setEditingId(null);
-        setFormTab('items');
-        setDialog('form');
-      }
-    } catch {}
-  }, []);
+  // Drafts stay saved in the background; they are resumed only when the user opens a new receipt.
   useEffect(() => {
     try {
       if (dialog === 'form' && !editingId) {
@@ -183,7 +170,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
   const sumTotal = periodRows.reduce((s,r)=>s+receiptTotal(r),0);
   const sumPaid = periodRows.reduce((s,r)=>s+Math.min(receiptTotal(r),Math.max(0,parseNumeric(r.paid))),0);
   const sumDue = periodRows.reduce((s,r)=>s+remaining(r),0);
-  const startNew = () => { setFormTableExpanded(false); setBarcodeQuery(''); setFormTab('info'); setNotification(null); const next = freshReceipt(); next.number = 'PUR-' + String(Math.max(0,...rows.map(r=>Number(String(r.number||'').replace(/\D/g,''))||0))+1).padStart(5,'0'); setForm(next); setEditingId(null); setError(''); setItemQuery(''); setDialog('form'); };
+  const startNew = () => { setFormTableExpanded(false); setBarcodeQuery(''); setFormTab('info'); setNotification(null); let next = freshReceipt(); try { const saved = JSON.parse(localStorage.getItem(PURCHASE_FORM_DRAFT_KEY) || 'null'); if (saved?.form && Array.isArray(saved.form.items)) { const deletedIds = new Set((Array.isArray(saved.deletedItemIds) ? saved.deletedItemIds : []).map(String)); next = {...saved.form, items:saved.form.items.filter(item => !deletedIds.has(String(item.id)))}; } else { next.number = 'PUR-' + String(Math.max(0,...rows.map(r=>Number(String(r.number||'').replace(/\D/g,''))||0))+1).padStart(5,'0'); } } catch { next.number = 'PUR-' + String(Math.max(0,...rows.map(r=>Number(String(r.number||'').replace(/\D/g,''))||0))+1).padStart(5,'0'); } setForm(next); setEditingId(null); setError(''); setItemQuery(''); setDialog('form'); };
   const startEdit = r => { if (!r) return; setFormTableExpanded(false); setBarcodeQuery(''); setFormTab('info'); setNotification(null); setForm({...r, paid:String(r.paid||0), items:(r.items||[]).map(i=>({...i,id:i.id||makeId()}))}); setEditingId(r.id); setError(''); setItemQuery(''); setDialog('form'); };
   const updateForm = (key,value) => setForm(old=>({...old,[key]:value}));
   const updateItem = (id,key,value) => setForm(old=>({...old,items:old.items.map(i=>i.id===id?{...i,[key]:value}:i)}));
