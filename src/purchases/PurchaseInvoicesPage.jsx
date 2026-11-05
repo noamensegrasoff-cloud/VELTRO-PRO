@@ -143,8 +143,9 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     return () => { active = false; };
   }, []);
   useEffect(() => {
-    if (dialog !== 'form' || formTableExpanded || productEditorOpen || barcodeProductOpen || productSearchOpen || supplierPickerOpen || supplierAddOpen || otherPicker || productSubModal) return;
-    // Wait until the receipt dialog and its barcode field are fully mounted/visible.
+    // Return the scanner/search focus to the barcode field after every receipt
+    // action or modal closes. Never steal focus while another dialog is active.
+    if (dialog !== 'form' || formTableExpanded || productEditorOpen || barcodeProductOpen || productSearchOpen || supplierPickerOpen || supplierAddOpen || otherPicker || productSubModal || itemDeleteTarget || itemPreview || noteOpen || notification) return;
     const focusTimer = window.setTimeout(() => {
       const field = barcodeSearchRef.current;
       if (field && field.isConnected && !field.disabled) {
@@ -153,7 +154,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
       }
     }, 140);
     return () => window.clearTimeout(focusTimer);
-  }, [dialog, formTableExpanded, productEditorOpen, barcodeProductOpen, productSearchOpen, supplierPickerOpen, supplierAddOpen, otherPicker, productSubModal]);
+  }, [dialog, formTableExpanded, productEditorOpen, barcodeProductOpen, productSearchOpen, supplierPickerOpen, supplierAddOpen, otherPicker, productSubModal, itemDeleteTarget, itemPreview, noteOpen, notification]);
   useEffect(() => {
     const refresh = () => { const storedSuppliers=read(SUPPLIERS_KEY, []); const storedCatalog=read(CATALOG_KEY, []); setSuppliers((Array.isArray(storedSuppliers)?storedSuppliers:[]).filter(s=>s&&typeof s==='object')); setCatalog((Array.isArray(storedCatalog)?storedCatalog:[]).filter(p=>p&&typeof p==='object')); };
     window.addEventListener('focus', refresh);
