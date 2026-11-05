@@ -685,13 +685,14 @@ export default function App() {
   const [moduleModalOpen,setModuleModalOpen]=useState(false);
   const [dashboardData,setDashboardData]=useState(()=>readDashboardSnapshot());
   useEffect(()=>{
+    if(activePage!==dashboard)return;
     const refreshDashboard=()=>setDashboardData(readDashboardSnapshot());
     refreshDashboard();
     window.addEventListener('focus',refreshDashboard);
     window.addEventListener('storage',refreshDashboard);
-    const interval=window.setInterval(refreshDashboard,15000);
+    const interval=window.setInterval(refreshDashboard,60000);
     return()=>{window.removeEventListener('focus',refreshDashboard);window.removeEventListener('storage',refreshDashboard);window.clearInterval(interval);};
-  },[moduleModalOpen]);
+  },[activePage]);
   const [search,setSearch]=useState('');
   const [searchOpen,setSearchOpen]=useState(false);
   const [languageOpen,setLanguageOpen]=useState(false);
