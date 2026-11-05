@@ -37,9 +37,12 @@ export default function ProductsPage({lang='ar'}) {
   const visibleRows=rows.slice((currentPage-1)*pageSize,currentPage*pageSize);
   useEffect(()=>{setCurrentPage(1)},[query,codeQuery,filter,category]);
   useEffect(()=>{if(currentPage>pageCount)setCurrentPage(pageCount)},[currentPage,pageCount]);
-  const categories=[...new Set(products.map(p=>p.category).filter(Boolean))];
-  const low=products.filter(p=>p.stock>0&&p.stock<=p.min&&p.stockAlertEnabled!==false).length, out=products.filter(p=>p.stock===0).length;
-  const stockValue=products.reduce((sum,p)=>sum+p.stock*p.cost,0);
+  const {categories,low,out,stockValue}=useMemo(()=>({
+    categories:[...new Set(products.map(p=>p.category).filter(Boolean))],
+    low:products.filter(p=>p.stock>0&&p.stock<=p.min&&p.stockAlertEnabled!==false).length,
+    out:products.filter(p=>p.stock===0).length,
+    stockValue:products.reduce((sum,p)=>sum+p.stock*p.cost,0),
+  }),[products]);
   const openModal=(product=null)=>{setEditingProductId(product?.id||null);setForm(product?{...initialForm,name:product.name||'',category:product.category||'',unit:product.unit||initialForm.unit,mainBarcode:product.barcode==='—'?'':product.barcode||'',unitBarcodes:Array.isArray(product.unitBarcodes)?product.unitBarcodes:[],cartonBarcode:product.cartonBarcode||'',cartonBarcodes:Array.isArray(product.cartonBarcodes)?product.cartonBarcodes:[],unitsPerCarton:String(product.unitsPerCarton??0),cartonsPurchased:'',totalUnits:String(product.stock??0),cartonCost:String(product.cartonCost??''),cartonSell:String(product.cartonSell??''),cartonMargin:String(product.cartonMargin??(Number(product.cartonSell)>0&&Number(product.cartonCost)>0?marginFromPrices(product.cartonSell,product.cartonCost).toFixed(2):(product.margin??20))),unitCost:String(product.cost??''),unitSell:String(product.sell??''),margin:String(product.margin??20),stockAlertEnabled:product.stockAlertEnabled!==false,stockAlert:String(product.min??10),expiryEnabled:!!product.expiryEnabled,expiryDate:product.expiryDate||'',expiryNotice:String(product.expiryNotice??3),sellByMeasure:!!product.sellByMeasure,measureUnit:product.measureUnit||initialForm.measureUnit,imageName:product.imageName||''}:initialForm);setStep(0);setActiveProductPanel(0);setImagePreview(product?.image||'');setCodeManager(null);setModal(true)};
   const openCodeManager=(type)=>{setCodeManager(type);setDraftCode('');setDraftType(type==='unitBarcodes'?'unit':'carton')};
   const saveCode=()=>{const value=draftCode.trim();if(!value||!codeManager)return;const norm=v=>String(v??'').normalize('NFKC').trim().replace(/\\s+/g,' ').toLocaleLowerCase();const used=[form.mainBarcode,form.cartonBarcode,...form.unitBarcodes,...form.cartonBarcodes].some(v=>norm(v)===norm(value))||!!duplicateCodeFor(value);if(used){setBarcodeAlert(value);return;}setForm(prev=>({...prev,[codeManager]:[...prev[codeManager],value]}));setDraftCode('')};
