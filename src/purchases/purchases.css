@@ -3600,3 +3600,23 @@
 .purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-empty-state{
   background:#fff!important;background-image:none!important;color:#796b9d!important;
 }
+
+/* Product editor opened from the expanded purchase ledger must sit above it */
+.purchase-product-editor-overlay{
+  position:fixed!important;inset:0!important;z-index:140000!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  padding:max(12px,env(safe-area-inset-top)) 12px max(12px,env(safe-area-inset-bottom))!important;
+  background:rgba(25,16,48,.62)!important;
+  -webkit-backdrop-filter:blur(8px)!important;backdrop-filter:blur(8px)!important;
+}
+.purchase-product-editor-overlay .purchase-product-editor-modal{
+  position:relative!important;z-index:140001!important;max-height:calc(100dvh - 24px)!important;
+  overflow:hidden!important;transform:none!important;
+}
+.purchase-product-editor-overlay .purchase-product-editor-body{
+  min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;
+}
+.purchase-product-editor-overlay~.purchase-product-sub-overlay,
+.purchase-product-editor-overlay .purchase-product-sub-overlay{
+  z-index:140010!important;
+}
