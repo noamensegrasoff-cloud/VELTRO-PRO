@@ -1,4 +1,5 @@
 import { getDeviceId, getCloudRecords, saveCloudRecord, deleteCloudRecord } from './cloudStorage.js';
+import { resolveSnapshotConflict } from './syncConflict.js';
 
 const DB_NAME = 'veltro-pro-local';
 const DB_VERSION = 1;
@@ -198,7 +199,6 @@ export async function mergeCloudRecord(row, workspaceId) {
   const pending = (await listPendingSyncOperations()).some(item => item.recordKey === key);
   if (pending) return { skipped: true, reason: 'pending_local_change' };
   const existing = await withStore(RECORDS, 'readonly', store => store.get(key));
-  const { resolveSnapshotConflict } = await import('./syncConflict.js');
   if (existing && resolveSnapshotConflict(existing, row) === 'local') {
     return { skipped: true, reason: 'local_wins_conflict_policy' };
   }
