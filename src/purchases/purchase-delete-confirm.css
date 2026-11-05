@@ -48,3 +48,55 @@
 @media(prefers-reduced-motion:reduce){
   .purchase-delete-confirm-overlay,.purchase-delete-confirm{animation:none}
 }
+
+
+/* VELTRO royal-purple glass delete confirmation + reliable close controls */
+.purchase-delete-confirm-overlay{
+  z-index:12000!important;
+  background:rgba(35,24,58,.48)!important;
+  -webkit-backdrop-filter:blur(12px) saturate(125%)!important;
+  backdrop-filter:blur(12px) saturate(125%)!important;
+}
+.purchase-delete-confirm{
+  position:relative!important;
+  width:min(100%,460px)!important;
+  padding:34px 30px 26px!important;
+  border:1px solid rgba(160,135,218,.34)!important;
+  border-radius:26px!important;
+  background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(247,242,255,.94) 58%,rgba(236,227,255,.91))!important;
+  color:#392b59!important;
+  box-shadow:0 28px 90px rgba(42,25,77,.30),inset 0 1px 0 rgba(255,255,255,.96)!important;
+  -webkit-backdrop-filter:blur(22px)!important;backdrop-filter:blur(22px)!important;
+}
+.purchase-delete-confirm-close{
+  position:absolute!important;top:13px!important;inset-inline-end:13px!important;
+  width:36px!important;height:36px!important;padding:0!important;flex:none!important;
+  display:grid!important;place-items:center!important;border:1px solid rgba(126,96,183,.20)!important;
+  border-radius:12px!important;background:rgba(255,255,255,.78)!important;
+  color:#7256a8!important;cursor:pointer!important;z-index:2!important;
+  box-shadow:0 4px 12px rgba(75,52,119,.08)!important;
+}
+.purchase-delete-confirm-close:hover{background:#eee7fb!important;border-color:rgba(126,96,183,.42)!important;transform:translateY(-1px)}
+.purchase-delete-confirm-icon{
+  background:linear-gradient(145deg,rgba(255,237,243,.95),rgba(248,222,234,.78))!important;
+  color:#b65c83!important;box-shadow:inset 0 0 0 1px rgba(190,100,142,.16)!important;
+}
+.purchase-delete-confirm-eyebrow{color:#8569b9!important}
+.purchase-delete-confirm h2{color:#49366e!important}
+.purchase-delete-confirm p{color:#817493!important}
+.purchase-delete-confirm p b{color:#61478f!important}
+.purchase-delete-confirm footer .purchase-secondary{
+  border:1px solid rgba(132,105,197,.24)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(239,232,251,.82))!important;
+  color:#66528a!important;
+}
+.purchase-delete-confirm-action{
+  border:1px solid rgba(176,83,123,.34)!important;
+  background:linear-gradient(135deg,#bd6d91,#a94e78)!important;
+  color:#fff!important;box-shadow:0 7px 18px rgba(169,78,120,.20)!important;
+}
+.purchase-delete-confirm-action:hover{filter:brightness(1.04)!important}
+@media(max-width:480px){
+ .purchase-delete-confirm{padding:30px 18px 20px!important;border-radius:22px!important}
+ .purchase-delete-confirm-close{top:10px!important;inset-inline-end:10px!important;width:34px!important;height:34px!important}
+}
