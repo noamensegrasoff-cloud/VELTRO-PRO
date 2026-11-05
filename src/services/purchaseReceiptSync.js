@@ -15,39 +15,65 @@ function readLegacyReceipts() {
   }
 }
 
+function writeLegacyReceipts(rows) {
+  try {
+    localStorage.setItem(LEGACY_KEY, JSON.stringify(rows));
+  } catch (error) {
+    throw new Error('Could not persist purchase receipts in local storage.', { cause: error });
+  }
+}
+
 function timeOf(row) {
-  const value = Date.parse(row?.updatedAt || row?.createdAt || 0);
+  const value = Date.parse(row?.updatedAt || row?.updated_at || row?.createdAt || 0);
   return Number.isFinite(value) ? value : 0;
+}
+
+function mergeById(rows) {
+  const merged = new Map();
+  for (const row of rows) {
+    if (!row?.id) continue;
+    const id = String(row.id);
+    const previous = merged.get(id);
+    if (!previous || timeOf(row) >= timeOf(previous)) {
+      merged.set(id, { ...row, items: Array.isArray(row.items) ? row.items : [] });
+    }
+  }
+  return [...merged.values()];
 }
 
 export async function loadPurchaseReceipts() {
   let legacyRows = readLegacyReceipts();
+
+  // Sync errors must never prevent already-saved local receipts from loading.
   try { await syncWorkspace({ entityTypes: [ENTITY_TYPE] }); } catch {}
+
   const workspaceId = await getActiveWorkspaceId().catch(() => 'local-device');
-  // Migrate the old single-JSON cloud record as well, so a clean/new device
-  // can recover receipts that were synced before the per-receipt outbox existed.
+
+  // Recover records saved by the previous localStorage-only implementation.
   try {
-    const legacyCloud = await getCloudRecords({ workspaceId, entityType: 'local_storage', includeDeleted: true });
+    const legacyCloud = await getCloudRecords({
+      workspaceId, entityType: 'local_storage', includeDeleted: true,
+    });
     const oldRow = legacyCloud.find(row => row.record_id === LEGACY_KEY && !row.deleted_at);
     if (typeof oldRow?.payload?.value === 'string') {
       const parsed = JSON.parse(oldRow.payload.value);
-      if (Array.isArray(parsed)) {
-        const migrated = new Map();
-        for (const row of [...parsed, ...legacyRows]) {
-          if (!row?.id) continue;
-          const id = String(row.id);
-          const previous = migrated.get(id);
-          if (!previous || timeOf(row) >= timeOf(previous)) migrated.set(id, row);
-        }
-        legacyRows = [...migrated.values()];
-      }
+      if (Array.isArray(parsed)) legacyRows = mergeById([...parsed, ...legacyRows]);
     }
   } catch {}
+
   let stored = [];
-  try { stored = await listRecords({ entityType: ENTITY_TYPE, workspaceId, includeDeleted: true }); } catch {}
-  const storedById = new Map(stored.map(row => [String(row.recordId), row]));
-  const tombstones = new Map(stored.filter(row => row.deletedAt).map(row => [String(row.recordId), row]));
-  const merged = new Map(stored.filter(row => !row.deletedAt && row.payload).map(row => [String(row.recordId), row.payload]));
+  try {
+    stored = await listRecords({ entityType: ENTITY_TYPE, workspaceId, includeDeleted: true });
+  } catch {}
+
+  const tombstones = new Map(
+    stored.filter(row => row.deletedAt).map(row => [String(row.recordId), row])
+  );
+  const merged = new Map(
+    stored.filter(row => !row.deletedAt && row.payload)
+      .map(row => [String(row.recordId), row.payload])
+  );
+
   for (const legacy of legacyRows) {
     const id = String(legacy.id);
     const tombstone = tombstones.get(id);
@@ -55,27 +81,54 @@ export async function loadPurchaseReceipts() {
     const current = merged.get(id);
     if (!current || timeOf(legacy) > timeOf(current)) merged.set(id, legacy);
   }
-  for (const [id, receipt] of merged) {
-    const cloudRow = storedById.get(id);
-    const activeCloudRow = cloudRow && !cloudRow.deletedAt ? cloudRow : null;
-    if (!activeCloudRow || timeOf(receipt) > timeOf(activeCloudRow.payload)) {
+
+  const result = [...merged.values()].sort((a, b) => timeOf(b) - timeOf(a));
+
+  // Repair the local record store from the merged, authoritative result.
+  for (const receipt of result) {
+    const id = String(receipt.id);
+    const storedRow = stored.find(row => String(row.recordId) === id && !row.deletedAt);
+    if (!storedRow || timeOf(receipt) > timeOf(storedRow.payload)) {
       await saveRecord({ entityType: ENTITY_TYPE, recordId: id, payload: receipt, workspaceId }).catch(() => {});
     }
   }
-  try { await syncWorkspace({ entityTypes: [ENTITY_TYPE] }); } catch {}
-  const result = [...merged.values()].sort((a,b) => timeOf(b) - timeOf(a));
-  try { localStorage.setItem(LEGACY_KEY, JSON.stringify(result)); } catch {}
+
+  writeLegacyReceipts(result);
   return result;
 }
 
 export async function savePurchaseReceipt(receipt) {
   if (!receipt?.id) throw new Error('A stable purchase receipt ID is required.');
+
+  // Write the browser copy first. A refresh during a cloud/local DB sync cannot
+  // make a just-added receipt line disappear.
+  const rows = readLegacyReceipts();
+  const next = mergeById([
+    ...rows.filter(row => String(row.id) !== String(receipt.id)),
+    { ...receipt, items: Array.isArray(receipt.items) ? receipt.items : [] },
+  ]);
+  writeLegacyReceipts(next);
+
   const workspaceId = await getActiveWorkspaceId();
-  return saveRecord({ entityType: ENTITY_TYPE, recordId: String(receipt.id), payload: receipt, workspaceId });
+  return saveRecord({
+    entityType: ENTITY_TYPE,
+    recordId: String(receipt.id),
+    payload: receipt,
+    workspaceId,
+  });
 }
 
 export async function deletePurchaseReceipt(receiptId) {
-  if (receiptId == null || String(receiptId) === '') throw new Error('A purchase receipt ID is required.');
+  if (receiptId == null || String(receiptId) === '') {
+    throw new Error('A purchase receipt ID is required.');
+  }
   const workspaceId = await getActiveWorkspaceId();
-  return deleteRecord({ entityType: ENTITY_TYPE, recordId: String(receiptId), workspaceId });
+  const result = await deleteRecord({
+    entityType: ENTITY_TYPE,
+    recordId: String(receiptId),
+    workspaceId,
+  });
+  const remaining = readLegacyReceipts().filter(row => String(row.id) !== String(receiptId));
+  writeLegacyReceipts(remaining);
+  return result;
 }
