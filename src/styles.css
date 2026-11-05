@@ -7564,3 +7564,22 @@ html.veltro-low-performance .pform-overlay{
 .products-pagination button{width:32px;height:30px;display:grid;place-items:center;border:1px solid rgba(126,92,190,.24);border-radius:9px;background:rgba(255,255,255,.55);color:#7654b5}
 .products-pagination button:disabled{opacity:.35;cursor:not-allowed}
 @media(max-width:600px){.products-pagination{font-size:10px}.products-pagination button{width:29px;height:28px}}
+
+
+/* Live stock/profit preview positioned directly under sales price fields */
+.pform-sales-price-grid>.pform-live-preview{grid-column:1/-1;display:flex;flex-direction:column;gap:12px;min-width:0;margin-top:2px;padding:12px;border:1px solid rgba(139,92,246,.25);border-radius:18px;background:linear-gradient(135deg,rgba(124,58,237,.10),rgba(196,181,253,.08),rgba(255,255,255,.10));backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.pform-preview-stock-flow{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);align-items:center;gap:8px;padding:3px}
+.pform-preview-stock-box{display:flex;flex-direction:column;gap:7px;min-width:0;min-height:94px;justify-content:center;padding:12px 14px;border:1px solid rgba(139,92,246,.14);border-radius:15px;background:rgba(255,255,255,.24)}
+.pform-preview-stock-box>small,.pform-preview-metric>small{font-size:11px;line-height:1.4;color:var(--text-secondary,#64748b)}
+.pform-preview-stock-box>strong{font-size:23px;line-height:1.15;color:var(--text-primary,#29213d);font-variant-numeric:tabular-nums}
+.pform-preview-stock-box>strong em{font-size:11px;font-style:normal;font-weight:600}
+.pform-preview-stock-box.is-after{border-color:rgba(124,58,237,.24);background:linear-gradient(145deg,rgba(139,92,246,.12),rgba(255,255,255,.25))}
+.pform-preview-stock-box.is-after>strong,.pform-preview-stock-box.is-after>b{color:#7650c8}
+.pform-preview-stock-box.is-after>b{font-size:11px;font-weight:750}
+.pform-preview-arrow{text-align:center;color:#8662ce;font-size:24px;font-weight:700}
+.pform-preview-metrics{display:grid;grid-template-columns:minmax(0,1fr) minmax(120px,.38fr);gap:10px}
+.pform-preview-metric{display:flex;flex-direction:column;justify-content:center;gap:7px;min-width:0;min-height:82px;padding:12px 15px;border:1px solid rgba(139,92,246,.17);border-radius:15px;background:rgba(255,255,255,.20)}
+.pform-preview-metric>strong{font-size:21px;color:var(--text-primary,#29213d);font-variant-numeric:tabular-nums}
+.pform-preview-metric.is-margin>strong{color:#7650c8}
+.pform-preview-disclaimer{padding-inline:4px;font-size:10px;line-height:1.5;color:var(--text-muted,#77708b)}
+@media(max-width:600px){.pform-preview-stock-flow{grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr);gap:5px}.pform-preview-stock-box{padding:9px;min-height:82px}.pform-preview-stock-box>strong{font-size:19px}.pform-preview-stock-box>small,.pform-preview-metric>small{font-size:10px}.pform-preview-metrics{grid-template-columns:minmax(0,1fr) minmax(100px,.65fr);gap:7px}.pform-preview-metric{padding:10px;min-height:72px}.pform-preview-metric>strong{font-size:17px}}
