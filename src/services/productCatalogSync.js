@@ -60,14 +60,25 @@ export async function loadAndMergeProductCatalog() {
   const tombstones = new Map(records
     .filter(row => row && row.deletedAt && row.recordId != null)
     .map(row => [String(row.recordId), row]));
-  const cloudMap = new Map(records
+  const recordMap = new Map(records
     .filter(row => row && !row.deletedAt && row.payload && row.recordId != null)
-    .map(row => [String(row.recordId), { ...row.payload, id: String(row.recordId) }]));
+    .map(row => [String(row.recordId), row]));
+  const cloudMap = new Map([...recordMap].map(([id, row]) => [id, { ...row.payload, id }]));
 
   const merged = new Map(cloudMap);
   for (const [id, localProduct] of localMap) {
     const tombstone = tombstones.get(id);
-    if (tombstone && Date.parse(tombstone.deletedAt || 0) >= productTime(localProduct)) continue;
+    const record = recordMap.get(id);
+    if (tombstone && Date.parse(tombstone.deletedAt || 0) >= Math.max(productTime(localProduct), Date.parse(record?.updatedAt || 0))) continue;
+    const recordProduct = record ? { ...record.payload, id } : null;
+    const recordTime = Date.parse(record?.updatedAt || 0);
+    // IndexedDB is the durable local source of truth. Never let an older
+    // localStorage snapshot replace a newer or still-pending inventory edit.
+    if (recordProduct && (record.syncState === 'pending' || recordTime >= productTime(localProduct))) {
+      if (!sameProduct(localProduct, recordProduct)) archiveConflict(id, localProduct, recordProduct, 'local_database');
+      merged.set(id, recordProduct);
+      continue;
+    }
     const cloudProduct = cloudMap.get(id);
     if (!cloudProduct) {
       merged.set(id, localProduct);
