@@ -335,7 +335,7 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
      if (!receipt) return;
      const reversals = new Map();
      for (const item of (receipt.items || [])) {
-       const qty = Math.max(0, parseNumeric(item.stockAppliedQty));
+       const qty = Math.max(0, parseNumeric(item.stockAppliedQty != null ? item.stockAppliedQty : item.qty));
        if (!qty) continue;
        const product = catalog.find(p => String(p.id) === String(item.productId)) ||
          (item.barcode ? catalog.find(p => [p.mainBarcode,p.barcode,p.cartonBarcode,...(p.secondaryUnitBarcodes||[]),...(p.secondaryCartonBarcodes||[])].some(code => String(code||'').trim() === String(item.barcode).trim())) : null);
