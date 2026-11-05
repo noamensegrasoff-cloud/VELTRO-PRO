@@ -45,11 +45,11 @@ export async function getCloudRecords({ workspaceId, entityType, includeDeleted 
 
 export async function saveCloudRecord({ workspaceId, entityType, recordId, payload, expectedUpdatedAt = null, operationId = null }) {
   return syncCloudRecord({
-    workspaceId, entityType, recordId, payload, expectedUpdatedAt, deleted: false,
+    workspaceId, entityType, recordId, payload, expectedUpdatedAt, operationId, deleted: false,
   });
 }
 
-export async function deleteCloudRecord({ workspaceId, entityType, recordId, expectedUpdatedAt = null }) {
+export async function deleteCloudRecord({ workspaceId, entityType, recordId, expectedUpdatedAt = null, operationId = null }) {
   return syncCloudRecord({
     workspaceId, entityType, recordId, payload: {}, expectedUpdatedAt, operationId, deleted: true,
   });
