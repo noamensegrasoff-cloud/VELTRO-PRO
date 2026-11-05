@@ -3316,3 +3316,56 @@
  .purchase-other-picker-create>button:last-child:nth-child(3){grid-column:2}
  .purchase-other-picker-manage-launch button{width:100%}
 }
+
+
+/* Balanced inner spacing for catalog and unit management dialogs */
+.purchase-other-picker-modal .purchase-other-manager-intro{
+  margin:14px 20px 12px!important;
+  padding:14px 16px!important;
+}
+.purchase-other-picker-modal .purchase-other-manager-list{
+  padding:0 20px 14px!important;
+  gap:0;
+}
+.purchase-other-picker-modal .purchase-other-manager-list .purchase-other-picker-option{
+  width:100%;
+  margin:0 0 10px!important;
+  padding:12px 14px!important;
+}
+.purchase-other-picker-modal .purchase-other-picker-create{
+  margin:0 20px!important;
+  padding:16px 0 4px!important;
+  gap:12px!important;
+}
+.purchase-other-picker-modal .purchase-supplier-modal-footer{
+  padding:14px 20px 18px!important;
+  margin-top:0!important;
+}
+.purchase-other-picker-modal .purchase-other-picker-manage-launch{
+  margin:0 20px 14px!important;
+  padding:14px 0 0!important;
+}
+@media(max-width:560px){
+  .purchase-other-picker-modal .purchase-other-manager-intro{
+    margin:11px 13px 10px!important;
+    padding:12px!important;
+  }
+  .purchase-other-picker-modal .purchase-other-manager-list{
+    padding:0 13px 12px!important;
+  }
+  .purchase-other-picker-modal .purchase-other-manager-list .purchase-other-picker-option{
+    padding:10px!important;
+    gap:8px!important;
+  }
+  .purchase-other-picker-modal .purchase-other-picker-create{
+    margin:0 13px!important;
+    padding:13px 0 3px!important;
+    gap:9px!important;
+  }
+  .purchase-other-picker-modal .purchase-supplier-modal-footer{
+    padding:12px 13px 14px!important;
+  }
+  .purchase-other-picker-modal .purchase-other-picker-manage-launch{
+    margin:0 13px 12px!important;
+  }
+}
