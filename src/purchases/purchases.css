@@ -3768,3 +3768,40 @@
     min-height:198px!important;
   }
 }
+
+
+/* Increase the compact purchase table so it reaches close to the bottom of its card. */
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded){
+  height:min(58vh,560px)!important;
+  min-height:min(58vh,560px)!important;
+  max-height:min(58vh,560px)!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table{
+  height:min(58vh,560px)!important;
+  min-height:min(58vh,560px)!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-row td{
+  height:calc(min(58vh,560px) - 48px)!important;
+  min-height:calc(min(58vh,560px) - 48px)!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-state{
+  min-height:calc(min(58vh,560px) - 72px)!important;
+}
+@media(max-width:760px){
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded){
+    height:min(52vh,460px)!important;
+    min-height:min(52vh,460px)!important;
+    max-height:min(52vh,460px)!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-table{
+    height:min(52vh,460px)!important;
+    min-height:min(52vh,460px)!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-row td{
+    height:calc(min(52vh,460px) - 48px)!important;
+    min-height:calc(min(52vh,460px) - 48px)!important;
+  }
+  .purchase-page #purchase-form-items .purchase-ledger-scroll:not(.purchase-items-expanded) .purchase-ledger-empty-state{
+    min-height:calc(min(52vh,460px) - 72px)!important;
+  }
+}
