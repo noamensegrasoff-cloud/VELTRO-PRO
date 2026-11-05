@@ -3287,3 +3287,32 @@
 .purchase-other-picker-delete:hover{border-color:rgba(190,80,125,.55);background:linear-gradient(145deg,rgba(255,255,255,.4),rgba(190,80,125,.17))}
 .purchase-other-picker-action:focus-visible,.purchase-other-picker-select:focus-visible{outline:2px solid #9b7aea;outline-offset:2px}
 @media(max-width:560px){.purchase-other-picker-option{gap:6px;padding:8px}.purchase-other-picker-action{flex-basis:32px;width:32px;height:32px;border-radius:10px}}
+
+
+/* Separate catalog/unit selection from their management workspace */
+.purchase-other-picker-choice{
+  display:flex;align-items:center;gap:10px;width:100%;text-align:start;
+  padding:11px 13px;border:1px solid rgba(139,112,194,.16);border-radius:14px;
+  background:linear-gradient(120deg,rgba(255,255,255,.78),rgba(239,231,255,.52));
+  color:#51436f;cursor:pointer;box-shadow:inset 0 1px rgba(255,255,255,.8);
+}
+.purchase-other-picker-choice+.purchase-other-picker-choice{margin-top:7px}
+.purchase-other-picker-choice .purchase-supplier-option-copy{flex:1;min-width:0}
+.purchase-other-picker-choice>svg:last-child{color:#8564c7}
+.purchase-other-picker-manage-launch{display:flex;justify-content:flex-end;padding:12px 2px 2px;border-top:1px solid rgba(132,105,197,.14)}
+.purchase-other-picker-manage-launch button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:39px;padding:8px 15px;border:1px solid rgba(132,105,197,.28);border-radius:12px;background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(232,222,251,.82));color:#634b96;font-weight:800;box-shadow:0 5px 14px rgba(70,54,116,.08),inset 0 1px rgba(255,255,255,.9)}
+.purchase-other-manager-intro{padding:12px 14px;margin-bottom:10px;border:1px solid rgba(132,105,197,.16);border-radius:14px;background:linear-gradient(135deg,rgba(255,255,255,.78),rgba(239,232,252,.58));color:#59477f}
+.purchase-other-manager-intro>span{font-weight:850}
+.purchase-other-manager-intro p{margin:5px 0 0;color:#887b9e;font-size:12px;line-height:1.6}
+.purchase-other-manager-list{max-height:min(42vh,360px)}
+.purchase-other-manager-list .purchase-other-picker-option{background:linear-gradient(120deg,rgba(255,255,255,.82),rgba(241,235,252,.66))}
+.purchase-other-picker-create{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:end;gap:9px;padding:13px 0 2px;margin-top:10px;border-top:1px solid rgba(132,105,197,.16)}
+.purchase-other-picker-create label{min-width:0}
+.purchase-other-picker-create label span{display:block;margin-bottom:6px;color:#716187;font-size:12px;font-weight:800}
+.purchase-other-picker-create input{width:100%;min-width:0}
+.purchase-other-picker-create>button{min-height:39px;white-space:nowrap}
+@media(max-width:560px){
+ .purchase-other-picker-create{grid-template-columns:minmax(0,1fr) auto}
+ .purchase-other-picker-create>button:last-child:nth-child(3){grid-column:2}
+ .purchase-other-picker-manage-launch button{width:100%}
+}
