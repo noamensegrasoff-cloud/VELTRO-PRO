@@ -3701,3 +3701,27 @@
   min-height:100%!important;
   height:100%!important;
 }
+
+
+/* Make the empty ledger body itself fill the fixed expanded viewport.
+   Percentage heights on table cells do not resolve reliably in browsers. */
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-table{
+  height:auto!important;
+  min-height:0!important;
+  flex:none!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-empty-row td{
+  height:auto!important;
+  padding:0!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-empty-state{
+  box-sizing:border-box!important;
+  min-height:calc(100dvh - 160px)!important;
+  height:auto!important;
+  margin:0!important;
+}
+@media(max-width:700px){
+  .purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-empty-state{
+    min-height:calc(100dvh - 180px)!important;
+  }
+}
