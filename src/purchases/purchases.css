@@ -3672,3 +3672,32 @@
     padding:8px!important;
   }
 }
+
+
+/* Expanded purchase ledger: keep the table stretched through the available panel height,
+   including when there are no products yet. */
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+  min-height:0!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-table{
+  flex:1 0 100%!important;
+  height:100%!important;
+  min-height:100%!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-table tbody{
+  height:100%!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-empty-row{
+  height:100%!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-empty-row td{
+  height:100%!important;
+  vertical-align:stretch!important;
+}
+.purchase-page #purchase-form-items .purchase-ledger-scroll.purchase-items-expanded .purchase-ledger-empty-state{
+  min-height:100%!important;
+  height:100%!important;
+}
