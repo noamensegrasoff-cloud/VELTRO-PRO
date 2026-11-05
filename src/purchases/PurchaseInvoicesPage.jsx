@@ -330,11 +330,36 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
      setError('');
    };
    const remove = r => { if (r) setDeleteTarget(r); };
-   const confirmRemove = () => {
+   const confirmRemove = async () => {
      const receipt = deleteTarget;
      if (!receipt) return;
+     const reversals = new Map();
+     for (const item of (receipt.items || [])) {
+       const qty = Math.max(0, parseNumeric(item.stockAppliedQty));
+       if (!qty) continue;
+       const product = catalog.find(p => String(p.id) === String(item.productId)) ||
+         (item.barcode ? catalog.find(p => [p.mainBarcode,p.barcode,p.cartonBarcode,...(p.secondaryUnitBarcodes||[]),...(p.secondaryCartonBarcodes||[])].some(code => String(code||'').trim() === String(item.barcode).trim())) : null);
+       if (!product) continue;
+       const id = String(product.id);
+       const previous = reversals.get(id) || product;
+       reversals.set(id, {...previous, stock:Math.max(0,Number(previous.stock||0)-qty), updatedAt:new Date().toISOString()});
+     }
+     const originalCatalog = catalog;
+     const updatedCatalog = catalog.map(product => reversals.get(String(product.id)) || product);
+     try {
+       for (const updatedProduct of reversals.values()) await persistProduct(updatedProduct);
+       localStorage.setItem(CATALOG_KEY, JSON.stringify(updatedCatalog));
+       await deletePurchaseReceipt(receipt.id);
+     } catch {
+       for (const product of originalCatalog) {
+         if (reversals.has(String(product.id))) await persistProduct(product).catch(() => {});
+       }
+       try { localStorage.setItem(CATALOG_KEY, JSON.stringify(originalCatalog)); } catch {}
+       setNotification({type:'error',message:ar?'تعذر حذف البون أو عكس كمياته؛ لم يتم إكمال الحذف.':fr?'Impossible de supprimer le bon ou d’annuler ses quantités.':'Could not delete the receipt or reverse its stock quantities.'});
+       return;
+     }
+     setCatalog(updatedCatalog);
      setRows(old => old.filter(x => x.id !== receipt.id));
-     void deletePurchaseReceipt(receipt.id).catch(() => {});
      if (selectedId === receipt.id) setSelectedId(null);
      if (editingId === receipt.id) { setDialog(''); setEditingId(null); }
      setPreview(null);
