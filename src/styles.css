@@ -7541,3 +7541,27 @@ body>.products-page.pform-portal-root .pform-modal{position:relative!important;z
     padding-inline: 7px !important;
   }
 }
+
+
+/* Resource-aware rendering: preserve the translucent palette without GPU-heavy blur. */
+html.veltro-low-performance *,
+html.veltro-low-performance *::before,
+html.veltro-low-performance *::after{
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  filter:none;
+  box-shadow:0 1px 4px rgba(35,24,58,.07)!important;
+  transition-duration:.12s!important;
+  animation-duration:.12s!important;
+}
+html.veltro-low-performance .modal-backdrop,
+html.veltro-low-performance .purchase-delete-confirm-overlay,
+html.veltro-low-performance .pform-overlay{
+  background:rgba(35,24,58,.42)!important;
+}
+.products-pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 4px 2px;color:var(--muted,#7c8498);font-size:12px}
+.products-pagination>div{display:flex;align-items:center;gap:10px}
+.products-pagination b{font-variant-numeric:tabular-nums;color:var(--text,#40365e);font-size:12px}
+.products-pagination button{width:32px;height:30px;display:grid;place-items:center;border:1px solid rgba(126,92,190,.24);border-radius:9px;background:rgba(255,255,255,.55);color:#7654b5}
+.products-pagination button:disabled{opacity:.35;cursor:not-allowed}
+@media(max-width:600px){.products-pagination{font-size:10px}.products-pagination button{width:29px;height:28px}}
