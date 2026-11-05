@@ -71,12 +71,13 @@ async function syncLegacyLocalStorage(workspaceId) {
     const remoteChanged = (remoteValue !== oldValue) || (!row && oldValue !== undefined);
     if (localChanged) {
       if (localValue === null) {
-        await deleteCloudRecord({ workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key });
+        await deleteCloudRecord({ workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key, expectedUpdatedAt: row?.updated_at || null });
         baseline[key] = null;
       } else {
         await saveCloudRecord({
           workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key,
           payload: { value: localValue },
+          expectedUpdatedAt: row?.updated_at || null,
         });
         baseline[key] = localValue;
       }
@@ -219,21 +220,24 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
 
     for (const operation of pending) {
       try {
+        let result;
         if (operation.operation === 'delete') {
-          await deleteCloudRecord({
+          result = await deleteCloudRecord({
             workspaceId: workspace.id,
             entityType: operation.entityType,
             recordId: operation.recordId,
+            expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
           });
         } else {
-          await saveCloudRecord({
+          result = await saveCloudRecord({
             workspaceId: workspace.id,
             entityType: operation.entityType,
             recordId: operation.recordId,
             payload: operation.payload,
+            expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
           });
         }
-        await markLocalRecordSynced(operation.recordKey, operation.updatedAt || operation.createdAt);
+        await markLocalRecordSynced(operation.recordKey, operation.updatedAt || operation.createdAt, result?.updated_at || result?.updatedAt);
         await removePendingSyncOperation(operation.id, operation.updatedAt || operation.createdAt);
         pendingKeys.delete(operation.recordKey);
         pushed += 1;
