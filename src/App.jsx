@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Search, Bell, Menu, ChevronDown, LogOut, ArrowUpRight, Moon, Sun, RotateCw, CloudUpload,
@@ -12,11 +12,11 @@ import { dashboard, sections } from './data/navigation.js';
 import { getCloudStatus } from './services/cloudStorage.js';
 import { startAutoSync, syncWorkspace } from './services/databaseSync.js';
 import { supabase } from './lib/supabase.js';
-import BusinessOnboarding from './BusinessOnboarding.jsx';
-import ProductsPage from './ProductsPage.jsx';
-import ProductMovementPage from './ProductMovementPage.jsx';
-import PurchaseInvoicesPage from './purchases/PurchaseInvoicesPage.jsx';
-import PointOfSalePage from './PointOfSalePage.jsx';
+const BusinessOnboarding = lazy(() => import('./BusinessOnboarding.jsx'));
+const ProductsPage = lazy(() => import('./ProductsPage.jsx'));
+const ProductMovementPage = lazy(() => import('./ProductMovementPage.jsx'));
+const PurchaseInvoicesPage = lazy(() => import('./purchases/PurchaseInvoicesPage.jsx'));
+const PointOfSalePage = lazy(() => import('./PointOfSalePage.jsx'));
 import { QRCodeSVG } from 'qrcode.react';
 import Barcode from 'react-barcode';
 
@@ -731,7 +731,7 @@ export default function App() {
     return () => window.removeEventListener('keydown', onKeyDown, true);
   }, [openNavSection, moduleModalOpen, activeParent, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen, profileOpen]);
   if(setupState==='checking') return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تجهيز مساحة العمل…':lang==='fr'?'Préparation de votre espace…':'Preparing your workspace…'}</p></div></div>;
-  if(setupState==='required') return <BusinessOnboarding lang={lang} onLanguageChange={setLang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
+  if(setupState==='required') return <Suspense fallback={<div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تحميل الإعدادات…':lang==='fr'?'Chargement des paramètres…':'Loading setup…'}</p></div></div>}><BusinessOnboarding lang={lang} onLanguageChange={setLang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/></Suspense>;
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
   return <div className={'app-shell lang-'+lang+' theme-light'} dir={dir}>
     <div className="app-layout">
@@ -828,7 +828,7 @@ export default function App() {
           </div>
           <button type="button" className="branch-content-modal-close" onClick={()=>{setModuleModalOpen(false);if(activeParent)setOpenNavSection(activeParent);}} aria-label={lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}><X size={20}/></button>
         </header>
-        <div className="branch-content-modal-body"><ModulePage page={activePage} parent={activeParent} t={t} lang={lang} currentUser={currentUser} onBack={()=>{setModuleModalOpen(false);if(activeParent)setOpenNavSection(activeParent);}}/></div>
+        <div className="branch-content-modal-body"><Suspense fallback={<div className="module-loading" role="status">{lang==='ar'?'جارٍ تحميل القسم…':lang==='fr'?'Chargement de la rubrique…':'Loading section…'}</div>}><ModulePage page={activePage} parent={activeParent} t={t} lang={lang} currentUser={currentUser} onBack={()=>{setModuleModalOpen(false);if(activeParent)setOpenNavSection(activeParent);}}/></Suspense></div>
       </section>
     </div>,document.body)}
     {sessionPaused&&<div className="session-pause-overlay"><section className="session-pause-card"><span><LockKeyhole size={25}/></span><h2>{lang==='ar'?'الجلسة معلّقة':lang==='fr'?'Session suspendue':'Session paused'}</h2><p>{lang==='ar'?'تم إخفاء مساحة العمل مؤقتًا. استأنف الجلسة للمتابعة.':lang==='fr'?'Votre espace est masqué temporairement. Reprenez la session.':'Your workspace is hidden temporarily. Resume to continue.'}</p><button onClick={()=>setSessionPaused(false)}>{lang==='ar'?'استئناف الجلسة':lang==='fr'?'Reprendre la session':'Resume session'}</button><button className="pause-signout" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}}>{t('logout')}</button></section></div>}
