@@ -125,7 +125,12 @@ function readDashboardSnapshot() {
     _total: purchaseTotal(row),
     _date: String(row?.date || row?.createdAt || '').slice(0,10),
   })).filter(row => row._date && row._total >= 0);
-  const todayPurchases = normalizedPurchases.filter(row => row._date === todayKey).reduce((sum,row)=>sum+row._total,0);
+  // Aggregate purchase totals once instead of rescanning the full history for each day.
+  const purchasesByDay = new Map();
+  for (const row of normalizedPurchases) {
+    purchasesByDay.set(row._date, (purchasesByDay.get(row._date) || 0) + row._total);
+  }
+  const todayPurchases = purchasesByDay.get(todayKey) || 0;
   const inventoryValue = products.reduce((sum,product) =>
     sum + Math.max(0,Number(product.stock)||0) * Math.max(0,Number(product.cost)||0), 0);
   const lowStock = products.filter(product => {
@@ -137,7 +142,7 @@ function readDashboardSnapshot() {
   const days = Array.from({length:7},(_,index)=>{
     const date = new Date(today.getFullYear(),today.getMonth(),today.getDate()-(6-index));
     const key = dateKey(date);
-    return { key, date, total: normalizedPurchases.filter(row=>row._date===key).reduce((sum,row)=>sum+row._total,0) };
+    return { key, date, total: purchasesByDay.get(key) || 0 };
   });
   return {
     products, purchases: normalizedPurchases.sort((a,b)=>String(b._date).localeCompare(String(a._date)) || String(b.createdAt||'').localeCompare(String(a.createdAt||''))),
