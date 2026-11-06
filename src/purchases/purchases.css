@@ -4437,3 +4437,202 @@ button .purchase-product-shortcut-key{
   .purchase-other-information-modal .purchase-other-option-control{width:100%!important;justify-content:flex-start!important}
   .purchase-other-information-modal .purchase-other-inline-input{flex:1 1 auto!important;width:auto!important;max-width:none!important}
 }
+
+
+/* PR29 follow-up: every control is contained and aligned as a glass field */
+.purchase-other-information-modal .purchase-product-fields.purchase-other-information{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-auto-flow:row!important;
+  align-items:stretch!important;
+}
+.purchase-other-information-modal .purchase-product-fields.purchase-other-information > label,
+.purchase-other-information-modal .purchase-product-fields.purchase-other-information > .purchase-other-option{
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:82px!important;
+  align-self:stretch!important;
+  justify-self:stretch!important;
+  padding:12px!important;
+  border:1px solid rgba(112,83,166,.2)!important;
+  border-radius:14px!important;
+  background:linear-gradient(140deg,rgba(247,243,255,.98),rgba(255,255,255,.98))!important;
+  box-shadow:0 5px 16px rgba(66,42,110,.055),inset 0 1px 0 rgba(255,255,255,.95)!important;
+}
+.purchase-other-information-modal .purchase-product-fields.purchase-other-information > label{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:9px!important;
+}
+.purchase-other-information-modal .purchase-product-fields.purchase-other-information > label > span{
+  display:block!important;
+  width:100%!important;
+  color:#55416f!important;
+  font-size:11px!important;
+  font-weight:850!important;
+}
+.purchase-other-information-modal .purchase-product-fields.purchase-other-information > label > input:not([type=checkbox]),
+.purchase-other-information-modal .purchase-product-fields.purchase-other-information > label .purchase-other-picker-field{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+.purchase-other-information-modal .purchase-product-fields.purchase-other-information > .purchase-other-option{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:12px!important;
+}
+.purchase-other-information-modal .purchase-other-option-copy{
+  flex:1 1 42%!important;
+  min-width:0!important;
+}
+.purchase-other-information-modal .purchase-other-option-control{
+  flex:1 1 58%!important;
+  min-width:0!important;
+  justify-content:flex-end!important;
+}
+.purchase-other-information-modal .purchase-other-inline-input{
+  width:min(100%,150px)!important;
+  max-width:150px!important;
+  min-width:0!important;
+  flex:1 1 100px!important;
+}
+.purchase-other-information-modal .purchase-product-fields.purchase-other-information > .purchase-product-image-field{
+  grid-column:1/-1!important;
+  min-height:0!important;
+  padding:12px!important;
+  border:1px solid rgba(112,83,166,.2)!important;
+  border-radius:14px!important;
+  background:linear-gradient(140deg,rgba(247,243,255,.98),rgba(255,255,255,.98))!important;
+  box-shadow:0 5px 16px rgba(66,42,110,.055)!important;
+}
+.purchase-other-information-modal .purchase-product-shortcut-key,
+.purchase-other-information-modal kbd.purchase-product-shortcut-key{
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:30px!important;
+  height:23px!important;
+  min-height:23px!important;
+  margin:0!important;
+  padding:0 7px!important;
+  border:1px solid rgba(112,83,166,.22)!important;
+  border-radius:7px!important;
+  background:linear-gradient(180deg,#fff,#f0eafb)!important;
+  color:#65478f!important;
+  box-shadow:0 1px 2px rgba(51,33,82,.07)!important;
+  font-size:9px!important;
+  font-weight:850!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+.purchase-other-information-modal .purchase-toggle-switch{
+  position:relative!important;
+  width:44px!important;
+  min-width:44px!important;
+  height:26px!important;
+  min-height:26px!important;
+  flex:0 0 44px!important;
+  padding:3px!important;
+  border:1px solid rgba(94,69,137,.2)!important;
+  border-radius:7px!important;
+  background:#d7d0e1!important;
+  box-shadow:inset 0 1px 2px rgba(48,30,77,.12)!important;
+}
+.purchase-other-information-modal .purchase-toggle-switch>span{
+  width:18px!important;
+  height:18px!important;
+  flex:0 0 18px!important;
+  border-radius:4px!important;
+  background:#fff!important;
+  box-shadow:0 1px 3px rgba(45,29,72,.22)!important;
+  transform:translateX(0)!important;
+}
+.purchase-other-information-modal .purchase-toggle-switch.is-on{
+  background:linear-gradient(135deg,#8060c5,#59388f)!important;
+}
+.purchase-other-information-modal .purchase-toggle-switch.is-on>span{
+  transform:translateX(16px)!important;
+}
+.purchase-other-information-modal .purchase-other-toggle input[type=checkbox]{
+  appearance:none!important;
+  -webkit-appearance:none!important;
+  position:relative!important;
+  width:44px!important;
+  min-width:44px!important;
+  height:26px!important;
+  min-height:26px!important;
+  flex:0 0 44px!important;
+  margin:0!important;
+  border:1px solid rgba(94,69,137,.2)!important;
+  border-radius:7px!important;
+  background:#d7d0e1!important;
+  cursor:pointer!important;
+}
+.purchase-other-information-modal .purchase-other-toggle input[type=checkbox]::before{
+  content:""!important;
+  position:absolute!important;
+  top:3px!important;
+  left:3px!important;
+  width:18px!important;
+  height:18px!important;
+  border-radius:4px!important;
+  background:#fff!important;
+  box-shadow:0 1px 3px rgba(45,29,72,.22)!important;
+  transition:transform .15s ease!important;
+}
+.purchase-other-information-modal .purchase-other-toggle input[type=checkbox]:checked{
+  background:linear-gradient(135deg,#8060c5,#59388f)!important;
+}
+.purchase-other-information-modal .purchase-other-toggle input[type=checkbox]:checked::before{
+  transform:translateX(16px)!important;
+}
+.purchase-other-information-modal .purchase-other-picker-field{
+  align-items:stretch!important;
+  min-width:0!important;
+}
+.purchase-other-information-modal .purchase-other-picker-field .purchase-other-choice{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  justify-content:space-between!important;
+  gap:8px!important;
+  overflow:hidden!important;
+}
+.purchase-other-information-modal .purchase-other-picker-field .purchase-other-choice>span{
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  white-space:nowrap!important;
+}
+.purchase-other-information-modal .purchase-other-picker-field .purchase-other-search-button{
+  flex:0 0 42px!important;
+}
+@media(max-width:680px){
+  .purchase-other-information-modal .purchase-product-fields.purchase-other-information{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .purchase-other-information-modal .purchase-product-fields.purchase-other-information > .purchase-product-image-field,
+  .purchase-other-information-modal .purchase-product-fields.purchase-other-information > footer{
+    grid-column:1!important;
+  }
+}
+@media(max-width:420px){
+  .purchase-other-information-modal .purchase-product-fields.purchase-other-information > label,
+  .purchase-other-information-modal .purchase-product-fields.purchase-other-information > .purchase-other-option{
+    min-height:76px!important;
+  }
+  .purchase-other-information-modal .purchase-other-option-control{
+    flex:1 1 100%!important;
+    width:100%!important;
+  }
+  .purchase-other-information-modal .purchase-other-inline-input{
+    flex:1 1 auto!important;
+    width:auto!important;
+    max-width:none!important;
+  }
+}
