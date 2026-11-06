@@ -164,6 +164,87 @@ export default function PurchaseInvoicesPage({ lang = 'ar', currentUser }) {
     }, 180);
     return () => window.clearTimeout(focusTimer);
   }, [productEditorOpen]);
+  // Keep standard dialog and form keyboard behavior; remove only F-key shortcuts.
+  useEffect(() => {
+    if (!productEditorOpen) return;
+    const handleProductEditorKeys = event => {
+      if (event.repeat) return;
+      const key = event.key;
+      const stop = () => {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation?.();
+      };
+      if (key === 'Escape') {
+        stop();
+        if (otherPickerDeleteTarget) {
+          setOtherPickerDeleteTarget(null);
+          return;
+        }
+        if (otherPicker) {
+          if (otherPickerManage) {
+            setOtherPickerManage(false);
+            setOtherPickerEditId(null);
+            setOtherPickerNew('');
+            window.setTimeout(() => otherPickerSearchRef.current?.focus({ preventScroll: true }), 60);
+          } else {
+            setOtherPicker('');
+            setOtherPickerManage(false);
+            setOtherPickerDeleteTarget(null);
+            setOtherPickerEditId(null);
+            setOtherPickerNew('');
+            setOtherPickerSearch('');
+            otherPickerDrag.current = null;
+          }
+          return;
+        }
+        if (productSubModal) {
+          setProductSubModal('');
+          setProductError('');
+          return;
+        }
+        setProductEditorOpen(false);
+        setEditingReceiptItem(null);
+        return;
+      }
+      if (otherPicker) {
+        if (!otherPickerManage && !otherPickerDeleteTarget && (key === 'ArrowDown' || key === 'ArrowUp')) {
+          const choices = Array.from(document.querySelectorAll('.purchase-other-picker-modal .purchase-other-picker-choice'));
+          if (choices.length) {
+            stop();
+            const current = choices.indexOf(document.activeElement);
+            const next = current < 0 ? (key === 'ArrowDown' ? 0 : choices.length - 1) : (current + (key === 'ArrowDown' ? 1 : -1) + choices.length) % choices.length;
+            choices[next]?.focus({ preventScroll: true });
+          }
+          return;
+        }
+        if (key === 'Enter' && !otherPickerManage && !otherPickerDeleteTarget) {
+          const active = document.activeElement?.classList?.contains('purchase-other-picker-choice')
+            ? document.activeElement
+            : document.querySelector('.purchase-other-picker-modal .purchase-other-picker-choice');
+          if (active) { stop(); active.click(); }
+          return;
+        }
+        if (key === 'Enter' && otherPickerManage && document.activeElement === otherPickerNewRef.current) {
+          stop();
+          document.querySelector('.purchase-other-picker-modal .purchase-other-picker-create button[type="submit"]')?.click();
+        }
+        return;
+      }
+      if (key !== 'Enter' || event.target.matches('textarea,button,[contenteditable="true"]')) return;
+      if (productSubModal === 'other') {
+        const saveButton = document.querySelector('.purchase-other-information-modal footer .purchase-primary');
+        if (saveButton && !event.target.closest('form')) { stop(); saveButton.click(); }
+        return;
+      }
+      if (!productSubModal && !event.target.closest('form')) {
+        stop();
+        saveProductDraft();
+      }
+    };
+    window.addEventListener('keydown', handleProductEditorKeys, true);
+    return () => window.removeEventListener('keydown', handleProductEditorKeys, true);
+  }, [productEditorOpen, productSubModal, otherPicker, otherPickerManage, otherPickerDeleteTarget]);
   useEffect(() => {
     if (!otherPicker) return;
     const focusTimer = window.setTimeout(() => {
