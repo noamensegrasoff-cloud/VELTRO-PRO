@@ -7583,3 +7583,6 @@ html.veltro-low-performance .pform-overlay{
 .pform-preview-metric.is-margin>strong{color:#7650c8}
 .pform-preview-disclaimer{padding-inline:4px;font-size:10px;line-height:1.5;color:var(--text-muted,#77708b)}
 @media(max-width:600px){.pform-preview-stock-flow{grid-template-columns:minmax(0,1fr) 20px minmax(0,1fr);gap:5px}.pform-preview-stock-box{padding:9px;min-height:82px}.pform-preview-stock-box>strong{font-size:19px}.pform-preview-stock-box>small,.pform-preview-metric>small{font-size:10px}.pform-preview-metrics{grid-template-columns:minmax(0,1fr) minmax(100px,.65fr);gap:7px}.pform-preview-metric{padding:10px;min-height:72px}.pform-preview-metric>strong{font-size:17px}}
+
+
+.module-loading{min-height:180px;display:grid;place-items:center;border:1px solid rgba(130,104,205,.2);border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.88),rgba(235,226,255,.58));color:#6950a8;font-size:13px;font-weight:700;backdrop-filter:blur(12px)}
