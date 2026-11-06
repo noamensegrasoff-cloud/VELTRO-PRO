@@ -1,0 +1,41 @@
+name: PR 28 Preview Build
+
+on:
+  push:
+    branches:
+      - perf/lazy-load-workspace-sections
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-28-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview-build:
+    name: Build PR 28 preview artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout PR 28 branch
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install dependencies
+        run: npm install
+      - name: Build preview
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run build
+      - name: Upload preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: veltro-pro-pr-28-preview
+          path: dist
+          if-no-files-found: error
+          retention-days: 14
