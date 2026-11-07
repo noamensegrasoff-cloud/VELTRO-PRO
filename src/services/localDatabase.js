@@ -1,4 +1,5 @@
 import { getDeviceId, getCloudRecords, saveCloudRecord, deleteCloudRecord } from './cloudStorage.js';
+import { resolveSnapshotConflict } from './syncConflict.js';
 
 const DB_NAME = 'veltro-pro-local';
 const DB_VERSION = 1;
@@ -6,6 +7,11 @@ const RECORDS = 'records';
 const OUTBOX = 'outbox';
 const META = 'meta';
 const LOCAL_WORKSPACE = 'local-device';
+
+function createSyncOperationId() {
+  return globalThis.crypto?.randomUUID?.()
+    || `sync-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+}
 
 function openDatabase() {
   if (typeof indexedDB === 'undefined') {
@@ -80,10 +86,27 @@ export async function saveLocalRecord({ entityType, recordId, payload, workspace
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
-    tx.objectStore(RECORDS).put(record);
-    if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
-      tx.objectStore(OUTBOX).add({ recordKey: key, workspaceId: activeWorkspace, entityType, recordId: String(recordId), operation: 'upsert', payload, createdAt: now });
-    }
+    const records = tx.objectStore(RECORDS);
+    const previousRequest = records.get(key);
+    previousRequest.onsuccess = () => {
+      const previous = previousRequest.result;
+      const nextRecord = { ...record, cloudUpdatedAt: previous?.cloudUpdatedAt || null };
+      records.put(nextRecord);
+      if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
+        // Keep the last server version observed before this edit for atomic CAS on upload.
+        const outbox = tx.objectStore(OUTBOX);
+        const queued = outbox.index('by_record_key').getAll(key);
+        queued.onsuccess = () => {
+          for (const item of queued.result || []) outbox.delete(item.id);
+          outbox.put({
+            id: key, recordKey: key, workspaceId: activeWorkspace, entityType,
+            recordId: String(recordId), operation: 'upsert', operationId: createSyncOperationId(), payload,
+            expectedCloudUpdatedAt: previous?.cloudUpdatedAt || null,
+            updatedAt: now, createdAt: now,
+          });
+        };
+      }
+    };
     tx.oncomplete = () => { db.close(); resolve(record); };
     tx.onerror = () => { const error = tx.error || new Error('Could not save record locally.'); db.close(); reject(error); };
     tx.onabort = () => { const error = tx.error || new Error('Local save was aborted.'); db.close(); reject(error); };
@@ -123,10 +146,26 @@ export async function deleteLocalRecord({ entityType, recordId, workspaceId, que
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
-    tx.objectStore(RECORDS).put(record);
-    if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
-      tx.objectStore(OUTBOX).add({ recordKey: key, workspaceId: activeWorkspace, entityType, recordId: String(recordId), operation: 'delete', createdAt: now });
-    }
+    const records = tx.objectStore(RECORDS);
+    const previousRequest = records.get(key);
+    previousRequest.onsuccess = () => {
+      const previous = previousRequest.result;
+      records.put({ ...record, cloudUpdatedAt: previous?.cloudUpdatedAt || null });
+      if (queueForSync && activeWorkspace !== LOCAL_WORKSPACE) {
+        // A delete supersedes queued writes but retains the last known cloud version.
+        const outbox = tx.objectStore(OUTBOX);
+        const queued = outbox.index('by_record_key').getAll(key);
+        queued.onsuccess = () => {
+          for (const item of queued.result || []) outbox.delete(item.id);
+          outbox.put({
+            id: key, recordKey: key, workspaceId: activeWorkspace, entityType,
+            recordId: String(recordId), operation: 'delete', operationId: createSyncOperationId(),
+            expectedCloudUpdatedAt: previous?.cloudUpdatedAt || null,
+            updatedAt: now, createdAt: now,
+          });
+        };
+      }
+    };
     tx.oncomplete = () => { db.close(); resolve(record); };
     tx.onerror = () => { const error = tx.error || new Error('Could not delete record locally.'); db.close(); reject(error); };
     tx.onabort = () => { const error = tx.error || new Error('Local delete was aborted.'); db.close(); reject(error); };
@@ -145,21 +184,58 @@ export async function listPendingSyncOperations() {
   });
 }
 
-export async function removePendingSyncOperation(id) {
-  return withStore(OUTBOX, 'readwrite', store => store.delete(id));
-}
-
-export async function markLocalRecordSynced(key, cloudUpdatedAt) {
+export async function removePendingSyncOperation(id, expectedUpdatedAt) {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(RECORDS, 'readwrite');
-    const store = tx.objectStore(RECORDS);
-    const request = store.get(key);
+    const tx = db.transaction(OUTBOX, 'readwrite');
+    const store = tx.objectStore(OUTBOX);
+    const request = store.get(id);
     request.onsuccess = () => {
-      if (request.result) store.put({ ...request.result, syncState: 'synced', cloudUpdatedAt: cloudUpdatedAt || new Date().toISOString() });
+      const current = request.result;
+      // A newer edit may have replaced this queue row while its previous snapshot was uploading.
+      if (current && (!expectedUpdatedAt || (current.updatedAt || current.createdAt) === expectedUpdatedAt)) {
+        store.delete(id);
+      }
+    };
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => { const error = tx.error || new Error('Could not acknowledge sync operation.'); db.close(); reject(error); };
+    tx.onabort = () => { const error = tx.error || new Error('Sync acknowledgement was aborted.'); db.close(); reject(error); };
+  });
+}
+
+export async function markLocalRecordSynced(key, expectedUpdatedAt, cloudUpdatedAt) {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
+    const records = tx.objectStore(RECORDS);
+    const outbox = tx.objectStore(OUTBOX);
+    const request = records.get(key);
+    request.onsuccess = () => {
+      const current = request.result;
+      if (current) {
+        const version = cloudUpdatedAt || current.cloudUpdatedAt || new Date().toISOString();
+        const isAcknowledgedSnapshot = !expectedUpdatedAt || current.updatedAt === expectedUpdatedAt;
+        // A prior upload may finish after a newer local edit replaced it in the outbox.
+        // Advance only the cloud baseline; keep the newer edit pending.
+        records.put({
+          ...current,
+          syncState: isAcknowledgedSnapshot ? 'synced' : 'pending',
+          cloudUpdatedAt: version,
+        });
+        if (!isAcknowledgedSnapshot && cloudUpdatedAt) {
+          const queuedRequest = outbox.get(key);
+          queuedRequest.onsuccess = () => {
+            const queued = queuedRequest.result;
+            if (queued && queued.updatedAt !== expectedUpdatedAt) {
+              outbox.put({ ...queued, expectedCloudUpdatedAt: cloudUpdatedAt });
+            }
+          };
+        }
+      }
     };
     tx.oncomplete = () => { db.close(); resolve(); };
     tx.onerror = () => { const error = tx.error || new Error('Could not update sync state.'); db.close(); reject(error); };
+    tx.onabort = () => { const error = tx.error || new Error('Sync acknowledgement was aborted.'); db.close(); reject(error); };
   });
 }
 
@@ -168,12 +244,13 @@ export async function mergeCloudRecord(row, workspaceId) {
   const pending = (await listPendingSyncOperations()).some(item => item.recordKey === key);
   if (pending) return { skipped: true, reason: 'pending_local_change' };
   const existing = await withStore(RECORDS, 'readonly', store => store.get(key));
-  const remoteTime = Date.parse(row.updated_at || 0);
-  const localTime = Date.parse(existing?.updatedAt || 0);
-  if (existing && localTime > remoteTime) return { skipped: true, reason: 'local_is_newer' };
+  if (existing && resolveSnapshotConflict(existing, row) === 'local') {
+    return { skipped: true, reason: 'local_wins_conflict_policy' };
+  }
   const record = {
     key, workspaceId, entityType: row.entity_type, recordId: String(row.record_id),
     payload: row.payload || {}, updatedAt: row.updated_at || new Date().toISOString(),
+    cloudUpdatedAt: row.updated_at || null,
     deletedAt: row.deleted_at, deviceId: row.device_id || null, syncState: 'synced',
   };
   await withStore(RECORDS, 'readwrite', store => store.put(record));
@@ -194,8 +271,8 @@ export async function adoptLocalRecordsIntoWorkspace(workspaceId) {
         const nextKey = makeRecordKey(workspaceId, row.entityType, row.recordId);
         const adopted = { ...row, key: nextKey, workspaceId, syncState: 'pending' };
         recordsStore.put(adopted);
-        if (!row.deletedAt) outboxStore.add({ recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'upsert', payload: row.payload, createdAt: row.updatedAt });
-        else outboxStore.add({ recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'delete', createdAt: row.updatedAt });
+        if (!row.deletedAt) outboxStore.put({ id: nextKey, recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'upsert', operationId: createSyncOperationId(), payload: row.payload, expectedCloudUpdatedAt: row.cloudUpdatedAt || null, updatedAt: row.updatedAt, createdAt: row.updatedAt });
+        else outboxStore.put({ id: nextKey, recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'delete', operationId: createSyncOperationId(), expectedCloudUpdatedAt: row.cloudUpdatedAt || null, updatedAt: row.updatedAt, createdAt: row.updatedAt });
         recordsStore.delete(row.key);
       }
       tx.objectStore(META).put({ key: 'activeWorkspaceId', value: workspaceId });

@@ -71,12 +71,13 @@ async function syncLegacyLocalStorage(workspaceId) {
     const remoteChanged = (remoteValue !== oldValue) || (!row && oldValue !== undefined);
     if (localChanged) {
       if (localValue === null) {
-        await deleteCloudRecord({ workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key });
+        await deleteCloudRecord({ workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key, expectedUpdatedAt: row?.updated_at || null });
         baseline[key] = null;
       } else {
         await saveCloudRecord({
           workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key,
           payload: { value: localValue },
+          expectedUpdatedAt: row?.updated_at || null,
         });
         baseline[key] = localValue;
       }
@@ -219,22 +220,27 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
 
     for (const operation of pending) {
       try {
+        let result;
         if (operation.operation === 'delete') {
-          await deleteCloudRecord({
+          result = await deleteCloudRecord({
             workspaceId: workspace.id,
             entityType: operation.entityType,
             recordId: operation.recordId,
+            expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
+            operationId: operation.operationId || null,
           });
         } else {
-          await saveCloudRecord({
+          result = await saveCloudRecord({
             workspaceId: workspace.id,
             entityType: operation.entityType,
             recordId: operation.recordId,
             payload: operation.payload,
+            expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
+            operationId: operation.operationId || null,
           });
         }
-        await markLocalRecordSynced(operation.recordKey);
-        await removePendingSyncOperation(operation.id);
+        await markLocalRecordSynced(operation.recordKey, operation.updatedAt || operation.createdAt, result?.updated_at || result?.updatedAt);
+        await removePendingSyncOperation(operation.id, operation.updatedAt || operation.createdAt);
         pendingKeys.delete(operation.recordKey);
         pushed += 1;
         onProgress?.({ phase: 'upload', completed: pushed, total: pending.length });
@@ -286,7 +292,13 @@ export function startAutoSync({ entityTypes = DEFAULT_ENTITY_TYPES, onStatus } =
     }
   };
   const onOnline = () => { void run(); };
-  if (typeof window !== 'undefined') window.addEventListener('online', onOnline);
+  const onFocus = () => { if (typeof document === 'undefined' || document.visibilityState === 'visible') void run(); };
+  const onVisibility = () => { if (document.visibilityState === 'visible') void run(); };
+  if (typeof window !== 'undefined') {
+    window.addEventListener('online', onOnline);
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibility);
+  }
   const unsubscribeAuth = subscribeToAuthChanges(({ event, session }) => {
     if (session?.user && ['INITIAL_SESSION', 'SIGNED_IN', 'TOKEN_REFRESHED', 'USER_UPDATED'].includes(event)) {
       void run();
@@ -295,7 +307,11 @@ export function startAutoSync({ entityTypes = DEFAULT_ENTITY_TYPES, onStatus } =
   if (typeof navigator === 'undefined' || navigator.onLine) void run();
   return () => {
     stopped = true;
-    if (typeof window !== 'undefined') window.removeEventListener('online', onOnline);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibility);
+    }
     unsubscribeAuth();
   };
 }
