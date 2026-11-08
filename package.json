@@ -27,7 +27,6 @@
   "devDependencies": {
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^7.4.3",
-    "typescript": "^5.8.3",
-    "fake-indexeddb": "^6.2.7"
+    "typescript": "^5.8.3"
   }
 }
