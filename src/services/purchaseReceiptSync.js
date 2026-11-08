@@ -1,5 +1,6 @@
-import { deleteRecord, listRecords, saveRecord } from './dataRepository.js';
-import { getActiveWorkspaceId } from './localDatabase.js';
+import { listRecords, saveRecord } from './dataRepository.js';
+import { getActiveWorkspaceId, getLocalRecord, saveLocalRecordsAtomically } from './localDatabase.js';
+import { buildPurchaseMovementRecord, getPurchaseMovementRecordIds, PURCHASE_MOVEMENT_ENTITY } from './purchaseMovement.js';
 import { syncWorkspace } from './databaseSync.js';
 import { getCloudRecords } from './cloudStorage.js';
 
@@ -97,38 +98,69 @@ export async function loadPurchaseReceipts() {
   return result;
 }
 
-export async function savePurchaseReceipt(receipt) {
+export async function savePurchaseReceipt(receipt, { products = [], deleteMovementIds = [] } = {}) {
   if (!receipt?.id) throw new Error('A stable purchase receipt ID is required.');
-
-  // Write the browser copy first. A refresh during a cloud/local DB sync cannot
-  // make a just-added receipt line disappear.
   const rows = readLegacyReceipts();
   const next = mergeById([
     ...rows.filter(row => String(row.id) !== String(receipt.id)),
     { ...receipt, items: Array.isArray(receipt.items) ? receipt.items : [] },
   ]);
-  writeLegacyReceipts(next);
-
   const workspaceId = await getActiveWorkspaceId();
-  return saveRecord({
-    entityType: ENTITY_TYPE,
-    recordId: String(receipt.id),
-    payload: receipt,
-    workspaceId,
-  });
+  const previous = await getLocalRecord({
+    entityType: ENTITY_TYPE, recordId: String(receipt.id), workspaceId,
+  }).catch(() => null);
+  const previousReceipt = previous?.payload || rows.find(row => String(row.id) === String(receipt.id));
+  const movementRecords = (receipt.items || [])
+    .map(item => buildPurchaseMovementRecord(receipt, item))
+    .filter(Boolean);
+  const nextMovementIds = new Set(movementRecords.map(item => item.recordId));
+  const removedMovementIds = getPurchaseMovementRecordIds(previousReceipt)
+    .filter(id => !nextMovementIds.has(id));
+  const deletes = [...new Set([...removedMovementIds, ...deleteMovementIds])]
+    .map(recordId => ({ entityType: PURCHASE_MOVEMENT_ENTITY, recordId, workspaceId }));
+  const upserts = [
+    { entityType: ENTITY_TYPE, recordId: String(receipt.id), payload: receipt, workspaceId },
+    ...products.map(product => {
+      if (!product?.id) throw new Error('Every purchase product update requires a stable product ID.');
+      return { entityType: 'products', recordId: String(product.id), payload: product, workspaceId };
+    }),
+    ...movementRecords.map(record => ({ ...record, workspaceId })),
+  ];
+
+  await saveLocalRecordsAtomically({ upserts, deletes, workspaceId });
+  try { writeLegacyReceipts(next); } catch {}
+  void syncWorkspace().catch(() => {});
+  return receipt;
 }
 
-export async function deletePurchaseReceipt(receiptId) {
+export async function deletePurchaseReceipt(receiptId, { products = [], movementIds = [] } = {}) {
   if (receiptId == null || String(receiptId) === '') {
     throw new Error('A purchase receipt ID is required.');
   }
+  const id = String(receiptId);
   const workspaceId = await getActiveWorkspaceId();
-  const result = await deleteRecord({
-    entityType: ENTITY_TYPE,
-    recordId: String(receiptId),
-    workspaceId,
+  const rows = readLegacyReceipts();
+  const previous = await getLocalRecord({
+    entityType: ENTITY_TYPE, recordId: id, workspaceId,
+  }).catch(() => null);
+  const receipt = previous?.payload || rows.find(row => String(row.id) === id);
+  const sourceMovementIds = [...new Set([
+    ...getPurchaseMovementRecordIds(receipt),
+    ...movementIds,
+  ])];
+  const upserts = products.map(product => {
+    if (!product?.id) throw new Error('Every purchase product update requires a stable product ID.');
+    return { entityType: 'products', recordId: String(product.id), payload: product, workspaceId };
   });
-  const remaining = readLegacyReceipts().filter(row => String(row.id) !== String(receiptId));
-  writeLegacyReceipts(remaining);
-  return result;
+  const deletes = [
+    { entityType: ENTITY_TYPE, recordId: id, workspaceId },
+    ...sourceMovementIds.map(recordId => ({
+      entityType: PURCHASE_MOVEMENT_ENTITY, recordId, workspaceId,
+    })),
+  ];
+
+  await saveLocalRecordsAtomically({ upserts, deletes, workspaceId });
+  try { writeLegacyReceipts(rows.filter(row => String(row.id) !== id)); } catch {}
+  void syncWorkspace().catch(() => {});
+  return { deleted: true, locallyPersisted: true };
 }

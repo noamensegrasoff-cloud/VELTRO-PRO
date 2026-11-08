@@ -113,6 +113,111 @@ export async function saveLocalRecord({ entityType, recordId, payload, workspace
   });
 }
 
+
+export async function saveLocalRecordsAtomically({ upserts = [], deletes = [], workspaceId } = {}) {
+  if (!Array.isArray(upserts) || !Array.isArray(deletes)) {
+    throw new Error('upserts and deletes must be arrays.');
+  }
+  const defaultWorkspace = workspaceId || await getActiveWorkspaceId();
+  const now = new Date().toISOString();
+  const operations = new Map();
+
+  for (const item of upserts) {
+    if (!item?.entityType || item.recordId == null || item.payload === undefined) {
+      throw new Error('Every upsert requires entityType, recordId, and payload.');
+    }
+    const targetWorkspace = item.workspaceId || defaultWorkspace;
+    const recordId = String(item.recordId);
+    const key = makeRecordKey(targetWorkspace, item.entityType, recordId);
+    operations.set(key, {
+      key, workspaceId: targetWorkspace, entityType: item.entityType, recordId,
+      payload: item.payload, operation: 'upsert',
+      updatedAt: item.updatedAt || now, queueForSync: item.queueForSync !== false,
+    });
+  }
+
+  for (const item of deletes) {
+    if (!item?.entityType || item.recordId == null) {
+      throw new Error('Every delete requires entityType and recordId.');
+    }
+    const targetWorkspace = item.workspaceId || defaultWorkspace;
+    const recordId = String(item.recordId);
+    const key = makeRecordKey(targetWorkspace, item.entityType, recordId);
+    operations.set(key, {
+      key, workspaceId: targetWorkspace, entityType: item.entityType, recordId,
+      payload: {}, operation: 'delete', updatedAt: item.updatedAt || now,
+      deletedAt: item.deletedAt || now, queueForSync: item.queueForSync !== false,
+    });
+  }
+
+  const pendingWrites = [...operations.values()];
+  if (!pendingWrites.length) return [];
+
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
+    const recordsStore = tx.objectStore(RECORDS);
+    const outboxStore = tx.objectStore(OUTBOX);
+    const saved = [];
+
+    for (const operation of pendingWrites) {
+      const previousRequest = recordsStore.get(operation.key);
+      previousRequest.onsuccess = () => {
+        const previous = previousRequest.result;
+        const queued = operation.queueForSync && operation.workspaceId !== LOCAL_WORKSPACE;
+        const record = {
+          key: operation.key,
+          workspaceId: operation.workspaceId,
+          entityType: operation.entityType,
+          recordId: operation.recordId,
+          payload: operation.payload,
+          updatedAt: operation.updatedAt,
+          deletedAt: operation.deletedAt || null,
+          deviceId: getDeviceId(),
+          syncState: queued ? 'pending' : 'local',
+          cloudUpdatedAt: previous?.cloudUpdatedAt || null,
+        };
+        recordsStore.put(record);
+        saved.push(record);
+
+        const queuedRequest = outboxStore.index('by_record_key').getAll(operation.key);
+        queuedRequest.onsuccess = () => {
+          for (const oldOperation of queuedRequest.result || []) {
+            outboxStore.delete(oldOperation.id);
+          }
+          if (queued) {
+            outboxStore.put({
+              id: operation.key,
+              recordKey: operation.key,
+              workspaceId: operation.workspaceId,
+              entityType: operation.entityType,
+              recordId: operation.recordId,
+              operation: operation.operation,
+              operationId: createSyncOperationId(),
+              payload: operation.payload,
+              expectedCloudUpdatedAt: previous?.cloudUpdatedAt || null,
+              updatedAt: operation.updatedAt,
+              createdAt: operation.updatedAt,
+            });
+          }
+        };
+      };
+    }
+
+    tx.oncomplete = () => { db.close(); resolve(saved); };
+    tx.onerror = () => {
+      const error = tx.error || new Error('Atomic local record transaction failed.');
+      db.close();
+      reject(error);
+    };
+    tx.onabort = () => {
+      const error = tx.error || new Error('Atomic local record transaction was aborted.');
+      db.close();
+      reject(error);
+    };
+  });
+}
+
 export async function getLocalRecord({ entityType, recordId, workspaceId }) {
   const activeWorkspace = workspaceId || await getActiveWorkspaceId();
   const key = makeRecordKey(activeWorkspace, entityType, recordId);
