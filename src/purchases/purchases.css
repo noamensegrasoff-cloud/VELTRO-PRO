@@ -4268,3 +4268,228 @@ button .purchase-product-shortcut-key{
   .purchase-other-option-control .purchase-toggle-switch{flex:0 0 auto!important}
   .purchase-page .purchase-product-shortcut-key,.purchase-product-shortcut-key,button .purchase-product-shortcut-key{height:24px!important;min-height:24px!important;max-height:24px!important;padding-inline:8px!important;font-size:9px!important}
 }
+
+
+/* VELTRO-PRO purchase-only Other Information: unified expiry card. */
+.purchase-other-information-modal{
+  width:min(820px,calc(100vw - 28px))!important;
+  border:1px solid rgba(255,255,255,.82)!important;
+  border-radius:24px!important;
+  background:linear-gradient(145deg,rgba(42,22,82,.97),rgba(76,40,128,.95) 52%,rgba(111,65,166,.92))!important;
+  color:#fff!important;
+  box-shadow:0 24px 70px rgba(28,10,58,.42),inset 0 1px 0 rgba(255,255,255,.32)!important;
+  -webkit-backdrop-filter:blur(26px) saturate(145%)!important;
+  backdrop-filter:blur(26px) saturate(145%)!important;
+  padding:22px!important;
+}
+.purchase-other-information-modal>header{
+  top:-22px!important;
+  margin:-2px -2px 12px!important;
+  padding:2px 2px 14px!important;
+  background:linear-gradient(135deg,rgba(42,22,82,.99),rgba(76,40,128,.98) 52%,rgba(111,65,166,.97))!important;
+  border-bottom:1px solid rgba(235,215,255,.2)!important;
+}
+.purchase-other-information-modal>header h3,
+.purchase-other-information-modal .purchase-product-image-label,
+.purchase-other-information-modal .purchase-other-option-copy b,
+.purchase-other-information-modal .purchase-other-option-copy small,
+.purchase-other-information-modal .purchase-product-fields>label,
+.purchase-other-information-modal .purchase-expiry-alert-row,
+.purchase-other-information-modal .purchase-other-shortcuts{color:#fff!important}
+.purchase-other-information-modal .purchase-product-fields{gap:12px!important}
+.purchase-other-information-modal .purchase-product-image-control,
+.purchase-other-information-modal .purchase-expiry-card,
+.purchase-other-information-modal .purchase-other-option-inline,
+.purchase-other-information-modal .purchase-other-picker-field,
+.purchase-other-information-modal .purchase-other-shortcuts{
+  border:1px solid rgba(245,230,255,.32)!important;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),rgba(226,205,255,.08))!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 8px 24px rgba(20,8,46,.12)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(140%)!important;
+  backdrop-filter:blur(18px) saturate(140%)!important;
+}
+.purchase-other-information-modal .purchase-product-image-control{
+  border-radius:16px!important;
+  min-height:112px!important;
+  padding:14px!important;
+}
+.purchase-other-information-modal .purchase-product-image-placeholder{color:#f8edff!important}
+.purchase-other-information-modal .purchase-product-image-placeholder small{color:rgba(255,255,255,.72)!important}
+.purchase-other-information-modal .purchase-product-image-pick,
+.purchase-other-information-modal .purchase-other-search-button{
+  border:1px solid rgba(255,255,255,.34)!important;
+  border-radius:11px!important;
+  background:linear-gradient(135deg,#a855f7,#6d28d9)!important;
+  color:#fff!important;
+}
+.purchase-other-information-modal .purchase-expiry-card{
+  grid-column:1/-1;
+  display:grid;
+  gap:0;
+  overflow:hidden;
+  border-radius:16px!important;
+}
+.purchase-other-information-modal .purchase-expiry-date-row{
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:13px 15px!important;
+  margin:0!important;
+}
+.purchase-other-information-modal .purchase-expiry-alert-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:12px 15px 14px;
+  border-top:1px solid rgba(255,255,255,.2);
+  background:rgba(22,8,48,.12);
+}
+.purchase-other-information-modal .purchase-expiry-days-control{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex:0 0 auto;
+}
+.purchase-other-information-modal .purchase-expiry-days-control input{
+  width:112px!important;
+  min-height:42px!important;
+  padding:8px 11px!important;
+  border:1px solid rgba(239,216,255,.42)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.16)!important;
+  color:#fff!important;
+  font-size:15px!important;
+  font-weight:750!important;
+}
+.purchase-other-information-modal .purchase-expiry-days-control input:disabled{
+  opacity:.42!important;
+  cursor:not-allowed!important;
+}
+.purchase-other-information-modal .purchase-expiry-days-control span{
+  color:rgba(255,255,255,.82);
+  font-size:11px;
+  font-weight:700;
+}
+.purchase-other-information-modal .purchase-other-option-inline{
+  border-radius:14px!important;
+  padding:12px 14px!important;
+}
+.purchase-other-information-modal .purchase-other-inline-input{
+  border:1px solid rgba(239,216,255,.4)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.15)!important;
+  color:#fff!important;
+  color-scheme:dark;
+}
+.purchase-other-information-modal .purchase-other-inline-input:disabled{
+  background:rgba(255,255,255,.07)!important;
+  color:rgba(255,255,255,.42)!important;
+}
+.purchase-other-information-modal .purchase-rect-toggle{
+  width:112px!important;
+  min-width:112px!important;
+  height:42px!important;
+  min-height:42px!important;
+  flex:0 0 112px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:9px!important;
+  padding:5px 7px 5px 12px!important;
+  border:1px solid rgba(255,255,255,.34)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.14)!important;
+  color:#fff!important;
+  cursor:pointer!important;
+}
+.purchase-other-information-modal .purchase-rect-toggle.is-on{
+  background:linear-gradient(120deg,#9b35f5,#6b21c8)!important;
+  border-color:rgba(255,255,255,.5)!important;
+  box-shadow:0 5px 16px rgba(91,23,164,.32)!important;
+}
+.purchase-other-information-modal .purchase-rect-toggle-label{
+  display:block!important;
+  color:#fff!important;
+  font-size:11px!important;
+  font-weight:750!important;
+}
+.purchase-other-information-modal .purchase-rect-toggle-indicator{
+  display:block!important;
+  width:25px!important;
+  height:25px!important;
+  flex:0 0 25px!important;
+  border-radius:6px!important;
+  background:rgba(255,255,255,.92)!important;
+  box-shadow:0 1px 5px rgba(20,8,46,.24)!important;
+}
+.purchase-other-information-modal .purchase-other-picker-field .purchase-other-choice{
+  border:1px solid rgba(255,255,255,.3)!important;
+  border-radius:10px!important;
+  background:rgba(255,255,255,.14)!important;
+  color:#fff!important;
+}
+.purchase-other-information-modal .purchase-other-picker-field .purchase-other-choice span{color:#fff!important}
+.purchase-other-information-modal .purchase-other-toggle{color:#fff!important}
+.purchase-other-information-modal .purchase-other-shortcuts{
+  grid-column:1/-1;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px 14px;
+  padding:11px 14px;
+  border-radius:12px!important;
+  color:#fff!important;
+  font-size:11px;
+}
+.purchase-other-information-modal .purchase-other-shortcuts b{font-size:11px;color:#fff}
+.purchase-other-information-modal .purchase-other-shortcuts span{color:rgba(255,255,255,.84)}
+.purchase-other-information-modal .purchase-other-shortcuts kbd{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:25px;
+  height:22px;
+  padding:0 6px;
+  border:1px solid rgba(255,255,255,.3);
+  border-radius:6px;
+  background:rgba(255,255,255,.14);
+  color:#fff;
+  font:700 10px inherit;
+}
+.purchase-other-information-modal .purchase-product-fields footer{
+  display:flex!important;
+  justify-content:flex-end!important;
+  gap:9px!important;
+  padding-top:4px!important;
+}
+.purchase-other-information-modal .purchase-product-fields footer button{
+  min-height:42px!important;
+  border-radius:11px!important;
+}
+.purchase-other-information-modal .purchase-product-fields footer .purchase-primary{
+  border:1px solid rgba(255,255,255,.42)!important;
+  background:linear-gradient(135deg,#a855f7,#6d28d9)!important;
+  color:#fff!important;
+}
+.purchase-other-information-modal .purchase-product-fields footer .purchase-secondary{
+  border:1px solid rgba(255,255,255,.3)!important;
+  background:rgba(255,255,255,.13)!important;
+  color:#fff!important;
+}
+.purchase-other-information-modal>header button{
+  border:1px solid rgba(255,255,255,.35)!important;
+  background:rgba(255,255,255,.14)!important;
+  color:#fff!important;
+}
+@media(max-width:600px){
+  .purchase-other-information-modal{padding:14px!important;border-radius:18px!important}
+  .purchase-other-information-modal .purchase-expiry-date-row,
+  .purchase-other-information-modal .purchase-expiry-alert-row{align-items:stretch!important;flex-direction:column!important}
+  .purchase-other-information-modal .purchase-other-option-control{width:100%;justify-content:space-between}
+  .purchase-other-information-modal .purchase-expiry-days-control{width:100%}
+  .purchase-other-information-modal .purchase-expiry-days-control input{flex:1;min-width:0}
+  .purchase-other-information-modal .purchase-rect-toggle{flex:0 0 104px!important;width:104px!important;min-width:104px!important}
+  .purchase-other-information-modal .purchase-other-shortcuts{align-items:flex-start;flex-direction:column}
+}
