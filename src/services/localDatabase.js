@@ -353,9 +353,24 @@ export async function mergeCloudRecord(row, workspaceId) {
   const pending = (await listPendingSyncOperations()).some(item => item.recordKey === key);
   if (pending) return { skipped: true, reason: 'pending_local_change' };
   const existing = await withStore(RECORDS, 'readonly', store => store.get(key));
-  if (existing && resolveSnapshotConflict(existing, row) === 'local') {
+
+  if (existing?.syncState === 'synced' && existing.cloudUpdatedAt && row.updated_at) {
+    const baselineTime = Date.parse(existing.cloudUpdatedAt);
+    const remoteTime = Date.parse(row.updated_at);
+    if (Number.isFinite(baselineTime) && Number.isFinite(remoteTime)) {
+      // Server versions, not client clocks, decide whether a synced snapshot is stale.
+      if (remoteTime <= baselineTime) {
+        return { skipped: true, reason: 'remote_version_not_newer' };
+      }
+      // The cloud changed after this device's last acknowledged version. Adopt that
+      // server snapshot even if this device's wall clock is ahead of the server clock.
+    } else if (resolveSnapshotConflict(existing, row) === 'local') {
+      return { skipped: true, reason: 'local_wins_conflict_policy' };
+    }
+  } else if (existing && resolveSnapshotConflict(existing, row) === 'local') {
     return { skipped: true, reason: 'local_wins_conflict_policy' };
   }
+
   const record = {
     key, workspaceId, entityType: row.entity_type, recordId: String(row.record_id),
     payload: row.payload || {}, updatedAt: row.updated_at || new Date().toISOString(),

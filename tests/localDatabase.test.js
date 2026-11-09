@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import {
   getLocalRecord,
   listPendingSyncOperations,
+  mergeCloudRecord,
   markLocalRecordSynced,
   removePendingSyncOperation,
   saveLocalRecordsAtomically,
@@ -156,4 +157,79 @@ test('late cloud acknowledgement cannot clear a newer outbox operation with the 
     (await listPendingSyncOperations()).filter(operation => operation.workspaceId === workspaceId).length,
     0,
   );
+});
+
+
+test('a newer cloud version wins over a synced local snapshot when the client clock is ahead', async () => {
+  const workspaceId = 'workspace-cloud-version-test';
+  const recordId = 'product-cloud-version';
+  const clientTimestamp = '2026-12-01T12:00:00.000Z';
+  const acknowledgedCloudVersion = '2026-11-01T12:00:00.000Z';
+  const newerCloudVersion = '2026-11-02T12:00:00.000Z';
+
+  await saveLocalRecordsAtomically({
+    workspaceId,
+    upserts: [{
+      entityType: 'products',
+      recordId,
+      payload: { id: recordId, stock: 9 },
+      updatedAt: clientTimestamp,
+    }],
+  });
+  const operation = (await listPendingSyncOperations())
+    .find(item => item.workspaceId === workspaceId);
+  assert.ok(operation);
+
+  await markLocalRecordSynced(
+    operation.recordKey,
+    operation.updatedAt,
+    acknowledgedCloudVersion,
+    operation.operationId,
+  );
+  await removePendingSyncOperation(operation.id, operation.updatedAt, operation.operationId);
+
+  const result = await mergeCloudRecord({
+    entity_type: 'products',
+    record_id: recordId,
+    payload: { id: recordId, stock: 12 },
+    updated_at: newerCloudVersion,
+    deleted_at: null,
+    device_id: 'other-device',
+  }, workspaceId);
+
+  assert.deepEqual(result, { skipped: false });
+  const merged = await getLocalRecord({ workspaceId, entityType: 'products', recordId });
+  assert.equal(merged.payload.stock, 12);
+  assert.equal(merged.updatedAt, newerCloudVersion);
+  assert.equal(merged.cloudUpdatedAt, newerCloudVersion);
+  assert.equal(merged.syncState, 'synced');
+});
+
+test('a cloud snapshot at or before the acknowledged baseline cannot roll a synced record backward', async () => {
+  const workspaceId = 'workspace-stale-cloud-test';
+  const recordId = 'product-stale-cloud';
+  const baseline = '2026-11-03T12:00:00.000Z';
+
+  await mergeCloudRecord({
+    entity_type: 'products',
+    record_id: recordId,
+    payload: { id: recordId, stock: 15 },
+    updated_at: baseline,
+    deleted_at: null,
+    device_id: 'device-a',
+  }, workspaceId);
+
+  const result = await mergeCloudRecord({
+    entity_type: 'products',
+    record_id: recordId,
+    payload: { id: recordId, stock: 2 },
+    updated_at: '2026-11-02T12:00:00.000Z',
+    deleted_at: null,
+    device_id: 'device-b',
+  }, workspaceId);
+
+  assert.deepEqual(result, { skipped: true, reason: 'remote_version_not_newer' });
+  const stored = await getLocalRecord({ workspaceId, entityType: 'products', recordId });
+  assert.equal(stored.payload.stock, 15);
+  assert.equal(stored.cloudUpdatedAt, baseline);
 });
