@@ -4,6 +4,8 @@ import assert from 'node:assert/strict';
 import {
   getLocalRecord,
   listPendingSyncOperations,
+  markLocalRecordSynced,
+  removePendingSyncOperation,
   saveLocalRecordsAtomically,
 } from '../src/services/localDatabase.js';
 
@@ -69,4 +71,89 @@ test('receipt and movement tombstones replace queued upserts without duplicate o
   assert.ok(movement.deletedAt);
   assert.equal(receipt.syncState, 'pending');
   assert.equal(movement.syncState, 'pending');
+});
+
+
+test('late cloud acknowledgement cannot clear a newer outbox operation with the same timestamp', async () => {
+  const workspaceId = 'workspace-ack-race-test';
+  const recordId = 'product-ack-race';
+  const sameTimestamp = '2026-11-09T09:00:00.000Z';
+
+  await saveLocalRecordsAtomically({
+    workspaceId,
+    upserts: [{
+      entityType: 'products',
+      recordId,
+      payload: { id: recordId, stock: 5 },
+      updatedAt: sameTimestamp,
+    }],
+  });
+  const firstOperation = (await listPendingSyncOperations())
+    .find(operation => operation.workspaceId === workspaceId);
+
+  await saveLocalRecordsAtomically({
+    workspaceId,
+    upserts: [{
+      entityType: 'products',
+      recordId,
+      payload: { id: recordId, stock: 9 },
+      updatedAt: sameTimestamp,
+    }],
+  });
+  const secondOperation = (await listPendingSyncOperations())
+    .find(operation => operation.workspaceId === workspaceId);
+
+  assert.ok(firstOperation);
+  assert.ok(secondOperation);
+  assert.equal(firstOperation.updatedAt, secondOperation.updatedAt);
+  assert.notEqual(firstOperation.operationId, secondOperation.operationId);
+
+  const firstCloudVersion = '2026-11-09T09:01:00.000Z';
+  await markLocalRecordSynced(
+    firstOperation.recordKey,
+    firstOperation.updatedAt,
+    firstCloudVersion,
+    firstOperation.operationId,
+  );
+  await removePendingSyncOperation(
+    firstOperation.id,
+    firstOperation.updatedAt,
+    firstOperation.operationId,
+  );
+
+  const afterLateAcknowledgement = (await listPendingSyncOperations())
+    .filter(operation => operation.workspaceId === workspaceId);
+  assert.equal(afterLateAcknowledgement.length, 1);
+  assert.equal(afterLateAcknowledgement[0].operationId, secondOperation.operationId);
+  assert.equal(afterLateAcknowledgement[0].expectedCloudUpdatedAt, firstCloudVersion);
+
+  const localAfterLateAcknowledgement = await getLocalRecord({
+    workspaceId,
+    entityType: 'products',
+    recordId,
+  });
+  assert.equal(localAfterLateAcknowledgement.payload.stock, 9);
+  assert.equal(localAfterLateAcknowledgement.syncState, 'pending');
+  assert.equal(localAfterLateAcknowledgement.cloudUpdatedAt, firstCloudVersion);
+
+  const secondCloudVersion = '2026-11-09T09:02:00.000Z';
+  await markLocalRecordSynced(
+    secondOperation.recordKey,
+    secondOperation.updatedAt,
+    secondCloudVersion,
+    secondOperation.operationId,
+  );
+  await removePendingSyncOperation(
+    secondOperation.id,
+    secondOperation.updatedAt,
+    secondOperation.operationId,
+  );
+
+  const finalRecord = await getLocalRecord({ workspaceId, entityType: 'products', recordId });
+  assert.equal(finalRecord.syncState, 'synced');
+  assert.equal(finalRecord.cloudUpdatedAt, secondCloudVersion);
+  assert.equal(
+    (await listPendingSyncOperations()).filter(operation => operation.workspaceId === workspaceId).length,
+    0,
+  );
 });

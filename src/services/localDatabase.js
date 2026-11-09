@@ -289,7 +289,7 @@ export async function listPendingSyncOperations() {
   });
 }
 
-export async function removePendingSyncOperation(id, expectedUpdatedAt) {
+export async function removePendingSyncOperation(id, expectedUpdatedAt, expectedOperationId) {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const tx = db.transaction(OUTBOX, 'readwrite');
@@ -297,10 +297,11 @@ export async function removePendingSyncOperation(id, expectedUpdatedAt) {
     const request = store.get(id);
     request.onsuccess = () => {
       const current = request.result;
-      // A newer edit may have replaced this queue row while its previous snapshot was uploading.
-      if (current && (!expectedUpdatedAt || (current.updatedAt || current.createdAt) === expectedUpdatedAt)) {
-        store.delete(id);
-      }
+      // Operation identity is authoritative: timestamps can collide when two edits happen quickly.
+      const matchesExpectedOperation = expectedOperationId
+        ? current?.operationId === expectedOperationId
+        : (!expectedUpdatedAt || (current?.updatedAt || current?.createdAt) === expectedUpdatedAt);
+      if (current && matchesExpectedOperation) store.delete(id);
     };
     tx.oncomplete = () => { db.close(); resolve(); };
     tx.onerror = () => { const error = tx.error || new Error('Could not acknowledge sync operation.'); db.close(); reject(error); };
@@ -308,7 +309,7 @@ export async function removePendingSyncOperation(id, expectedUpdatedAt) {
   });
 }
 
-export async function markLocalRecordSynced(key, expectedUpdatedAt, cloudUpdatedAt) {
+export async function markLocalRecordSynced(key, expectedUpdatedAt, cloudUpdatedAt, expectedOperationId) {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
     const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
@@ -317,26 +318,29 @@ export async function markLocalRecordSynced(key, expectedUpdatedAt, cloudUpdated
     const request = records.get(key);
     request.onsuccess = () => {
       const current = request.result;
-      if (current) {
+      if (!current) return;
+
+      const queuedRequest = outbox.get(key);
+      queuedRequest.onsuccess = () => {
+        const queued = queuedRequest.result;
+        const sameQueuedOperation = expectedOperationId
+          ? (!queued || queued.operationId === expectedOperationId)
+          : (!queued || !expectedUpdatedAt || (queued.updatedAt || queued.createdAt) === expectedUpdatedAt);
+        const sameSnapshot = !expectedUpdatedAt || current.updatedAt === expectedUpdatedAt;
+        const isAcknowledgedSnapshot = sameQueuedOperation && sameSnapshot;
         const version = cloudUpdatedAt || current.cloudUpdatedAt || new Date().toISOString();
-        const isAcknowledgedSnapshot = !expectedUpdatedAt || current.updatedAt === expectedUpdatedAt;
-        // A prior upload may finish after a newer local edit replaced it in the outbox.
-        // Advance only the cloud baseline; keep the newer edit pending.
+
+        // A late acknowledgement may belong to an older operation even when its timestamp
+        // matches a newer edit. Keep that edit pending and advance its CAS baseline only.
         records.put({
           ...current,
           syncState: isAcknowledgedSnapshot ? 'synced' : 'pending',
           cloudUpdatedAt: version,
         });
-        if (!isAcknowledgedSnapshot && cloudUpdatedAt) {
-          const queuedRequest = outbox.get(key);
-          queuedRequest.onsuccess = () => {
-            const queued = queuedRequest.result;
-            if (queued && queued.updatedAt !== expectedUpdatedAt) {
-              outbox.put({ ...queued, expectedCloudUpdatedAt: cloudUpdatedAt });
-            }
-          };
+        if (!isAcknowledgedSnapshot && queued && cloudUpdatedAt) {
+          outbox.put({ ...queued, expectedCloudUpdatedAt: cloudUpdatedAt });
         }
-      }
+      };
     };
     tx.oncomplete = () => { db.close(); resolve(); };
     tx.onerror = () => { const error = tx.error || new Error('Could not update sync state.'); db.close(); reject(error); };
