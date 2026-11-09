@@ -205,9 +205,9 @@ test('a newer cloud version wins over a synced local snapshot when the client cl
   assert.equal(merged.syncState, 'synced');
 });
 
-test('a cloud snapshot at or before the acknowledged baseline cannot roll a synced record backward', async () => {
-  const workspaceId = 'workspace-stale-cloud-test';
-  const recordId = 'product-stale-cloud';
+test('an unchanged cloud version does not replace an acknowledged local snapshot', async () => {
+  const workspaceId = 'workspace-unchanged-cloud-test';
+  const recordId = 'product-unchanged-cloud';
   const baseline = '2026-11-03T12:00:00.000Z';
 
   await mergeCloudRecord({
@@ -223,12 +223,12 @@ test('a cloud snapshot at or before the acknowledged baseline cannot roll a sync
     entity_type: 'products',
     record_id: recordId,
     payload: { id: recordId, stock: 2 },
-    updated_at: '2026-11-02T12:00:00.000Z',
+    updated_at: baseline,
     deleted_at: null,
     device_id: 'device-b',
   }, workspaceId);
 
-  assert.deepEqual(result, { skipped: true, reason: 'remote_version_not_newer' });
+  assert.deepEqual(result, { skipped: true, reason: 'cloud_version_unchanged' });
   const stored = await getLocalRecord({ workspaceId, entityType: 'products', recordId });
   assert.equal(stored.payload.stock, 15);
   assert.equal(stored.cloudUpdatedAt, baseline);

@@ -355,18 +355,13 @@ export async function mergeCloudRecord(row, workspaceId) {
   const existing = await withStore(RECORDS, 'readonly', store => store.get(key));
 
   if (existing?.syncState === 'synced' && existing.cloudUpdatedAt && row.updated_at) {
-    const baselineTime = Date.parse(existing.cloudUpdatedAt);
-    const remoteTime = Date.parse(row.updated_at);
-    if (Number.isFinite(baselineTime) && Number.isFinite(remoteTime)) {
-      // Server versions, not client clocks, decide whether a synced snapshot is stale.
-      if (remoteTime <= baselineTime) {
-        return { skipped: true, reason: 'remote_version_not_newer' };
-      }
-      // The cloud changed after this device's last acknowledged version. Adopt that
-      // server snapshot even if this device's wall clock is ahead of the server clock.
-    } else if (resolveSnapshotConflict(existing, row) === 'local') {
-      return { skipped: true, reason: 'local_wins_conflict_policy' };
+    // Compare cloud version identity, not timestamp ordering: older client clocks can
+    // legitimately write a different current row with an earlier updated_at value.
+    if (existing.cloudUpdatedAt === row.updated_at) {
+      return { skipped: true, reason: 'cloud_version_unchanged' };
     }
+    // The authoritative cloud row differs from this device's last acknowledged baseline.
+    // Adopt it regardless of wall-clock ordering; local unsynced edits were handled above.
   } else if (existing && resolveSnapshotConflict(existing, row) === 'local') {
     return { skipped: true, reason: 'local_wins_conflict_policy' };
   }
