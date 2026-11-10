@@ -320,7 +320,7 @@ export async function normalizePendingSyncOperations() {
         );
         if (!recordKey) continue;
         const group = groups.get(recordKey) || [];
-        group.push({ ...item, recordKey });
+        group.push(item);
         groups.set(recordKey, group);
       }
 
