@@ -3,6 +3,7 @@ import {
   adoptLocalRecordsIntoWorkspace,
   getActiveWorkspaceId,
   listPendingSyncOperations,
+  normalizePendingSyncOperations,
   markLocalRecordSynced,
   mergeCloudRecord,
   removePendingSyncOperation,
@@ -204,6 +205,8 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     if (typeof navigator !== 'undefined' && !navigator.onLine) return { status: 'offline', pushed: 0, pulled: 0 };
 
     const workspace = await getOrCreateWorkspace();
+    // Persist stable operation IDs for older outbox rows before any network retry.
+    await normalizePendingSyncOperations();
     const pending = await listPendingSyncOperations();
     let pushed = 0;
     let pulled = 0;
@@ -255,6 +258,23 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
         onProgress?.({ phase: 'upload', completed: pushed, total: pending.length });
       } catch (error) {
         // Keep the operation in the outbox for a later retry; never discard unsynced data.
+        // Report CAS failures distinctly so the UI can distinguish a device conflict
+        // from an offline/network interruption.
+        if (error?.code === 'SYNC_CONFLICT') {
+          return {
+            status: 'conflict',
+            pushed,
+            pulled,
+            error,
+            workspaceId: workspace.id,
+            conflict: {
+              entityType: operation.entityType,
+              recordId: operation.recordId,
+              operation: operation.operation,
+              operationId: operation.operationId || null,
+            },
+          };
+        }
         return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
       }
     }
