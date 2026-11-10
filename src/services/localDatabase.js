@@ -289,6 +289,74 @@ export async function listPendingSyncOperations() {
   });
 }
 
+function compareOutboxOperations(a, b) {
+  const aTime = Date.parse(a.updatedAt || a.createdAt || '') || 0;
+  const bTime = Date.parse(b.updatedAt || b.createdAt || '') || 0;
+  if (aTime !== bTime) return aTime - bTime;
+  const aId = typeof a.id === 'number' ? a.id : 0;
+  const bId = typeof b.id === 'number' ? b.id : 0;
+  if (aId !== bId) return aId - bId;
+  return String(a.id || '').localeCompare(String(b.id || ''));
+}
+
+// Backfill IDs for outbox rows created by older app versions and coalesce any
+// legacy duplicate rows before they are uploaded. The chosen snapshot is the
+// latest one for each workspace/entity/record key.
+export async function normalizePendingSyncOperations() {
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(OUTBOX, 'readwrite');
+    const store = tx.objectStore(OUTBOX);
+    const request = store.getAll();
+    let normalized = 0;
+
+    request.onsuccess = () => {
+      const groups = new Map();
+      for (const item of request.result || []) {
+        const recordKey = item.recordKey || (
+          item.workspaceId && item.entityType && item.recordId != null
+            ? makeRecordKey(item.workspaceId, item.entityType, item.recordId)
+            : null
+        );
+        if (!recordKey) continue;
+        const group = groups.get(recordKey) || [];
+        group.push({ ...item, recordKey });
+        groups.set(recordKey, group);
+      }
+
+      for (const [recordKey, items] of groups) {
+        items.sort(compareOutboxOperations);
+        const latest = items[items.length - 1];
+        for (const obsolete of items.slice(0, -1)) {
+          store.delete(obsolete.id);
+          normalized += 1;
+        }
+
+        const next = { ...latest, recordKey };
+        if (!next.operationId) {
+          next.operationId = createSyncOperationId();
+          normalized += 1;
+        }
+        if (latest.recordKey !== recordKey || !latest.operationId) {
+          store.put(next);
+        }
+      }
+    };
+
+    tx.oncomplete = () => { db.close(); resolve(normalized); };
+    tx.onerror = () => {
+      const error = tx.error || new Error('Could not normalize pending sync operations.');
+      db.close();
+      reject(error);
+    };
+    tx.onabort = () => {
+      const error = tx.error || new Error('Outbox normalization was aborted.');
+      db.close();
+      reject(error);
+    };
+  });
+}
+
 export async function removePendingSyncOperation(id, expectedUpdatedAt, expectedOperationId) {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
@@ -320,9 +388,10 @@ export async function markLocalRecordSynced(key, expectedUpdatedAt, cloudUpdated
       const current = request.result;
       if (!current) return;
 
-      const queuedRequest = outbox.get(key);
+      const queuedRequest = outbox.index('by_record_key').getAll(key);
       queuedRequest.onsuccess = () => {
-        const queued = queuedRequest.result;
+        const queuedRows = (queuedRequest.result || []).sort(compareOutboxOperations);
+        const queued = queuedRows[queuedRows.length - 1] || null;
         const sameQueuedOperation = expectedOperationId
           ? (!queued || queued.operationId === expectedOperationId)
           : (!queued || !expectedUpdatedAt || (queued.updatedAt || queued.createdAt) === expectedUpdatedAt);
@@ -350,30 +419,82 @@ export async function markLocalRecordSynced(key, expectedUpdatedAt, cloudUpdated
 
 export async function mergeCloudRecord(row, workspaceId) {
   const key = makeRecordKey(workspaceId, row.entity_type, row.record_id);
-  const pending = (await listPendingSyncOperations()).some(item => item.recordKey === key);
-  if (pending) return { skipped: true, reason: 'pending_local_change' };
-  const existing = await withStore(RECORDS, 'readonly', store => store.get(key));
+  const db = await openDatabase();
 
-  if (existing?.syncState === 'synced' && existing.cloudUpdatedAt && row.updated_at) {
-    // Compare cloud version identity, not timestamp ordering: older client clocks can
-    // legitimately write a different current row with an earlier updated_at value.
-    if (existing.cloudUpdatedAt === row.updated_at) {
-      return { skipped: true, reason: 'cloud_version_unchanged' };
-    }
-    // The authoritative cloud row differs from this device's last acknowledged baseline.
-    // Adopt it regardless of wall-clock ordering; local unsynced edits were handled above.
-  } else if (existing && resolveSnapshotConflict(existing, row) === 'local') {
-    return { skipped: true, reason: 'local_wins_conflict_policy' };
-  }
+  // Read the outbox and local snapshot in the same read/write transaction.
+  // Local saves use these same stores, so a concurrent edit is either observed
+  // as pending here or runs after this merge and becomes the final local value.
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction([RECORDS, OUTBOX], 'readwrite');
+    const records = tx.objectStore(RECORDS);
+    const outbox = tx.objectStore(OUTBOX);
+    const pendingRequest = outbox.index('by_record_key').getAll(key);
+    const existingRequest = records.get(key);
+    let pendingReady = false;
+    let existingReady = false;
+    let pendingRows = [];
+    let existing = null;
+    let outcome = { skipped: false };
+    let decided = false;
 
-  const record = {
-    key, workspaceId, entityType: row.entity_type, recordId: String(row.record_id),
-    payload: row.payload || {}, updatedAt: row.updated_at || new Date().toISOString(),
-    cloudUpdatedAt: row.updated_at || null,
-    deletedAt: row.deleted_at, deviceId: row.device_id || null, syncState: 'synced',
-  };
-  await withStore(RECORDS, 'readwrite', store => store.put(record));
-  return { skipped: false };
+    const applyMerge = () => {
+      if (!pendingReady || !existingReady || decided) return;
+      decided = true;
+
+      if (pendingRows.length) {
+        outcome = { skipped: true, reason: 'pending_local_change' };
+        return;
+      }
+
+      if (existing?.syncState === 'synced' && existing.cloudUpdatedAt && row.updated_at) {
+        // Compare cloud version identity, not timestamp ordering: client clocks can skew.
+        if (existing.cloudUpdatedAt === row.updated_at) {
+          outcome = { skipped: true, reason: 'cloud_version_unchanged' };
+          return;
+        }
+        // A changed authoritative cloud version is adopted regardless of wall-clock order.
+      } else if (existing && resolveSnapshotConflict(existing, row) === 'local') {
+        outcome = { skipped: true, reason: 'local_wins_conflict_policy' };
+        return;
+      }
+
+      records.put({
+        key,
+        workspaceId,
+        entityType: row.entity_type,
+        recordId: String(row.record_id),
+        payload: row.payload || {},
+        updatedAt: row.updated_at || new Date().toISOString(),
+        cloudUpdatedAt: row.updated_at || null,
+        deletedAt: row.deleted_at,
+        deviceId: row.device_id || null,
+        syncState: 'synced',
+      });
+    };
+
+    pendingRequest.onsuccess = () => {
+      pendingRows = pendingRequest.result || [];
+      pendingReady = true;
+      applyMerge();
+    };
+    existingRequest.onsuccess = () => {
+      existing = existingRequest.result || null;
+      existingReady = true;
+      applyMerge();
+    };
+
+    tx.oncomplete = () => { db.close(); resolve(outcome); };
+    tx.onerror = () => {
+      const error = tx.error || new Error('Could not merge the cloud record locally.');
+      db.close();
+      reject(error);
+    };
+    tx.onabort = () => {
+      const error = tx.error || new Error('Cloud record merge was aborted.');
+      db.close();
+      reject(error);
+    };
+  });
 }
 
 export async function adoptLocalRecordsIntoWorkspace(workspaceId) {
