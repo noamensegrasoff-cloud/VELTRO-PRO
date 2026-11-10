@@ -6,9 +6,34 @@ import {
   listPendingSyncOperations,
   mergeCloudRecord,
   markLocalRecordSynced,
+  normalizePendingSyncOperations,
   removePendingSyncOperation,
   saveLocalRecordsAtomically,
 } from '../src/services/localDatabase.js';
+
+async function mutateOutboxRecord(id, mutate) {
+  const db = await new Promise((resolve, reject) => {
+    const request = indexedDB.open('veltro-pro-local', 1);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('outbox', 'readwrite');
+    const store = tx.objectStore('outbox');
+    const request = store.get(id);
+    request.onsuccess = () => {
+      if (!request.result) {
+        tx.abort();
+        return;
+      }
+      store.put(mutate({ ...request.result }));
+    };
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => { const error = tx.error || new Error('Could not update test outbox row.'); db.close(); reject(error); };
+    tx.onabort = () => { const error = tx.error || new Error('Test outbox update was aborted.'); db.close(); reject(error); };
+  });
+}
 
 test('purchase receipt, product, and source movement share one durable outbox batch', async () => {
   const workspaceId = 'workspace-atomic-test';
@@ -232,4 +257,79 @@ test('an unchanged cloud version does not replace an acknowledged local snapshot
   const stored = await getLocalRecord({ workspaceId, entityType: 'products', recordId });
   assert.equal(stored.payload.stock, 15);
   assert.equal(stored.cloudUpdatedAt, baseline);
+});
+
+
+test('legacy pending outbox rows receive a persisted idempotency key before retry', async () => {
+  const workspaceId = 'workspace-legacy-outbox-id-test';
+  await saveLocalRecordsAtomically({
+    workspaceId,
+    upserts: [{
+      entityType: 'products',
+      recordId: 'legacy-outbox-product',
+      payload: { id: 'legacy-outbox-product', stock: 4 },
+    }],
+  });
+
+  const before = (await listPendingSyncOperations())
+    .find(operation => operation.workspaceId === workspaceId);
+  assert.ok(before);
+  await mutateOutboxRecord(before.id, operation => {
+    delete operation.operationId;
+    return operation;
+  });
+
+  assert.equal(
+    (await listPendingSyncOperations()).find(operation => operation.workspaceId === workspaceId).operationId,
+    undefined,
+  );
+
+  await normalizePendingSyncOperations();
+  const firstNormalization = (await listPendingSyncOperations())
+    .find(operation => operation.workspaceId === workspaceId);
+  assert.ok(firstNormalization.operationId);
+
+  await normalizePendingSyncOperations();
+  const secondNormalization = (await listPendingSyncOperations())
+    .find(operation => operation.workspaceId === workspaceId);
+  assert.equal(secondNormalization.operationId, firstNormalization.operationId);
+});
+
+test('a concurrent cloud pull cannot overwrite a local edit queued in the same IndexedDB stores', async () => {
+  const workspaceId = 'workspace-merge-race-test';
+  const recordId = 'product-merge-race';
+  const localUpdatedAt = '2026-11-09T09:00:00.000Z';
+
+  const [mergeResult] = await Promise.all([
+    mergeCloudRecord({
+      entity_type: 'products',
+      record_id: recordId,
+      payload: { id: recordId, stock: 2 },
+      updated_at: '2026-11-10T09:00:00.000Z',
+      deleted_at: null,
+      device_id: 'remote-device',
+    }, workspaceId),
+    saveLocalRecordsAtomically({
+      workspaceId,
+      upserts: [{
+        entityType: 'products',
+        recordId,
+        payload: { id: recordId, stock: 15 },
+        updatedAt: localUpdatedAt,
+      }],
+    }),
+  ]);
+
+  const stored = await getLocalRecord({ workspaceId, entityType: 'products', recordId });
+  assert.equal(stored.payload.stock, 15);
+  assert.equal(stored.syncState, 'pending');
+  const pending = (await listPendingSyncOperations())
+    .filter(operation => operation.workspaceId === workspaceId && operation.recordId === recordId);
+  assert.equal(pending.length, 1);
+  assert.ok(pending[0].operationId);
+  assert.ok(
+    mergeResult.skipped === true
+      ? mergeResult.reason === 'pending_local_change'
+      : mergeResult.skipped === false,
+  );
 });
