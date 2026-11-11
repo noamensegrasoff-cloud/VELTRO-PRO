@@ -11,6 +11,12 @@ import {
   removePendingSyncOperation,
 } from './localDatabase.js';
 import { deleteCloudRecord, getCloudRecords, saveCloudRecord } from './cloudStorage.js';
+import {
+  LEGACY_STORAGE_OPERATION_IDS_KEY,
+  classifyLegacyStorageChange,
+  getStableLegacyStorageOperationId,
+  clearLegacyStorageOperationId,
+} from './legacyStorageSync.js';
 
 let syncInFlight = null;
 
@@ -25,8 +31,12 @@ function readStorageBaseline() {
   } catch { return {}; }
 }
 
+function writeStorageBaseline(baseline) {
+  localStorage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline));
+}
+
 function isSyncableStorageKey(key) {
-  if (!key || LEGACY_STORAGE_EXCLUDED.test(key)) return false;
+  if (!key || key === LEGACY_STORAGE_OPERATION_IDS_KEY || LEGACY_STORAGE_EXCLUDED.test(key)) return false;
   // Sync business records/settings only; do not replicate arbitrary browser or auth state.
   return /^(?:veltro[._-]|products$|categories$|sales$|purchases$|customers$|suppliers$|orders$|invoices$|expenses$|stock$)/i.test(key);
 }
@@ -58,45 +68,77 @@ async function syncLegacyLocalStorage(workspaceId) {
     const remoteValue = row && !row.deleted_at && typeof row.payload?.value === 'string'
       ? row.payload.value : null;
 
-    // On a new device, adopt existing cloud data rather than overwrite it with defaults.
-    if (oldValue === undefined && row) {
-      if (remoteValue === null) {
-        if (localValue !== null) localStorage.removeItem(key);
-      } else {
-        localStorage.setItem(key, remoteValue);
-      }
+    const decision = classifyLegacyStorageChange({
+      localValue,
+      baselineValue: oldValue,
+      remoteValue,
+      baselineExists: oldValue !== undefined,
+      rowExists: Boolean(row),
+    });
+
+    if (decision === 'conflict') {
+      const error = new Error('Both this device and the cloud changed the same legacy setting since the last acknowledged snapshot.');
+      error.code = 'SYNC_CONFLICT';
+      error.conflict = {
+        entityType: LEGACY_STORAGE_ENTITY,
+        recordId: key,
+        operation: 'legacy_local_storage',
+      };
+      throw error;
+    }
+
+    if (decision === 'adopt_remote' || decision === 'pull_remote') {
+      if (remoteValue === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, remoteValue);
       baseline[key] = remoteValue;
+      writeStorageBaseline(baseline);
+      try { clearLegacyStorageOperationId(key); } catch {}
       pulled += 1;
       continue;
     }
 
-    const localChanged = localValue !== oldValue;
-    const remoteChanged = (remoteValue !== oldValue) || (!row && oldValue !== undefined);
-    if (localChanged) {
+    if (decision === 'converged') {
+      baseline[key] = localValue;
+      writeStorageBaseline(baseline);
+      try { clearLegacyStorageOperationId(key); } catch {}
+      continue;
+    }
+
+    if (decision === 'push_local') {
+      // Persist the idempotency key before sending. If the response is lost, the next
+      // retry reuses this key; if the local value changes, a new key is allocated.
+      const operationId = getStableLegacyStorageOperationId(key, localValue);
       if (localValue === null) {
-        await deleteCloudRecord({ workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key, expectedUpdatedAt: row?.updated_at || null });
-        baseline[key] = null;
+        await deleteCloudRecord({
+          workspaceId,
+          entityType: LEGACY_STORAGE_ENTITY,
+          recordId: key,
+          expectedUpdatedAt: row?.updated_at || null,
+          operationId,
+        });
       } else {
         await saveCloudRecord({
-          workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key,
+          workspaceId,
+          entityType: LEGACY_STORAGE_ENTITY,
+          recordId: key,
           payload: { value: localValue },
           expectedUpdatedAt: row?.updated_at || null,
+          operationId,
         });
-        baseline[key] = localValue;
       }
+      baseline[key] = localValue;
+      // Baseline must be durable before discarding the retry key.
+      writeStorageBaseline(baseline);
+      try { clearLegacyStorageOperationId(key); } catch {}
       pushed += 1;
       continue;
     }
 
-    if (remoteChanged) {
-      if (remoteValue === null) localStorage.removeItem(key);
-      else localStorage.setItem(key, remoteValue);
-      baseline[key] = remoteValue;
-      pulled += 1;
+    if (decision === 'unchanged') {
+      try { clearLegacyStorageOperationId(key); } catch {}
     }
   }
 
-  try { localStorage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline)); } catch {}
   return { pushed, pulled };
 }
 
@@ -222,6 +264,16 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
       pushed += legacy.pushed;
       pulled += legacy.pulled;
     } catch (error) {
+      if (error?.code === 'SYNC_CONFLICT') {
+        return {
+          status: 'conflict',
+          pushed,
+          pulled,
+          error,
+          workspaceId: workspace.id,
+          conflict: error.conflict || { operation: 'legacy_local_storage' },
+        };
+      }
       return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
     }
     const pendingKeys = new Set(pending.map(item => item.recordKey));
