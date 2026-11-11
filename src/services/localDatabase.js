@@ -45,7 +45,14 @@ async function withStore(storeName, mode, operation) {
     const store = tx.objectStore(storeName);
     let result;
     try { result = operation(store, tx); } catch (error) { reject(error); db.close(); return; }
-    tx.oncomplete = () => { db.close(); resolve(result?.result ?? result); };
+    tx.oncomplete = () => {
+      db.close();
+      // IDBRequest.result can legitimately be undefined for a missing key.
+      // Nullish fallback would return the request object itself in that case.
+      const isRequest = result && typeof result === 'object'
+        && 'readyState' in result && 'result' in result;
+      resolve(isRequest ? result.result : result);
+    };
     tx.onerror = () => { const error = tx.error || new Error('Local database transaction failed.'); db.close(); reject(error); };
     tx.onabort = () => { const error = tx.error || new Error('Local database transaction was aborted.'); db.close(); reject(error); };
   });
