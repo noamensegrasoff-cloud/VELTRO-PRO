@@ -14,6 +14,22 @@ import {
   saveLocalRecordsAtomically,
 } from '../src/services/localDatabase.js';
 
+async function removeLocalRecordRowForTest(workspaceId, entityType, recordId) {
+  const db = await new Promise((resolve, reject) => {
+    const request = indexedDB.open('veltro-pro-local', 1);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+
+  await new Promise((resolve, reject) => {
+    const tx = db.transaction('records', 'readwrite');
+    tx.objectStore('records').delete([workspaceId, entityType, String(recordId)].join('::'));
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => { const error = tx.error || new Error('Could not clean test local record.'); db.close(); reject(error); };
+    tx.onabort = () => { const error = tx.error || new Error('Test local record cleanup was aborted.'); db.close(); reject(error); };
+  });
+}
+
 async function mutateOutboxRecord(id, mutate) {
   const db = await new Promise((resolve, reject) => {
     const request = indexedDB.open('veltro-pro-local', 1);
@@ -385,6 +401,7 @@ test('workspace adoption preserves local data and an existing workspace outbox i
   assert.equal(after.payload.name, 'Workspace product');
   assert.equal(conflicts.length, 1);
   assert.equal(conflicts[0].reason, 'workspace_record_exists');
+  await removeLocalRecordRowForTest('local-device', 'products', recordId);
 });
 
 test('workspace adoption moves a local-only record once and creates a stable pending operation', async () => {
