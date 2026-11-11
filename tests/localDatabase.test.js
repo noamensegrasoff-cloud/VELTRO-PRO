@@ -3,6 +3,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   getLocalRecord,
+  adoptLocalRecordsIntoWorkspace,
+  filterPendingSyncOperationsForWorkspace,
+  listWorkspaceAdoptionConflicts,
   listPendingSyncOperations,
   mergeCloudRecord,
   markLocalRecordSynced,
@@ -331,5 +334,96 @@ test('a concurrent cloud pull cannot overwrite a local edit queued in the same I
     mergeResult.skipped === true
       ? mergeResult.reason === 'pending_local_change'
       : mergeResult.skipped === false,
+  );
+});
+
+
+test('workspace adoption preserves local data and an existing workspace outbox instead of overwriting either', async () => {
+  const workspaceId = 'workspace-adoption-collision-test';
+  const recordId = 'shared-product-id';
+
+  await saveLocalRecordsAtomically({
+    workspaceId: 'local-device',
+    upserts: [{
+      entityType: 'products',
+      recordId,
+      payload: { id: recordId, name: 'Device-local product', stock: 11 },
+      queueForSync: false,
+    }],
+  });
+  await saveLocalRecordsAtomically({
+    workspaceId,
+    upserts: [{
+      entityType: 'products',
+      recordId,
+      payload: { id: recordId, name: 'Workspace product', stock: 27 },
+    }],
+  });
+
+  const before = (await listPendingSyncOperations())
+    .find(operation => operation.workspaceId === workspaceId && operation.recordId === recordId);
+  assert.ok(before);
+
+  const result = await adoptLocalRecordsIntoWorkspace(workspaceId);
+  assert.deepEqual(result, { adopted: 0, conflicts: 1 });
+
+  const local = await getLocalRecord({
+    workspaceId: 'local-device',
+    entityType: 'products',
+    recordId,
+  });
+  const workspace = await getLocalRecord({ workspaceId, entityType: 'products', recordId });
+  const after = (await listPendingSyncOperations())
+    .find(operation => operation.workspaceId === workspaceId && operation.recordId === recordId);
+  const conflicts = await listWorkspaceAdoptionConflicts(workspaceId);
+
+  assert.equal(local.payload.name, 'Device-local product');
+  assert.equal(local.payload.stock, 11);
+  assert.equal(workspace.payload.name, 'Workspace product');
+  assert.equal(workspace.payload.stock, 27);
+  assert.equal(after.operationId, before.operationId);
+  assert.equal(after.payload.name, 'Workspace product');
+  assert.equal(conflicts.length, 1);
+  assert.equal(conflicts[0].reason, 'workspace_record_exists');
+});
+
+test('workspace adoption moves a local-only record once and creates a stable pending operation', async () => {
+  const workspaceId = 'workspace-adoption-new-record-test';
+  const recordId = 'local-only-product';
+
+  await saveLocalRecordsAtomically({
+    workspaceId: 'local-device',
+    upserts: [{
+      entityType: 'products',
+      recordId,
+      payload: { id: recordId, stock: 4 },
+      queueForSync: false,
+    }],
+  });
+
+  const result = await adoptLocalRecordsIntoWorkspace(workspaceId);
+  assert.deepEqual(result, { adopted: 1, conflicts: 0 });
+
+  const moved = await getLocalRecord({ workspaceId, entityType: 'products', recordId });
+  const oldLocal = await getLocalRecord({ workspaceId: 'local-device', entityType: 'products', recordId });
+  const pending = (await listPendingSyncOperations())
+    .filter(operation => operation.workspaceId === workspaceId && operation.recordId === recordId);
+
+  assert.equal(moved.payload.stock, 4);
+  assert.equal(moved.syncState, 'pending');
+  assert.equal(oldLocal, undefined);
+  assert.equal(pending.length, 1);
+  assert.ok(pending[0].operationId);
+});
+
+test('pending operations are isolated to their owning workspace', () => {
+  const operations = [
+    { workspaceId: 'workspace-a', recordKey: 'a::products::1' },
+    { workspaceId: 'workspace-b', recordKey: 'b::products::1' },
+    { workspaceId: 'workspace-a', recordKey: 'a::purchases::1' },
+  ];
+  assert.deepEqual(
+    filterPendingSyncOperationsForWorkspace(operations, 'workspace-a'),
+    [operations[0], operations[2]],
   );
 });

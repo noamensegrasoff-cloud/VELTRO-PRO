@@ -3,6 +3,8 @@ import {
   adoptLocalRecordsIntoWorkspace,
   getActiveWorkspaceId,
   listPendingSyncOperations,
+  filterPendingSyncOperationsForWorkspace,
+  listWorkspaceAdoptionConflicts,
   normalizePendingSyncOperations,
   markLocalRecordSynced,
   mergeCloudRecord,
@@ -207,7 +209,10 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     const workspace = await getOrCreateWorkspace();
     // Persist stable operation IDs for older outbox rows before any network retry.
     await normalizePendingSyncOperations();
-    const pending = await listPendingSyncOperations();
+    const allPending = await listPendingSyncOperations();
+    // Do not send an operation from a different workspace using the current user's
+    // active workspace ID. Keep those operations queued until that workspace is active.
+    const pending = filterPendingSyncOperationsForWorkspace(allPending, workspace.id);
     let pushed = 0;
     let pulled = 0;
     // Bridge existing sections that still persist directly to localStorage into cloud_records.
@@ -289,6 +294,18 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
         pulled += 1;
       }
       onProgress?.({ phase: 'download', entityType, completed: pulled });
+    }
+
+    const adoptionConflicts = await listWorkspaceAdoptionConflicts(workspace.id);
+    if (adoptionConflicts.length) {
+      return {
+        status: 'conflict',
+        pushed,
+        pulled,
+        workspaceId: workspace.id,
+        conflicts: adoptionConflicts,
+        conflict: { operation: 'workspace_adoption' },
+      };
     }
 
     return { status: 'synced', pushed, pulled, workspaceId: workspace.id };

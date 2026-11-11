@@ -277,6 +277,21 @@ export async function deleteLocalRecord({ entityType, recordId, workspaceId, que
   });
 }
 
+export function filterPendingSyncOperationsForWorkspace(operations, workspaceId) {
+  if (!Array.isArray(operations) || !workspaceId) return [];
+  return operations.filter(operation => operation?.workspaceId === workspaceId);
+}
+
+export async function listWorkspaceAdoptionConflicts(workspaceId) {
+  if (!workspaceId) return [];
+  const prefix = `workspaceAdoptionConflict::${workspaceId}::`;
+  const rows = await withStore(META, 'readonly', store => store.getAll());
+  return (rows || [])
+    .filter(row => typeof row.key === 'string' && row.key.startsWith(prefix))
+    .map(row => row.value)
+    .filter(Boolean);
+}
+
 export async function listPendingSyncOperations() {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
@@ -504,20 +519,101 @@ export async function adoptLocalRecordsIntoWorkspace(workspaceId) {
     const tx = db.transaction([RECORDS, OUTBOX, META], 'readwrite');
     const recordsStore = tx.objectStore(RECORDS);
     const outboxStore = tx.objectStore(OUTBOX);
+    const metaStore = tx.objectStore(META);
     const request = recordsStore.index('by_workspace_entity').getAll();
+    let adopted = 0;
+    let conflicts = 0;
+
+    metaStore.put({ key: 'activeWorkspaceId', value: workspaceId });
+
     request.onsuccess = () => {
       const localRows = (request.result || []).filter(row => row.workspaceId === LOCAL_WORKSPACE);
-      for (const row of localRows) {
+
+      const adoptNext = index => {
+        if (index >= localRows.length) return;
+        const row = localRows[index];
         const nextKey = makeRecordKey(workspaceId, row.entityType, row.recordId);
-        const adopted = { ...row, key: nextKey, workspaceId, syncState: 'pending' };
-        recordsStore.put(adopted);
-        if (!row.deletedAt) outboxStore.put({ id: nextKey, recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'upsert', operationId: createSyncOperationId(), payload: row.payload, expectedCloudUpdatedAt: row.cloudUpdatedAt || null, updatedAt: row.updatedAt, createdAt: row.updatedAt });
-        else outboxStore.put({ id: nextKey, recordKey: nextKey, workspaceId, entityType: row.entityType, recordId: row.recordId, operation: 'delete', operationId: createSyncOperationId(), expectedCloudUpdatedAt: row.cloudUpdatedAt || null, updatedAt: row.updatedAt, createdAt: row.updatedAt });
-        recordsStore.delete(row.key);
-      }
-      tx.objectStore(META).put({ key: 'activeWorkspaceId', value: workspaceId });
+        const conflictKey = `workspaceAdoptionConflict::${workspaceId}::${encodeURIComponent(row.entityType)}::${encodeURIComponent(row.recordId)}`;
+
+        const targetRequest = recordsStore.get(nextKey);
+        targetRequest.onsuccess = () => {
+          const pendingByRecord = outboxStore.index('by_record_key').getAll(nextKey);
+          const pendingById = outboxStore.get(nextKey);
+          let byRecordReady = false;
+          let byIdReady = false;
+          let recordPending = [];
+          let idPending = null;
+
+          const finishCheck = () => {
+            if (!byRecordReady || !byIdReady) return;
+            const hasPending = recordPending.length > 0 || Boolean(idPending);
+            if (targetRequest.result || hasPending) {
+              // Never overwrite a workspace snapshot or pending operation while adopting
+              // a device-local row. Keep the local source intact and record a review marker.
+              metaStore.put({
+                key: conflictKey,
+                value: {
+                  workspaceId,
+                  entityType: row.entityType,
+                  recordId: row.recordId,
+                  localKey: row.key,
+                  workspaceKey: nextKey,
+                  detectedAt: new Date().toISOString(),
+                  reason: targetRequest.result ? 'workspace_record_exists' : 'workspace_outbox_exists',
+                },
+              });
+              conflicts += 1;
+              adoptNext(index + 1);
+              return;
+            }
+
+            const operation = row.deletedAt ? 'delete' : 'upsert';
+            recordsStore.put({ ...row, key: nextKey, workspaceId, syncState: 'pending' });
+            outboxStore.put({
+              id: nextKey,
+              recordKey: nextKey,
+              workspaceId,
+              entityType: row.entityType,
+              recordId: row.recordId,
+              operation,
+              operationId: createSyncOperationId(),
+              payload: row.deletedAt ? {} : row.payload,
+              expectedCloudUpdatedAt: row.cloudUpdatedAt || null,
+              updatedAt: row.updatedAt,
+              createdAt: row.updatedAt,
+            });
+            recordsStore.delete(row.key);
+            metaStore.delete(conflictKey);
+            adopted += 1;
+            adoptNext(index + 1);
+          };
+
+          pendingByRecord.onsuccess = () => {
+            recordPending = pendingByRecord.result || [];
+            byRecordReady = true;
+            finishCheck();
+          };
+          pendingById.onsuccess = () => {
+            idPending = pendingById.result || null;
+            byIdReady = true;
+            finishCheck();
+          };
+        };
+      };
+
+      adoptNext(0);
     };
-    tx.oncomplete = () => { db.close(); resolve(); };
-    tx.onerror = () => { const error = tx.error || new Error('Could not attach local records to the workspace.'); db.close(); reject(error); };
+
+    tx.oncomplete = () => { db.close(); resolve({ adopted, conflicts }); };
+    tx.onerror = () => {
+      const error = tx.error || new Error('Could not attach local records to the workspace.');
+      db.close();
+      reject(error);
+    };
+    tx.onabort = () => {
+      const error = tx.error || new Error('Workspace adoption was aborted.');
+      db.close();
+      reject(error);
+    };
   });
 }
