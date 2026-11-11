@@ -25,10 +25,18 @@ const LEGACY_STORAGE_BASELINE_KEY = 'veltro.cloud-sync.local-storage-baseline.v1
 const LEGACY_STORAGE_EXCLUDED = /^(?:veltro\.purchases\.v1|veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|veltro-products-catalog-v1|veltro-products-conflicts-v1|sb-[^-]+-auth-token)$/i;
 
 function readStorageBaseline() {
+  const raw = localStorage.getItem(LEGACY_STORAGE_BASELINE_KEY);
+  if (!raw) return {};
+  let parsed;
   try {
-    const parsed = JSON.parse(localStorage.getItem(LEGACY_STORAGE_BASELINE_KEY) || '{}');
-    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
-  } catch { return {}; }
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new Error('Legacy cloud-sync baseline is corrupt; refusing to overwrite local or cloud settings.');
+  }
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('Legacy cloud-sync baseline is invalid; refusing to overwrite local or cloud settings.');
+  }
+  return parsed;
 }
 
 function writeStorageBaseline(baseline) {
@@ -84,6 +92,8 @@ async function syncLegacyLocalStorage(workspaceId) {
         recordId: key,
         operation: 'legacy_local_storage',
       };
+      error.pushed = pushed;
+      error.pulled = pulled;
       throw error;
     }
 
@@ -264,6 +274,8 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
       pushed += legacy.pushed;
       pulled += legacy.pulled;
     } catch (error) {
+      pushed += Number(error?.pushed) || 0;
+      pulled += Number(error?.pulled) || 0;
       if (error?.code === 'SYNC_CONFLICT') {
         return {
           status: 'conflict',
