@@ -60,6 +60,16 @@ async function syncCloudRecord({ workspaceId, entityType, recordId, payload, exp
     throw new Error('workspaceId, entityType and recordId are required.');
   }
   if (payload === undefined) throw new Error('payload is required.');
+
+  // Never send an unkeyed cloud mutation. A stable operation ID is persisted in the
+  // IndexedDB outbox (or legacy retry state) before this function is called.
+  const stableOperationId = typeof operationId === 'string' ? operationId.trim() : '';
+  if (!stableOperationId) {
+    const error = new Error('A stable operationId is required for every cloud record write.');
+    error.code = 'SYNC_IDEMPOTENCY_REQUIRED';
+    throw error;
+  }
+
   const client = requireCloud();
   const { data: authData, error: authError } = await client.auth.getUser();
   if (authError) throw authError;
@@ -71,7 +81,7 @@ async function syncCloudRecord({ workspaceId, entityType, recordId, payload, exp
     p_record_id: String(recordId),
     p_payload: payload,
     p_device_id: getDeviceId(),
-    p_operation_id: operationId,
+    p_operation_id: stableOperationId,
     p_expected_updated_at: expectedUpdatedAt,
     p_deleted: deleted,
   });
