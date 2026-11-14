@@ -3,6 +3,9 @@ name: Build and deploy VELTRO-PRO
 on:
   push:
     branches: ['**']
+  pull_request:
+    branches: ['main']
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 permissions:
@@ -27,6 +30,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Run sync regression tests
+        run: npm test
       - name: Build
         env:
           # Accept either GitHub Actions Variables or Secrets so the build matches the repo setup.
@@ -39,6 +44,52 @@ jobs:
         with:
           path: dist
 
+  postgres-migration-test:
+    name: PostgreSQL migration and RLS integration
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: veltro_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d veltro_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create isolated Supabase auth and RLS fixture
+        run: |
+          docker run --rm --network host \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -e PGPASSWORD=postgres postgres:17 \
+            psql -h 127.0.0.1 -U postgres -d veltro_test -v ON_ERROR_STOP=1 \
+            -f /workspace/tests/postgres/cloud_sync_schema.sql
+      - name: Apply all pending cloud CAS and operation-ledger migrations to ephemeral PostgreSQL
+        run: |
+          docker run --rm --network host \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -e PGPASSWORD=postgres postgres:17 \
+            psql -h 127.0.0.1 -U postgres -d veltro_test -v ON_ERROR_STOP=1 \
+            -f /workspace/supabase/migrations/20261105231016_add_cloud_record_compare_and_swap_rpc.sql \
+            -f /workspace/supabase/migrations/20261105231118_tighten_cloud_record_compare_and_swap_missing_rows.sql \
+            -f /workspace/supabase/migrations/20261105231155_add_cloud_record_sync_operation_idempotency.sql \
+            -f /workspace/supabase/migrations/20261113082500_require_cloud_record_sync_operation_id.sql \
+            -f /workspace/supabase/migrations/20261114095000_add_cloud_record_sync_operation_ledger.sql
+      - name: Verify delayed retries, CAS conflicts, and RLS enforcement
+        run: |
+          docker run --rm --network host \
+            -v "$GITHUB_WORKSPACE:/workspace" \
+            -e PGPASSWORD=postgres postgres:17 \
+            psql -h 127.0.0.1 -U postgres -d veltro_test -v ON_ERROR_STOP=1 \
+            -f /workspace/tests/postgres/cloud_record_sync_operation_ledger.integration.sql
+
   deploy:
     timeout-minutes: 10
     if: github.ref == 'refs/heads/main'
@@ -46,7 +97,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, postgres-migration-test]
     steps:
       - name: Deploy
         id: deployment

@@ -3,11 +3,20 @@ import {
   adoptLocalRecordsIntoWorkspace,
   getActiveWorkspaceId,
   listPendingSyncOperations,
+  filterPendingSyncOperationsForWorkspace,
+  listWorkspaceAdoptionConflicts,
+  normalizePendingSyncOperations,
   markLocalRecordSynced,
   mergeCloudRecord,
   removePendingSyncOperation,
 } from './localDatabase.js';
 import { deleteCloudRecord, getCloudRecords, saveCloudRecord } from './cloudStorage.js';
+import {
+  LEGACY_STORAGE_OPERATION_IDS_KEY,
+  classifyLegacyStorageChange,
+  getStableLegacyStorageOperationId,
+  clearLegacyStorageOperationId,
+} from './legacyStorageSync.js';
 
 let syncInFlight = null;
 
@@ -16,14 +25,26 @@ const LEGACY_STORAGE_BASELINE_KEY = 'veltro.cloud-sync.local-storage-baseline.v1
 const LEGACY_STORAGE_EXCLUDED = /^(?:veltro\.purchases\.v1|veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|veltro-products-catalog-v1|veltro-products-conflicts-v1|sb-[^-]+-auth-token)$/i;
 
 function readStorageBaseline() {
+  const raw = localStorage.getItem(LEGACY_STORAGE_BASELINE_KEY);
+  if (!raw) return {};
+  let parsed;
   try {
-    const parsed = JSON.parse(localStorage.getItem(LEGACY_STORAGE_BASELINE_KEY) || '{}');
-    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
-  } catch { return {}; }
+    parsed = JSON.parse(raw);
+  } catch {
+    throw new Error('Legacy cloud-sync baseline is corrupt; refusing to overwrite local or cloud settings.');
+  }
+  if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    throw new Error('Legacy cloud-sync baseline is invalid; refusing to overwrite local or cloud settings.');
+  }
+  return parsed;
+}
+
+function writeStorageBaseline(baseline) {
+  localStorage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline));
 }
 
 function isSyncableStorageKey(key) {
-  if (!key || LEGACY_STORAGE_EXCLUDED.test(key)) return false;
+  if (!key || key === LEGACY_STORAGE_OPERATION_IDS_KEY || LEGACY_STORAGE_EXCLUDED.test(key)) return false;
   // Sync business records/settings only; do not replicate arbitrary browser or auth state.
   return /^(?:veltro[._-]|products$|categories$|sales$|purchases$|customers$|suppliers$|orders$|invoices$|expenses$|stock$)/i.test(key);
 }
@@ -55,44 +76,79 @@ async function syncLegacyLocalStorage(workspaceId) {
     const remoteValue = row && !row.deleted_at && typeof row.payload?.value === 'string'
       ? row.payload.value : null;
 
-    // On a new device, adopt existing cloud data rather than overwrite it with defaults.
-    if (oldValue === undefined && row) {
-      if (remoteValue === null) {
-        if (localValue !== null) localStorage.removeItem(key);
-      } else {
-        localStorage.setItem(key, remoteValue);
-      }
+    const decision = classifyLegacyStorageChange({
+      localValue,
+      baselineValue: oldValue,
+      remoteValue,
+      baselineExists: oldValue !== undefined,
+      rowExists: Boolean(row),
+    });
+
+    if (decision === 'conflict') {
+      const error = new Error('Both this device and the cloud changed the same legacy setting since the last acknowledged snapshot.');
+      error.code = 'SYNC_CONFLICT';
+      error.conflict = {
+        entityType: LEGACY_STORAGE_ENTITY,
+        recordId: key,
+        operation: 'legacy_local_storage',
+      };
+      error.pushed = pushed;
+      error.pulled = pulled;
+      throw error;
+    }
+
+    if (decision === 'adopt_remote' || decision === 'pull_remote') {
+      if (remoteValue === null) localStorage.removeItem(key);
+      else localStorage.setItem(key, remoteValue);
       baseline[key] = remoteValue;
+      writeStorageBaseline(baseline);
+      try { clearLegacyStorageOperationId(key); } catch {}
       pulled += 1;
       continue;
     }
 
-    const localChanged = localValue !== oldValue;
-    const remoteChanged = (remoteValue !== oldValue) || (!row && oldValue !== undefined);
-    if (localChanged) {
+    if (decision === 'converged') {
+      baseline[key] = localValue;
+      writeStorageBaseline(baseline);
+      try { clearLegacyStorageOperationId(key); } catch {}
+      continue;
+    }
+
+    if (decision === 'push_local') {
+      // Persist the idempotency key before sending. If the response is lost, the next
+      // retry reuses this key; if the local value changes, a new key is allocated.
+      const operationId = getStableLegacyStorageOperationId(key, localValue);
       if (localValue === null) {
-        await deleteCloudRecord({ workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key });
-        baseline[key] = null;
+        await deleteCloudRecord({
+          workspaceId,
+          entityType: LEGACY_STORAGE_ENTITY,
+          recordId: key,
+          expectedUpdatedAt: row?.updated_at || null,
+          operationId,
+        });
       } else {
         await saveCloudRecord({
-          workspaceId, entityType: LEGACY_STORAGE_ENTITY, recordId: key,
+          workspaceId,
+          entityType: LEGACY_STORAGE_ENTITY,
+          recordId: key,
           payload: { value: localValue },
+          expectedUpdatedAt: row?.updated_at || null,
+          operationId,
         });
-        baseline[key] = localValue;
       }
+      baseline[key] = localValue;
+      // Baseline must be durable before discarding the retry key.
+      writeStorageBaseline(baseline);
+      try { clearLegacyStorageOperationId(key); } catch {}
       pushed += 1;
       continue;
     }
 
-    if (remoteChanged) {
-      if (remoteValue === null) localStorage.removeItem(key);
-      else localStorage.setItem(key, remoteValue);
-      baseline[key] = remoteValue;
-      pulled += 1;
+    if (decision === 'unchanged') {
+      try { clearLegacyStorageOperationId(key); } catch {}
     }
   }
 
-  try { localStorage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline)); } catch {}
   return { pushed, pulled };
 }
 
@@ -203,7 +259,12 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     if (typeof navigator !== 'undefined' && !navigator.onLine) return { status: 'offline', pushed: 0, pulled: 0 };
 
     const workspace = await getOrCreateWorkspace();
-    const pending = await listPendingSyncOperations();
+    // Persist stable operation IDs for older outbox rows before any network retry.
+    await normalizePendingSyncOperations();
+    const allPending = await listPendingSyncOperations();
+    // Do not send an operation from a different workspace using the current user's
+    // active workspace ID. Keep those operations queued until that workspace is active.
+    const pending = filterPendingSyncOperationsForWorkspace(allPending, workspace.id);
     let pushed = 0;
     let pulled = 0;
     // Bridge existing sections that still persist directly to localStorage into cloud_records.
@@ -213,33 +274,76 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
       pushed += legacy.pushed;
       pulled += legacy.pulled;
     } catch (error) {
+      pushed += Number(error?.pushed) || 0;
+      pulled += Number(error?.pulled) || 0;
+      if (error?.code === 'SYNC_CONFLICT') {
+        return {
+          status: 'conflict',
+          pushed,
+          pulled,
+          error,
+          workspaceId: workspace.id,
+          conflict: error.conflict || { operation: 'legacy_local_storage' },
+        };
+      }
       return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
     }
     const pendingKeys = new Set(pending.map(item => item.recordKey));
 
     for (const operation of pending) {
       try {
+        let result;
         if (operation.operation === 'delete') {
-          await deleteCloudRecord({
+          result = await deleteCloudRecord({
             workspaceId: workspace.id,
             entityType: operation.entityType,
             recordId: operation.recordId,
+            expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
+            operationId: operation.operationId || null,
           });
         } else {
-          await saveCloudRecord({
+          result = await saveCloudRecord({
             workspaceId: workspace.id,
             entityType: operation.entityType,
             recordId: operation.recordId,
             payload: operation.payload,
+            expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
+            operationId: operation.operationId || null,
           });
         }
-        await markLocalRecordSynced(operation.recordKey);
-        await removePendingSyncOperation(operation.id);
+        await markLocalRecordSynced(
+          operation.recordKey,
+          operation.updatedAt || operation.createdAt,
+          result?.updated_at || result?.updatedAt,
+          operation.operationId || null,
+        );
+        await removePendingSyncOperation(
+          operation.id,
+          operation.updatedAt || operation.createdAt,
+          operation.operationId || null,
+        );
         pendingKeys.delete(operation.recordKey);
         pushed += 1;
         onProgress?.({ phase: 'upload', completed: pushed, total: pending.length });
       } catch (error) {
         // Keep the operation in the outbox for a later retry; never discard unsynced data.
+        // Report CAS failures distinctly so the UI can distinguish a device conflict
+        // from an offline/network interruption.
+        if (error?.code === 'SYNC_CONFLICT') {
+          return {
+            status: 'conflict',
+            pushed,
+            pulled,
+            error,
+            workspaceId: workspace.id,
+            conflict: {
+              entityType: operation.entityType,
+              recordId: operation.recordId,
+              operation: operation.operation,
+              operationId: operation.operationId || null,
+            },
+          };
+        }
         return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
       }
     }
@@ -254,6 +358,18 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
         pulled += 1;
       }
       onProgress?.({ phase: 'download', entityType, completed: pulled });
+    }
+
+    const adoptionConflicts = await listWorkspaceAdoptionConflicts(workspace.id);
+    if (adoptionConflicts.length) {
+      return {
+        status: 'conflict',
+        pushed,
+        pulled,
+        workspaceId: workspace.id,
+        conflicts: adoptionConflicts,
+        conflict: { operation: 'workspace_adoption' },
+      };
     }
 
     return { status: 'synced', pushed, pulled, workspaceId: workspace.id };
@@ -286,7 +402,13 @@ export function startAutoSync({ entityTypes = DEFAULT_ENTITY_TYPES, onStatus } =
     }
   };
   const onOnline = () => { void run(); };
-  if (typeof window !== 'undefined') window.addEventListener('online', onOnline);
+  const onFocus = () => { if (typeof document === 'undefined' || document.visibilityState === 'visible') void run(); };
+  const onVisibility = () => { if (document.visibilityState === 'visible') void run(); };
+  if (typeof window !== 'undefined') {
+    window.addEventListener('online', onOnline);
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisibility);
+  }
   const unsubscribeAuth = subscribeToAuthChanges(({ event, session }) => {
     if (session?.user && ['INITIAL_SESSION', 'SIGNED_IN', 'TOKEN_REFRESHED', 'USER_UPDATED'].includes(event)) {
       void run();
@@ -295,7 +417,11 @@ export function startAutoSync({ entityTypes = DEFAULT_ENTITY_TYPES, onStatus } =
   if (typeof navigator === 'undefined' || navigator.onLine) void run();
   return () => {
     stopped = true;
-    if (typeof window !== 'undefined') window.removeEventListener('online', onOnline);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('online', onOnline);
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisibility);
+    }
     unsubscribeAuth();
   };
 }
