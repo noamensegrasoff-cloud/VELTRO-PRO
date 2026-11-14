@@ -71,12 +71,13 @@ jobs:
             -e PGPASSWORD=postgres postgres:17 \
             psql -h 127.0.0.1 -U postgres -d veltro_test -v ON_ERROR_STOP=1 \
             -f /workspace/tests/postgres/cloud_sync_schema.sql
-      - name: Apply cloud operation ledger migration to ephemeral PostgreSQL
+      - name: Apply pending CAS and operation-ledger migrations to ephemeral PostgreSQL
         run: |
           docker run --rm --network host \
             -v "$GITHUB_WORKSPACE:/workspace" \
             -e PGPASSWORD=postgres postgres:17 \
             psql -h 127.0.0.1 -U postgres -d veltro_test -v ON_ERROR_STOP=1 \
+            -f /workspace/supabase/migrations/20261113082500_require_cloud_record_sync_operation_id.sql \
             -f /workspace/supabase/migrations/20261114095000_add_cloud_record_sync_operation_ledger.sql
       - name: Verify delayed retries, CAS conflicts, and RLS enforcement
         run: |
