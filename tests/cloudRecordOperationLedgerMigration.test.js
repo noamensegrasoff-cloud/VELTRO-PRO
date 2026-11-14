@@ -15,8 +15,8 @@ test('cloud operation ledger is append-only, workspace-scoped, and protected by 
   assert.match(normalized, /grant select, insert on table public\.cloud_record_sync_operations to authenticated/);
   assert.match(normalized, /private\.is_workspace_member\(workspace_id\)/);
   assert.match(normalized, /private\.has_workspace_permission\(/);
-  assert.match(normalized, /required_workspace_permission\\(entity_type, 'insert', record_id\\)/);
-  assert.match(normalized, /required_workspace_permission\\(entity_type, 'update', record_id\\)/);
+  assert.match(normalized, /required_workspace_permission\(entity_type, 'insert', record_id\)/);
+  assert.match(normalized, /required_workspace_permission\(entity_type, 'update', record_id\)/);
   assert.match(normalized, /synced_record\.last_operation_id = cloud_record_sync_operations\.operation_id/);
   assert.match(normalized, /pg_catalog\.to_jsonb\(synced_record\) = cloud_record_sync_operations\.record_data/);
   assert.doesNotMatch(normalized, /grant [^;]*(update|delete)[^;]*cloud_record_sync_operations/i);
