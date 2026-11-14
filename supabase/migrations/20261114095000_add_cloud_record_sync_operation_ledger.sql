@@ -55,6 +55,16 @@ create policy "Writers can record acknowledged cloud sync operations"
       workspace_id,
       public.required_workspace_permission(entity_type, 'read', record_id)
     )
+    and (
+      private.has_workspace_permission(
+        workspace_id,
+        public.required_workspace_permission(entity_type, 'insert', record_id)
+      )
+      or private.has_workspace_permission(
+        workspace_id,
+        public.required_workspace_permission(entity_type, 'update', record_id)
+      )
+    )
     and exists (
       select 1
       from public.cloud_records as synced_record
