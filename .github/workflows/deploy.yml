@@ -71,12 +71,15 @@ jobs:
             -e PGPASSWORD=postgres postgres:17 \
             psql -h 127.0.0.1 -U postgres -d veltro_test -v ON_ERROR_STOP=1 \
             -f /workspace/tests/postgres/cloud_sync_schema.sql
-      - name: Apply pending CAS and operation-ledger migrations to ephemeral PostgreSQL
+      - name: Apply all pending cloud CAS and operation-ledger migrations to ephemeral PostgreSQL
         run: |
           docker run --rm --network host \
             -v "$GITHUB_WORKSPACE:/workspace" \
             -e PGPASSWORD=postgres postgres:17 \
             psql -h 127.0.0.1 -U postgres -d veltro_test -v ON_ERROR_STOP=1 \
+            -f /workspace/supabase/migrations/20261105231016_add_cloud_record_compare_and_swap_rpc.sql \
+            -f /workspace/supabase/migrations/20261105231118_tighten_cloud_record_compare_and_swap_missing_rows.sql \
+            -f /workspace/supabase/migrations/20261105231155_add_cloud_record_sync_operation_idempotency.sql \
             -f /workspace/supabase/migrations/20261113082500_require_cloud_record_sync_operation_id.sql \
             -f /workspace/supabase/migrations/20261114095000_add_cloud_record_sync_operation_ledger.sql
       - name: Verify delayed retries, CAS conflicts, and RLS enforcement
