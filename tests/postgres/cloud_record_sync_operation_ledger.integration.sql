@@ -26,6 +26,9 @@ begin
     raise exception 'Initial idempotent insert did not return the expected cloud row.';
   end if;
 
+  -- A second authenticated workspace member represents another device/session.
+  perform pg_catalog.set_config('request.jwt.claim.sub', '20000000-0000-4000-8000-000000000003', false);
+
   select result.sync_status, result.record_data
     into v_status, v_second
   from public.sync_cloud_record_cas(
@@ -38,6 +41,9 @@ begin
      or v_second->>'last_operation_id' <> 'operation-b' then
     raise exception 'The second CAS update did not replace the first snapshot.';
   end if;
+
+  -- The original writer retries after the other workspace member has updated the row.
+  perform pg_catalog.set_config('request.jwt.claim.sub', '20000000-0000-4000-8000-000000000001', false);
 
   select result.sync_status, result.record_data
     into v_status, v_replay
@@ -81,6 +87,9 @@ begin
   exception
     when sqlstate '23505' then null;
   end;
+
+  -- The second authenticated member also proves that a stale version is rejected.
+  perform pg_catalog.set_config('request.jwt.claim.sub', '20000000-0000-4000-8000-000000000003', false);
 
   select result.sync_status
     into v_status
