@@ -38,8 +38,9 @@ begin
   ) as result;
 
   if v_status <> 'synced' or v_second->'payload'->>'stock' <> '15'
-     or v_second->>'last_operation_id' <> 'operation-b' then
-    raise exception 'The second CAS update did not replace the first snapshot.';
+     or v_second->>'last_operation_id' <> 'operation-b'
+     or v_second->>'updated_by' <> '20000000-0000-4000-8000-000000000003' then
+    raise exception 'The second authenticated workspace member did not replace the first snapshot.';
   end if;
 
   -- The original writer retries after the other workspace member has updated the row.
