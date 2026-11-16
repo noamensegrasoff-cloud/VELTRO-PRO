@@ -619,7 +619,7 @@ export default function App() {
         else if(result?.status==='not_configured')setCloudState('not_configured');
         else if(result?.status==='conflict')setCloudState('conflict');
         else if(result?.status==='error'||result?.status==='partial')setCloudState('error');
-        else if(result?.status==='offline')setCloudState('configured');
+        else if(result?.status==='pending'||result?.status==='offline')setCloudState('configured');
       }
     });
     const refresh=()=>{ if(alive && typeof navigator!=='undefined' && navigator.onLine) void syncWorkspace().catch(()=>{}); };
