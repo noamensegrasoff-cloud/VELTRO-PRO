@@ -20,6 +20,19 @@ import {
 
 let syncInFlight = null;
 
+// A sync pass is complete only when its workspace outbox is empty at the final
+// acknowledgement check. Local edits can be queued while an earlier upload is in flight.
+export function buildSyncCompletionResult(pendingOperations, { pushed = 0, pulled = 0, workspaceId = null } = {}) {
+  const pending = Array.isArray(pendingOperations) ? pendingOperations.length : 0;
+  return {
+    status: pending > 0 ? 'pending' : 'synced',
+    pushed,
+    pulled,
+    workspaceId,
+    pending,
+  };
+}
+
 const LEGACY_STORAGE_ENTITY = 'local_storage';
 const LEGACY_STORAGE_BASELINE_KEY = 'veltro.cloud-sync.local-storage-baseline.v1';
 const LEGACY_STORAGE_EXCLUDED = /^(?:veltro\.purchases\.v1|veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|veltro-products-catalog-v1|veltro-products-conflicts-v1|sb-[^-]+-auth-token)$/i;
@@ -372,7 +385,17 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
       };
     }
 
-    return { status: 'synced', pushed, pulled, workspaceId: workspace.id };
+    // Re-read after downloads as well: an edit may have entered IndexedDB while
+    // this pass was uploading an older snapshot. Never report "synced" with work queued.
+    const remainingPending = filterPendingSyncOperationsForWorkspace(
+      await listPendingSyncOperations(),
+      workspace.id,
+    );
+    return buildSyncCompletionResult(remainingPending, {
+      pushed,
+      pulled,
+      workspaceId: workspace.id,
+    });
   })();
 
   try {
