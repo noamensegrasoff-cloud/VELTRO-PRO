@@ -69,14 +69,44 @@ test('legacy sync refuses to silently replace corrupt idempotency state', () => 
   );
 });
 
-test('new devices adopt existing cloud values instead of uploading local defaults', () => {
+test('a new device with no local value adopts an existing cloud value', () => {
   assert.equal(classifyLegacyStorageChange({
-    localValue: 'default',
+    localValue: null,
     baselineValue: undefined,
     remoteValue: 'cloud',
     baselineExists: false,
     rowExists: true,
   }), 'adopt_remote');
+});
+
+test('a new device preserves a present local value as a conflict instead of overwriting it', () => {
+  assert.equal(classifyLegacyStorageChange({
+    localValue: 'local-user-data',
+    baselineValue: undefined,
+    remoteValue: 'cloud',
+    baselineExists: false,
+    rowExists: true,
+  }), 'conflict');
+});
+
+test('a new device converges without a conflict when local and cloud values already match', () => {
+  assert.equal(classifyLegacyStorageChange({
+    localValue: 'same-value',
+    baselineValue: undefined,
+    remoteValue: 'same-value',
+    baselineExists: false,
+    rowExists: true,
+  }), 'converged');
+});
+
+test('a local value is preserved when the first cloud snapshot is a tombstone', () => {
+  assert.equal(classifyLegacyStorageChange({
+    localValue: 'local-user-data',
+    baselineValue: undefined,
+    remoteValue: null,
+    baselineExists: false,
+    rowExists: true,
+  }), 'conflict');
 });
 
 test('legacy local-only edits are queued for upload', () => {
