@@ -66,8 +66,13 @@ export function classifyLegacyStorageChange({
   baselineExists,
   rowExists,
 }) {
-  // A new device must adopt an existing cloud value before considering local defaults.
-  if (!baselineExists && rowExists) return 'adopt_remote';
+  // With no acknowledged baseline, a present local value may be user data rather
+  // than an application default. Never replace it automatically with the cloud copy.
+  // An absent local value can safely adopt the existing cloud snapshot.
+  if (!baselineExists && rowExists) {
+    if (localValue === null || localValue === undefined) return 'adopt_remote';
+    return localValue === remoteValue ? 'converged' : 'conflict';
+  }
 
   const localChanged = localValue !== baselineValue;
   const remoteChanged = remoteValue !== baselineValue || (!rowExists && baselineExists);
