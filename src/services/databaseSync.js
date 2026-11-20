@@ -22,14 +22,82 @@ let syncInFlight = null;
 
 // A sync pass is complete only when its workspace outbox is empty at the final
 // acknowledgement check. Local edits can be queued while an earlier upload is in flight.
-export function buildSyncCompletionResult(pendingOperations, { pushed = 0, pulled = 0, workspaceId = null } = {}) {
+export function buildSyncCompletionResult(pendingOperations, {
+  pushed = 0,
+  pulled = 0,
+  workspaceId = null,
+  conflicts = [],
+  error = null,
+} = {}) {
   const pending = Array.isArray(pendingOperations) ? pendingOperations.length : 0;
+  if (conflicts.length) {
+    return {
+      status: 'conflict',
+      pushed,
+      pulled,
+      workspaceId,
+      pending,
+      conflicts,
+      conflict: conflicts[0],
+      ...(error ? { error } : {}),
+    };
+  }
   return {
     status: pending > 0 ? 'pending' : 'synced',
     pushed,
     pulled,
     workspaceId,
     pending,
+  };
+}
+
+export async function processPendingSyncOperations(operations, {
+  workspaceId,
+  initialPushed = 0,
+  uploadOperation,
+  acknowledgeOperation,
+  onProgress,
+} = {}) {
+  if (typeof uploadOperation !== 'function' || typeof acknowledgeOperation !== 'function') {
+    throw new Error('Upload and acknowledgement handlers are required to process the sync outbox.');
+  }
+
+  const queue = Array.isArray(operations) ? operations : [];
+  const pendingKeys = new Set(queue.map(operation => operation.recordKey).filter(Boolean));
+  const conflicts = [];
+  let pushed = initialPushed;
+  let conflictError = null;
+
+  for (const operation of queue) {
+    try {
+      const result = await uploadOperation(operation, workspaceId);
+      await acknowledgeOperation(operation, result);
+      pendingKeys.delete(operation.recordKey);
+      pushed += 1;
+      onProgress?.({ phase: 'upload', completed: pushed, total: queue.length });
+    } catch (error) {
+      if (error?.code === 'SYNC_CONFLICT') {
+        conflictError ||= error;
+        conflicts.push({
+          entityType: operation.entityType,
+          recordId: operation.recordId,
+          operation: operation.operation,
+          operationId: operation.operationId || null,
+        });
+        // A conflict belongs to one record. Keep that operation queued, but do not
+        // let it block unrelated records in the same workspace outbox.
+        continue;
+      }
+      return { status: 'partial', pushed, pendingKeys, conflicts, error };
+    }
+  }
+
+  return {
+    status: 'complete',
+    pushed,
+    pendingKeys,
+    conflicts,
+    error: conflictError,
   };
 }
 
@@ -280,6 +348,8 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     const pending = filterPendingSyncOperationsForWorkspace(allPending, workspace.id);
     let pushed = 0;
     let pulled = 0;
+    const conflicts = [];
+    let firstConflictError = null;
     // Bridge existing sections that still persist directly to localStorage into cloud_records.
     // This keeps legacy screens working while their CRUD flows migrate to the shared repository.
     try {
@@ -290,40 +360,36 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
       pushed += Number(error?.pushed) || 0;
       pulled += Number(error?.pulled) || 0;
       if (error?.code === 'SYNC_CONFLICT') {
-        return {
-          status: 'conflict',
-          pushed,
-          pulled,
-          error,
-          workspaceId: workspace.id,
-          conflict: error.conflict || { operation: 'legacy_local_storage' },
-        };
+        conflicts.push(error.conflict || { operation: 'legacy_local_storage' });
+        firstConflictError ||= error;
+      } else {
+        return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
       }
-      return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
     }
-    const pendingKeys = new Set(pending.map(item => item.recordKey));
 
-    for (const operation of pending) {
-      try {
-        let result;
+    const queueResult = await processPendingSyncOperations(pending, {
+      workspaceId: workspace.id,
+      initialPushed: pushed,
+      uploadOperation: async operation => {
         if (operation.operation === 'delete') {
-          result = await deleteCloudRecord({
+          return deleteCloudRecord({
             workspaceId: workspace.id,
             entityType: operation.entityType,
             recordId: operation.recordId,
-            expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
-            operationId: operation.operationId || null,
-          });
-        } else {
-          result = await saveCloudRecord({
-            workspaceId: workspace.id,
-            entityType: operation.entityType,
-            recordId: operation.recordId,
-            payload: operation.payload,
             expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
             operationId: operation.operationId || null,
           });
         }
+        return saveCloudRecord({
+          workspaceId: workspace.id,
+          entityType: operation.entityType,
+          recordId: operation.recordId,
+          payload: operation.payload,
+          expectedUpdatedAt: operation.expectedCloudUpdatedAt || null,
+          operationId: operation.operationId || null,
+        });
+      },
+      acknowledgeOperation: async (operation, result) => {
         await markLocalRecordSynced(
           operation.recordKey,
           operation.updatedAt || operation.createdAt,
@@ -335,30 +401,22 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
           operation.updatedAt || operation.createdAt,
           operation.operationId || null,
         );
-        pendingKeys.delete(operation.recordKey);
-        pushed += 1;
-        onProgress?.({ phase: 'upload', completed: pushed, total: pending.length });
-      } catch (error) {
-        // Keep the operation in the outbox for a later retry; never discard unsynced data.
-        // Report CAS failures distinctly so the UI can distinguish a device conflict
-        // from an offline/network interruption.
-        if (error?.code === 'SYNC_CONFLICT') {
-          return {
-            status: 'conflict',
-            pushed,
-            pulled,
-            error,
-            workspaceId: workspace.id,
-            conflict: {
-              entityType: operation.entityType,
-              recordId: operation.recordId,
-              operation: operation.operation,
-              operationId: operation.operationId || null,
-            },
-          };
-        }
-        return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
-      }
+      },
+      onProgress,
+    });
+    pushed = queueResult.pushed;
+    const pendingKeys = queueResult.pendingKeys;
+    conflicts.push(...queueResult.conflicts);
+    firstConflictError ||= queueResult.error?.code === 'SYNC_CONFLICT' ? queueResult.error : null;
+    if (queueResult.status === 'partial') {
+      return {
+        status: 'partial',
+        pushed,
+        pulled,
+        error: queueResult.error,
+        workspaceId: workspace.id,
+        conflicts,
+      };
     }
 
     const types = [...new Set(entityTypes.filter(Boolean))];
@@ -374,16 +432,10 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
     }
 
     const adoptionConflicts = await listWorkspaceAdoptionConflicts(workspace.id);
-    if (adoptionConflicts.length) {
-      return {
-        status: 'conflict',
-        pushed,
-        pulled,
-        workspaceId: workspace.id,
-        conflicts: adoptionConflicts,
-        conflict: { operation: 'workspace_adoption' },
-      };
-    }
+    conflicts.push(...adoptionConflicts.map(conflict => ({
+      ...conflict,
+      operation: 'workspace_adoption',
+    })));
 
     // Re-read after downloads as well: an edit may have entered IndexedDB while
     // this pass was uploading an older snapshot. Never report "synced" with work queued.
@@ -395,6 +447,8 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
       pushed,
       pulled,
       workspaceId: workspace.id,
+      conflicts,
+      error: firstConflictError,
     });
   })();
 
