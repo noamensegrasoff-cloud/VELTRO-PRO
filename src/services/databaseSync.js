@@ -105,8 +105,8 @@ const LEGACY_STORAGE_ENTITY = 'local_storage';
 const LEGACY_STORAGE_BASELINE_KEY = 'veltro.cloud-sync.local-storage-baseline.v1';
 const LEGACY_STORAGE_EXCLUDED = /^(?:veltro\.purchases\.v1|veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|veltro-products-catalog-v1|veltro-products-conflicts-v1|sb-[^-]+-auth-token)$/i;
 
-function readStorageBaseline() {
-  const raw = localStorage.getItem(LEGACY_STORAGE_BASELINE_KEY);
+function readStorageBaseline(storage = globalThis.localStorage) {
+  const raw = storage.getItem(LEGACY_STORAGE_BASELINE_KEY);
   if (!raw) return {};
   let parsed;
   try {
@@ -120,8 +120,8 @@ function readStorageBaseline() {
   return parsed;
 }
 
-function writeStorageBaseline(baseline) {
-  localStorage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline));
+function writeStorageBaseline(baseline, storage = globalThis.localStorage) {
+  storage.setItem(LEGACY_STORAGE_BASELINE_KEY, JSON.stringify(baseline));
 }
 
 function isSyncableStorageKey(key) {
@@ -130,24 +130,33 @@ function isSyncableStorageKey(key) {
   return /^(?:veltro[._-]|products$|categories$|sales$|purchases$|customers$|suppliers$|orders$|invoices$|expenses$|stock$)/i.test(key);
 }
 
-async function syncLegacyLocalStorage(workspaceId) {
-  if (typeof localStorage === 'undefined') return { pushed: 0, pulled: 0 };
-  const baseline = readStorageBaseline();
+export async function syncLegacyLocalStorage(workspaceId, dependencies = {}) {
+  const storage = dependencies.storage || globalThis.localStorage;
+  if (!storage) return { pushed: 0, pulled: 0, conflicts: [] };
+
+  const readCloudRows = dependencies.getCloudRecords || getCloudRecords;
+  const writeCloudRecord = dependencies.saveCloudRecord || saveCloudRecord;
+  const removeCloudRecord = dependencies.deleteCloudRecord || deleteCloudRecord;
+  const getOperationId = dependencies.getStableLegacyStorageOperationId || getStableLegacyStorageOperationId;
+  const clearOperationId = dependencies.clearLegacyStorageOperationId || clearLegacyStorageOperationId;
+
+  const baseline = readStorageBaseline(storage);
   const local = new Map();
-  for (let i = 0; i < localStorage.length; i += 1) {
-    const key = localStorage.key(i);
+  for (let i = 0; i < storage.length; i += 1) {
+    const key = storage.key(i);
     if (!isSyncableStorageKey(key)) continue;
-    const value = localStorage.getItem(key);
+    const value = storage.getItem(key);
     if (value !== null) local.set(key, value);
   }
 
-  const cloudRows = await getCloudRecords({
+  const cloudRows = await readCloudRows({
     workspaceId, entityType: LEGACY_STORAGE_ENTITY, includeDeleted: true,
   });
   const remote = new Map(cloudRows.map(row => [String(row.record_id), row]));
   const keys = new Set([...local.keys(), ...Object.keys(baseline), ...remote.keys()]);
   let pushed = 0;
   let pulled = 0;
+  const conflicts = [];
 
   for (const key of keys) {
     if (!isSyncableStorageKey(key)) continue;
@@ -166,41 +175,41 @@ async function syncLegacyLocalStorage(workspaceId) {
     });
 
     if (decision === 'conflict') {
-      const error = new Error('Both this device and the cloud changed the same legacy setting since the last acknowledged snapshot.');
-      error.code = 'SYNC_CONFLICT';
-      error.conflict = {
+      conflicts.push({
         entityType: LEGACY_STORAGE_ENTITY,
         recordId: key,
         operation: 'legacy_local_storage',
-      };
-      error.pushed = pushed;
-      error.pulled = pulled;
-      throw error;
+        reason: 'both_sides_changed',
+      });
+      // This key needs explicit review, but independent legacy keys remain safe
+      // to synchronize during the same pass.
+      continue;
     }
 
     if (decision === 'adopt_remote' || decision === 'pull_remote') {
-      if (remoteValue === null) localStorage.removeItem(key);
-      else localStorage.setItem(key, remoteValue);
+      if (remoteValue === null) storage.removeItem(key);
+      else storage.setItem(key, remoteValue);
       baseline[key] = remoteValue;
-      writeStorageBaseline(baseline);
-      try { clearLegacyStorageOperationId(key); } catch {}
+      writeStorageBaseline(baseline, storage);
+      try { clearOperationId(key, storage); } catch {}
       pulled += 1;
       continue;
     }
 
     if (decision === 'converged') {
       baseline[key] = localValue;
-      writeStorageBaseline(baseline);
-      try { clearLegacyStorageOperationId(key); } catch {}
+      writeStorageBaseline(baseline, storage);
+      try { clearOperationId(key, storage); } catch {}
       continue;
     }
 
     if (decision === 'push_local') {
       // Persist the idempotency key before sending. If the response is lost, the next
       // retry reuses this key; if the local value changes, a new key is allocated.
-      const operationId = getStableLegacyStorageOperationId(key, localValue);
+      const operationId = getOperationId(key, localValue, storage);
+      try {
       if (localValue === null) {
-        await deleteCloudRecord({
+        await removeCloudRecord({
           workspaceId,
           entityType: LEGACY_STORAGE_ENTITY,
           recordId: key,
@@ -208,7 +217,7 @@ async function syncLegacyLocalStorage(workspaceId) {
           operationId,
         });
       } else {
-        await saveCloudRecord({
+        await writeCloudRecord({
           workspaceId,
           entityType: LEGACY_STORAGE_ENTITY,
           recordId: key,
@@ -217,20 +226,38 @@ async function syncLegacyLocalStorage(workspaceId) {
           operationId,
         });
       }
+      } catch (error) {
+        if (error?.code === 'SYNC_CONFLICT') {
+          conflicts.push({
+            entityType: LEGACY_STORAGE_ENTITY,
+            recordId: key,
+            operation: 'legacy_local_storage',
+            operationId,
+            reason: 'cloud_changed_during_upload',
+          });
+          continue;
+        }
+        const wrapped = new Error(error?.message || 'Legacy storage synchronization failed.', { cause: error });
+        wrapped.code = error?.code;
+        wrapped.pushed = pushed;
+        wrapped.pulled = pulled;
+        wrapped.conflicts = conflicts;
+        throw wrapped;
+      }
       baseline[key] = localValue;
       // Baseline must be durable before discarding the retry key.
-      writeStorageBaseline(baseline);
-      try { clearLegacyStorageOperationId(key); } catch {}
+      writeStorageBaseline(baseline, storage);
+      try { clearOperationId(key, storage); } catch {}
       pushed += 1;
       continue;
     }
 
     if (decision === 'unchanged') {
-      try { clearLegacyStorageOperationId(key); } catch {}
+      try { clearOperationId(key, storage); } catch {}
     }
   }
 
-  return { pushed, pulled };
+  return { pushed, pulled, conflicts };
 }
 
 export async function getOrCreateWorkspace() {
