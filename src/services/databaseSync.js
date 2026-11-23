@@ -383,14 +383,16 @@ export async function syncWorkspace({ entityTypes = DEFAULT_ENTITY_TYPES, onProg
       const legacy = await syncLegacyLocalStorage(workspace.id);
       pushed += legacy.pushed;
       pulled += legacy.pulled;
+      conflicts.push(...(legacy.conflicts || []));
     } catch (error) {
       pushed += Number(error?.pushed) || 0;
       pulled += Number(error?.pulled) || 0;
+      conflicts.push(...(error?.conflicts || []));
       if (error?.code === 'SYNC_CONFLICT') {
         conflicts.push(error.conflict || { operation: 'legacy_local_storage' });
         firstConflictError ||= error;
       } else {
-        return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id };
+        return { status: 'partial', pushed, pulled, error, workspaceId: workspace.id, conflicts };
       }
     }
 
