@@ -733,7 +733,6 @@ export default function App() {
           return {...conflict,workspaceId,localValue,remoteValue,remoteRow,readOnly:false};
         }
         const recordKey=[workspaceId,conflict.entityType,String(conflict.recordId)].join('::');
-        const local=pendingRows.length?null:null;
         return {...conflict,workspaceId,remoteRow,localKey:recordKey,pending:pendingRows.find(operation=>operation.recordKey===recordKey)||null,local:null,readOnly:false};
       });
       const hydrated=await Promise.all(items.map(async item=>{
@@ -783,11 +782,13 @@ export default function App() {
       }else if(result?.status==='conflict'){
         setCloudState('conflict');await loadSyncConflictReview(result.conflicts||[]);
       }else if(result?.status==='pending'||result?.status==='offline'){
-        setCloudState('configured');setConflictsOpen(false);
+        setCloudState('configured');
+        setConflictReview(previous=>previous.map(entry=>entry.entityType===item.entityType&&String(entry.recordId)===String(item.recordId)?{...entry,resolvedLocally:true}:entry));
+        setConflictError(lang==='ar'?'تم حفظ قرارك محلياً، وما زالت العملية بانتظار تأكيد السحابة. لن تُعتبر مكتملة حتى يصل التأكيد.':lang==='fr'?'Votre choix est enregistré localement et attend encore la confirmation du cloud.':'Your choice is saved locally and is still awaiting cloud confirmation. It is not complete until acknowledged by the cloud.');
       }else if(result?.status==='partial'||result?.status==='error'){
         setCloudState('error');
+        setConflictReview(previous=>previous.map(entry=>entry.entityType===item.entityType&&String(entry.recordId)===String(item.recordId)?{...entry,resolvedLocally:true}:entry));
         setConflictError(result?.error?.message||'بقيت عمليات غير مؤكدة؛ احتفظ النظام بها لإعادة المحاولة.');
-        await loadSyncConflictReview(result.conflicts||[]);
       }else if(result?.status==='not_configured'){
         setCloudState('not_configured');
       }
@@ -940,7 +941,7 @@ export default function App() {
             const remoteSnapshot=isLegacy?item.remoteValue:item.remoteRow?.payload;
             const localText=localSnapshot==null?(lang==='ar'?'غير موجود محلياً':lang==='fr'?'Absent localement':'Not present locally'):typeof localSnapshot==='string'?localSnapshot:JSON.stringify(localSnapshot,null,2);
             const remoteText=remoteSnapshot==null?(lang==='ar'?'غير موجود في السحابة أو محذوف':lang==='fr'?'Absent du cloud ou supprimé':'Absent from cloud or deleted'):typeof remoteSnapshot==='string'?remoteSnapshot:JSON.stringify(remoteSnapshot,null,2);
-            const canResolve=!item.readOnly&&(isLegacy||item.actionable);
+            const canResolve=!item.readOnly&&!item.resolvedLocally&&(isLegacy||item.actionable);
             const reason=item.reason==='cloud_changed_during_upload'?(lang==='ar'?'تغيّر السجل أثناء الرفع':lang==='fr'?'Le cloud a changé pendant l’envoi':'Cloud changed during upload'):item.reason==='both_sides_changed'?(lang==='ar'?'تغيّرت النسختان منذ آخر مزامنة':lang==='fr'?'Les deux versions ont changé':'Both versions changed since last sync'):item.reason==='workspace_record_exists'?(lang==='ar'?'السجل موجود مسبقاً في مساحة العمل':lang==='fr'?'L’enregistrement existe déjà dans l’espace':'Record already exists in workspace'):item.reason==='workspace_outbox_exists'?(lang==='ar'?'توجد عملية معلقة في مساحة العمل':lang==='fr'?'Une opération est en attente':'Workspace already has a pending operation'):(lang==='ar'?'تعارض يحتاج إلى مراجعة':lang==='fr'?'Conflit à examiner':'Conflict needs review');
             return <article className="sync-conflict-card" key={item.entityType+'::'+item.recordId+'::'+index}>
               <div className="sync-conflict-card-head"><div><span>{item.entityType||'record'}</span><h3>{item.recordId||'—'}</h3></div><span className="sync-conflict-reason">{reason}</span></div>
@@ -951,12 +952,12 @@ export default function App() {
               {canResolve?<div className="sync-conflict-actions">
                 <button type="button" className="sync-conflict-keep-local" disabled={Boolean(conflictResolving)} onClick={()=>resolveSyncConflict(item,'local')}>{conflictResolving===[item.entityType,String(item.recordId)].join('::')?(lang==='ar'?'جارٍ الحفظ…':lang==='fr'?'Enregistrement…':'Saving…'):(lang==='ar'?'اعتماد النسخة المحلية':lang==='fr'?'Garder la version locale':'Keep local version')}</button>
                 <button type="button" className="sync-conflict-keep-cloud" disabled={Boolean(conflictResolving)} onClick={()=>resolveSyncConflict(item,'remote')}>{lang==='ar'?'اعتماد النسخة السحابية':lang==='fr'?'Garder la version cloud':'Keep cloud version'}</button>
-              </div>:<p className="sync-conflict-readonly">{lang==='ar'?'هذا التعارض يحتاج إلى معالجة منفصلة؛ لم تُجرَ أي تغييرات عليه.':lang==='fr'?'Ce conflit nécessite un traitement distinct ; aucune donnée n’a été modifiée.':'This conflict needs a separate workflow; no data was changed.'}</p>}
+              </div>:<p className="sync-conflict-readonly">{item.resolvedLocally?(lang==='ar'?'تم حفظ اختيارك محلياً؛ ما زال ينتظر تأكيد السحابة.':lang==='fr'?'Votre choix est enregistré localement ; en attente de confirmation cloud.':'Your choice is saved locally and awaits cloud acknowledgement.'):lang==='ar'?'هذا التعارض يحتاج إلى معالجة منفصلة؛ لم تُجرَ أي تغييرات عليه.':lang==='fr'?'Ce conflit nécessite un traitement distinct ; aucune donnée n’a été modifiée.':'This conflict needs a separate workflow; no data was changed.'}</p>}
             </article>;
           })}
           {conflictError&&<p className="sync-conflicts-error" role="alert">{conflictError}</p>}
         </div>
-        <footer className="sync-conflicts-footer"><span>{syncConflicts.length} {lang==='ar'?'تعارضات':lang==='fr'?'conflits':'conflicts'}</span><button type="button" onClick={()=>openSyncConflictReview()} disabled={conflictsLoading||Boolean(conflictResolving)}>{lang==='ar'?'تحديث النسخ':lang==='fr'?'Actualiser':'Refresh snapshots'}</button><button type="button" className="sync-conflicts-done" onClick={()=>setConflictsOpen(false)}>{lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}</button></footer>
+        <footer className="sync-conflicts-footer"><span>{conflictReview.length} {lang==='ar'?'سجلات للمراجعة':lang==='fr'?'éléments à examiner':'records under review'}</span><button type="button" onClick={()=>openSyncConflictReview()} disabled={conflictsLoading||Boolean(conflictResolving)}>{lang==='ar'?'تحديث النسخ':lang==='fr'?'Actualiser':'Refresh snapshots'}</button><button type="button" className="sync-conflicts-done" onClick={()=>setConflictsOpen(false)}>{lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}</button></footer>
       </section>
     </div>,document.body)}
     {sessionPaused&&<div className="session-pause-overlay"><section className="session-pause-card"><span><LockKeyhole size={25}/></span><h2>{lang==='ar'?'الجلسة معلّقة':lang==='fr'?'Session suspendue':'Session paused'}</h2><p>{lang==='ar'?'تم إخفاء مساحة العمل مؤقتًا. استأنف الجلسة للمتابعة.':lang==='fr'?'Votre espace est masqué temporairement. Reprenez la session.':'Your workspace is hidden temporarily. Resume to continue.'}</p><button onClick={()=>setSessionPaused(false)}>{lang==='ar'?'استئناف الجلسة':lang==='fr'?'Reprendre la session':'Resume session'}</button><button className="pause-signout" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}}>{t('logout')}</button></section></div>}
