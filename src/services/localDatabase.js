@@ -299,6 +299,166 @@ export async function listWorkspaceAdoptionConflicts(workspaceId) {
     .filter(Boolean);
 }
 
+
+/**
+ * Resolve an explicit record-level cloud conflict without losing the losing snapshot.
+ * Choosing local creates a new operation (new request identity) based on the latest
+ * observed cloud version. The new operation ID remains stable in the outbox for retries.
+ * Choosing remote removes the pending write and adopts the latest cloud snapshot.
+ */
+export async function resolvePendingRecordConflict({
+  workspaceId,
+  entityType,
+  recordId,
+  resolution,
+  remoteRow = null,
+} = {}) {
+  if (!workspaceId || !entityType || recordId == null) {
+    throw new Error('workspaceId, entityType and recordId are required.');
+  }
+  if (!['local', 'remote'].includes(resolution)) {
+    throw new Error('resolution must be local or remote.');
+  }
+  if (remoteRow && (
+    remoteRow.workspace_id !== workspaceId
+    || remoteRow.entity_type !== entityType
+    || String(remoteRow.record_id) !== String(recordId)
+  )) {
+    throw new Error('The refreshed cloud snapshot does not match the conflicted record.');
+  }
+
+  const key = makeRecordKey(workspaceId, entityType, recordId);
+  const db = await openDatabase();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction([RECORDS, OUTBOX, META], 'readwrite');
+    const records = tx.objectStore(RECORDS);
+    const outbox = tx.objectStore(OUTBOX);
+    const meta = tx.objectStore(META);
+    const localRequest = records.get(key);
+    const queuedRequest = outbox.index('by_record_key').getAll(key);
+    let localReady = false;
+    let queueReady = false;
+    let current = null;
+    let queuedRows = [];
+    let outcome = null;
+    let failure = null;
+
+    const applyResolution = () => {
+      if (!localReady || !queueReady || outcome || failure) return;
+      if (!current) {
+        failure = new Error('The local conflict snapshot is no longer available.');
+        tx.abort();
+        return;
+      }
+      if (!queuedRows.length) {
+        failure = new Error('The pending operation is no longer available.');
+        tx.abort();
+        return;
+      }
+
+      const latest = queuedRows[queuedRows.length - 1];
+      const resolvedAt = new Date().toISOString();
+      const archiveKey = [
+        'syncConflictResolution',
+        workspaceId,
+        encodeURIComponent(entityType),
+        encodeURIComponent(String(recordId)),
+        resolvedAt,
+        createSyncOperationId(),
+      ].join('::');
+
+      // Keep the losing/local snapshot and the refreshed remote version for audit/recovery.
+      meta.put({
+        key: archiveKey,
+        value: {
+          workspaceId,
+          entityType,
+          recordId: String(recordId),
+          resolution,
+          resolvedAt,
+          localRecord: current,
+          remoteRow,
+          previousOperationId: latest.operationId || null,
+        },
+      });
+
+      for (const operation of queuedRows) outbox.delete(operation.id);
+
+      if (resolution === 'local') {
+        const operationId = createSyncOperationId();
+        const updatedAt = current.updatedAt || resolvedAt;
+        outbox.put({
+          ...latest,
+          id: key,
+          recordKey: key,
+          workspaceId,
+          entityType,
+          recordId: String(recordId),
+          operation: current.deletedAt ? 'delete' : 'upsert',
+          operationId,
+          payload: current.deletedAt ? {} : current.payload,
+          expectedCloudUpdatedAt: remoteRow?.updated_at || null,
+          updatedAt,
+          createdAt: updatedAt,
+        });
+        records.put({
+          ...current,
+          key,
+          workspaceId,
+          cloudUpdatedAt: remoteRow?.updated_at || null,
+          syncState: 'pending',
+        });
+        outcome = { resolution, operationId, pending: true, archiveKey };
+        return;
+      }
+
+      if (remoteRow) {
+        records.put({
+          key,
+          workspaceId,
+          entityType,
+          recordId: String(recordId),
+          payload: remoteRow.payload || {},
+          updatedAt: remoteRow.updated_at || resolvedAt,
+          cloudUpdatedAt: remoteRow.updated_at || null,
+          deletedAt: remoteRow.deleted_at || null,
+          deviceId: remoteRow.device_id || null,
+          syncState: 'synced',
+        });
+      } else {
+        records.delete(key);
+      }
+      outcome = { resolution, pending: false, archiveKey };
+    };
+
+    localRequest.onsuccess = () => {
+      current = localRequest.result || null;
+      localReady = true;
+      applyResolution();
+    };
+    queuedRequest.onsuccess = () => {
+      queuedRows = (queuedRequest.result || []).sort(compareOutboxOperations);
+      queueReady = true;
+      applyResolution();
+    };
+
+    tx.oncomplete = () => {
+      db.close();
+      resolve(outcome);
+    };
+    tx.onerror = () => {
+      const error = failure || tx.error || new Error('Could not resolve the cloud conflict.');
+      db.close();
+      reject(error);
+    };
+    tx.onabort = () => {
+      const error = failure || tx.error || new Error('Cloud conflict resolution was aborted.');
+      db.close();
+      reject(error);
+    };
+  });
+}
+
 export async function listPendingSyncOperations() {
   const db = await openDatabase();
   return new Promise((resolve, reject) => {
