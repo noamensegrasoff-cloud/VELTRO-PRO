@@ -9,7 +9,7 @@ import {
   Plus, Phone, MapPin, Pencil, Trash2, ImagePlus, Building2, FileText, Users, Eye, Printer, ScanLine, Mail, Wifi, Server, UserRound, Pause, Check, LockKeyhole, Expand, Truck
 } from 'lucide-react';
 import { dashboard, sections } from './data/navigation.js';
-import { getCloudRecords, getCloudStatus } from './services/cloudStorage.js';
+import { getCloudRecordsByIds, getCloudStatus } from './services/cloudStorage.js';
 import { startAutoSync, syncWorkspace } from './services/databaseSync.js';
 import { getActiveWorkspaceId, getLocalRecord, listPendingSyncOperations, resolvePendingRecordConflict } from './services/localDatabase.js';
 import { supabase } from './lib/supabase.js';
@@ -718,7 +718,11 @@ export default function App() {
       const entityTypes=[...new Set((sourceConflicts||[]).filter(item=>item?.entityType&&item.entityType!=='workspace_adoption').map(item=>item.entityType))];
       const remoteGroups=await Promise.all(entityTypes.map(async entityType=>[
         entityType,
-        await getCloudRecords({workspaceId,entityType,includeDeleted:true})
+        await getCloudRecordsByIds({
+          workspaceId,
+          entityType,
+          recordIds:(sourceConflicts||[]).filter(item=>item?.entityType===entityType).map(item=>item.recordId)
+        })
       ]));
       for(const [entityType,rows] of remoteGroups)rowsByType.set(entityType,rows);
       const pendingRows=await listPendingSyncOperations();
@@ -755,7 +759,7 @@ export default function App() {
     setConflictResolving(key);setConflictError('');
     try{
       const workspaceId=item.workspaceId||await getActiveWorkspaceId();
-      const rows=await getCloudRecords({workspaceId,entityType:item.entityType,includeDeleted:true});
+      const rows=await getCloudRecordsByIds({workspaceId,entityType:item.entityType,recordIds:[item.recordId]});
       const remoteRow=rows.find(row=>String(row.record_id)===String(item.recordId))||null;
       if(item.entityType==='local_storage'){
         const baselineKey='veltro.cloud-sync.local-storage-baseline.v1';
