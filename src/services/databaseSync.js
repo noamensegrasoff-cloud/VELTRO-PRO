@@ -103,7 +103,7 @@ export async function processPendingSyncOperations(operations, {
 
 const LEGACY_STORAGE_ENTITY = 'local_storage';
 const LEGACY_STORAGE_BASELINE_KEY = 'veltro.cloud-sync.local-storage-baseline.v1';
-const LEGACY_STORAGE_EXCLUDED = /^(?:veltro\.purchases\.v1|veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|veltro-products-catalog-v1|veltro-products-conflicts-v1|sb-[^-]+-auth-token)$/i;
+const LEGACY_STORAGE_EXCLUDED = /^(?:veltro\.purchases\.v1|veltro-pro-auth|veltro-pro-device-id|veltro\.theme(?:\.palette\.v2)?|veltro\.language|veltro\.cloud-sync\.local-storage-baseline\.v1|veltro\\.sync-conflict-archive\\.v1\\..+|veltro-products-catalog-v1|veltro-products-conflicts-v1|sb-[^-]+-auth-token)$/i;
 
 function readStorageBaseline(storage = globalThis.localStorage) {
   const raw = storage.getItem(LEGACY_STORAGE_BASELINE_KEY);
