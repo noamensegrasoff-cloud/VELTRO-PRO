@@ -770,6 +770,15 @@ export default function App() {
           if(!baseline||typeof baseline!=='object'||Array.isArray(baseline))throw new Error('بيانات خط الأساس للمزامنة غير صالحة؛ لم يتم تغيير القيم.');
         }
         const remoteValue=remoteRow&&!remoteRow.deleted_at&&typeof remoteRow.payload?.value==='string'?remoteRow.payload.value:null;
+        const localValue=localStorage.getItem(item.recordId);
+        const archiveId=globalThis.crypto?.randomUUID?.()||`sync-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;
+        const archiveKey='veltro.sync-conflict-archive.v1.'+archiveId;
+        // Persist both snapshots before applying the explicit choice. If storage is full,
+        // stop here rather than replacing either side without a recovery copy.
+        localStorage.setItem(archiveKey,JSON.stringify({
+          recordId:item.recordId,resolution,localValue,remoteValue,
+          resolvedAt:new Date().toISOString(),workspaceId
+        }));
         if(resolution==='remote'){
           if(remoteValue===null)localStorage.removeItem(item.recordId);
           else localStorage.setItem(item.recordId,remoteValue);
