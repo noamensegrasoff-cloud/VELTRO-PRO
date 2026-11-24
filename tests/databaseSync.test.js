@@ -184,3 +184,23 @@ test('legacy sync continues independent keys after both detected and upload-time
     'veltro.pull': 'remote-pull',
   });
 });
+
+test('legacy sync excludes local conflict archives from cloud transport', async () => {
+  const storage = createLegacyStorage({
+    'veltro.cloud-sync.local-storage-baseline.v1': '{}',
+    'veltro.sync-conflict-archive.v1.test': JSON.stringify({
+      recordId: 'settings',
+      localValue: 'local',
+      remoteValue: 'cloud',
+    }),
+  });
+  const result = await syncLegacyLocalStorage('workspace-conflict-archive-test', {
+    storage,
+    getCloudRecords: async () => [],
+    saveCloudRecord: async () => { throw new Error('Conflict archives must never be uploaded.'); },
+    deleteCloudRecord: async () => { throw new Error('Conflict archives must never be uploaded.'); },
+    getStableLegacyStorageOperationId: key => 'operation-' + key,
+    clearLegacyStorageOperationId: () => {},
+  });
+  assert.deepEqual(result, { pushed: 0, pulled: 0, conflicts: [] });
+});
