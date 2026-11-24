@@ -43,6 +43,33 @@ export async function getCloudRecords({ workspaceId, entityType, includeDeleted 
   return data ?? [];
 }
 
+
+/**
+ * Fetch only the requested conflict snapshots. Avoid scanning/paginating an entire
+ * entity collection (for example, a catalogue with tens of thousands of products).
+ */
+export async function getCloudRecordsByIds({ workspaceId, entityType, recordIds = [] } = {}) {
+  if (!workspaceId || !entityType) throw new Error('workspaceId and entityType are required.');
+  const ids = [...new Set((Array.isArray(recordIds) ? recordIds : [])
+    .filter(recordId => recordId != null && String(recordId).length > 0)
+    .map(String))];
+  if (!ids.length) return [];
+
+  const client = requireCloud();
+  const batches = [];
+  for (let index = 0; index < ids.length; index += 100) batches.push(ids.slice(index, index + 100));
+  const results = await Promise.all(batches.map(async batch => {
+    const { data, error } = await client.from('cloud_records')
+      .select('workspace_id, entity_type, record_id, payload, updated_at, deleted_at, device_id')
+      .eq('workspace_id', workspaceId)
+      .eq('entity_type', entityType)
+      .in('record_id', batch);
+    if (error) throw error;
+    return data || [];
+  }));
+  return results.flat();
+}
+
 export async function saveCloudRecord({ workspaceId, entityType, recordId, payload, expectedUpdatedAt = null, operationId = null }) {
   return syncCloudRecord({
     workspaceId, entityType, recordId, payload, expectedUpdatedAt, operationId, deleted: false,
