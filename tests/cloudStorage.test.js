@@ -37,3 +37,19 @@ test('cloud writes reject whitespace-only idempotency keys', async () => {
     error => error?.code === 'SYNC_IDEMPOTENCY_REQUIRED',
   );
 });
+
+import { getCloudRecordsByIds } from '../src/services/cloudStorage.js';
+
+test('conflict snapshot lookup validates its workspace and entity scope', async () => {
+  await assert.rejects(
+    getCloudRecordsByIds({ entityType: 'products', recordIds: ['product-a'] }),
+    /workspaceId and entityType are required/,
+  );
+});
+
+test('conflict snapshot lookup does not issue a cloud request for an empty ID set', async () => {
+  assert.deepEqual(
+    await getCloudRecordsByIds({ workspaceId: 'workspace-test', entityType: 'products', recordIds: [] }),
+    [],
+  );
+});
