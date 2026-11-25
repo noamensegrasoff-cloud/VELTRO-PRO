@@ -11,7 +11,7 @@ import {
 import { dashboard, sections } from './data/navigation.js';
 import { getCloudRecordsByIds, getCloudStatus } from './services/cloudStorage.js';
 import { startAutoSync, syncWorkspace } from './services/databaseSync.js';
-import { getActiveWorkspaceId, getLocalRecord, listPendingSyncOperations, resolvePendingRecordConflict } from './services/localDatabase.js';
+import { getActiveWorkspaceId, getLocalRecord, listPendingSyncOperations, resolvePendingRecordConflict, resolveWorkspaceAdoptionConflict } from './services/localDatabase.js';
 import { supabase } from './lib/supabase.js';
 import BusinessOnboarding from './BusinessOnboarding.jsx';
 import ProductsPage from './ProductsPage.jsx';
@@ -727,20 +727,41 @@ export default function App() {
       for(const [entityType,rows] of remoteGroups)rowsByType.set(entityType,rows);
       const pendingRows=await listPendingSyncOperations();
       const items=(sourceConflicts||[]).map(conflict=>{
-        if(conflict?.operation==='workspace_adoption'){
-          return {...conflict,workspaceId,readOnly:true,local:null,remoteRow:null,pending:null};
-        }
         const remoteRow=(rowsByType.get(conflict.entityType)||[]).find(row=>String(row.record_id)===String(conflict.recordId))||null;
+        const recordKey=[workspaceId,conflict.entityType,String(conflict.recordId)].join('::');
+        if(conflict?.operation==='workspace_adoption'){
+          return {
+            ...conflict,
+            workspaceId,
+            remoteRow,
+            recordKey,
+            pending:pendingRows.filter(operation=>operation.recordKey===recordKey),
+            readOnly:false,
+          };
+        }
         if(conflict.entityType==='local_storage'){
           const localValue=localStorage.getItem(conflict.recordId);
           const remoteValue=remoteRow&&!remoteRow.deleted_at&&typeof remoteRow.payload?.value==='string'?remoteRow.payload.value:null;
           return {...conflict,workspaceId,localValue,remoteValue,remoteRow,readOnly:false};
         }
-        const recordKey=[workspaceId,conflict.entityType,String(conflict.recordId)].join('::');
         return {...conflict,workspaceId,remoteRow,localKey:recordKey,pending:pendingRows.find(operation=>operation.recordKey===recordKey)||null,local:null,readOnly:false};
       });
       const hydrated=await Promise.all(items.map(async item=>{
         if(item.entityType==='local_storage'||item.readOnly)return item;
+        if(item.operation==='workspace_adoption'){
+          const [local,workspaceRecord]=await Promise.all([
+            getLocalRecord({workspaceId:'local-device',entityType:item.entityType,recordId:item.recordId}),
+            getLocalRecord({workspaceId:item.workspaceId,entityType:item.entityType,recordId:item.recordId}),
+          ]);
+          const pending=item.pending||[];
+          const cloudSnapshotVerified=!workspaceRecord?.cloudUpdatedAt||Boolean(item.remoteRow);
+          return {
+            ...item,
+            local,
+            workspaceRecord,
+            actionable:Boolean(local&&pending.length===0&&workspaceRecord?.syncState!=='pending'&&cloudSnapshotVerified),
+          };
+        }
         const local=await getLocalRecord({workspaceId:item.workspaceId,entityType:item.entityType,recordId:item.recordId});
         return {...item,local,actionable:Boolean(local&&item.pending)};
       }));
@@ -761,7 +782,9 @@ export default function App() {
       const workspaceId=item.workspaceId||await getActiveWorkspaceId();
       const rows=await getCloudRecordsByIds({workspaceId,entityType:item.entityType,recordIds:[item.recordId]});
       const remoteRow=rows.find(row=>String(row.record_id)===String(item.recordId))||null;
-      if(item.entityType==='local_storage'){
+      if(item.operation==='workspace_adoption'){
+        await resolveWorkspaceAdoptionConflict({workspaceId,entityType:item.entityType,recordId:item.recordId,resolution,remoteRow});
+      }else if(item.entityType==='local_storage'){
         const baselineKey='veltro.cloud-sync.local-storage-baseline.v1';
         let baseline={};
         const raw=localStorage.getItem(baselineKey);
@@ -950,8 +973,9 @@ export default function App() {
         <div className="sync-conflicts-body">
           {conflictsLoading?<div className="sync-conflicts-empty">{lang==='ar'?'جارٍ تحميل النسخ المحلية والسحابية…':lang==='fr'?'Chargement des versions locales et cloud…':'Loading local and cloud snapshots…'}</div>:conflictReview.length===0?<div className="sync-conflicts-empty">{lang==='ar'?'لا توجد تعارضات قابلة للعرض حالياً. أعد المزامنة لتحديث الحالة.':lang==='fr'?'Aucun conflit à afficher. Relancez la synchronisation.':'No conflicts to display. Run sync again to refresh the status.'}</div>:conflictReview.map((item,index)=>{
             const isLegacy=item.entityType==='local_storage';
-            const localSnapshot=isLegacy?item.localValue:item.local?.payload;
-            const remoteSnapshot=isLegacy?item.remoteValue:item.remoteRow?.payload;
+            const isAdoption=item.operation==='workspace_adoption';
+            const localSnapshot=isAdoption?item.local?.payload:isLegacy?item.localValue:item.local?.payload;
+            const remoteSnapshot=isAdoption?item.remoteRow?.payload:isLegacy?item.remoteValue:item.remoteRow?.payload;
             const localText=localSnapshot==null?(lang==='ar'?'غير موجود محلياً':lang==='fr'?'Absent localement':'Not present locally'):typeof localSnapshot==='string'?localSnapshot:JSON.stringify(localSnapshot,null,2);
             const remoteText=remoteSnapshot==null?(lang==='ar'?'غير موجود في السحابة أو محذوف':lang==='fr'?'Absent du cloud ou supprimé':'Absent from cloud or deleted'):typeof remoteSnapshot==='string'?remoteSnapshot:JSON.stringify(remoteSnapshot,null,2);
             const canResolve=!item.readOnly&&!item.resolvedLocally&&(isLegacy||item.actionable);
@@ -961,11 +985,12 @@ export default function App() {
               <div className="sync-conflict-snapshots">
                 <section><h4>{lang==='ar'?'النسخة المحلية':lang==='fr'?'Version locale':'Local version'}</h4><pre>{localText}</pre></section>
                 <section><h4>{lang==='ar'?'النسخة السحابية':lang==='fr'?'Version cloud':'Cloud version'}</h4><pre>{remoteText}</pre></section>
+                {isAdoption&&item.workspaceRecord&&<section><h4>{lang==='ar'?'نسخة مساحة العمل المحفوظة محلياً':lang==='fr'?'Copie locale de l’espace de travail':'Cached workspace snapshot'}</h4><pre>{JSON.stringify(item.workspaceRecord.payload,null,2)}</pre></section>}
               </div>
               {canResolve?<div className="sync-conflict-actions">
                 <button type="button" className="sync-conflict-keep-local" disabled={Boolean(conflictResolving)} onClick={()=>resolveSyncConflict(item,'local')}>{conflictResolving===[item.entityType,String(item.recordId)].join('::')?(lang==='ar'?'جارٍ الحفظ…':lang==='fr'?'Enregistrement…':'Saving…'):(lang==='ar'?'اعتماد النسخة المحلية':lang==='fr'?'Garder la version locale':'Keep local version')}</button>
                 <button type="button" className="sync-conflict-keep-cloud" disabled={Boolean(conflictResolving)} onClick={()=>resolveSyncConflict(item,'remote')}>{lang==='ar'?'اعتماد النسخة السحابية':lang==='fr'?'Garder la version cloud':'Keep cloud version'}</button>
-              </div>:<p className="sync-conflict-readonly">{item.resolvedLocally?(lang==='ar'?'تم حفظ اختيارك محلياً؛ ما زال ينتظر تأكيد السحابة.':lang==='fr'?'Votre choix est enregistré localement ; en attente de confirmation cloud.':'Your choice is saved locally and awaits cloud acknowledgement.'):lang==='ar'?'هذا التعارض يحتاج إلى معالجة منفصلة؛ لم تُجرَ أي تغييرات عليه.':lang==='fr'?'Ce conflit nécessite un traitement distinct ; aucune donnée n’a été modifiée.':'This conflict needs a separate workflow; no data was changed.'}</p>}
+              </div>:<p className="sync-conflict-readonly">{item.resolvedLocally?(lang==='ar'?'تم حفظ اختيارك محلياً؛ ما زال ينتظر تأكيد السحابة.':lang==='fr'?'Votre choix est enregistré localement ; en attente de confirmation cloud.':'Your choice is saved locally and awaits cloud acknowledgement.'):isAdoption&&(item.pending?.length||item.workspaceRecord?.syncState==='pending')?(lang==='ar'?'توجد عملية معلقة في مساحة العمل. انتظر تأكيدها أو حل تعارضها أولاً؛ لم يتم تغيير أي نسخة.':lang==='fr'?'Une opération de l’espace de travail est en attente. Attendez sa confirmation ou résolvez-la d’abord.':'A workspace operation is still pending. Wait for its acknowledgement or resolve it first; neither snapshot was changed.'):isAdoption&&item.workspaceRecord?.cloudUpdatedAt&&!item.remoteRow?(lang==='ar'?'تعذر التحقق من أحدث نسخة سحابية؛ لم يتم تغيير البيانات.':lang==='fr'?'Impossible de vérifier la dernière version cloud ; aucune donnée n’a été modifiée.':'The latest cloud snapshot could not be verified; no data was changed.'):isAdoption?(lang==='ar'?'تعذر تجهيز النسختين للمراجعة؛ لم يتم تغيير البيانات.':lang==='fr'?'Les deux versions ne sont pas disponibles ; aucune donnée n’a été modifiée.':'Both snapshots are not available for review; no data was changed.'):lang==='ar'?'هذا التعارض يحتاج إلى معالجة منفصلة؛ لم تُجرَ أي تغييرات عليه.':lang==='fr'?'Ce conflit nécessite un traitement distinct ; aucune donnée n’a été modifiée.':'This conflict needs a separate workflow; no data was changed.'}</p>}
             </article>;
           })}
           {conflictError&&<p className="sync-conflicts-error" role="alert">{conflictError}</p>}
