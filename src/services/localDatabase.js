@@ -300,6 +300,181 @@ export async function listWorkspaceAdoptionConflicts(workspaceId) {
 }
 
 
+export async function resolveWorkspaceAdoptionConflict({
+  workspaceId,
+  entityType,
+  recordId,
+  resolution,
+  remoteRow = null,
+} = {}) {
+  if (!workspaceId || !entityType || recordId == null) {
+    throw new Error('workspaceId, entityType and recordId are required.');
+  }
+  if (!['local', 'remote'].includes(resolution)) {
+    throw new Error('resolution must be local or remote.');
+  }
+  if (remoteRow && (
+    remoteRow.workspace_id !== workspaceId
+    || remoteRow.entity_type !== entityType
+    || String(remoteRow.record_id) !== String(recordId)
+  )) {
+    throw new Error('The refreshed cloud snapshot does not match the workspace-adoption conflict.');
+  }
+
+  const localKey = makeRecordKey(LOCAL_WORKSPACE, entityType, recordId);
+  const workspaceKey = makeRecordKey(workspaceId, entityType, recordId);
+  const conflictKey = `workspaceAdoptionConflict::${workspaceId}::${encodeURIComponent(entityType)}::${encodeURIComponent(String(recordId))}`;
+  const db = await openDatabase();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction([RECORDS, OUTBOX, META], 'readwrite');
+    const records = tx.objectStore(RECORDS);
+    const outbox = tx.objectStore(OUTBOX);
+    const meta = tx.objectStore(META);
+    const localRequest = records.get(localKey);
+    const workspaceRequest = records.get(workspaceKey);
+    const queuedRequest = outbox.index('by_record_key').getAll(workspaceKey);
+    const conflictRequest = meta.get(conflictKey);
+    let ready = 0;
+    let localRecord = null;
+    let workspaceRecord = null;
+    let queuedRows = [];
+    let marker = null;
+    let outcome = null;
+    let failure = null;
+
+    const abortWith = message => {
+      if (failure || outcome) return;
+      failure = new Error(message);
+      tx.abort();
+    };
+
+    const applyResolution = () => {
+      if (ready !== 4 || failure || outcome) return;
+      if (!marker?.value || marker.value.localKey !== localKey || marker.value.workspaceKey !== workspaceKey) {
+        abortWith('The workspace-adoption conflict marker is no longer available.');
+        return;
+      }
+      if (!localRecord || localRecord.workspaceId !== LOCAL_WORKSPACE
+        || localRecord.entityType !== entityType
+        || String(localRecord.recordId) !== String(recordId)) {
+        abortWith('The device-local conflict snapshot is no longer available.');
+        return;
+      }
+      // Never supersede a workspace operation that may already have reached the server.
+      // Resolve or acknowledge that operation first, then refresh this conflict.
+      if (queuedRows.length || workspaceRecord?.syncState === 'pending') {
+        abortWith('The workspace still has a pending operation. Synchronize or resolve it before adopting the device-local snapshot.');
+        return;
+      }
+      // A cached cloud version must be refreshed successfully before making a choice.
+      // A missing row is treated as cloud absence only when no prior cloud version is known.
+      if (workspaceRecord?.cloudUpdatedAt && !remoteRow) {
+        abortWith('The latest cloud snapshot could not be verified. No workspace data was changed.');
+        return;
+      }
+
+      const resolvedAt = new Date().toISOString();
+      const archiveKey = [
+        'workspaceAdoptionResolution',
+        workspaceId,
+        encodeURIComponent(entityType),
+        encodeURIComponent(String(recordId)),
+        resolvedAt,
+        createSyncOperationId(),
+      ].join('::');
+
+      meta.put({
+        key: archiveKey,
+        value: {
+          workspaceId,
+          entityType,
+          recordId: String(recordId),
+          resolution,
+          resolvedAt,
+          localRecord,
+          workspaceRecord,
+          remoteRow,
+        },
+      });
+
+      if (resolution === 'local') {
+        const operationId = createSyncOperationId();
+        const operation = localRecord.deletedAt ? 'delete' : 'upsert';
+        const payload = localRecord.deletedAt ? {} : localRecord.payload;
+        records.put({
+          ...localRecord,
+          key: workspaceKey,
+          workspaceId,
+          updatedAt: resolvedAt,
+          cloudUpdatedAt: remoteRow?.updated_at || null,
+          syncState: 'pending',
+        });
+        outbox.put({
+          id: workspaceKey,
+          recordKey: workspaceKey,
+          workspaceId,
+          entityType,
+          recordId: String(recordId),
+          operation,
+          operationId,
+          payload,
+          expectedCloudUpdatedAt: remoteRow?.updated_at || null,
+          updatedAt: resolvedAt,
+          createdAt: resolvedAt,
+        });
+        outcome = { resolution, operationId, pending: true, archiveKey };
+      } else {
+        if (remoteRow) {
+          records.put({
+            key: workspaceKey,
+            workspaceId,
+            entityType,
+            recordId: String(recordId),
+            payload: remoteRow.payload || {},
+            updatedAt: remoteRow.updated_at || resolvedAt,
+            cloudUpdatedAt: remoteRow.updated_at || null,
+            deletedAt: remoteRow.deleted_at || null,
+            deviceId: remoteRow.device_id || null,
+            syncState: 'synced',
+          });
+        } else {
+          records.delete(workspaceKey);
+        }
+        outcome = { resolution, pending: false, archiveKey };
+      }
+
+      records.delete(localKey);
+      meta.delete(conflictKey);
+    };
+
+    const markReady = () => {
+      ready += 1;
+      applyResolution();
+    };
+    localRequest.onsuccess = () => { localRecord = localRequest.result || null; markReady(); };
+    workspaceRequest.onsuccess = () => { workspaceRecord = workspaceRequest.result || null; markReady(); };
+    queuedRequest.onsuccess = () => { queuedRows = queuedRequest.result || []; markReady(); };
+    conflictRequest.onsuccess = () => { marker = conflictRequest.result || null; markReady(); };
+
+    tx.oncomplete = () => {
+      db.close();
+      resolve(outcome);
+    };
+    tx.onerror = () => {
+      const error = failure || tx.error || new Error('Could not resolve the workspace-adoption conflict.');
+      db.close();
+      reject(error);
+    };
+    tx.onabort = () => {
+      const error = failure || tx.error || new Error('Workspace-adoption conflict resolution was aborted.');
+      db.close();
+      reject(error);
+    };
+  });
+}
+
+
 /**
  * Resolve an explicit record-level cloud conflict without losing the losing snapshot.
  * Choosing local creates a new operation (new request identity) based on the latest
