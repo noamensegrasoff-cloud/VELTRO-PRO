@@ -9,8 +9,9 @@ import {
   Plus, Phone, MapPin, Pencil, Trash2, ImagePlus, Building2, FileText, Users, Eye, Printer, ScanLine, Mail, Wifi, Server, UserRound, Pause, Check, LockKeyhole, Expand, Truck
 } from 'lucide-react';
 import { dashboard, sections } from './data/navigation.js';
-import { getCloudStatus } from './services/cloudStorage.js';
+import { getCloudRecordsByIds, getCloudStatus } from './services/cloudStorage.js';
 import { startAutoSync, syncWorkspace } from './services/databaseSync.js';
+import { getActiveWorkspaceId, getLocalRecord, listPendingSyncOperations, resolvePendingRecordConflict, resolveWorkspaceAdoptionConflict } from './services/localDatabase.js';
 import { supabase } from './lib/supabase.js';
 import BusinessOnboarding from './BusinessOnboarding.jsx';
 import ProductsPage from './ProductsPage.jsx';
@@ -600,6 +601,12 @@ export default function App() {
   const [sessionPaused,setSessionPaused]=useState(false);
   useEffect(()=>{let alive=true;supabase.auth.getUser().then(({data})=>{if(alive)setCurrentUser(data?.user||null)}).catch(()=>{if(alive)setCurrentUser(null)});const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,session)=>setCurrentUser(session?.user||null));return()=>{alive=false;subscription?.unsubscribe()}},[]);
   const [manualSyncing,setManualSyncing]=useState(false);
+  const [syncConflicts,setSyncConflicts]=useState([]);
+  const [conflictsOpen,setConflictsOpen]=useState(false);
+  const [conflictReview,setConflictReview]=useState([]);
+  const [conflictsLoading,setConflictsLoading]=useState(false);
+  const [conflictResolving,setConflictResolving]=useState('');
+  const [conflictError,setConflictError]=useState('');
   const [setupState,setSetupState]=useState('checking');
   const [setupProfile,setSetupProfile]=useState({});
   const [setupSaving,setSetupSaving]=useState(false);
@@ -615,10 +622,11 @@ export default function App() {
     const stopAutoSync=startAutoSync({
       onStatus: result=>{
         if(!alive)return;
-        if(result?.status==='synced')setCloudState('connected');
+        if(result?.status==='synced'){setCloudState('connected');setSyncConflicts([]);}
         else if(result?.status==='not_configured')setCloudState('not_configured');
+        else if(result?.status==='conflict'){setCloudState('conflict');setSyncConflicts(result.conflicts||[]);}
         else if(result?.status==='error'||result?.status==='partial')setCloudState('error');
-        else if(result?.status==='offline')setCloudState('configured');
+        else if(result?.status==='pending'||result?.status==='offline')setCloudState('configured');
       }
     });
     const refresh=()=>{ if(alive && typeof navigator!=='undefined' && navigator.onLine) void syncWorkspace().catch(()=>{}); };
@@ -702,7 +710,130 @@ export default function App() {
   const [logoutOpen,setLogoutOpen]=useState(false);
   const [signedOut,setSignedOut]=useState(false);
   const t=(key)=>copy[lang][key]||copy.ar[key]||key;
-  const handleManualSync=async()=>{if(manualSyncing)return;setManualSyncing(true);try{const result=await syncWorkspace();if(result?.status!=='synced')throw new Error('sync_failed');setCloudState('connected');window.alert(t('syncDone'));}catch{setCloudState('error');window.alert(t('syncError'));}finally{setManualSyncing(false);}};
+  async function loadSyncConflictReview(sourceConflicts=syncConflicts){
+    setConflictsLoading(true);setConflictError('');
+    try{
+      const workspaceId=await getActiveWorkspaceId();
+      const rowsByType=new Map();
+      const entityTypes=[...new Set((sourceConflicts||[]).filter(item=>item?.entityType&&item.entityType!=='workspace_adoption').map(item=>item.entityType))];
+      const remoteGroups=await Promise.all(entityTypes.map(async entityType=>[
+        entityType,
+        await getCloudRecordsByIds({
+          workspaceId,
+          entityType,
+          recordIds:(sourceConflicts||[]).filter(item=>item?.entityType===entityType).map(item=>item.recordId)
+        })
+      ]));
+      for(const [entityType,rows] of remoteGroups)rowsByType.set(entityType,rows);
+      const pendingRows=await listPendingSyncOperations();
+      const items=(sourceConflicts||[]).map(conflict=>{
+        const remoteRow=(rowsByType.get(conflict.entityType)||[]).find(row=>String(row.record_id)===String(conflict.recordId))||null;
+        const recordKey=[workspaceId,conflict.entityType,String(conflict.recordId)].join('::');
+        if(conflict?.operation==='workspace_adoption'){
+          return {
+            ...conflict,
+            workspaceId,
+            remoteRow,
+            recordKey,
+            pending:pendingRows.filter(operation=>operation.recordKey===recordKey),
+            readOnly:false,
+          };
+        }
+        if(conflict.entityType==='local_storage'){
+          const localValue=localStorage.getItem(conflict.recordId);
+          const remoteValue=remoteRow&&!remoteRow.deleted_at&&typeof remoteRow.payload?.value==='string'?remoteRow.payload.value:null;
+          return {...conflict,workspaceId,localValue,remoteValue,remoteRow,readOnly:false};
+        }
+        return {...conflict,workspaceId,remoteRow,localKey:recordKey,pending:pendingRows.find(operation=>operation.recordKey===recordKey)||null,local:null,readOnly:false};
+      });
+      const hydrated=await Promise.all(items.map(async item=>{
+        if(item.entityType==='local_storage'||item.readOnly)return item;
+        if(item.operation==='workspace_adoption'){
+          const [local,workspaceRecord]=await Promise.all([
+            getLocalRecord({workspaceId:'local-device',entityType:item.entityType,recordId:item.recordId}),
+            getLocalRecord({workspaceId:item.workspaceId,entityType:item.entityType,recordId:item.recordId}),
+          ]);
+          const pending=item.pending||[];
+          const cloudSnapshotVerified=!workspaceRecord?.cloudUpdatedAt||Boolean(item.remoteRow);
+          return {
+            ...item,
+            local,
+            workspaceRecord,
+            actionable:Boolean(local&&pending.length===0&&workspaceRecord?.syncState!=='pending'&&cloudSnapshotVerified),
+          };
+        }
+        const local=await getLocalRecord({workspaceId:item.workspaceId,entityType:item.entityType,recordId:item.recordId});
+        return {...item,local,actionable:Boolean(local&&item.pending)};
+      }));
+      setConflictReview(hydrated);
+    }catch(error){
+      setConflictError(error?.message||'تعذّر تحميل تفاصيل التعارض.');
+      setConflictReview([]);
+    }finally{setConflictsLoading(false);}
+  }
+  async function openSyncConflictReview(sourceConflicts=syncConflicts){
+    setConflictsOpen(true);
+    await loadSyncConflictReview(sourceConflicts);
+  }
+  async function resolveSyncConflict(item,resolution){
+    const key=[item.entityType,String(item.recordId)].join('::');
+    setConflictResolving(key);setConflictError('');
+    try{
+      const workspaceId=item.workspaceId||await getActiveWorkspaceId();
+      const rows=await getCloudRecordsByIds({workspaceId,entityType:item.entityType,recordIds:[item.recordId]});
+      const remoteRow=rows.find(row=>String(row.record_id)===String(item.recordId))||null;
+      if(item.operation==='workspace_adoption'){
+        await resolveWorkspaceAdoptionConflict({workspaceId,entityType:item.entityType,recordId:item.recordId,resolution,remoteRow});
+      }else if(item.entityType==='local_storage'){
+        const baselineKey='veltro.cloud-sync.local-storage-baseline.v1';
+        let baseline={};
+        const raw=localStorage.getItem(baselineKey);
+        if(raw){
+          baseline=JSON.parse(raw);
+          if(!baseline||typeof baseline!=='object'||Array.isArray(baseline))throw new Error('بيانات خط الأساس للمزامنة غير صالحة؛ لم يتم تغيير القيم.');
+        }
+        const remoteValue=remoteRow&&!remoteRow.deleted_at&&typeof remoteRow.payload?.value==='string'?remoteRow.payload.value:null;
+        const localValue=localStorage.getItem(item.recordId);
+        const archiveId=globalThis.crypto?.randomUUID?.()||`sync-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;
+        const archiveKey='veltro.sync-conflict-archive.v1.'+archiveId;
+        // Persist both snapshots before applying the explicit choice. If storage is full,
+        // stop here rather than replacing either side without a recovery copy.
+        localStorage.setItem(archiveKey,JSON.stringify({
+          recordId:item.recordId,resolution,localValue,remoteValue,
+          resolvedAt:new Date().toISOString(),workspaceId
+        }));
+        if(resolution==='remote'){
+          if(remoteValue===null)localStorage.removeItem(item.recordId);
+          else localStorage.setItem(item.recordId,remoteValue);
+        }
+        baseline[item.recordId]=remoteValue;
+        localStorage.setItem(baselineKey,JSON.stringify(baseline));
+      }else{
+        await resolvePendingRecordConflict({workspaceId,entityType:item.entityType,recordId:item.recordId,resolution,remoteRow});
+      }
+      const result=await syncWorkspace();
+      setSyncConflicts(result?.conflicts||[]);
+      if(result?.status==='synced'){
+        setCloudState('connected');setSyncConflicts([]);setConflictsOpen(false);setConflictReview([]);
+      }else if(result?.status==='conflict'){
+        setCloudState('conflict');await loadSyncConflictReview(result.conflicts||[]);
+      }else if(result?.status==='pending'||result?.status==='offline'){
+        setCloudState('configured');
+        setConflictReview(previous=>previous.map(entry=>entry.entityType===item.entityType&&String(entry.recordId)===String(item.recordId)?{...entry,resolvedLocally:true}:entry));
+        setConflictError(lang==='ar'?'تم حفظ قرارك محلياً، وما زالت العملية بانتظار تأكيد السحابة. لن تُعتبر مكتملة حتى يصل التأكيد.':lang==='fr'?'Votre choix est enregistré localement et attend encore la confirmation du cloud.':'Your choice is saved locally and is still awaiting cloud confirmation. It is not complete until acknowledged by the cloud.');
+      }else if(result?.status==='partial'||result?.status==='error'){
+        setCloudState('error');
+        setConflictReview(previous=>previous.map(entry=>entry.entityType===item.entityType&&String(entry.recordId)===String(item.recordId)?{...entry,resolvedLocally:true}:entry));
+        setConflictError(result?.error?.message||'بقيت عمليات غير مؤكدة؛ احتفظ النظام بها لإعادة المحاولة.');
+      }else if(result?.status==='not_configured'){
+        setCloudState('not_configured');
+      }
+    }catch(error){
+      setConflictError(error?.message||'تعذّر حل التعارض. بقيت البيانات المحلية محفوظة.');
+      await loadSyncConflictReview(syncConflicts);
+    }finally{setConflictResolving('');}
+  }
+  const handleManualSync=async()=>{if(manualSyncing)return;setManualSyncing(true);try{const result=await syncWorkspace();if(result?.status==='conflict'){setCloudState('conflict');setSyncConflicts(result.conflicts||[]);await openSyncConflictReview(result.conflicts||[]);return;}if(result?.status!=='synced')throw new Error('sync_failed');setSyncConflicts([]);setCloudState('connected');window.alert(t('syncDone'));}catch{setCloudState('error');window.alert(t('syncError'));}finally{setManualSyncing(false);}};
   const dir=lang==='ar'?'rtl':'ltr';
   const NavigationSectionIcon=openNavSection?.icon;
   const navigate=(page,parent=null)=>{setActivePage(page);setActiveParent(parent);setModuleModalOpen(Boolean(parent));setOpenNavSection(null);setNotificationsOpen(false);setSearchOpen(false);setLanguageOpen(false);};
@@ -712,6 +843,7 @@ export default function App() {
         if (moduleModalOpen) { event.preventDefault(); setModuleModalOpen(false); if(activeParent)setOpenNavSection(activeParent); return; }
         if (openNavSection) { event.preventDefault(); setOpenNavSection(null); return; }
         if (searchOpen || languageOpen || notificationsOpen || profileOpen) { event.preventDefault(); setSearchOpen(false); setLanguageOpen(false); setNotificationsOpen(false); setProfileOpen(false); return; }
+        if (conflictsOpen) { event.preventDefault(); setConflictsOpen(false); return; }
         if (logoutOpen) {
           event.preventDefault();
           setLogoutOpen(false);
@@ -729,7 +861,7 @@ export default function App() {
     // Capture phase cancels browser defaults before page-level handlers can run.
     window.addEventListener('keydown', onKeyDown, true);
     return () => window.removeEventListener('keydown', onKeyDown, true);
-  }, [openNavSection, moduleModalOpen, activeParent, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen, profileOpen]);
+  }, [openNavSection, moduleModalOpen, activeParent, logoutOpen, signedOut, mobileOpen, activePage.id, searchOpen, languageOpen, notificationsOpen, profileOpen, conflictsOpen]);
   if(setupState==='checking') return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>VELTRO</h1><p>{lang==='ar'?'جارٍ تجهيز مساحة العمل…':lang==='fr'?'Préparation de votre espace…':'Preparing your workspace…'}</p></div></div>;
   if(setupState==='required') return <BusinessOnboarding lang={lang} onLanguageChange={setLang} initialProfile={setupProfile} onComplete={completeBusinessSetup} onLogout={logoutFromSetup} saving={setupSaving} saveError={setupError}/>;
   if(signedOut) return <div className="signed-out" dir={dir}><div className="signed-out-card"><span className="brand-mark"><span>V</span></span><h1>{t('signedOut')}</h1><p>VELTRO BUSINESS SUITE</p><button onClick={()=>{setSignedOut(false);setActivePage(dashboard);}}>{t('signIn')}</button></div></div>;
@@ -747,7 +879,7 @@ export default function App() {
                 <button className="profile-menu-item danger" onClick={async()=>{setProfileOpen(false);try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}}><LogOut size={15}/>{lang==='ar'?'تسجيل الخروج':lang==='fr'?'Déconnexion':'Sign out'}</button>
               </div>}
             </div>
-            <div className="connection-card"><span className={'connection-state '+(navigator.onLine?'is-online':'is-offline')}><Wifi size={15}/><span><b>Internet</b><small>{navigator.onLine?(lang==='ar'?'متصل':lang==='fr'?'Connecté':'Connected'):(lang==='ar'?'غير متصل':lang==='fr'?'Hors ligne':'Offline')}</small></span><i/></span><span className={'connection-state '+(cloudState==='connected'?'is-online':'is-pending')}><Cloud size={15}/><span><b>{lang==='ar'?'السحابة':'Cloud'}</b><small>{cloudState==='connected'?(lang==='ar'?'متصلة':lang==='fr'?'Connecté':'Connected'):(lang==='ar'?'قيد الفحص':lang==='fr'?'À vérifier':'Check status')}</small></span><i/></span><span className={'connection-state '+(cloudState==='error'?'is-offline':'is-online')}><Server size={15}/><span><b>{lang==='ar'?'السيرفر':'Server'}</b><small>{cloudState==='error'?(lang==='ar'?'غير متاح':lang==='fr'?'Indisponible':'Unavailable'):(lang==='ar'?'جاهز':lang==='fr'?'Prêt':'Ready')}</small></span><i/></span></div>
+            <div className="connection-card"><span className={'connection-state '+(navigator.onLine?'is-online':'is-offline')}><Wifi size={15}/><span><b>Internet</b><small>{navigator.onLine?(lang==='ar'?'متصل':lang==='fr'?'Connecté':'Connected'):(lang==='ar'?'غير متصل':lang==='fr'?'Hors ligne':'Offline')}</small></span><i/></span><span className={'connection-state '+(cloudState==='connected'?'is-online':cloudState==='conflict'||cloudState==='error'?'is-offline':'is-pending')}><Cloud size={15}/><span><b>{lang==='ar'?'السحابة':'Cloud'}</b><small>{cloudState==='connected'?(lang==='ar'?'متصلة':lang==='fr'?'Connecté':'Connected'):cloudState==='conflict'?(lang==='ar'?'تعارض يحتاج مراجعة':lang==='fr'?'Conflit à résoudre':'Conflict needs review'):cloudState==='error'?(lang==='ar'?'غير متاحة':lang==='fr'?'Indisponible':'Unavailable'):(lang==='ar'?'قيد الفحص':lang==='fr'?'À vérifier':'Check status')}</small></span><i/></span><span className={'connection-state '+(cloudState==='error'?'is-offline':'is-online')}><Server size={15}/><span><b>{lang==='ar'?'السيرفر':'Server'}</b><small>{cloudState==='error'?(lang==='ar'?'غير متاح':lang==='fr'?'Indisponible':'Unavailable'):(lang==='ar'?'جاهز':lang==='fr'?'Prêt':'Ready')}</small></span><i/></span></div>
           </div>
           <div className="topbar-tools">
             <div className="header-popover-wrap search-wrap"><button className="topbar-tool search-tool" onClick={()=>{setSearchOpen(v=>!v);setLanguageOpen(false);setNotificationsOpen(false);setProfileOpen(false)}} aria-label={t('search')}><Search size={17}/><span>{lang==='ar'?'بحث':lang==='fr'?'Rechercher':'Search'}</span></button>{searchOpen&&<div className="header-popover search-popover"><div className="popover-title"><b>{t('searchResults')}</b><button className="popover-close" onClick={()=>setSearchOpen(false)}><X size={15}/></button></div><label className="popup-search-field"><Search size={16}/><input autoFocus value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('search')}/><kbd>Esc</kbd></label></div>}</div>
@@ -756,6 +888,7 @@ export default function App() {
               <button className="topbar-tool compact-tool refresh-tool" onClick={()=>window.location.reload()} aria-label={t('refreshPage')} title={t('refreshPage')}><RotateCw size={16}/></button>
               <div className="header-popover-wrap notification-wrap"><button className="topbar-tool compact-tool" onClick={()=>{setNotificationsOpen(v=>!v);setSearchOpen(false);setLanguageOpen(false);setProfileOpen(false)}} aria-label={t('notifications')}><Bell size={17}/><i className="tool-indicator"/></button>{notificationsOpen&&<div className="header-popover notification-popover"><div className="popover-title"><b>{t('notifications')}</b><button className="popover-close" onClick={()=>setNotificationsOpen(false)}><X size={15}/></button></div><div className="notification-empty"><span><Bell size={18}/></span><b>{t('noNotifications')}</b><p>{lang==='ar'?'ستظهر هنا التنبيهات المهمة.':lang==='fr'?'Les alertes importantes apparaîtront ici.':'Important alerts will appear here.'}</p></div></div>}</div>
               <div className="header-popover-wrap language-wrap"><button className="topbar-tool compact-tool" onClick={()=>{setLanguageOpen(v=>!v);setSearchOpen(false);setNotificationsOpen(false);setProfileOpen(false)}} aria-label="Language"><Globe size={17}/><span>{lang.toUpperCase()}</span></button>{languageOpen&&<div className="header-popover language-popover"><b className="popover-heading">{lang==='ar'?'لغة التطبيق':lang==='fr'?'Langue':'Language'}</b>{[['ar','العربية'],['fr','Français'],['en','English']].map(([value,label])=><button key={value} className={'language-option '+(lang===value?'selected':'')} onClick={()=>{setLang(value);setLanguageOpen(false)}}><span>{label}</span>{lang===value&&<Check size={15}/>}</button>)}</div>}</div>
+              {syncConflicts.length>0&&<button type="button" className="sync-conflict-trigger" onClick={()=>openSyncConflictReview()} aria-label={lang==='ar'?'مراجعة تعارضات المزامنة':lang==='fr'?'Examiner les conflits de synchronisation':'Review sync conflicts'} title={lang==='ar'?'تعارضات تحتاج إلى مراجعة':lang==='fr'?'Conflits à examiner':'Conflicts need review'}><CircleAlert size={16}/><span>{syncConflicts.length}</span></button>}
               <button className="topbar-tool compact-tool sync-tool" onClick={handleManualSync} disabled={manualSyncing} aria-label={t('sync')} title={t('sync')}><CloudUpload className={manualSyncing?'sync-spinning':''} size={16}/></button>
             </div>
             <LiveDateTime lang={lang}/><span className="topbar-brand-mark" aria-label="VELTRO-PRO">V</span>
@@ -829,6 +962,40 @@ export default function App() {
           <button type="button" className="branch-content-modal-close" onClick={()=>{setModuleModalOpen(false);if(activeParent)setOpenNavSection(activeParent);}} aria-label={lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}><X size={20}/></button>
         </header>
         <div className="branch-content-modal-body"><ModulePage page={activePage} parent={activeParent} t={t} lang={lang} currentUser={currentUser} onBack={()=>{setModuleModalOpen(false);if(activeParent)setOpenNavSection(activeParent);}}/></div>
+      </section>
+    </div>,document.body)}
+    {conflictsOpen&&createPortal(<div className="sync-conflicts-overlay" role="presentation" onMouseDown={event=>{if(event.target===event.currentTarget&&!conflictResolving)setConflictsOpen(false);}}>
+      <section className="sync-conflicts-modal" role="dialog" aria-modal="true" aria-labelledby="sync-conflicts-title" dir={dir}>
+        <header className="sync-conflicts-head">
+          <div><span className="sync-conflicts-kicker">{lang==='ar'?'مزامنة الأجهزة':lang==='fr'?'Synchronisation des appareils':'Device synchronization'}</span><h2 id="sync-conflicts-title">{lang==='ar'?'مراجعة تعارضات البيانات':lang==='fr'?'Résoudre les conflits de données':'Review data conflicts'}</h2><p>{lang==='ar'?'اختر النسخة المعتمدة لكل سجل. لن تُحذف النسخة الأخرى؛ تُحفظ في سجل مراجعة محلي.':lang==='fr'?'Choisissez la version à conserver. L’autre instantané est conservé dans l’historique local.':'Choose the version to keep. The other snapshot is retained in a local resolution archive.'}</p></div>
+          <button type="button" className="sync-conflicts-close" onClick={()=>setConflictsOpen(false)} aria-label={lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}><X size={19}/></button>
+        </header>
+        <div className="sync-conflicts-body">
+          {conflictsLoading?<div className="sync-conflicts-empty">{lang==='ar'?'جارٍ تحميل النسخ المحلية والسحابية…':lang==='fr'?'Chargement des versions locales et cloud…':'Loading local and cloud snapshots…'}</div>:conflictReview.length===0?<div className="sync-conflicts-empty">{lang==='ar'?'لا توجد تعارضات قابلة للعرض حالياً. أعد المزامنة لتحديث الحالة.':lang==='fr'?'Aucun conflit à afficher. Relancez la synchronisation.':'No conflicts to display. Run sync again to refresh the status.'}</div>:conflictReview.map((item,index)=>{
+            const isLegacy=item.entityType==='local_storage';
+            const isAdoption=item.operation==='workspace_adoption';
+            const localSnapshot=isAdoption?item.local?.payload:isLegacy?item.localValue:item.local?.payload;
+            const remoteSnapshot=isAdoption?item.remoteRow?.payload:isLegacy?item.remoteValue:item.remoteRow?.payload;
+            const localText=localSnapshot==null?(lang==='ar'?'غير موجود محلياً':lang==='fr'?'Absent localement':'Not present locally'):typeof localSnapshot==='string'?localSnapshot:JSON.stringify(localSnapshot,null,2);
+            const remoteText=remoteSnapshot==null?(lang==='ar'?'غير موجود في السحابة أو محذوف':lang==='fr'?'Absent du cloud ou supprimé':'Absent from cloud or deleted'):typeof remoteSnapshot==='string'?remoteSnapshot:JSON.stringify(remoteSnapshot,null,2);
+            const canResolve=!item.readOnly&&!item.resolvedLocally&&(isLegacy||item.actionable);
+            const reason=item.reason==='cloud_changed_during_upload'?(lang==='ar'?'تغيّر السجل أثناء الرفع':lang==='fr'?'Le cloud a changé pendant l’envoi':'Cloud changed during upload'):item.reason==='both_sides_changed'?(lang==='ar'?'تغيّرت النسختان منذ آخر مزامنة':lang==='fr'?'Les deux versions ont changé':'Both versions changed since last sync'):item.reason==='workspace_record_exists'?(lang==='ar'?'السجل موجود مسبقاً في مساحة العمل':lang==='fr'?'L’enregistrement existe déjà dans l’espace':'Record already exists in workspace'):item.reason==='workspace_outbox_exists'?(lang==='ar'?'توجد عملية معلقة في مساحة العمل':lang==='fr'?'Une opération est en attente':'Workspace already has a pending operation'):(lang==='ar'?'تعارض يحتاج إلى مراجعة':lang==='fr'?'Conflit à examiner':'Conflict needs review');
+            return <article className="sync-conflict-card" key={item.entityType+'::'+item.recordId+'::'+index}>
+              <div className="sync-conflict-card-head"><div><span>{item.entityType||'record'}</span><h3>{item.recordId||'—'}</h3></div><span className="sync-conflict-reason">{reason}</span></div>
+              <div className="sync-conflict-snapshots">
+                <section><h4>{lang==='ar'?'النسخة المحلية':lang==='fr'?'Version locale':'Local version'}</h4><pre>{localText}</pre></section>
+                <section><h4>{lang==='ar'?'النسخة السحابية':lang==='fr'?'Version cloud':'Cloud version'}</h4><pre>{remoteText}</pre></section>
+                {isAdoption&&item.workspaceRecord&&<section><h4>{lang==='ar'?'نسخة مساحة العمل المحفوظة محلياً':lang==='fr'?'Copie locale de l’espace de travail':'Cached workspace snapshot'}</h4><pre>{JSON.stringify(item.workspaceRecord.payload,null,2)}</pre></section>}
+              </div>
+              {canResolve?<div className="sync-conflict-actions">
+                <button type="button" className="sync-conflict-keep-local" disabled={Boolean(conflictResolving)} onClick={()=>resolveSyncConflict(item,'local')}>{conflictResolving===[item.entityType,String(item.recordId)].join('::')?(lang==='ar'?'جارٍ الحفظ…':lang==='fr'?'Enregistrement…':'Saving…'):(lang==='ar'?'اعتماد النسخة المحلية':lang==='fr'?'Garder la version locale':'Keep local version')}</button>
+                <button type="button" className="sync-conflict-keep-cloud" disabled={Boolean(conflictResolving)} onClick={()=>resolveSyncConflict(item,'remote')}>{lang==='ar'?'اعتماد النسخة السحابية':lang==='fr'?'Garder la version cloud':'Keep cloud version'}</button>
+              </div>:<p className="sync-conflict-readonly">{item.resolvedLocally?(lang==='ar'?'تم حفظ اختيارك محلياً؛ ما زال ينتظر تأكيد السحابة.':lang==='fr'?'Votre choix est enregistré localement ; en attente de confirmation cloud.':'Your choice is saved locally and awaits cloud acknowledgement.'):isAdoption&&(item.pending?.length||item.workspaceRecord?.syncState==='pending')?(lang==='ar'?'توجد عملية معلقة في مساحة العمل. انتظر تأكيدها أو حل تعارضها أولاً؛ لم يتم تغيير أي نسخة.':lang==='fr'?'Une opération de l’espace de travail est en attente. Attendez sa confirmation ou résolvez-la d’abord.':'A workspace operation is still pending. Wait for its acknowledgement or resolve it first; neither snapshot was changed.'):isAdoption&&item.workspaceRecord?.cloudUpdatedAt&&!item.remoteRow?(lang==='ar'?'تعذر التحقق من أحدث نسخة سحابية؛ لم يتم تغيير البيانات.':lang==='fr'?'Impossible de vérifier la dernière version cloud ; aucune donnée n’a été modifiée.':'The latest cloud snapshot could not be verified; no data was changed.'):isAdoption?(lang==='ar'?'تعذر تجهيز النسختين للمراجعة؛ لم يتم تغيير البيانات.':lang==='fr'?'Les deux versions ne sont pas disponibles ; aucune donnée n’a été modifiée.':'Both snapshots are not available for review; no data was changed.'):lang==='ar'?'هذا التعارض يحتاج إلى معالجة منفصلة؛ لم تُجرَ أي تغييرات عليه.':lang==='fr'?'Ce conflit nécessite un traitement distinct ; aucune donnée n’a été modifiée.':'This conflict needs a separate workflow; no data was changed.'}</p>}
+            </article>;
+          })}
+          {conflictError&&<p className="sync-conflicts-error" role="alert">{conflictError}</p>}
+        </div>
+        <footer className="sync-conflicts-footer"><span>{conflictReview.length} {lang==='ar'?'سجلات للمراجعة':lang==='fr'?'éléments à examiner':'records under review'}</span><button type="button" onClick={()=>openSyncConflictReview()} disabled={conflictsLoading||Boolean(conflictResolving)}>{lang==='ar'?'تحديث النسخ':lang==='fr'?'Actualiser':'Refresh snapshots'}</button><button type="button" className="sync-conflicts-done" onClick={()=>setConflictsOpen(false)}>{lang==='ar'?'إغلاق':lang==='fr'?'Fermer':'Close'}</button></footer>
       </section>
     </div>,document.body)}
     {sessionPaused&&<div className="session-pause-overlay"><section className="session-pause-card"><span><LockKeyhole size={25}/></span><h2>{lang==='ar'?'الجلسة معلّقة':lang==='fr'?'Session suspendue':'Session paused'}</h2><p>{lang==='ar'?'تم إخفاء مساحة العمل مؤقتًا. استأنف الجلسة للمتابعة.':lang==='fr'?'Votre espace est masqué temporairement. Reprenez la session.':'Your workspace is hidden temporarily. Resume to continue.'}</p><button onClick={()=>setSessionPaused(false)}>{lang==='ar'?'استئناف الجلسة':lang==='fr'?'Reprendre la session':'Resume session'}</button><button className="pause-signout" onClick={async()=>{try{const {error}=await supabase.auth.signOut();if(error)throw error;window.location.reload()}catch(error){window.alert(error?.message||'Sign out failed')}}}>{t('logout')}</button></section></div>}
