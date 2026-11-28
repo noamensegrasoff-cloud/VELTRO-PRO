@@ -74,3 +74,49 @@ test('cloud pagination propagates transport errors without returning a partial l
     error => error === networkError,
   );
 });
+
+
+test('cloud pagination refuses to return a collection when its row count changes during paging', async () => {
+  const initialRows = makeRows(0, 4);
+  let pageCalls = 0;
+  await assert.rejects(
+    collectCloudRecordPages(async request => {
+      pageCalls += 1;
+      const visibleRows = pageCalls === 1
+        ? initialRows
+        : [{ record_id: 'record-00000' }, ...initialRows];
+      const remaining = visibleRows.filter(row => (
+        request.afterRecordId === null || row.record_id > request.afterRecordId
+      ));
+      return {
+        data: remaining.slice(0, 2),
+        count: request.includeCount ? initialRows.length : null,
+        error: null,
+      };
+    }, {
+      pageSize: 2,
+      // Simulate a concurrent insert whose ID sorts before the already-read cursor.
+      verifyCount: async () => ({ count: 5, error: null }),
+    }),
+    /count changed during pagination/,
+  );
+  assert.equal(pageCalls, 2);
+});
+
+test('cloud pagination returns rows when the exact count is stable through the final verification', async () => {
+  const allRows = makeRows(0, 3);
+  const rows = await collectCloudRecordPages(async request => {
+    const remaining = allRows.filter(row => (
+      request.afterRecordId === null || row.record_id > request.afterRecordId
+    ));
+    return {
+      data: remaining.slice(0, 2),
+      count: request.includeCount ? allRows.length : null,
+      error: null,
+    };
+  }, {
+    pageSize: 2,
+    verifyCount: async () => ({ count: allRows.length, error: null }),
+  });
+  assert.deepEqual(rows.map(row => row.record_id), allRows.map(row => row.record_id));
+});

@@ -36,9 +36,10 @@ const CLOUD_RECORD_PAGE_SIZE = 1000;
  * The exact count is read once so a project-level PostgREST row cap below the
  * requested page size cannot make a truncated response look like completion.
  */
-export async function collectCloudRecordPages(fetchPage, { pageSize = CLOUD_RECORD_PAGE_SIZE } = {}) {
+export async function collectCloudRecordPages(fetchPage, { pageSize = CLOUD_RECORD_PAGE_SIZE, verifyCount = null } = {}) {
   if (typeof fetchPage !== 'function') throw new Error('A cloud page loader is required.');
   if (!Number.isSafeInteger(pageSize) || pageSize < 1) throw new Error('pageSize must be a positive safe integer.');
+  if (verifyCount !== null && typeof verifyCount !== 'function') throw new Error('verifyCount must be a function when provided.');
 
   const rows = [];
   let afterRecordId = null;
@@ -80,6 +81,18 @@ export async function collectCloudRecordPages(fetchPage, { pageSize = CLOUD_RECO
     }
   }
 
+  if (verifyCount) {
+    const verification = await verifyCount();
+    if (verification?.error) throw verification.error;
+    const finalCount = verification?.count;
+    if (!Number.isSafeInteger(finalCount) || finalCount < 0) {
+      throw new Error('The final cloud query did not return an exact row count; refusing to complete a potentially inconsistent pull.');
+    }
+    if (finalCount !== expectedCount) {
+      throw new Error(`Cloud record count changed during pagination (expected ${expectedCount} rows at start, observed ${finalCount} at completion); refusing to return a potentially incomplete collection.`);
+    }
+  }
+
   return rows;
 }
 
@@ -88,16 +101,30 @@ export async function getCloudRecords({ workspaceId, entityType, includeDeleted 
   const client = requireCloud();
   const columns = 'workspace_id, entity_type, record_id, payload, updated_at, deleted_at, device_id';
 
-  return collectCloudRecordPages(({ afterRecordId, pageSize, includeCount }) => {
-    let query = client.from('cloud_records')
-      .select(columns, includeCount ? { count: 'exact' } : undefined)
+  const applyScope = query => {
+    let scoped = query
       .eq('workspace_id', workspaceId)
-      .eq('entity_type', entityType)
+      .eq('entity_type', entityType);
+    if (!includeDeleted) scoped = scoped.is('deleted_at', null);
+    return scoped;
+  };
+
+  return collectCloudRecordPages(({ afterRecordId, pageSize, includeCount }) => {
+    let query = applyScope(client.from('cloud_records')
+      .select(columns, includeCount ? { count: 'exact' } : undefined))
       .order('record_id', { ascending: true })
       .limit(pageSize);
-    if (!includeDeleted) query = query.is('deleted_at', null);
     if (afterRecordId !== null) query = query.gt('record_id', afterRecordId);
     return query;
+  }, {
+    // A concurrent insert before the keyset cursor could otherwise be missed while
+    // the first-page count still matches the number of rows collected. Re-check the
+    // exact scoped count after paging and fail closed if the collection changed.
+    verifyCount: async () => {
+      const { count, error } = await applyScope(client.from('cloud_records')
+        .select('record_id', { count: 'exact', head: true }));
+      return { count, error };
+    },
   });
 }
 
